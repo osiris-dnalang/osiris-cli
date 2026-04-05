@@ -1,0 +1,7 @@
+# Ignore Python bytecode and editor files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.vscode/

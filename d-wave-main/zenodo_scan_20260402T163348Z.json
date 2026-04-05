@@ -1,0 +1,53 @@
+{
+  "query": "generate living organisms and qbyte mine",
+  "timestamp": "2026-04-02T16:33:48.071650Z",
+  "record_count": 2,
+  "records": [
+    {
+      "id": "mock-zenodo-1",
+      "title": "Mock Nature Physics discovery for: generate living organisms and qbyte mine",
+      "authors": [
+        "Devin Phillip Davis"
+      ],
+      "doi": "10.1234/mockzenodo.1",
+      "url": "https://zenodo.org/record/mock-1"
+    },
+    {
+      "id": "mock-zenodo-2",
+      "title": "Mock arXiv-style exposition for: generate living organisms and qbyte mine",
+      "authors": [
+        "Agile Defense Systems"
+      ],
+      "doi": "10.1234/mockzenodo.2",
+      "url": "https://zenodo.org/record/mock-2"
+    }
+  ],
+  "evidence": {
+    "query": "generate living organisms and qbyte mine",
+    "record_count": 2,
+    "records": [
+      {
+        "id": "mock-zenodo-1",
+        "title": "Mock Nature Physics discovery for: generate living organisms and qbyte mine",
+        "authors": [
+          "Devin Phillip Davis"
+        ],
+        "doi": "10.1234/mockzenodo.1",
+        "url": "https://zenodo.org/record/mock-1"
+      },
+      {
+        "id": "mock-zenodo-2",
+        "title": "Mock arXiv-style exposition for: generate living organisms and qbyte mine",
+        "authors": [
+          "Agile Defense Systems"
+        ],
+        "doi": "10.1234/mockzenodo.2",
+        "url": "https://zenodo.org/record/mock-2"
+      }
+    ],
+    "analysis": {
+      "confidence": 0.6,
+      "summary": "Found 2 candidate records on zenodo.org for query generate living organisms and qbyte mine"
+    }
+  }
+}

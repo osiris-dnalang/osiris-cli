@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# OSIRIS wrapper script - no external telemetry, local SDK only
+set -euo pipefail
+SCRIPT_DIR="/workspaces/osiris-cli/d-wave-main"
+PY="${PY:-python3}"
+exec "$PY" "$SCRIPT_DIR/osiris_cli.py" "$@"
