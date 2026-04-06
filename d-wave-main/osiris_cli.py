@@ -5,14 +5,19 @@ import json
 import os
 import re
 import sys
+import html
 import logging
 import random
 import time
 import math
 import hashlib
-from datetime import datetime, timedelta
+import subprocess
+import tempfile
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, Optional, List, Tuple, Set
 from pathlib import Path
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 import networkx as nx
 import numpy as np
 from collections import deque
@@ -44,6 +49,9 @@ AUTOADVANCE_DIR.mkdir(exist_ok=True, parents=True)
 # Add our enhanced NCLM components to path
 ENHANCED_NCLM_PATH = REPO_ROOT / "nclm"
 sys.path.insert(0, str(ENHANCED_NCLM_PATH))
+
+# Add SDK to path
+sys.path.insert(0, str(SDK_PATH))
 
 from nclm.enhanced_config import NCLMEnhancedConfig, NCLMMode
 from nclm.enhanced_client import EnhancedDNALangCopilotClient
@@ -1570,6 +1578,305 @@ async def do_swarm_deployment(task: str, num_agents: int, iterations: int) -> No
     
     print(f"\n{'='*80}\n")
 
+async def do_quantum_hypothesis_generation(domain: str, search_space: int) -> None:
+    """Generate research hypotheses using quantum algorithms"""
+    print(f"\n{'='*80}")
+    print(f"⚛️  OSIRIS QUANTUM HYPOTHESIS ENGINE")
+    print(f"{'='*80}\n")
+    
+    print(f"Domain: {domain}")
+    print(f"Search Space Size: {search_space}")
+    print(f"Quantum Backend: ibm_fez\n")
+    
+    try:
+        from dnalang_sdk.nclm.quantum_hypothesis_engine import QuantumHypothesisEngine
+        
+        engine = QuantumHypothesisEngine()
+        hypotheses = engine.grover_hypothesis_search(domain, search_space)
+        
+        if hypotheses:
+            print(f"🚀 Generated {len(hypotheses)} quantum-accelerated hypotheses:\n")
+            
+            for i, h in enumerate(hypotheses, 1):
+                print(f"{i}. {h.title}")
+                print(f"   Domain: {h.domain}")
+                print(f"   Statement: {h.statement}")
+                print(f"   Quantum Confidence: {h.quantum_confidence:.3f}")
+                print(f"   Classical Confidence: {h.classical_confidence:.3f}")
+                print(f"   Speedup Factor: {h.speedup_factor:.2f}x")
+                print(f"   Qubits Used: {h.qubits_used}")
+                print(f"   Circuit Depth: {h.circuit_depth}")
+                print()
+            
+            # Show quantum advantage report
+            report = engine.get_quantum_advantage_report()
+            print(report)
+        else:
+            print("❌ No hypotheses generated - insufficient domain data or quantum backend unavailable")
+    
+    except ImportError as e:
+        print(f"❌ Quantum hypothesis engine not available: {e}")
+    except Exception as e:
+        print(f"❌ Error in quantum hypothesis generation: {e}")
+    
+    print(f"\n{'='*80}\n")
+
+async def do_holographic_visualization(export_file: Optional[str], show_preview: bool) -> None:
+    """Generate 4D holographic knowledge graph visualization"""
+    print(f"\n{'='*80}")
+    print(f"🌌 OSIRIS HOLOGRAPHIC VISUALIZER")
+    print(f"{'='*80}\n")
+    
+    try:
+        from dnalang_sdk.nclm.holographic_visualizer import HolographicVisualizer
+        
+        visualizer = HolographicVisualizer()
+        visualizer.generate_4d_embedding()
+        
+        if show_preview:
+            preview = visualizer.get_ascii_preview()
+            print(preview)
+        
+        report = visualizer.get_holographic_report()
+        print(report)
+        
+        if export_file:
+            result = visualizer.export_webxr_visualization(export_file)
+            print(f"\n{result}")
+            print("Open the HTML file in a WebXR-compatible browser for immersive 3D exploration!")
+    
+    except ImportError as e:
+        print(f"❌ Holographic visualizer not available: {e}")
+    except Exception as e:
+        print(f"❌ Error in holographic visualization: {e}")
+    
+    print(f"\n{'='*80}\n")
+
+async def do_time_crystal_engine(action: str, domain: str, name: Optional[str]) -> None:
+    """Control time crystal research engine"""
+    print(f"\n{'='*80}")
+    print(f"⏰ OSIRIS TIME CRYSTAL RESEARCH ENGINE")
+    print(f"{'='*80}\n")
+    
+    try:
+        from dnalang_sdk.nclm.time_crystal_engine import TimeCrystalResearchEngine
+        
+        engine = TimeCrystalResearchEngine()
+        
+        if action == "create":
+            crystal_name = name or f"{domain}_crystal"
+            crystal_id = engine.create_time_crystal(domain, crystal_name)
+            print(f"✨ Created time crystal: {crystal_id}")
+            print(f"Domain: {domain}")
+            print(f"Perpetual evolution started...")
+            
+        elif action == "status":
+            if engine.time_crystals:
+                for crystal_id in engine.time_crystals:
+                    status = engine.get_crystal_status(crystal_id)
+                    print(f"Crystal {crystal_id}:")
+                    print(f"  Energy: {status['energy_level']:.3f}")
+                    print(f"  Coherence Time: {status['coherence_time']:.1f}s")
+                    print(f"  Hypotheses: {status['total_hypotheses']}")
+                    print()
+            else:
+                print("No active time crystals.")
+                
+        elif action == "report":
+            report = engine.get_time_crystal_report()
+            print(report)
+            
+        elif action == "stop":
+            engine.stop_all_crystals()
+            print("All time crystals stopped.")
+    
+    except ImportError as e:
+        print(f"❌ Time crystal engine not available: {e}")
+    except Exception as e:
+        print(f"❌ Error in time crystal engine: {e}")
+    
+    print(f"\n{'='*80}\n")
+
+async def do_autonomous_swarm(action: str, population: int) -> None:
+    """Control autonomous research swarm"""
+    print(f"\n{'='*80}")
+    print(f"🐜 OSIRIS AUTONOMOUS RESEARCH SWARM")
+    print(f"{'='*80}\n")
+    
+    try:
+        from dnalang_sdk.nclm.autonomous_swarm import AutonomousResearchSwarm
+        
+        # Use a global swarm instance (simplified)
+        if not hasattr(do_autonomous_swarm, 'swarm'):
+            do_autonomous_swarm.swarm = None
+            
+        if action == "start":
+            if do_autonomous_swarm.swarm is None:
+                do_autonomous_swarm.swarm = AutonomousResearchSwarm(population)
+            do_autonomous_swarm.swarm.start_swarm_evolution()
+            print(f"🚀 Autonomous swarm started with {population} agents")
+            print("Evolution will continue indefinitely...")
+            
+        elif action == "status":
+            if do_autonomous_swarm.swarm:
+                status = do_autonomous_swarm.swarm.get_swarm_status()
+                print(f"Population: {status['population_size']}")
+                print(f"Evolution Cycle: {status['evolution_cycle']}")
+                print(f"Swarm Φ: {status['swarm_consciousness']['phi_swarm']:.3f}")
+                print(f"Emergent Intelligence: {status['swarm_consciousness']['emergent_intelligence']:.3f}")
+            else:
+                print("Swarm not started.")
+                
+        elif action == "report":
+            if do_autonomous_swarm.swarm:
+                report = do_autonomous_swarm.swarm.get_swarm_report()
+                print(report)
+            else:
+                print("Swarm not started.")
+                
+        elif action == "stop":
+            if do_autonomous_swarm.swarm:
+                do_autonomous_swarm.swarm.stop_swarm()
+                print("Autonomous swarm stopped.")
+            else:
+                print("Swarm not running.")
+    
+    except ImportError as e:
+        print(f"❌ Autonomous swarm not available: {e}")
+    except Exception as e:
+        print(f"❌ Error in autonomous swarm: {e}")
+    
+    print(f"\n{'='*80}\n")
+
+async def do_meta_intelligence(action: str) -> None:
+    """Control meta-intelligence singularity monitor"""
+    print(f"\n{'='*80}")
+    print(f"🧠 OSIRIS META-INTELLIGENCE ENGINE")
+    print(f"{'='*80}\n")
+    
+    try:
+        from dnalang_sdk.nclm.meta_intelligence_engine import MetaIntelligenceEngine
+        
+        # Use a global meta-engine instance
+        if not hasattr(do_meta_intelligence, 'meta_engine'):
+            do_meta_intelligence.meta_engine = MetaIntelligenceEngine()
+            
+        engine = do_meta_intelligence.meta_engine
+        
+        if action == "start":
+            engine.start_meta_intelligence()
+            print("🚀 Meta-intelligence monitoring started")
+            print("Singularity tracking and subsystem coordination active...")
+            
+        elif action == "status":
+            status = engine.get_meta_intelligence_status()
+            print(f"Monitoring Cycle: {status['monitoring_cycle']}")
+            print(f"Overall Coherence: {status['overall_coherence']:.3f}")
+            print(f"Convergence Events: {status['convergence_events']}")
+            print(f"Breakthrough Potential: {status['breakthrough_potential']:.3f}")
+            print(f"Ethical Score: {status['ethical_score']:.3f}")
+            print(f"Singularity Probability: {status['singularity_metrics']['singularity_probability']:.3f}")
+            
+        elif action == "report":
+            report = engine.get_singularity_report()
+            print(report)
+            
+        elif action == "stop":
+            engine.stop_meta_intelligence()
+            print("Meta-intelligence engine stopped.")
+    
+    except ImportError as e:
+        print(f"❌ Meta-intelligence engine not available: {e}")
+    except Exception as e:
+        print(f"❌ Error in meta-intelligence engine: {e}")
+    
+    print(f"\n{'='*80}\n")
+
+async def do_universal_benchmarking(action: str, suite_name: Optional[str],
+                                  iterations: int, duration: int) -> None:
+    """Control universal AI benchmarking"""
+    print(f"\n{'='*80}")
+    print(f"🏁 OSIRIS UNIVERSAL BENCHMARKING ENGINE")
+    print(f"{'='*80}\n")
+    
+    try:
+        from dnalang_sdk.nclm.universal_benchmarking_engine import UniversalBenchmarkingEngine
+        
+        engine = UniversalBenchmarkingEngine()
+        
+        if action == "create-suite":
+            suite = suite_name or f"benchmark_suite_{int(time.time())}"
+            engine.create_benchmark_suite(
+                suite,
+                f"Comprehensive AI benchmarking suite created at {datetime.now(timezone.utc).isoformat()}"
+            )
+            print(f"✨ Created benchmark suite: {suite}")
+            
+        elif action == "run-suite":
+            if not suite_name:
+                print("❌ Please specify a suite name with --suite")
+                return
+            results = await engine.run_benchmark_suite(suite_name, iterations)
+            print(f"🏆 Completed benchmarking with {len(results)} results")
+            
+        elif action == "report":
+            if not suite_name:
+                print("❌ Please specify a suite name with --suite")
+                return
+            report = engine.generate_comprehensive_report(suite_name)
+            print(report)
+            
+        elif action == "realtime":
+            await engine.run_real_time_benchmark(duration)
+    
+    except ImportError as e:
+        print(f"❌ Universal benchmarking engine not available: {e}")
+    except Exception as e:
+        print(f"❌ Error in universal benchmarking: {e}")
+    
+    print(f"\n{'='*80}\n")
+
+async def do_physics_discovery_deployment(action: str) -> None:
+    """Control physics discovery deployment"""
+    print(f"\n{'='*80}")
+    print(f"🔬 OSIRIS PHYSICS DISCOVERY DEPLOYMENT")
+    print(f"{'='*80}\n")
+    
+    try:
+        from dnalang_sdk.nclm.physics_discovery_deployment import PhysicsDiscoveryDeployment
+        
+        # Use a global deployment instance
+        if not hasattr(do_physics_discovery_deployment, 'deployment'):
+            do_physics_discovery_deployment.deployment = PhysicsDiscoveryDeployment()
+            
+        deployment = do_physics_discovery_deployment.deployment
+        
+        if action == "start":
+            await deployment.start_physics_discovery()
+            
+        elif action == "status":
+            status = deployment.get_deployment_status()
+            print(f"Running: {status['running']}")
+            print(f"Discoveries Made: {status['discoveries_made']}")
+            print(f"Papers Drafted: {status['papers_drafted']}")
+            print(f"Research Domains: {len(status['research_domains'])}")
+            if status['meta_intelligence']:
+                print(f"Singularity Probability: {status['meta_intelligence']['singularity_metrics']['singularity_probability']:.3f}")
+            
+        elif action == "report":
+            report = deployment.generate_deployment_report()
+            print(report)
+            
+        elif action == "stop":
+            await deployment.stop_deployment()
+    
+    except ImportError as e:
+        print(f"❌ Physics discovery deployment not available: {e}")
+    except Exception as e:
+        print(f"❌ Error in physics discovery deployment: {e}")
+    
+    print(f"\n{'='*80}\n")
+
 async def main_async() -> None:
     """Main asynchronous entry point with auto-enhance and auto-advance commands"""
     parser = argparse.ArgumentParser(
@@ -1662,8 +1969,8 @@ async def main_async() -> None:
     zenodo_parser.add_argument("--max", type=int, default=12, help="Maximum results")
 
     # GitHub command
-    github_parser = subparsers.add_parser("github", help="Ingest GitHub repository")
-    github_parser.add_argument("repo", help="GitHub repo URL or owner/repo")
+    github_parser = subparsers.add_parser("github", help="Ingest GitHub repository, research URL, or local path")
+    github_parser.add_argument("repo", help="GitHub repo URL, website URL, local path, or owner/repo")
 
     # Quantum command
     subparsers.add_parser("quantum", help="Run quantum cognitive simulation")
@@ -1716,6 +2023,42 @@ async def main_async() -> None:
     hypothesis_parser.add_argument("--contradictions", action="store_true", help="Find contradictions")
     hypothesis_parser.add_argument("--gaps", action="store_true", help="Identify gaps")
     hypothesis_parser.add_argument("--predictions", action="store_true", help="Generate predictions")
+
+    # Quantum Hypothesis Engine command
+    quantum_hypothesis_parser = subparsers.add_parser("quantum-hypothesis", help="Generate hypotheses using quantum algorithms")
+    quantum_hypothesis_parser.add_argument("--domain", default="quantum", help="Research domain to analyze")
+    quantum_hypothesis_parser.add_argument("--search-space", type=int, default=1024, help="Size of hypothesis search space")
+
+    # Holographic Visualizer command
+    hologram_parser = subparsers.add_parser("hologram", help="Generate 4D holographic knowledge graph visualization")
+    hologram_parser.add_argument("--export", help="Export WebXR visualization to file")
+    hologram_parser.add_argument("--preview", action="store_true", help="Show ASCII preview")
+
+    # Time Crystal Research Engine command
+    time_crystal_parser = subparsers.add_parser("time-crystal", help="Create and monitor time crystal research evolution")
+    time_crystal_parser.add_argument("action", choices=["create", "status", "report", "stop"], help="Action to perform")
+    time_crystal_parser.add_argument("--domain", default="quantum", help="Research domain for new crystal")
+    time_crystal_parser.add_argument("--name", help="Name for new time crystal")
+
+    # Autonomous Research Swarm command
+    swarm_parser = subparsers.add_parser("autonomous-swarm", help="Control autonomous research swarm")
+    swarm_parser.add_argument("action", choices=["start", "status", "report", "stop"], help="Action to perform")
+    swarm_parser.add_argument("--population", type=int, default=10, help="Initial population size")
+
+    # Meta-Intelligence Engine command
+    meta_parser = subparsers.add_parser("meta-intelligence", help="Control meta-intelligence singularity monitor")
+    meta_parser.add_argument("action", choices=["start", "status", "report", "stop"], help="Action to perform")
+
+    # Universal Benchmarking Engine command
+    benchmark_parser = subparsers.add_parser("benchmark", help="Run universal AI benchmarking")
+    benchmark_parser.add_argument("action", choices=["create-suite", "run-suite", "report", "realtime"], help="Action to perform")
+    benchmark_parser.add_argument("--suite", help="Benchmark suite name")
+    benchmark_parser.add_argument("--iterations", type=int, default=5, help="Number of iterations per test")
+    benchmark_parser.add_argument("--duration", type=int, default=5, help="Duration in minutes for realtime benchmarking")
+
+    # Physics Discovery Deployment command
+    discovery_parser = subparsers.add_parser("physics-discovery", help="Deploy OSIRIS for autonomous physics discovery")
+    discovery_parser.add_argument("action", choices=["start", "status", "report", "stop"], help="Action to perform")
 
     # Swarm command
     swarm_parser = subparsers.add_parser("swarm", help="Deploy agent swarm for problem solving")
@@ -1849,6 +2192,49 @@ async def main_async() -> None:
                 generate_predictions=args.predictions
             )
 
+        elif args.command == "quantum-hypothesis":
+            await do_quantum_hypothesis_generation(
+                domain=args.domain,
+                search_space=args.search_space
+            )
+
+        elif args.command == "hologram":
+            await do_holographic_visualization(
+                export_file=args.export,
+                show_preview=args.preview
+            )
+
+        elif args.command == "time-crystal":
+            await do_time_crystal_engine(
+                action=args.action,
+                domain=args.domain,
+                name=args.name
+            )
+
+        elif args.command == "autonomous-swarm":
+            await do_autonomous_swarm(
+                action=args.action,
+                population=args.population
+            )
+
+        elif args.command == "meta-intelligence":
+            await do_meta_intelligence(
+                action=args.action
+            )
+
+        elif args.command == "benchmark":
+            await do_universal_benchmarking(
+                action=args.action,
+                suite_name=args.suite,
+                iterations=args.iterations,
+                duration=args.duration
+            )
+
+        elif args.command == "physics-discovery":
+            await do_physics_discovery_deployment(
+                action=args.action
+            )
+
         elif args.command == "swarm":
             await do_swarm_deployment(
                 task=args.task,
@@ -1924,9 +2310,84 @@ async def interactive_shell() -> None:
     app.run()
 
 async def do_github_ingest(repo: str) -> None:
-    """Ingest a GitHub repository"""
-    print(f"Ingesting GitHub repo: {repo}")
-    # TODO: Implement full ingestion logic
+    """Ingest a GitHub repository or remote research URL."""
+    print(f"Ingesting source: {repo}")
+
+    from dnalang_sdk.nclm.ingest import quick_ingest, Domain
+
+    def _clean_html(html_text: str) -> str:
+        text = re.sub(r'(?s)<script.*?</script>', ' ', html_text)
+        text = re.sub(r'(?s)<style.*?</style>', ' ', text)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        text = html.unescape(text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text
+
+    def _fetch_url_text(url: str) -> str:
+        req = Request(url, headers={
+            'User-Agent': 'OSIRIS/1.0 (+https://quantum-advantage.dev)'
+        })
+        with urlopen(req, timeout=30) as response:
+            raw = response.read().decode('utf-8', errors='replace')
+        return _clean_html(raw)
+
+    def _clone_repo(url: str, target_dir: Path) -> None:
+        subprocess.run([
+            'git', 'clone', '--depth', '1', '--quiet', url, str(target_dir)
+        ], check=True)
+
+    parsed = urlparse(repo)
+    if parsed.scheme in ('http', 'https'):
+        if parsed.netloc.endswith('github.com'):
+            repo_path = parsed.path.strip('/')
+            if not repo_path:
+                raise ValueError('GitHub repository URL must include owner/repo')
+            target = Path(tempfile.mkdtemp(prefix='osiris_github_')) / repo_path.replace('/', '_')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            print(f"Cloning GitHub repository to: {target}")
+            try:
+                _clone_repo(repo, target)
+                print(f"Repository cloned successfully: {target}")
+                nodes, summary = quick_ingest(str(target), domain=Domain.QUANTUM)
+                print(summary)
+            except Exception as exc:
+                logger.error(f"GitHub ingest failed: {exc}")
+                print(f"Error ingesting GitHub repository: {exc}")
+            return
+        else:
+            print(f"Fetching web content from URL: {repo}")
+            try:
+                text = _fetch_url_text(repo)
+                ingest_dir = REPO_ROOT / '.osiris_ingest' / 'website'
+                ingest_dir.mkdir(parents=True, exist_ok=True)
+                dest_file = ingest_dir / f"{parsed.netloc}_{parsed.path.strip('/').replace('/', '_') or 'index'}.txt"
+                dest_file.write_text(text, encoding='utf-8')
+                print(f"Saved scraped content to: {dest_file}")
+                nodes, summary = quick_ingest(str(dest_file), domain=Domain.UNKNOWN)
+                print(summary)
+            except Exception as exc:
+                logger.error(f"Web ingest failed: {exc}")
+                print(f"Error ingesting URL content: {exc}")
+            return
+    elif os.path.exists(repo):
+        print(f"Ingesting local path: {repo}")
+        try:
+            nodes, summary = quick_ingest(repo, domain=Domain.UNKNOWN)
+            print(summary)
+        except Exception as exc:
+            logger.error(f"Local ingest failed: {exc}")
+            print(f"Error ingesting local path: {exc}")
+        return
+
+    # Owner/repo short form support
+    if '/' in repo:
+        repo_url = f"https://github.com/{repo}"
+        await do_github_ingest(repo_url)
+        return
+
+    raise ValueError(
+        "Repo format not recognized. Use owner/repo, GitHub URL, website URL, or local path."
+    )
     # For now, placeholder
 
 def main():

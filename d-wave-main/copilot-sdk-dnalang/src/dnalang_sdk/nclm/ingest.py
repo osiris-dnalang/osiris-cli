@@ -21,6 +21,7 @@ Run `osiris graph ingest --all` to ingest every known source.
 
 from __future__ import annotations
 
+import asyncio
 import os
 import re
 import json
@@ -928,6 +929,8 @@ class GraphIngestor:
         )
         try:
             from .tools import tool_llm
+            if asyncio.iscoroutinefunction(tool_llm):
+                return []
             result = tool_llm(prompt)
         except Exception:
             return []
