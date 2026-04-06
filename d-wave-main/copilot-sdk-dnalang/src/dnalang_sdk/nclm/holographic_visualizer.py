@@ -339,5 +339,10 @@ Domain Coherence Analysis:
                                  next((n.domain for n in self.nodes if n.id == b.target_id), None) == target))
             report += f"  {source} ↔ {target}: {bridge_count} bridges\n"
 
-        return report</content>
-<parameter name="filePath">/workspaces/osiris-cli/d-wave-main/copilot-sdk-dnalang/src/dnalang_sdk/nclm/holographic_visualizer.py
+        return report
+
+        """Check if holographic visualizer is active."""
+        return len(self.nodes) > 0
+    def is_active(self) -> bool:
+        """Check if holographic visualizer is active."""
+        return len(self.nodes) > 0

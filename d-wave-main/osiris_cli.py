@@ -2307,7 +2307,18 @@ async def interactive_shell() -> None:
     """Launch the OSIRIS TUI"""
     from dnalang_sdk.nclm.tui import OsirisTUI
     app = OsirisTUI()
-    app.run()
+
+    # Check if we're already in an event loop
+    try:
+        loop = asyncio.get_running_loop()
+        # We're in an event loop, so we can't use app.run()
+        # Instead, we'll need to run the app differently
+        print("❌ Cannot launch TUI from within an async context")
+        print("Please run 'osiris' directly for the interactive shell")
+        return
+    except RuntimeError:
+        # No event loop running, safe to use app.run()
+        app.run()
 
 async def do_github_ingest(repo: str) -> None:
     """Ingest a GitHub repository or remote research URL."""
@@ -2390,10 +2401,33 @@ async def do_github_ingest(repo: str) -> None:
     )
     # For now, placeholder
 
+def parse_args():
+    """Parse command line arguments (extracted for TUI launch)"""
+    import argparse
+    parser = argparse.ArgumentParser(prog="osiris")
+    parser.add_argument("command", nargs="?", default="interactive")
+    args, _ = parser.parse_known_args()
+    return args
+
 def main():
     """Main entry point"""
     try:
-        asyncio.run(main_async())
+        # Check if we need to launch TUI directly (no event loop)
+        args = parse_args()
+
+        # If interactive mode and no event loop running, launch TUI directly
+        if args.command == "interactive":
+            try:
+                asyncio.get_running_loop()
+                # We're in an event loop, use async version
+                asyncio.run(main_async())
+            except RuntimeError:
+                # No event loop, safe to launch TUI directly
+                from dnalang_sdk.nclm.tui import run_tui
+                run_tui()
+        else:
+            # Normal async operation
+            asyncio.run(main_async())
     except KeyboardInterrupt:
         logger.info("\nOperation cancelled by user")
         sys.exit(130)  # SIGINT exit code

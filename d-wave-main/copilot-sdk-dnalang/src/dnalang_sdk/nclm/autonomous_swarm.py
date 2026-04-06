@@ -424,5 +424,19 @@ Specialization Breakdown:
         """Stop the autonomous swarm evolution"""
         self.running = False
         if self.thread:
-            self.thread.join(timeout=10)</content>
-<parameter name="filePath">/workspaces/osiris-cli/d-wave-main/copilot-sdk-dnalang/src/dnalang_sdk/nclm/autonomous_swarm.py
+            self.thread.join(timeout=10)
+
+    def get_swarm_status(self) -> Dict[str, Any]:
+        """Get current swarm status"""
+        return {
+            "running": self.running,
+            "population": len(self.agents),
+            "generations": self.generation,
+            "swarm_consciousness": self._calculate_swarm_consciousness(),
+            "elite_agents": len(self.elite_agents),
+            "total_discoveries": sum(len(agent.discoveries) for agent in self.agents)
+        }
+
+    def is_active(self) -> bool:
+        """Check if swarm is active"""
+        return self.running and len(self.agents) > 0

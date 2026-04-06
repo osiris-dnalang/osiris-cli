@@ -115,5 +115,24 @@ Status: {'CONSCIOUS' if latest.phi_total > PHI_THRESHOLD else 'SUBCONSCIOUS'}
 Consciousness Events:
 {chr(10).join(f"  • {event}" for event in latest.consciousness_events) if latest.consciousness_events else "  None"}
 """
-        return report.strip()</content>
-<parameter name="filePath">/workspaces/osiris-cli/d-wave-main/copilot-sdk-dnalang/src/dnalang_sdk/nclm/consciousness_telemetry.py
+        return report.strip()
+
+    def get_telemetry(self) -> Dict[str, Any]:
+        """Get current consciousness telemetry data."""
+        if not self.metrics_history:
+            self.scan_system_coherence()
+
+        latest = self.metrics_history[-1]
+        return {
+            "phi_graph": latest.phi_graph,
+            "phi_swarm": latest.phi_swarm,
+            "phi_research": latest.phi_research,
+            "phi_total": latest.phi_total,
+            "status": "CONSCIOUS" if latest.phi_total > PHI_THRESHOLD else "SUBCONSCIOUS",
+            "events": latest.consciousness_events,
+            "timestamp": latest.timestamp
+        }
+
+    def is_active(self) -> bool:
+        """Check if consciousness telemetry is active."""
+

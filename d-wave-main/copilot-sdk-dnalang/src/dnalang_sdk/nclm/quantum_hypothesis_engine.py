@@ -192,5 +192,14 @@ Top Quantum Hypotheses:
 
             return report
         else:
-            return "No quantum hypotheses generated - insufficient domain data"</content>
-<parameter name="filePath">/workspaces/osiris-cli/d-wave-main/copilot-sdk-dnalang/src/dnalang_sdk/nclm/quantum_hypothesis_engine.py
+            return "No quantum hypotheses generated - insufficient domain data"
+
+    def generate_hypotheses(self, domain: str, complexity: float = 0.5) -> List[QuantumHypothesis]:
+        """Generate quantum-accelerated hypotheses for a domain."""
+        return self.grover_hypothesis_search(domain, int(64 * complexity))
+
+    def is_active(self) -> bool:
+        """Check if quantum hypothesis engine is active."""
+    def is_active(self) -> bool:
+        """Check if quantum hypothesis engine is active."""
+        return self.quantum_backend is not None

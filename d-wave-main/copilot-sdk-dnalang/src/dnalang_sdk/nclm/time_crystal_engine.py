@@ -281,5 +281,10 @@ Crystal {crystal_id}:
         """Stop all time crystal evolution."""
         self.running = False
         if self.thread:
-            self.thread.join(timeout=5)</content>
-<parameter name="filePath">/workspaces/osiris-cli/d-wave-main/copilot-sdk-dnalang/src/dnalang_sdk/nclm/time_crystal_engine.py
+            self.thread.join(timeout=5)
+
+        """Check if time crystal engine is active."""
+        return self.running
+    def is_active(self) -> bool:
+        """Check if time crystal engine is active."""
+        return self.running

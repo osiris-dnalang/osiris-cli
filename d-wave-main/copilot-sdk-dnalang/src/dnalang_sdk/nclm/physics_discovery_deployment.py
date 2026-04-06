@@ -105,7 +105,7 @@ class PhysicsDiscoveryDeployment:
         self.running = True
 
         # Initialize autonomous swarm
-        self.swarm = AutonomousResearchSwarm(population=15)
+        self.swarm = AutonomousResearchSwarm(initial_population=15)
         self.meta_intelligence.swarm = self.swarm  # Connect to meta-intelligence
 
         # Start all subsystems

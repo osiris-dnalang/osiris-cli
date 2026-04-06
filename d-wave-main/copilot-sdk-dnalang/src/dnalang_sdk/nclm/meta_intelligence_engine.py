@@ -413,5 +413,10 @@ Status: {'ACTIVE' if self.running else 'INACTIVE'}
         """Stop the meta-intelligence engine"""
         self.running = False
         if self.thread:
-            self.thread.join(timeout=10)</content>
-<parameter name="filePath">/workspaces/osiris-cli/d-wave-main/copilot-sdk-dnalang/src/dnalang_sdk/nclm/meta_intelligence_engine.py
+            self.thread.join(timeout=10)
+
+        """Check if meta-intelligence engine is active."""
+        return self.running
+    def is_active(self) -> bool:
+        """Check if meta-intelligence engine is active."""
+        return self.running
