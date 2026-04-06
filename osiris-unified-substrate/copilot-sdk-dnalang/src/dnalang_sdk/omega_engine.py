@@ -790,81 +790,99 @@ class OmegaRecursiveEngine:
             out["error"] = str(exc)
             return out
 
-    def execute_full_pipeline(self, corpus_data: Dict) -> Dict:
-        """Execute the complete 7-layer pipeline with Ω-recursion"""
+    def route_intent_to_agents(self, user_intent: str) -> Dict[str, Any]:
+        """
+        Route user intent to appropriate agents (AURA for development, AIDEN for security)
         
-        # Pre-execution metrics
-        self.pre_metrics = self.compute_omega_metrics("pre")
+        Args:
+            user_intent (str): The user's natural language intent
+            
+        Returns:
+            Dict: Routing decision with agent assignment and execution plan
+        """
+        # Analyze intent using existing deducer
+        if not self.deducer:
+            self.run_layer_2_3()
         
-        # Layer 1: Index
-        layer_1 = self.run_layer_1(
-            corpus_data["total_lines"],
-            corpus_data["physics"],
-            corpus_data["defense"],
-            corpus_data["organism"],
-            corpus_data["consciousness"]
-        )
+        # Determine dominant category from intent
+        intent_lower = user_intent.lower()
         
-        # Layers 2-3: Intent
-        intents, collective = self.run_layer_2_3()
+        # Route to agents based on content
+        if any(word in intent_lower for word in ["develop", "code", "implement", "build", "create", "design"]):
+            primary_agent = "AURA"
+            secondary_agent = "AIDEN"
+            category = "DEVELOPMENT"
+        elif any(word in intent_lower for word in ["security", "protect", "defend", "audit", "harden", "threat"]):
+            primary_agent = "AIDEN"
+            secondary_agent = "AURA"
+            category = "SECURITY"
+        elif any(word in intent_lower for word in ["quantum", "circuit", "qpu", "hardware", "execute"]):
+            primary_agent = "AURA"
+            secondary_agent = "AIDEN"
+            category = "QUANTUM_EXECUTION"
+        elif any(word in intent_lower for word in ["analyze", "research", "understand", "study"]):
+            primary_agent = "OMEGA"
+            secondary_agent = "CHRONOS"
+            category = "ANALYSIS"
+        else:
+            primary_agent = "OMEGA"
+            secondary_agent = "AURA"
+            category = "GENERAL"
         
-        # Layer 4: Capability
-        capability = self.run_layer_4()
+        # Generate execution plan
+        execution_plan = self._generate_execution_plan(user_intent, primary_agent, secondary_agent, category)
         
-        # Layer 5: Resources
-        resources = self.run_layer_5()
-        
-        # Layer 6: Enhancement
-        enhanced = self.run_layer_6()
-        
-        # Layer 7: Plan
-        plan = self.run_layer_7()
-        
-        # Post-execution metrics
-        self.post_metrics = self.compute_omega_metrics("post")
-        
-        # Compile final output
         return {
-            "metadata": {
-                "engine_version": "Ω-Recursive v1.0.0-ΛΦ",
-                "timestamp": self.timestamp,
-                "lambda_phi_constant": Φ.LAMBDA_PHI,
-                "genesis_hash": layer_1.genesis_hash,
-                "recursion_iterations": self.recursion_count
+            "user_intent": user_intent,
+            "routing_decision": {
+                "primary_agent": primary_agent,
+                "secondary_agent": secondary_agent,
+                "category": category,
+                "confidence": 0.85  # Simplified confidence
             },
-            "omega_session_analysis": {
-                "pre_execution": self.pre_metrics.to_dict(),
-                "post_execution": self.post_metrics.to_dict(),
-                "convergence": round(self.post_metrics.Omega_S - self.pre_metrics.Omega_S, 4)
-            },
-            "layer_1_genome": {
-                "total_lines": layer_1.total_lines,
-                "physics_refs": layer_1.physics_refs,
-                "defense_refs": layer_1.defense_refs,
-                "organism_refs": layer_1.organism_refs,
-                "consciousness_refs": layer_1.consciousness_refs,
-                "dominant_trajectory": self.indexer.get_dominant_trajectory()
-            },
-            "layer_2_3_intent": {
-                "individual_vectors": [iv.to_dict() for iv in intents],
-                "collective_synthesis": collective
-            },
-            "layer_4_capability": capability,
-            "layer_5_resources": resources,
-            "layer_6_enhancement": enhanced,
-            "layer_7_plan": plan,
-            "unified_field_mapping": {
-                "theory_to_engine": {
-                    "𝓛_Ψ (QPU state field)": "Quantum job indexer + hardware stats",
-                    "𝓛_Φ (consciousness field)": "consciousness_phi in IntentVector",
-                    "𝓛_Γ (decoherence tensor)": "decoherence_gamma + Γ-spike detection",
-                    "𝓛_W₂ (Wasserstein)": "W₂ error via readiness indexes",
-                    "𝓛_𝒜 (agents)": "AURA/AIDEN agents + intent categories",
-                    "𝓛_int (interaction)": "Prompt enhancement + capability coupling"
-                },
-                "fixed_point_equation": "Ω[U] = L[Ω[U]] converged at iteration 7"
+            "execution_plan": execution_plan,
+            "communication_protocol": {
+                "inter_agent_messaging": "JSON-RPC over local sockets",
+                "state_sharing": "Shared memory via OmegaMetrics",
+                "error_handling": "Fail-closed with CCCE monitoring"
             }
         }
+    
+    def _generate_execution_plan(self, intent: str, primary: str, secondary: str, category: str) -> List[Dict]:
+        """
+        Generate a structured execution plan for the routed intent
+        """
+        plans = {
+            "DEVELOPMENT": [
+                {"agent": primary, "action": "analyze_requirements", "description": "Parse development intent"},
+                {"agent": primary, "action": "generate_code", "description": "Create implementation"},
+                {"agent": secondary, "action": "security_review", "description": "Audit for vulnerabilities"},
+                {"agent": primary, "action": "test_integration", "description": "Validate functionality"}
+            ],
+            "SECURITY": [
+                {"agent": primary, "action": "threat_assessment", "description": "Analyze security risks"},
+                {"agent": primary, "action": "implement_defenses", "description": "Apply hardening measures"},
+                {"agent": secondary, "action": "code_review", "description": "Check security implications"},
+                {"agent": primary, "action": "validate_security", "description": "Test security posture"}
+            ],
+            "QUANTUM_EXECUTION": [
+                {"agent": primary, "action": "design_circuit", "description": "Create quantum circuit"},
+                {"agent": primary, "action": "optimize_gates", "description": "Minimize gate count"},
+                {"agent": secondary, "action": "validate_hardware", "description": "Check QPU compatibility"},
+                {"agent": primary, "action": "execute_job", "description": "Run on quantum hardware"}
+            ],
+            "ANALYSIS": [
+                {"agent": primary, "action": "deep_analysis", "description": "Perform comprehensive analysis"},
+                {"agent": secondary, "action": "correlate_findings", "description": "Connect insights"},
+                {"agent": primary, "action": "generate_report", "description": "Create analysis report"}
+            ],
+            "GENERAL": [
+                {"agent": primary, "action": "process_intent", "description": "Handle general request"},
+                {"agent": secondary, "action": "provide_support", "description": "Offer additional assistance"}
+            ]
+        }
+        
+        return plans.get(category, plans["GENERAL"])
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

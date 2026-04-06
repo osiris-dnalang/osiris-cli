@@ -851,6 +851,8 @@ class OsirisTUI(App):
         self._status_timer = self.set_interval(2.0, self._refresh_status)
         # Start swarm panel refresh timer
         self._swarm_timer = self.set_interval(4.0, self._refresh_swarm)
+        # Start quantum telemetry timer
+        self._quantum_timer = self.set_interval(5.0, self._refresh_quantum_telemetry)
 
         # Signal Scimitar mouse: boot nominal
         try:
@@ -1164,6 +1166,7 @@ class OsirisTUI(App):
             "/diff": lambda a: tool_diff(a),
             "/test": lambda a: tool_test(a),
             "/profile": lambda _: tool_profile(),
+            "/ingest": lambda a: self.ingest_unstructured_text(a) if a else "Usage: /ingest <text>",
         }
 
         if command in tool_map:
@@ -1289,6 +1292,73 @@ class OsirisTUI(App):
             for r in recent[-10:]:
                 ts = datetime.fromtimestamp(r["timestamp"]).strftime("%H:%M")
                 chat.write(Text(f"  [{ts}] {r['text'][:80]}", style="dim"))
+
+    def _refresh_quantum_telemetry(self) -> None:
+        """Refresh quantum job telemetry display."""
+        try:
+            # Import quantum runtime if available
+            from qiskit_ibm_runtime import QiskitRuntimeService
+            
+            service = QiskitRuntimeService()
+            jobs = service.jobs(limit=5)  # Get recent jobs
+            
+            telemetry_text = Text("Quantum Telemetry:\n", style="bold blue")
+            
+            for job in jobs:
+                status = job.status()
+                backend = job.backend().name if job.backend() else "Unknown"
+                shots = getattr(job, 'shots', 'N/A')
+                telemetry_text.append(f"• {backend}: {status} ({shots} shots)\n", style="cyan")
+            
+            # Update events log with telemetry
+            events = self.query_one("#events-log", RichLog)
+            events.write(telemetry_text)
+            
+        except ImportError:
+            # Qiskit not available
+            pass
+        except Exception as e:
+            events = self.query_one("#events-log", RichLog)
+            events.write(f"Quantum telemetry error: {e}", style="red")
+
+    def ingest_unstructured_text(self, text: str) -> None:
+        """Ingest and process unstructured text data."""
+        # Store in memory
+        self.memory.add(text, category="unstructured_input")
+        
+        # Analyze with intent router
+        try:
+            from .intent_router import IntentResult
+            
+            # Simple keyword matching for demo
+            intent = "analyze" if "analyze" in text.lower() else "chat"
+            result = IntentResult(
+                command=intent,
+                args=[text],
+                confidence=0.8,
+                raw_intent=text
+            )
+            
+            # Display processing
+            chat = self.query_one("#chat-log", RichLog)
+            chat.write(f"Ingested text: {text[:100]}...", style="green")
+            chat.write(f"Routed to: /{result.command}", style="yellow")
+            
+            # Process the intent
+            self._process_ingested_intent(result)
+            
+        except Exception as e:
+            chat = self.query_one("#chat-log", RichLog)
+            chat.write(f"Text ingestion error: {e}", style="red")
+
+    def _process_ingested_intent(self, intent_result) -> None:
+        """Process the ingested intent result."""
+        # Simulate processing
+        tools = self.query_one("#tools-log", RichLog)
+        tools.write(f"Processing /{intent_result.command} with args: {intent_result.args}", style="magenta")
+        
+        # Here you would call the actual command handlers
+        # For now, just acknowledge
 
     def _export_session(self, fmt: str):
         """Export session transcript to file."""
