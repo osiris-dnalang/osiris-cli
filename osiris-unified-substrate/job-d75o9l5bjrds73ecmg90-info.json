@@ -1,0 +1,35 @@
+{
+  "backend": "ibm_torino",
+  "created": "2026-03-31T08:24:52.707578Z",
+  "estimated_running_time_seconds": 485.432752813,
+  "id": "d75o9l5bjrds73ecmg90",
+  "cost": 600,
+  "params": {
+    "pubs": [
+      [
+        {
+          "__type__": "QuantumCircuit",
+          "__value__": "eJyt1wVQ1Gkch/H9rwF2d2IXdidiYivYiYiKYrCC3XHd3d3d3d0det3d7Xl3ul/2WeQ7pzPneDujHx7GhYV5399vHZ+WPjIto0q4RBCKPYLleXxUP1R2figx+sGO6J8wnwwX+7i8/srKiWQV5OQnd+2UEt61flOXpJ3rNuQFhc8KgviXij+CYl9FjxJYEkthaUzARCyDZbFc8VcSfVTAilgJK2MVrIrVsDrWwJpYC2tjHayL9bA+NsCG2AgbYxI2wabYDJtjC2yJrbA1tsG22A6TsT12wI7YCTtjF+yK3bA79sCe2At7Yx/si/2wPw7AFByIqTgIB+MQHIrDcDim4QgciaNwNI7BsTgOx+METMcMnIiTcDJOwak4DafjDJyJs3A2zsFMnItZOA+zcT4uwIWYg4twMebiElyKy3A5xu9jBFdgPhbgSlyFq3ENrsV1uB434EbchJtxC27Fbbg9S5MhHCoZLMnOjL+o+COwKs1ngtCBHxOmDcvMz9YPOjD+W0ysnTw4Y0/S7gFFc+VgT06fUvTkw/hGZVIO4cmph/MqU/+fbxT+9/MKv+ag/U/e/zv5b6/scH5/0VcWH/wHeGWFj9TMSCQnO1LspcWfcbBvOTp6sAoisR8mdu0O4RkDs2L/JrbXon/2Rh+8vHDhttsWSggyl2bl5ObG73jR2cYdeAQeiUfh0XgMHovH4fF4Ap6IJ+HJeAqeiqfh6XgGnoln4dl4Dp6L5+H5eAFeiBfhxXgJXoqX4eV4BV6JV+HVeA1ei9fh9XgD3og34c14C96Kt+HteAfeiXfh3XgP3ov34f34AD6ID+HD+Ag+io/h4/gEPolP4dP4DD6Lz+Hz+AK+iC/hy/gKvoqv4ev4Br6JO3EXvoVv4zv4Lr6H7+MH+CF+hB/jJ/gpfoaf4xf4JX6FX+M3+C1+h9/jD/gj/oQ/4y/4K/6Gv+MfuBv/xD34F/6N/+DeGEXvm/kgYGQFvLcNeG8blMqL7biid8UB72qD+LvahP0DJPAMe5bwLOlZyrO0Z4JnomcZz7Ke5TzLe1bwrOhZybOyZxXPqp7VPKt71vCs6VnLs7ZnHc+6nvU863s28Gzo2cizsWeSZxPPpp7NPJt7tvBs6dnKs7VnG8+2nu08kz3be3bw7OjZybOzZxfPrp7dPLt79vDs6dnLs7dnH8++nv08+3sO8EzxLHxPEX+3HcTeodg/SPUc5DnYc4jnUM9hnsM90zxHeI70HOU52nOM51jPcZ7jPSd4pntmeE70nOQ52XOK51TPaZ7TPWd4zvSc5Tnbc45npudczyzPeZ7ZnvM9F3gu9MzxXOS52DPXc4nnUs9lnss98zwjnis88z0LPFd6rvJc7bnGc63nOs/1nhs8N3pu8tzsucVzq6eus264Hrr7Wtja0lrN2seFSzgUW7fasVqs2qZaodqbWpbakFqL2oVagNp6WnXab1pq2mRaX9pZWlTaTlpJ2kNaPto4jUOx3aKFoi2i1aF9oSWhzaB1oB2gwa9prxGvua5hrgmusa1ZrQGtqaxRrPmroatJq/GqmapBqumpkak5qeGoiZgSis0yDTBNLY0qzScNJU0ijR/NHA0aTReNFM0RDQ9NDI0JzQYNBE0BXX3dd11y3WxdZ91hXVzdVl1R3cs5odgN1LXTXdMF063SVdL90aXRTdH10J3QRdDp15HXOdfh1onWMdbZ1YHVKdXR1HnUIdTJ03HTGdPB0mnSEdK52RyKnRAdC/3Hb/s+kJmMTQ=="
+        },
+        {
+          "__value__": "eJyb7BfqGxDJyFDGUK2eklqcXKRupaBuk2ahrqOgnpZfVFKUmBefX5SSChJ3S8wpTgWKF2ckFqQC+RoGOpo6CrUKFAAuAFOzG1s=",
+          "__type__": "ndarray"
+        },
+        1000000
+      ]
+    ],
+    "support_qiskit": true,
+    "version": 2,
+    "options": {}
+  },
+  "program": {
+    "id": "sampler"
+  },
+  "state": {
+    "reason": "Failed to execute program: A control instrument error occurred. -- localhost/PURIFIED
+    "reason_code": 8056,
+    "status": "Failed"
+  },
+  "status": "Failed",
+  "user_id": "IBMid-696001J81D"
+}

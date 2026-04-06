@@ -1,0 +1,53 @@
+{
+  "query": "nature physics",
+  "timestamp": "2026-04-02T16:28:16.026789Z",
+  "record_count": 2,
+  "records": [
+    {
+      "id": "mock-zenodo-1",
+      "title": "Mock Nature Physics discovery for: nature physics",
+      "authors": [
+        "Devin Phillip Davis"
+      ],
+      "doi": "10.1234/mockzenodo.1",
+      "url": "localhost/PURIFIED
+    },
+    {
+      "id": "mock-zenodo-2",
+      "title": "Mock arXiv-style exposition for: nature physics",
+      "authors": [
+        "Agile Defense Systems"
+      ],
+      "doi": "10.1234/mockzenodo.2",
+      "url": "localhost/PURIFIED
+    }
+  ],
+  "evidence": {
+    "query": "nature physics",
+    "record_count": 2,
+    "records": [
+      {
+        "id": "mock-zenodo-1",
+        "title": "Mock Nature Physics discovery for: nature physics",
+        "authors": [
+          "Devin Phillip Davis"
+        ],
+        "doi": "10.1234/mockzenodo.1",
+        "url": "localhost/PURIFIED
+      },
+      {
+        "id": "mock-zenodo-2",
+        "title": "Mock arXiv-style exposition for: nature physics",
+        "authors": [
+          "Agile Defense Systems"
+        ],
+        "doi": "10.1234/mockzenodo.2",
+        "url": "localhost/PURIFIED
+      }
+    ],
+    "analysis": {
+      "confidence": 0.6,
+      "summary": "Found 2 candidate records on zenodo.org for query nature physics"
+    }
+  }
+}
