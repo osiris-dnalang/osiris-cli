@@ -12,7 +12,7 @@ from datetime import datetime
 from dataclasses import dataclass
 
 # Textual TUI framework
-from textual.app import ComposeResult, on
+from textual.app import App, ComposeResult, on
 from textual.containers import Container, Vertical, Horizontal, ScrollableContainer
 from textual.widgets import Header, Footer, Static, Input, Label, Button, RichLog
 from textual.binding import Binding
@@ -341,6 +341,97 @@ Hotkeys:
         return help_text
 
 
+class OsirisTextualApp(App):
+    """Textual chat-native OSIRIS interface"""
+
+    TITLE = "OSIRIS Quantum Discovery System"
+    BINDINGS = [
+        Binding("ctrl+c", "quit", "Quit"),
+        Binding("f1", "show_help", "Help"),
+        Binding("f2", "show_status", "Status")
+    ]
+
+    def __init__(self):
+        super().__init__()
+        self.osiris = OsirisApp()
+        self.chat_log = ChatLog()
+        self.status_panel = StatusPanel()
+        self.hotkeys_panel = HotkeysPanel()
+        self.input_widget = Input(placeholder="Type or paste natural language here, then press Enter...", id="user_input")
+
+    def compose(self) -> ComposeResult:
+        yield Header(show_clock=True, title=self.TITLE)
+
+        with Container():
+            with Horizontal():
+                yield self.chat_log
+                with Vertical():
+                    yield self.status_panel
+                    yield self.hotkeys_panel
+
+            with Horizontal():
+                yield self.input_widget
+
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.chat_log.write("[bold green]⚛ Welcome to OSIRIS. Type or paste commands below.[/bold green]\n")
+        self.chat_log.write("[dim]Press F1 for help, F2 for status, or Ctrl+C to quit.[/dim]\n")
+        self.refresh_status()
+        self.set_focus(self.input_widget)
+
+    def refresh_status(self) -> None:
+        self.status_panel.update_status(
+            queue_size=len(self.osiris.chat_history),
+            last_result=self.osiris.chat_history[-1].content if self.osiris.chat_history else "Ready",
+            token_status="connected" if self.osiris.token else "no token"
+        )
+
+    async def submit_message(self, user_input: str) -> None:
+        if not user_input:
+            return
+
+        message = ChatMessage(
+            sender="user",
+            content=user_input,
+            timestamp=datetime.now().isoformat(),
+            message_type="text"
+        )
+        self.chat_log.add_message(message)
+
+        response_text = await self.osiris.process_user_input(user_input)
+
+        response = ChatMessage(
+            sender="osiris",
+            content=response_text,
+            timestamp=datetime.now().isoformat(),
+            message_type="result"
+        )
+        self.chat_log.add_message(response)
+        self.input_widget.value = ""
+        self.refresh_status()
+
+    @on(Input.Submitted)
+    async def handle_input(self, event: Input.Submitted) -> None:
+        await self.submit_message(event.value)
+
+    async def action_show_help(self) -> None:
+        self.chat_log.write("[cyan]Type any natural language command, such as:\n  - 'benchmark ibm_torino with extreme depth'\n  - 'run xeb experiment'\n  - 'publish to zenodo'\n  - 'show status'[/cyan]\n")
+
+    async def action_show_status(self) -> None:
+        status_text = (
+            f"IBM Quantum Token: {'SET' if self.osiris.token else 'NOT SET'}\n"
+            f"Zenodo Token: {'SET' if self.osiris.zenodo_token else 'NOT SET'}\n"
+            f"Chat History: {len(self.osiris.chat_history)} messages"
+        )
+        self.chat_log.write(f"[yellow]{status_text}[/yellow]\n")
+
+
+def run_textual_mode() -> None:
+    """Run the Textual OSIRIS application"""
+    OsirisTextualApp().run()
+
+
 async def run_cli_mode():
     """Run OSIRIS in CLI chat mode (for testing)"""
     
@@ -378,9 +469,9 @@ async def run_cli_mode():
             print(f"⚠ Error: {e}\n")
 
 
-async def main():
+def main():
     """Main entry point"""
-    await run_cli_mode()
+    run_textual_mode()
 
 
 if __name__ == "__main__":
@@ -391,4 +482,4 @@ if __name__ == "__main__":
         sys.exit(1)
     
     # Run TUI
-    asyncio.run(main())
+    main()

@@ -49,8 +49,8 @@ def cmd_chat(args):
     """Launch chat-native TUI"""
     print("\n⚛ Launching OSIRIS Chat Interface...\n")
     
-    from osiris_tui_core import run_cli_mode
-    asyncio.run(run_cli_mode())
+    from osiris_tui_core import run_textual_mode
+    run_textual_mode()
 
 def cmd_benchmark(args):
     """Run quantum hardware benchmarking"""
