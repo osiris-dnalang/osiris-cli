@@ -138,6 +138,50 @@ def cmd_status(args):
     
     print("\n" + "="*70)
 
+
+def cmd_intent(args):
+    """Route free-text instructions through the NCLM intent router."""
+    print("\n⚛ Routing natural language intent...\n")
+    try:
+        router_root = Path(__file__).parent / "osiris-unified-substrate" / "copilot-sdk-dnalang" / "src"
+        sys.path.insert(0, str(router_root))
+        from dnalang_sdk.nclm.intent_router import get_intent_router
+    except Exception as exc:
+        print(f"⚠ Intent router unavailable: {exc}")
+        print("Please ensure osiris-unified-substrate/copilot-sdk-dnalang/src is present and importable.")
+        return
+
+    router = get_intent_router(use_llm=not args.no_llm)
+    result = router.route(args.text)
+
+    if not result.routed or not result.command:
+        print("⚠ Could not identify a high-confidence intent. Try a clearer command.")
+        print(f"Parsed input: {result.raw_intent}")
+        return
+
+    print(f"→ Routed to OSIRIS command: {result.command} {' '.join(result.args)} (confidence={result.confidence:.2f})")
+
+    dummy = type('Dummy', (), {})()
+    if result.command == 'chat':
+        cmd_chat(dummy)
+    elif result.command == 'benchmark':
+        dummy.output = getattr(args, 'output', 'quantum_benchmark_results.json')
+        dummy.quick = getattr(args, 'quick', False)
+        cmd_benchmark(dummy)
+    elif result.command == 'run':
+        dummy.campaign = 'week1_foundation'
+        cmd_run(dummy)
+    elif result.command == 'status':
+        cmd_status(dummy)
+    elif result.command == 'publish':
+        dummy.mode = getattr(args, 'mode', 'all')
+        dummy.sandbox = getattr(args, 'sandbox', False)
+        cmd_publish(dummy)
+    else:
+        print(f"⚠ Routed to unsupported command: {result.command}. Showing help instead.")
+        cmd_help(args)
+
+
 def cmd_help(args):
     """Show help"""
     help_text = """
@@ -151,6 +195,7 @@ Commands:
   orchestrate       Run full OSIRIS orchestrator pipeline
   publish           Publish results to Zenodo
   status            Show system status
+  intent            Route natural language into OSIRIS commands
   help              Show this help
 
 Publishing:
@@ -218,6 +263,11 @@ def main():
     orchestrator_parser = subparsers.add_parser('orchestrate', help='Run full OSIRIS orchestrator pipeline')
     orchestrator_parser.add_argument('--quick', action='store_true', help='Quick mode (skip publication)')
 
+    # Intent command
+    intent_parser = subparsers.add_parser('intent', help='Route natural language into OSIRIS commands')
+    intent_parser.add_argument('--text', required=True, help='Natural language instruction')
+    intent_parser.add_argument('--no-llm', action='store_true', help='Disable LLM fallback for intent routing')
+
     # Publish command
     publish_parser = subparsers.add_parser('publish', help='Publish results to Zenodo')
     publish_parser.add_argument('--mode', default='all', choices=['rqc', 'applications', 'all'],
@@ -246,6 +296,8 @@ def main():
         cmd_orchestrate(args)
     elif args.command == 'status':
         cmd_status(args)
+    elif args.command == 'intent':
+        cmd_intent(args)
     elif args.command == 'help':
         cmd_help(args)
     else:

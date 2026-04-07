@@ -1,32 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # OSIRIS Setup Script
 # ═══════════════════════════════════════════════════════════════════════════════
-# This script sets up OSIRIS as a global command with all dependencies
+# This script sets up OSIRIS as a local command with dependencies and alias support
 
 set -e
 
-OSIRIS_DIR="/workspaces/osiris-cli"
-VENV_DIR="${OSIRIS_DIR}/venv"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_DIR="${REPO_ROOT}/venv"
+LOCAL_BIN="${HOME}/.local/bin"
+WRAPPER_FILE="${LOCAL_BIN}/osiris"
 
 echo "╔════════════════════════════════════════════════════════════════════════════╗"
 echo "║  OSIRIS Automated Discovery System - Setup                                ║"
 echo "╚════════════════════════════════════════════════════════════════════════════╝"
 echo ""
-
-# Check if in correct directory
-if [ ! -f "${OSIRIS_DIR}/osiris_cli.py" ]; then
-    echo "❌ Error: Not in OSIRIS directory"
-    echo "   Expected: ${OSIRIS_DIR}/osiris_cli.py"
-    exit 1
-fi
-
-echo "📦 Checking dependencies..."
-
-# Install system dependencies
-if ! command -v python3 &> /dev/null; then
-    echo "❌ python3 not found. Installing..."
-    sudo apt-get update && sudo apt-get install -y python3 python3-venv python3-pip
-fi
 
 # Create virtual environment
 if [ ! -d "${VENV_DIR}" ]; then
@@ -41,127 +28,78 @@ source "${VENV_DIR}/bin/activate"
 echo "📥 Upgrading pip..."
 pip install --upgrade pip setuptools wheel > /dev/null 2>&1
 
-# Install requirements
+# Install Python dependencies
 echo "📥 Installing Python dependencies..."
-if [ -f "${OSIRIS_DIR}/requirements.txt" ]; then
-    pip install -r "${OSIRIS_DIR}/requirements.txt"
+if [ -f "${REPO_ROOT}/requirements.txt" ]; then
+    pip install -r "${REPO_ROOT}/requirements.txt"
 else
-    pip install qiskit qiskit-ibmq qiskit-machine-learning pandas numpy scipy matplotlib rich requests
+    pip install qiskit qiskit-ibm-runtime qiskit-aer numpy scipy matplotlib requests PyYAML
 fi
 
-# Create global command wrapper
-echo "🔗 Creating global 'osiris' command..."
-
-WRAPPER_FILE="/usr/local/bin/osiris"
-
-sudo tee "${WRAPPER_FILE}" > /dev/null << 'EOF'
-#!/bin/bash
-# OSIRIS CLI Wrapper
-cd /workspaces/osiris-cli
-source venv/bin/activate
-exec python3 "$HOME/.local/bin/osiris_launcher.py" "$@"
+# Create local executable wrapper
+echo "🔗 Installing local 'osiris' command into ${LOCAL_BIN}..."
+mkdir -p "${LOCAL_BIN}"
+cat > "${WRAPPER_FILE}" << EOF
+#!/usr/bin/env bash
+REPO_ROOT="${REPO_ROOT}"
+cd "${REPO_ROOT}"
+exec "${REPO_ROOT}/venv/bin/python3" "${REPO_ROOT}/osiris_launcher.py" "$@"
 EOF
+chmod +x "${WRAPPER_FILE}"
 
-sudo chmod +x "${WRAPPER_FILE}"
-
-# Create launcher script
-LAUNCHER_FILE="${HOME}/.local/bin/osiris_launcher.py"
-mkdir -p "$(dirname "${LAUNCHER_FILE}")"
-
-tee "${LAUNCHER_FILE}" > /dev/null << 'EOF'
-#!/usr/bin/env python3
-import sys
-import subprocess
-from pathlib import Path
-
-osiris_dir = Path("/workspaces/osiris-cli")
-
-# If no args or first arg is a hotkey, start TUI
-if len(sys.argv) == 1 or (len(sys.argv) > 1 and len(sys.argv[1]) == 1):
-    subprocess.run([sys.executable, str(osiris_dir / "osiris_tui.py")] + sys.argv[1:])
-else:
-    # Otherwise route to CLI
-    subprocess.run([sys.executable, str(osiris_dir / "osiris_cli.py")] + sys.argv[1:])
-EOF
-
-chmod +x "${LAUNCHER_FILE}"
-
-# Add bash completion
-echo "🎯 Installing bash completion..."
-
-COMPLETION_FILE="/etc/bash_completion.d/osiris"
-
-sudo tee "${COMPLETION_FILE}" > /dev/null << 'EOF'
-_osiris_completion() {
-    local cur prev opts
-    COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    
-    opts="run list status publish help --help -h"
-    
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    return 0
-}
-
-complete -F _osiris_completion osiris
-EOF
-
-sudo chmod +x "${COMPLETION_FILE}"
-
-# Create shell profile entries
+# Add ~/.local/bin to shell profile if needed
 echo "🔧 Updating shell profiles..."
-
 for profile in ~/.bashrc ~/.zshrc; do
     if [ -f "$profile" ]; then
-        if ! grep -q "OSIRIS_SETUP" "$profile"; then
+        if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$profile"; then
             cat >> "$profile" << 'EOF'
 
-# OSIRIS Configuration
-export OSIRIS_HOME="/workspaces/osiris-cli"
-OSIRIS_SETUP=1
+# OSIRIS local command path
+export PATH="$HOME/.local/bin:$PATH"
+EOF
+        fi
+        if ! grep -q 'export OSIRIS_HOME="${REPO_ROOT}"' "$profile"; then
+            cat >> "$profile" << 'EOF'
+
+# OSIRIS environment
+export OSIRIS_HOME="${REPO_ROOT}"
 EOF
         fi
     fi
 done
 
-# Verify installation
+# Create discovery output directory
+mkdir -p "${REPO_ROOT}/discoveries"
+
 echo ""
-echo "✓ Verifying installation..."
-
+echo "✓ Verifying OSIRIS installation..."
 if [ -f "${WRAPPER_FILE}" ]; then
-    echo "  ✓ Global 'osiris' command installed"
+    echo "  ✓ Local 'osiris' command installed at: ${WRAPPER_FILE}"
 fi
 
-if [ -f "${LAUNCHER_FILE}" ]; then
-    echo "  ✓ Launcher script installed"
-fi
-
-# Test imports
 echo ""
 echo "✓ Testing Python imports..."
-cd "${OSIRIS_DIR}"
-
-python3 -c "from osiris_auto_discovery import AutoDiscoveryPipeline; print('  ✓ osiris_auto_discovery')" 2>/dev/null || echo "  ⚠ osiris_auto_discovery has issues"
-python3 -c "from osiris_orchestrator import WorkflowScheduler; print('  ✓ osiris_orchestrator')" 2>/dev/null || echo "  ⚠ osiris_orchestrator has issues"
-python3 -c "from osiris_agents import AgentManager; print('  ✓ osiris_agents')" 2>/dev/null || echo "  ⚠ osiris_agents has issues"
-python3 -c "from rich.console import Console; print('  ✓ Rich TUI library')" 2>/dev/null || echo "  ⚠ Rich library needs installation"
+cd "${REPO_ROOT}"
+python3 -c "from osiris_auto_discovery import AutoDiscoveryPipeline; print('  ✓ osiris_auto_discovery')" 2>/dev/null || echo "  ⚠ osiris_auto_discovery import failed"
+python3 -c "from osiris_orchestrator import WorkflowScheduler; print('  ✓ osiris_orchestrator')" 2>/dev/null || echo "  ⚠ osiris_orchestrator import failed"
+python3 -c "from osiris_launcher import main; print('  ✓ osiris_launcher')" 2>/dev/null || echo "  ⚠ osiris_launcher import failed"
+python3 -c "from rich.console import Console; print('  ✓ Rich library')" 2>/dev/null || echo "  ⚠ rich import failed"
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════════════════╗"
 echo "║  ✅ OSIRIS SETUP COMPLETE                                                 ║"
 echo "╚════════════════════════════════════════════════════════════════════════════╝"
 echo ""
-echo "Quick start:"
-echo "  1. Source your shell: source ~/.bashrc  (or ~/.zshrc)"
-echo "  2. Start OSIRIS:      osiris"
-echo "  3. Use commands:      osiris run          (execute experiments)"
-echo "                        osiris list         (show templates)"
-echo "                        osiris status       (check progress)"
-echo "                        osiris publish      (publish results)"
+echo "Next steps:"
+echo "  1. Reload shell: source ~/.bashrc or source ~/.zshrc"
+echo "  2. Run OSIRIS with: osiris status"
+echo "  3. Run an experiment: osiris run --campaign week1_foundation"
+echo "  4. Launch interactive chat: osiris chat"
 echo ""
-echo "Available hotkeys in TUI:"
-echo "  'a' → Analyze     'e' → Execute    'v' → Visualize"
-echo "  'o' → Optimize    'd' → Discover   'x' → Explain"
-echo "  'p' → Publish     '?' → Help       'q' → Quit"
+echo "Helpful commands:" 
+  echo "  - osiris status"
+  echo "  - osiris benchmark --quick"
+  echo "  - osiris publish --mode all --sandbox"
+  echo "  - osiris intent --text 'run a benchmark'"
+
 echo ""

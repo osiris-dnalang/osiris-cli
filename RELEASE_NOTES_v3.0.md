@@ -83,7 +83,12 @@
    - Hardware backend error handling
    - Graceful fallback to mock execution
 
-4. **Documentation**
+5. **Portable OSIRIS command support**
+   - `setup.sh` now installs a local `osiris` wrapper into `~/.local/bin`
+   - Shell profile updates ensure `osiris` works after cloning and install
+   - No root `/usr/local/bin` dependency is required
+
+6. **Documentation**
    - Comprehensive README (4,200 words)
    - Methodology guide (280 lines)
    - Quickstart reference

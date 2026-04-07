@@ -80,8 +80,9 @@ Effect Size: 0.83 (Medium-Large)
 git clone https://github.com/osiris-dnalang/osiris-cli.git
 cd osiris-cli
 
-# Install dependencies
-pip install -r requirements.txt
+# Install OSIRIS and register the command
+bash setup.sh
+source ~/.bashrc   # or source ~/.zshrc
 
 # Optional: Add IBM Quantum token for hardware execution
 export IBM_QUANTUM_TOKEN="your_token_here"
@@ -89,7 +90,7 @@ export IBM_QUANTUM_TOKEN="your_token_here"
 
 ### Launch TUI
 ```bash
-python3 osiris_tui.py
+osiris chat
 ```
 
 ### Run Full Benchmark
