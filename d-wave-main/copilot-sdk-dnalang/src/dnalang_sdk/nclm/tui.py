@@ -716,7 +716,7 @@ class OsirisTUI(App):
     }
 
     #input-container {
-        height: 3;
+        height: 5;
         dock: bottom;
         border: solid $primary;
         border-title-color: $text;
@@ -724,7 +724,13 @@ class OsirisTUI(App):
 
     #input-field {
         width: 100%;
-        height: 1;
+        height: 3;
+    }
+
+    .input-label {
+        text-style: bold;
+        color: $text;
+        margin: 0 1;
     }
 
     .section-title {
@@ -846,9 +852,10 @@ class OsirisTUI(App):
         yield StatusBar(self.telemetry, id="status-bar")
 
         with Container(id="input-container"):
+            yield Static("Type your query or command:", classes="input-label")
             yield Input(
                 id="input-field",
-                placeholder="Ask naturally · /help for commands · [a]mplify, [d]eepen, [q]uantum responses",
+                placeholder="Ask OSIRIS anything... (/help for commands)",
             )
 
         yield Footer()
@@ -866,7 +873,7 @@ class OsirisTUI(App):
         events.border_title = "📡 Events"
 
         inp = self.query_one("#input-container", Container)
-        inp.border_title = "◈ OSIRIS"
+        inp.border_title = "⚛ OSIRIS Input"
 
         # Boot sequence
         self._boot()
@@ -1371,7 +1378,11 @@ class OsirisTUI(App):
             pass
         except Exception as e:
             events = self.query_one("#events-log", RichLog)
-            events.write(f"Quantum telemetry error: {e}", style="red")
+            error_text = str(e)
+            if "Unable to find account" in error_text or "AccountNotFoundError" in type(e).__name__:
+                events.write(Text("Quantum telemetry unavailable: IBM account not configured", style="yellow"))
+            else:
+                events.write(Text(f"Quantum telemetry error: {e}", style="red"))
 
     def ingest_unstructured_text(self, text: str) -> None:
         """Ingest and process unstructured text data."""
@@ -1393,21 +1404,21 @@ class OsirisTUI(App):
             
             # Display processing
             chat = self.query_one("#chat-log", RichLog)
-            chat.write(f"Ingested text: {text[:100]}...", style="green")
-            chat.write(f"Routed to: /{result.command}", style="yellow")
+            chat.write(Text(f"Ingested text: {text[:100]}...", style="green"))
+            chat.write(Text(f"Routed to: /{result.command}", style="yellow"))
             
             # Process the intent
             self._process_ingested_intent(result)
             
         except Exception as e:
             chat = self.query_one("#chat-log", RichLog)
-            chat.write(f"Text ingestion error: {e}", style="red")
+            chat.write(Text(f"Text ingestion error: {e}", style="red"))
 
     def _process_ingested_intent(self, intent_result) -> None:
         """Process the ingested intent result."""
         # Simulate processing
         tools = self.query_one("#tools-log", RichLog)
-        tools.write(f"Processing /{intent_result.command} with args: {intent_result.args}", style="magenta")
+        tools.write(Text(f"Processing /{intent_result.command} with args: {intent_result.args}", style="magenta"))
         
         # Here you would call the actual command handlers
         # For now, just acknowledge

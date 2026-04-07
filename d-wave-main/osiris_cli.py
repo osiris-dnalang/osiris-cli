@@ -2422,14 +2422,8 @@ def main():
 
         # If it's just "osiris" or "osiris interactive", launch TUI directly
         if len(args) == 0 or (len(args) == 1 and args[0] == "interactive"):
-            try:
-                asyncio.get_running_loop()
-                # We're in an event loop, use async version
-                asyncio.run(main_async())
-            except RuntimeError:
-                # No event loop, safe to launch TUI directly
-                from dnalang_sdk.nclm.tui import run_tui
-                run_tui()
+            from dnalang_sdk.nclm.tui import run_tui
+            run_tui()
         else:
             # Normal async operation
             asyncio.run(main_async())

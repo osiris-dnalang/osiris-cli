@@ -104,6 +104,20 @@ def cmd_run(args):
     
     print(f"\n✓ Campaign complete! {len(results)} experiments executed")
 
+def cmd_orchestrate(args):
+    """Run the full OSIRIS research orchestrator pipeline"""
+    print("⚛ Running full OSIRIS research orchestrator...\n")
+    from osiris_rqc_orchestrator import ResearchOrchestrator
+
+    orchestrator = ResearchOrchestrator()
+    if args.quick:
+        orchestrator.step_1_system_check()
+        orchestrator.step_2_rqc_vs_rcs_experiments()
+        orchestrator.step_3_application_experiments()
+    else:
+        asyncio.run(orchestrator.run_full_pipeline())
+
+
 def cmd_status(args):
     """Show system status"""
     print("\n" + "="*70)
@@ -134,8 +148,15 @@ Commands:
   chat              Launch chat-native TUI interface
   benchmark         Run quantum hardware benchmarking suite
   run               Execute experiment campaign
+  orchestrate       Run full OSIRIS orchestrator pipeline
+  publish           Publish results to Zenodo
   status            Show system status
   help              Show this help
+
+Publishing:
+  osiris publish --mode all            Publish both RQC and application results
+  osiris publish --mode rqc            Publish only RQC experiment results
+  osiris publish --mode applications   Publish only application results
 
 Benchmarking:
   osiris benchmark --output results.json       # Full benchmark
@@ -160,6 +181,9 @@ Examples:
   
   # Run full week-1 campaign
   osiris run --campaign week1_foundation
+  
+  # Run the full OSIRIS orchestrator pipeline
+  osiris orchestrate
   
   # Check system status
   osiris status
@@ -190,12 +214,16 @@ def main():
                            choices=['week1_foundation', 'week1_adaptive'],
                            help='Campaign to run')
     
-    # Status command
-    subparsers.add_parser('status', help='Show system status')
-    
-    # Help command
-    subparsers.add_parser('help', help='Show help')
-    
+    # Orchestrator command
+    orchestrator_parser = subparsers.add_parser('orchestrate', help='Run full OSIRIS orchestrator pipeline')
+    orchestrator_parser.add_argument('--quick', action='store_true', help='Quick mode (skip publication)')
+
+    # Publish command
+    publish_parser = subparsers.add_parser('publish', help='Publish results to Zenodo')
+    publish_parser.add_argument('--mode', default='all', choices=['rqc', 'applications', 'all'],
+                                help='Publish RQC results, application results, or both')
+    publish_parser.add_argument('--sandbox', action='store_true', help='Use Zenodo sandbox endpoint')
+
     # If no command, default to chat
     if len(sys.argv) == 1:
         args = parser.parse_args(['chat'])
@@ -212,6 +240,10 @@ def main():
         cmd_benchmark(args)
     elif args.command == 'run':
         cmd_run(args)
+    elif args.command == 'publish':
+        cmd_publish(args)
+    elif args.command == 'orchestrate':
+        cmd_orchestrate(args)
     elif args.command == 'status':
         cmd_status(args)
     elif args.command == 'help':

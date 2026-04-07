@@ -16,6 +16,7 @@ class IntentType(Enum):
     """Intent classification"""
     BENCHMARK = "benchmark"
     EXPERIMENT = "experiment"
+    ORCHESTRATE = "orchestrate"
     DEPLOY = "deploy"
     ANALYZE = "analyze"
     PUBLISH = "publish"
@@ -63,6 +64,16 @@ class IntentEngine:
         r"submit",
         r"release",
         r"launch.*production"
+    ]
+    
+    ORCHESTRATE_PATTERNS = [
+        r"orchestrator",
+        r"run.*campaign",
+        r"full.*pipeline",
+        r"research.*pipeline",
+        r"week1",
+        r"rqc.*rcs",
+        r"execute.*pipeline"
     ]
     
     ANALYZE_PATTERNS = [
@@ -142,6 +153,10 @@ class IntentEngine:
         for pattern in self.BENCHMARK_PATTERNS:
             if re.search(pattern, text):
                 return IntentType.BENCHMARK
+        
+        for pattern in self.ORCHESTRATE_PATTERNS:
+            if re.search(pattern, text):
+                return IntentType.ORCHESTRATE
         
         for pattern in self.DEPLOY_PATTERNS:
             if re.search(pattern, text):
@@ -266,6 +281,15 @@ class IntentEngine:
                 "5. Update bibliography"
             ]
         
+        elif intent_type == IntentType.ORCHESTRATE:
+            actions = [
+                "1. Run full research pipeline",
+                "2. Execute RQC vs RCS experiments",
+                "3. Run domain-specific applications",
+                "4. Publish results to Zenodo",
+                "5. Generate archive manifest"
+            ]
+        
         elif intent_type == IntentType.STATUS:
             actions = [
                 "1. Check running jobs",
@@ -289,6 +313,8 @@ class IntentEngine:
             agents = ["packager_agent", "publisher_agent"]
         elif intent_type == IntentType.PUBLISH:
             agents = ["publisher_agent", "citation_agent"]
+        elif intent_type == IntentType.ORCHESTRATE:
+            agents = ["orchestrator_agent", "executor_agent", "publisher_agent"]
         elif intent_type == IntentType.ANALYZE:
             agents = ["analyzer_agent"]
         elif intent_type == IntentType.REFINE:

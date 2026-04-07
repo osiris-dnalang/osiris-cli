@@ -6,10 +6,12 @@ Single entry point: `python osiris_tui_core.py` or `osiris` command
 """
 
 import os
+import io
 import asyncio
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from dataclasses import dataclass
+from contextlib import redirect_stdout, redirect_stderr
 
 # Textual TUI framework
 from textual.app import App, ComposeResult, on
@@ -27,6 +29,7 @@ from osiris_intent_engine import IntentEngine, IntentType
 from osiris_quantum_benchmarker import QuantumHardwareBenchmarker, BenchmarkResult
 from osiris_auto_discovery import AutoDiscoveryPipeline, ExperimentConfig
 from osiris_orchestrator import campaign_week1_foundation, campaign_week1_adaptive
+from osiris_rqc_orchestrator import ResearchOrchestrator
 
 console = Console()
 
@@ -91,7 +94,8 @@ class HotkeysPanel(Static):
             "[2]": "Run Exp",
             "[3]": "Status",
             "[4]": "Deploy",
-            "[5]": "Help",
+            "[5]": "Pipeline",
+            "[6]": "Help",
         }
     
     def update_hotkeys(self, hotkeys: Dict[str, str]):
@@ -136,6 +140,7 @@ class OsirisApp:
         self.intent_engine = IntentEngine()
         self.benchmarker = None
         self.pipeline = None
+        self.orchestrator = None
         self.chat_history: List[ChatMessage] = []
         self.token = os.getenv('IBM_QUANTUM_TOKEN')
         self.zenodo_token = os.getenv('ZENODO_TOKEN')
@@ -165,6 +170,13 @@ class OsirisApp:
             print("✓ Discovery pipeline initialized")
         except Exception as e:
             print(f"⚠ Pipeline init warning: {e}")
+
+        # Initialize orchestrator
+        try:
+            self.orchestrator = ResearchOrchestrator()
+            print("✓ Research orchestrator initialized")
+        except Exception as e:
+            print(f"⚠ Orchestrator init warning: {e}")
     
     async def process_user_input(self, user_input: str) -> str:
         """Process user input through intent engine and execute"""
@@ -204,6 +216,8 @@ class OsirisApp:
             return await self._handle_experiment(intent)
         elif intent.intent_type == IntentType.DEPLOY:
             return await self._handle_deploy(intent)
+        elif intent.intent_type == IntentType.ORCHESTRATE:
+            return await self._handle_orchestrate(intent)
         elif intent.intent_type == IntentType.STATUS:
             return await self._handle_status(intent)
         elif intent.intent_type == IntentType.HELP:
@@ -288,6 +302,26 @@ class OsirisApp:
             response += "Set with: export ZENODO_TOKEN='your_token'\n"
         
         return response
+
+    async def _handle_orchestrate(self, intent) -> str:
+        """Handle full orchestrator pipeline intent"""
+        response = "⚛ Launching full OSIRIS research pipeline...\n"
+
+        if not self.orchestrator:
+            return response + "⚠ Orchestrator unavailable"
+
+        try:
+            # Capture orchestrator streaming output
+            buffer = io.StringIO()
+            with redirect_stdout(buffer), redirect_stderr(buffer):
+                await asyncio.to_thread(self.orchestrator.run_full_pipeline)
+            output = buffer.getvalue()
+            response += "✓ Pipeline complete.\n"
+            response += "\n" + output.strip()
+        except Exception as e:
+            response = f"⚠ Orchestrator error: {e}"
+
+        return response
     
     async def _handle_status(self, intent) -> str:
         """Handle status inquiry"""
@@ -315,6 +349,12 @@ Experiments:
   "run xeb experiment with 50 trials"
   "execute platform stability tests"
   "test with 16 qubits at depth 32"
+
+Research Pipeline:
+  "run full research pipeline"
+  "execute the orchestrator"
+  "run week1 campaign"
+  "perform RQC vs RCS experiments"
 
 Deployment:
   "deploy results to zenodo"
