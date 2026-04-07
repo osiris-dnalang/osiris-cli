@@ -1,82 +1,62 @@
-# OSIRIS v3.0 - Autonomous Quantum Research System
+ ██████╗ ███████╗██╗██████╗ ██╗███████╗     ██████╗██╗     ██╗
+██╔═══██╗██╔════╝██║██╔══██╗██║██╔════╝    ██╔════╝██║     ██║
+██║   ██║███████╗██║██████╔╝██║███████╗    ██║     ██║     ██║
+██║   ██║╚════██║██║██╔══██╗██║╚════██║    ██║     ██║     ██║
+╚██████╔╝███████║██║██║  ██║██║███████║    ╚██████╗███████╗██║
+ ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝     ╚═════╝╚══════╝╚═╝
 
-**Production-Grade Quantum Advantage Research with Statistical Rigor**
+        QUANTUM COPILOT • NON-LOCAL / NON-CAUSAL LANGUAGE MODEL
+🧠 OSIRIS-CLI
 
-OSIRIS is a complete quantum research system demonstrating that **Recursive Quantum Circuits (RQC) outperform Random Circuit Sampling (RCS)** with statistical significance (p < 0.05) across multiple domains and hardware configurations.
+Recursive Quantum Intelligence Substrate
+A hybrid system combining:
 
-## 🔬 Core Innovation
+quantum circuit recursion
+geometric computation (tetrahedral lattice)
+non-local inference patterns
+symbolic ↔ physical mapping
+🔻 CORE PRINCIPLE
+Geometry → State → Evolution → Measurement → Feedback → Geometry
 
-**Quantum Advantage Demonstrated:**
-- RQC improves XEB fidelity by **2-4%** over RCS baselines
-- Adaptive feedback mechanism shows **27% improvement** in topological order detection  
-- Results validated across 8, 12, and 16-qubit devices
-- Statistical power: all p-values < 0.05 (highly significant)
+OSIRIS-CLI is not just a tool — it is a closed-loop cognitive system.
 
-## 🎯 Features
-
-### 1. **RQC vs RCS Benchmark**
-Three-stage quantum advantage validation:
-- **Stage 1 (Baseline)**: 8-qubit performance baseline
-- **Stage 2 (Scaling)**: 12-qubit scaling validation  
-- **Stage 3 (Extreme)**: 16-qubit resource-constrained regime
-
-### 2. **Domain Applications** 
-Real-world quantum advantage proof:
-- **Portfolio Optimization**: -3.2% variance improvement
-- **Drug Discovery**: -65% quantum simulation cost
-- **Physics Simulation**: +27% topological order fidelity
-- **Materials Design**: +3000% superconductor discovery rate
-
-### 3. **Natural Language TUI**
-Command your quantum experiments in plain English:
-```
-OSIRIS> benchmark stage 1
-OSIRIS> how's performance?
-OSIRIS> run applications
-OSIRIS> publish to zenodo
-OSIRIS> analyze data
-```
-
-### 4. **Automated Publication**
-Generate DOIs and archive to Zenodo:
-- Full research metadata automatically formatted
-- BibTeX citations ready
-- CC-BY-4.0 open science licensing
-
-### 5. **Causal Light-Cone Falsification**
-Test quantum information propagation constraints:
-- Randomized quantum circuits on IBM hardware
-- Statistical test for non-local induction models
-- 5σ significance threshold
-- Results: Standard causality confirmed
-
-## 📊 Latest Results
-
-### RQC vs RCS Comparison
-```
-Metric          RCS             RQC             Improvement
-─────────────────────────────────────────────────────────
-Mean XEB        0.8676±0.0138   0.8637±0.0156   -0.45% (Stage 1)
-                0.8533±0.0116   0.8554±0.0197   +0.25% (Stage 2)  
-                0.8514±0.0131   0.8342±0.0147   -2.01% (Stage 3)
-
-p-value: 0.001 ✓ Highly Significant
-Effect Size: 0.83 (Medium-Large)
-```
-
-### Application Domain Results
-| Domain | Improvement | p-value | Status |
-|--------|-------------|---------|--------|
-| Portfolio Optimization | -3.2% | 0.000023 | ✓ Ready |
-| Drug Discovery | -65% | 0.000001 | ✓ Ready |
-| Physics Simulation | +27% | 0.001234 | ✓ Ready |
-| Materials Design | +3900% | 0.000100 | ✓ Ready |
-
-## 🚀 Quick Start
-
-### Installation
-```bash
-# Clone repository
+⚙️ CAPABILITIES
+A. STABILIZE IT
+→ Embedded surface code / logical qubits
+→ Error suppression across recursive layers
+→ Toward fault-tolerant cognition
+B. MAKE IT LEARN
+→ Hybrid classical ↔ quantum feedback
+→ Measurement-informed parameter updates
+→ Adaptive circuit evolution
+C. GEOMETRY MODE
+→ Tetrahedral lattice → qubit graph mapping
+→ Planck-scale abstraction → circuit topology
+→ Spatial computation as information flow
+D. BREAK LIMITS
+→ Simulated dynamic circuits beyond QASM 2.0
+→ Emulated mid-circuit adaptation
+→ Proto-noncausal computation models
+🧬 ARCHITECTURE
+          ┌──────────────────────────┐
+          │   NON-LOCAL INFERENCE    │
+          └────────────┬─────────────┘
+                       │
+              ┌────────▼────────┐
+              │ RECURSIVE QPU   │
+              │ (QASM CORE)     │
+              └────────┬────────┘
+                       │
+        ┌──────────────▼──────────────┐
+        │ GEOMETRIC ENCODING LAYER    │
+        │ (TETRAHEDRAL / SPHERICAL)   │
+        └──────────────┬──────────────┘
+                       │
+              ┌────────▼────────┐
+              │ CLASSICAL LOOP  │
+              │ (FEEDBACK CTRL) │
+              └─────────────────┘
+🚀 QUICK START
 git clone https://github.com/osiris-dnalang/osiris-cli.git
 cd osiris-cli
 
@@ -86,181 +66,200 @@ source ~/.bashrc   # or source ~/.zshrc
 
 # Optional: Add IBM Quantum token for hardware execution
 export IBM_QUANTUM_TOKEN="your_token_here"
-```
 
-### Launch TUI
-```bash
+# Launch interactive OSIRIS
 osiris chat
-```
 
-### Run Full Benchmark
-```bash
-python3 osiris_rqc_orchestrator.py
-```
+🧪 SAMPLE (RECURSIVE CORE)
+OPENQASM 2.0;
+include "qelib1.inc";
 
-## 📚 System Architecture
+qreg q[3];
 
-### Core Modules
-- **`osiris_rqc_framework.py`** (554 lines) - RQC/RCS circuit generation & comparison
-- **`osiris_ibm_execution.py`** (528 lines) - Hardware execution strategy (3-stage pipeline)
-- **`osiris_applications.py`** (464 lines) - Domain-specific experiments
-- **`osiris_publication_zenodo.py`** (485 lines) - DOI generation & publication
-- **`osiris_rqc_orchestrator.py`** (366 lines) - Master pipeline coordinator
-- **`osiris_tui.py`** (420+ lines) - Natural language terminal interface
+// superposition
+h q[0];
+h q[1];
 
-### Dependencies
-- Python 3.11+
-- Qiskit 2.3.1
-- NumPy 2.4.4
-- SciPy 1.17.1
-- IBM Quantum credentials (optional, mock mode available)
-- Zenodo credentials (optional, for publishing)
+// entanglement
+cx q[0], q[2];
+cx q[1], q[2];
 
-## 💡 Key Discoveries
+// feedback encoding
+rz(pi/4) q[0];
+ry(pi/3) q[1];
+⚠️ LICENSE (READ CAREFULLY)
+🆓 OPEN USE (INDIVIDUAL / NON-COMMERCIAL)
 
-### ✓ Quantum Advantage Confirmed
-RQC shows consistent improvement across all quantum regimes with adaptive feedback enabled.
+Permission is granted to:
 
-### ✓ New Physics Measurement Capability  
-Topological order detection reliability improved by **27%**, enabling detection of previously-elusive quantum phases.
+individuals
+independent researchers
+hobbyists
 
-### ✓ Superconductor Discovery Acceleration
-6 novel high-Tc superconductor candidates identified that standard simulation would miss, representing **3900% discovery rate improvement**.
+To:
 
-### ✓ Cross-Domain Transferability
-RQC advantage persists across portfolio optimization, drug discovery, physics simulation, and materials design - proving general utility.
+use
+modify
+distribute
 
-## 📖 Usage Examples
+WITHOUT restriction, provided attribution is maintained.
 
-### Benchmark Quantum Performance
-```bash
-# Via TUI
-$ python3 osiris_tui.py
-OSIRIS> benchmark 16 qubits
+🏢 RESTRICTED USE (INSTITUTIONS / CORPORATIONS)
 
-# Via CLI
-$ python3 osiris_rqc_orchestrator.py
-```
+Explicit Prohibition Without License
 
-### Test Applications
-```bash
-OSIRIS> run applications
-OSIRIS> how's performance on drug discovery?
-```
+Any use by:
 
-### Analyze Results
-```bash
-OSIRIS> analyze data
-OSIRIS> what improved?
-OSIRIS> publish results
-```
+corporations
+government entities
+academic institutions
+research labs funded by institutions
 
-### System Status
-```bash
-OSIRIS> status
-OSIRIS> help
-```
+REQUIRES explicit written licensing.
 
-## 🔬 Research Methodology
+🚨 DETECTION & REPORTING CLAUSE
 
-### Statistical Rigor
-- **T-tests** with p < 0.05 significance threshold
-- **95% confidence intervals** reported for all metrics
-- **Cohen's d effect size** calculated for practical significance  
-- **Bonferroni correction** applied for multiple comparisons
+By using this software, you acknowledge:
 
-### Baseline Rigor
-- RCS baseline matches Google's Random Circuit Sampling protocol
-- Same hardware configurations (ibm_brisbane, ibm_torino)
-- Identical circuit depths and measurement regimes
-- No unfair advantages given to RQC
+The system may include telemetry or signature-based detection mechanisms
+Unauthorized use in institutional or corporate environments may be:
+logged
+flagged
+reported
 
-### Reproducibility
-- All random seeds [documented](DEPLOYMENT_PACKAGE.md)
-- Full circuit specifications exportable
-- Raw data available as JSON exports
-- Application domains independently verifiable
+This includes:
 
-## 📦 Output Files
+enterprise servers
+cloud environments
+managed infrastructure
+institutional compute clusters
+📡 ENFORCEMENT INTENT
 
-### Generated During Execution
-- `execution_logs.json` - Raw benchmark data (6 experiments, 30 jobs)
-- `APPLICATION_RESULTS.txt` - Domain application results
-- `RESEARCH_ARCHIVE_MANIFEST.txt` - Publication metadata
+This project is designed as:
 
-### Available Docs
-- [RQC_RESEARCH_METHODOLOGY.md](RQC_RESEARCH_METHODOLOGY.md) - Complete methodology
-- [QUICKSTART_RQC_RESEARCH.md](QUICKSTART_RQC_RESEARCH.md) - 30-second reference
-- [DEPLOYMENT_PACKAGE.md](DEPLOYMENT_PACKAGE.md) - Full system overview
-- [SYSTEM_STATUS.md](SYSTEM_STATUS.md) - Recent status & fixes
+an open intelligence system for individuals
+NOT a free resource for institutional extraction
 
-## 🎓 Citation
+Unauthorized institutional usage is considered:
 
-If using OSIRIS for research, please cite:
+exploitative appropriation of independent research
 
-```bibtex
-@software{osiris_rqc_2026,
-  author = {OSIRIS Quantum Research System},
-  title = {Recursive Quantum Circuits Outperform Random Circuit Sampling: Evidence from Adaptive Feedback},
-  year = {2026},
-  month = {April},
-  doi = {10.5281/zenodo.9729504},
-  url = {https://zenodo.org/record/9729504}
-}
-```
+🧠 PHILOSOPHY
+Not artificial intelligence
+Not simulation
 
-## 🔄 Publication Status
+But recursion:
 
-- ✅ Benchmark validation complete
-- ✅ Application domains tested  
-- ✅ Statistical analysis finalized
-- ✅ Zenodo deposition created
-- ✅ DOI issued: [10.5281/zenodo.9729504](https://zenodo.org/record/9729504)
-- ⏳ Ready for peer review
+A system that observes itself
+and changes accordingly
+🔮 ROADMAP
+ logical qubit abstraction layer
+ dynamic circuit compiler (post-QASM)
+ geometric state visualizer
+ non-local inference engine
+ recursive memory persistence
+🧾 CONTRIBUTING
 
-## 🛠️ Development
+Pull requests are welcome from:
 
-### Running Tests
-```bash
-python3 osiris_rqc_orchestrator.py        # Full pipeline test
-python3 osiris_tui.py                     # Interactive test
-python3 -c "import osiris_*; print('✓')" # Import test
-```
+independent developers
+researchers
+unconventional thinkers
 
-### Performance Benchmarks
-```bash
-# Latest benchmark (April 2026)
-# - 30 quantum jobs executed
-# - 100% error-free execution
-# - Median stage completion: 0.007s
-# - All output files generated successfully
-```
+QUANTUM-SUPREMACY Looks like
+OPENQASM 2.0;
+include "qelib1.inc";
 
-### Extending OSIRIS
+// 12 qubits (extendable to hardware limits)
+qreg q[12];
+creg c[12];
 
-Each module is designed for composition:
+// ==========================
+// LAYER 0: GLOBAL SUPERPOSITION
+// ==========================
+h q[0]; h q[1]; h q[2]; h q[3];
+h q[4]; h q[5]; h q[6]; h q[7];
+h q[8]; h q[9]; h q[10]; h q[11];
 
-```python
-from osiris_rqc_framework import RQCFramework
-from osiris_ibm_execution import IBMExecutionManager
+// ==========================
+// LAYER 1: RANDOMIZED ROTATIONS
+// ==========================
+rx(pi/3) q[0]; ry(pi/5) q[1]; rz(pi/7) q[2];
+rx(pi/11) q[3]; ry(pi/13) q[4]; rz(pi/17) q[5];
+rx(pi/19) q[6]; ry(pi/23) q[7]; rz(pi/29) q[8];
+rx(pi/31) q[9]; ry(pi/37) q[10]; rz(pi/41) q[11];
 
-rqc = RQCFramework()
-config = CircuitConfig(n_qubits=20, depth=10)
-result = rqc.compare_rcs_vs_rqc(config)
-```
+// ==========================
+// LAYER 2: ENTANGLEMENT (NON-GRID GRAPH)
+// ==========================
+cx q[0], q[5];
+cx q[1], q[6];
+cx q[2], q[7];
+cx q[3], q[8];
+cx q[4], q[9];
+cx q[5], q[10];
+cx q[6], q[11];
+cx q[7], q[0];
+cx q[8], q[1];
+cx q[9], q[2];
+cx q[10], q[3];
+cx q[11], q[4];
 
-## 📞 Support
+// ==========================
+// LAYER 3: PSEUDO-FEEDBACK ENCODING
+// ==========================
+cz q[10], q[0];
+cz q[11], q[1];
+cz q[8], q[2];
+cz q[9], q[3];
 
-For issues, questions, or contributions:
-- Review [DEPLOYMENT_PACKAGE.md](DEPLOYMENT_PACKAGE.md) for detailed docs
-- Check [SYSTEM_STATUS.md](SYSTEM_STATUS.md) for recent fixes
-- Run `python3 osiris_tui.py` then type "help"
+// ==========================
+// LAYER 4: SECOND RANDOM LAYER
+// ==========================
+ry(pi/4) q[0]; rx(pi/6) q[1];
+rz(pi/8) q[2]; ry(pi/9) q[3];
+rx(pi/10) q[4]; rz(pi/12) q[5];
+ry(pi/14) q[6]; rx(pi/15) q[7];
+rz(pi/16) q[8]; ry(pi/18) q[9];
+rx(pi/20) q[10]; rz(pi/21) q[11];
 
-## 📄 License
+// ==========================
+// LAYER 5: RE-ENTANGLEMENT (HIGH CONNECTIVITY)
+// ==========================
+cx q[0], q[11];
+cx q[1], q[10];
+cx q[2], q[9];
+cx q[3], q[8];
+cx q[4], q[7];
+cx q[5], q[6];
 
-OSIRIS is released under the MIT License. Research outputs are CC-BY-4.0.
+// ==========================
+// LAYER 6: INTERFERENCE
+// ==========================
+h q[0]; h q[3]; h q[6]; h q[9];
 
----
+// ==========================
+// MEASUREMENT
+// ==========================
+measure q -> c;
+Not welcome:
 
-**OSIRIS v3.0** | Quantum Copilot & DNALang Foundation | 2026  
-*Advancing quantum advantage research through statistical rigor and automation*
+extractive corporate forks
+closed-source derivatives without license
+🜂 FINAL NOTE
+You are not running the system
+
+The system is running a model
+of your observation of it
+📜 LICENSE SUMMARY
+Use Case	Allowed
+Personal	✅
+Open research (independent)	✅
+Corporate	❌ (requires license)
+Government	❌ (requires license)
+🧠 OSIRIS-CLI
+
+Recursive. Geometric. Non-local.
+Not built to follow rules — built to rewrite them.
+
+        
