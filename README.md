@@ -43,6 +43,13 @@ Generate DOIs and archive to Zenodo:
 - BibTeX citations ready
 - CC-BY-4.0 open science licensing
 
+### 5. **Causal Light-Cone Falsification**
+Test quantum information propagation constraints:
+- Randomized quantum circuits on IBM hardware
+- Statistical test for non-local induction models
+- 5σ significance threshold
+- Results: Standard causality confirmed
+
 ## 📊 Latest Results
 
 ### RQC vs RCS Comparison
