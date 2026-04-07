@@ -2,6 +2,10 @@ from qiskit_ibm_runtime import QiskitRuntimeService, Sampler
 from generate_circuits import generate_batch
 from qiskit import transpile
 import json
+import os
+
+# Set token
+os.environ["IBM_QUANTUM_TOKEN"] = "y54pB-JlRo2JOJ9mZeZ3do8u50UjMupYAKcUDojunLxw"
 
 service = QiskitRuntimeService()
 backend = service.backend("ibm_fez")
@@ -15,7 +19,7 @@ sampler = Sampler(backend)
 
 jobs = []
 for circuit in transpiled_circuits:
-    job = sampler.run([circuit], shots=10000)
+    job = sampler.run([circuit], shots=32000)  # Changed to 32000
     jobs.append(job)
 
 results = []
