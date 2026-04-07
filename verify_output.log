@@ -1,0 +1,56 @@
+
+
+╔====================================================================╗
+║               OSIRIS SYSTEM VERIFICATION v2.0                    ║
+╚====================================================================╝
+
+======================================================================
+  TEST 1: Core Discovery Pipeline
+======================================================================
+  [91m[✗][0m Pipeline initialization — AutoDiscoveryPipeline.__init__() missing 1 required positional argument: 'api_token'
+  [91m[✗][0m ExperimentConfig creation — ExperimentConfig.__init__() got an unexpected keyword argument 'num_runs'
+  [91m[✗][0m Circuit generation — 'RandomCircuitGenerator' object has no attribute 'generate_circuit'
+  [91m[✗][0m Statistical validation — 'StatisticalValidator' object has no attribute 'validate'
+
+======================================================================
+  TEST 2: Workflow Orchestration
+======================================================================
+  [91m[✗][0m WorkflowScheduler initialization — WorkflowScheduler.__init__() missing 1 required positional argument: 'pipeline'
+  [91m[✗][0m Experiment templates — type object 'ExperimentTemplates' has no attribute 'get_all_templates'
+  [91m[✗][0m Campaign creation — type object 'ExperimentTemplates' has no attribute 'xeb_benchmark'
+
+======================================================================
+  TEST 3: Multi-Agent System
+======================================================================
+  [92m[✓][0m AgentManager initialization — 7 agents created
+  [92m[✓][0m Task submission — Task task_0...
+  [92m[✓][0m Task execution — Received 1 result(s)
+  [92m[✓][0m Agent status tracking — 7/7 agents idle
+
+======================================================================
+  TEST 4: Zenodo Publishing
+======================================================================
+  [91m[✗][0m PublishingWorkflow initialization — PublishingWorkflow.__init__() got an unexpected keyword argument 'enable_dry_run'
+  [92m[✓][0m Publication criteria check — Publishable=True
+
+======================================================================
+  TEST 5: System Integration
+======================================================================
+  [92m[✓][0m Full integration import — All modules compatible
+  [91m[✗][0m Data serialization — ExperimentConfig.__init__() got an unexpected keyword argument 'num_runs'
+
+======================================================================
+  TEST 6: Performance Benchmarks
+======================================================================
+  [91m[✗][0m Circuit generation speed — 'RandomCircuitGenerator' object has no attribute 'generate_circuit'
+
+======================================================================
+  VERIFICATION SUMMARY
+======================================================================
+
+  Total Tests: 16
+  Passed: 6 ✓
+  Failed: 10 ✗
+  Success Rate: 37.5%
+
+  ⚠️  10 test(s) need attention

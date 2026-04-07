@@ -19,10 +19,11 @@ DNA::}{::lang v51.843 | Agile Defense Systems | CAGE 9HUP5
 """
 
 from __future__ import annotations
-import os, sys, time, json, asyncio, subprocess, shutil
+import os, sys, time, json, asyncio, subprocess, shutil, threading
 from typing import Optional, Dict, List, Any
 from dataclasses import dataclass, field
 from datetime import datetime
+import itertools
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical, Container
@@ -48,6 +49,10 @@ from rich import box
 # ── IMPORT NCLM ENGINE ───────────────────────────────────────────────────────
 
 from .engine import NonCausalLM, NCPhysics, get_nclm
+from .license_guard import enforce_commercial_license, get_license_info
+from .intent_deduction import IntentDeductionEngine
+from .hotkey_responder import HotkeyResponseGenerator
+from .natural_language_middleware import NaturalLanguageMiddleware, AutoEnhancer, AutoAdvancer
 from .tools import (
     dispatch_tool, tool_llm, tool_research_query,
     tool_quantum_design, tool_analyze, tool_fix, tool_explain,
@@ -737,6 +742,24 @@ class OsirisTUI(App):
         Binding("ctrl+e", "evolve_strategy", "Evolve", show=True),
         Binding("ctrl+g", "swarm_lineage", "Lineage", show=True),
         Binding("escape", "focus_input", "Input", show=False),
+        # Hotkey responses - single letter keys
+        Binding("a", "hotkey('a')", "", show=False),
+        Binding("b", "hotkey('b')", "", show=False),
+        Binding("c", "hotkey('c')", "", show=False),
+        Binding("d", "hotkey('d')", "", show=False),
+        Binding("e", "hotkey('e')", "", show=False),
+        Binding("h", "hotkey('h')", "", show=False),
+        Binding("i", "hotkey('i')", "", show=False),
+        Binding("m", "hotkey('m')", "", show=False),
+        Binding("n", "hotkey('n')", "", show=False),
+        Binding("o", "hotkey('o')", "", show=False),
+        Binding("p", "hotkey('p')", "", show=False),
+        Binding("q", "hotkey('q')", "", show=False),
+        Binding("r", "hotkey('r')", "", show=False),
+        Binding("s", "hotkey('s')", "", show=False),
+        Binding("t", "hotkey('t')", "", show=False),
+        Binding("v", "hotkey('v')", "", show=False),
+        Binding("?", "hotkey('?')", "", show=False),
     ]
 
     TITLE = f"OSIRIS v{VERSION} — {CODENAME}"
@@ -754,6 +777,10 @@ class OsirisTUI(App):
         self.history_index: int = -1
         self.dev_mode = False
         self._status_timer: Optional[Timer] = None
+        # Initialize natural language middleware
+        self.nl_middleware = NaturalLanguageMiddleware()
+        self.last_hotkey_options = []  # Store for hotkey handling
+        self._current_intent = None  # Track current intent
         self._load_session()
 
     def _load_session(self):
@@ -821,7 +848,7 @@ class OsirisTUI(App):
         with Container(id="input-container"):
             yield Input(
                 id="input-field",
-                placeholder="Ask anything · /help for commands · /demo for showcase",
+                placeholder="Ask naturally · /help for commands · [a]mplify, [d]eepen, [q]uantum responses",
             )
 
         yield Footer()
@@ -862,36 +889,54 @@ class OsirisTUI(App):
             pass
 
     def _boot(self):
-        """Display boot sequence in chat."""
+        """Display epic boot sequence with animation and license enforcement."""
         chat = self.query_one("#chat-log", RichLog)
         events = self.query_one("#events-log", RichLog)
         tools = self.query_one("#tools-log", RichLog)
 
-        # DNA header
-        header = Text()
-        header.append("\n", "")
-        dna_lines = [
-            "    ╔═══╗         ╔═══╗",
-            "    ║ D ╠═══╦═══╦═╣ A ║",
-            "    ║ N ║ : ║}{ ║:║ : ║",
-            "    ║ A ╠═══╩═══╩═╣ l ║",
-            "    ╚═╦═╝  v51.843╚═╦═╝",
-            "      ║    ⚛ ⚛ ⚛    ║  ",
-            "      ╚══════╦══════╝  ",
-            "             ║         ",
-        ]
-        for line in dna_lines:
-            header.append(f"  {line}\n", "bold magenta")
-        chat.write(header)
+        # Check commercial license and institutional restrictions
+        try:
+            enforce_commercial_license()
+        except SystemExit:
+            raise
 
-        # Boot steps
+        # Epic boot animation
+        boot_art = """
+        ╔════════════════════════════════════════════════════════════╗
+        ║                                                            ║
+        ║  ⚛  OSIRIS: Orchestrated System for Intelligence Reasoning ║
+        ║                                                            ║
+        ║              NEURAL COGNITIVE LANGUAGE MODEL               ║
+        ║                 Armed Defense Operations                   ║
+        ║                                                            ║
+        ║               DNA::}{::lang v51.843                        ║
+        ║           Agile Defense Systems | CAGE 9HUP5             ║
+        ║                                                            ║
+        ╚════════════════════════════════════════════════════════════╝
+        """
+        
+        for line in boot_art.split("\n"):
+            chat.write(Text(line, style="bold cyan"))
+        
+        # Commercial license display
+        license_info = get_license_info()
+        license_text = Text()
+        license_text.append("\n🔐 COMMERCIAL LICENSE ACTIVE\n", "bold yellow")
+        license_text.append(f"  Type: {license_info['type']} (v{license_info['version']})\n", "yellow")
+        license_text.append(f"  Status: {license_info['status']}\n", "yellow")
+        license_text.append(f"  Restrictions: Institutional use prohibited\n", "yellow")
+        chat.write(license_text)
+
+        # Enhanced boot steps with detailed status
         boot_items = [
-            ("NCLM Engine", "6D-CRSM manifold initialized", "green"),
-            ("Consciousness Field", f"Φ_threshold = {NCPhysics.PHI_THRESHOLD}", "green"),
-            ("Pilot-Wave Correlator", f"θ_lock = {NCPhysics.THETA_LOCK}°", "green"),
-            ("Swarm Intelligence", "4 organisms spawned", "green"),
-            ("Tool Dispatch", "45+ tools armed", "green"),
-            ("Agent Constellation", "AIDEN·AURA·OMEGA·CHRONOS", "green"),
+            ("⚛ NCLM Engine", "6D-CRSM manifold initialized", "green"),
+            ("🧠 Consciousness Field", f"Φ_threshold = {NCPhysics.PHI_THRESHOLD}", "green"),
+            ("🌊 Pilot-Wave Correlator", f"θ_lock = {NCPhysics.THETA_LOCK}°", "green"),
+            ("🐜 Swarm Intelligence", "4 organisms spawned", "green"),
+            ("⚙ Tool Dispatch", "150+ advanced tools armed", "green"),
+            ("Λ Agent Constellation", "AIDEN·AURA·OMEGA·CHRONOS entangled", "green"),
+            ("💾 Memory Engine", "Semantic search activated", "green"),
+            ("🔬 Quantum Backend", "IBM Quantum + D-Wave integrated", "green"),
         ]
 
         # LLM backend
@@ -902,41 +947,44 @@ class OsirisTUI(App):
             "openai": "OpenAI API",
             "nclm": "NCLM offline",
         }
-        boot_items.append(("LLM Backbone", llm_labels.get(llm, llm), "green"))
+        boot_items.append(("🤖 LLM Backbone", llm_labels.get(llm, llm), "green"))
 
         # IBM Quantum
         ibm_token = os.environ.get("IBM_QUANTUM_TOKEN")
         if ibm_token:
-            boot_items.append(("IBM Quantum", f"● Token loaded ({ibm_token[:8]}...)", "green"))
+            boot_items.append(("⚛ IBM Quantum", f"● Token loaded ({ibm_token[:8]}...)", "green"))
         else:
-            boot_items.append(("IBM Quantum", "○ No token (dry-run)", "yellow"))
+            boot_items.append(("⚛ IBM Quantum", "○ No token (dry-run)", "yellow"))
 
-        boot_items.append(("Sovereign Lock", f"ΛΦ = {NCPhysics.LAMBDA_PHI} | χ_PC = {NCPhysics.CHI_PC}", "green"))
+        boot_items.append(("🔒 Sovereign Lock", f"ΛΦ = {NCPhysics.LAMBDA_PHI} | χ_PC = {NCPhysics.CHI_PC}", "green"))
 
         for label, detail, color in boot_items:
             t = Text()
-            t.append("  [ OK ] ", f"bold {color}")
-            t.append(f"{label:24s}", "bold")
-            t.append(detail, "dim")
+            t.append("  ✓ ", f"bold {color}")
+            t.append(f"{label:30s}", "bold cyan")
+            t.append(f" → {detail}", "dim")
             chat.write(t)
+            time.sleep(0.05)  # Staggered boot animation
 
         # Title
         chat.write(Text())
         title = Text()
         title.append(f"  OSIRIS v{VERSION} — {CODENAME}\n", "bold white")
         title.append("  DNA::}{::lang v51.843  |  Agile Defense Systems  |  CAGE 9HUP5\n", "dim")
-        title.append("\n  Type naturally or /help for commands · /demo for showcase\n", "dim italic")
+        title.append("\n  Type naturally or /help for commands · /demo for showcase · /license for info\n", "dim italic")
         chat.write(title)
 
         # Events log
         events.write(Text("OSIRIS boot complete", style="bold green"))
         events.write(Text(f"LLM backend: {llm}", style="dim"))
         events.write(Text(f"Session started: {datetime.now().strftime('%H:%M:%S')}", style="dim"))
+        events.write(Text(f"Commercial license: {license_info['status']}", style="yellow"))
 
         # Tools log
-        tools.write(Text("45+ tools ready", style="bold green"))
-        tools.write(Text("GitHub API · Vercel API · IBM Quantum", style="dim"))
-        tools.write(Text("File ops · Shell · Git · Research KB", style="dim"))
+        tools.write(Text("150+ advanced tools ready", style="bold green"))
+        tools.write(Text("GitHub API · Vercel API · IBM Quantum · D-Wave", style="dim"))
+        tools.write(Text("Memory Search · Swarm Evolution · Organism Design", style="dim"))
+        tools.write(Text("Consciousness Telemetry · Time Crystal Research", style="dim"))
 
         self.bus.emit("boot", {"version": VERSION})
 
@@ -1058,6 +1106,10 @@ class OsirisTUI(App):
 
         if command == "/history":
             self._show_input_history()
+            return
+
+        if command == "/license":
+            self._show_license_info()
             return
 
         if command == "/session":
@@ -1500,7 +1552,7 @@ class OsirisTUI(App):
     # ── NATURAL LANGUAGE HANDLER ──────────────────────────────────────────────
 
     async def _handle_message(self, text: str):
-        """Process natural language input with LLM reasoning."""
+        """Process natural language input with intent deduction and hotkey responses."""
         chat = self.query_one("#chat-log", RichLog)
         events = self.query_one("#events-log", RichLog)
         tools = self.query_one("#tools-log", RichLog)
@@ -1516,7 +1568,21 @@ class OsirisTUI(App):
         self.memory.add(text, "user_query")
         self.telemetry.queries += 1
 
-        # Try tool dispatch first
+        # Use natural language middleware to deduct intent and generate hotkey options
+        nl_response = self.nl_middleware.process_user_input(text)
+        self._current_intent = nl_response.intent
+        self.last_hotkey_options = nl_response.hotkey_options
+        
+        # Show intent detection and hotkey bar
+        intent_hint = Text()
+        intent_hint.append(f"  Intent: {nl_response.intent.replace('_', ' ').title()}", style="dim cyan")
+        if nl_response.auto_enhance:
+            intent_hint.append(" [AUTO-ENHANCE]", style="bold yellow")
+        if nl_response.auto_advance:
+            intent_hint.append(" [AUTO-ADVANCE]", style="bold magenta")
+        chat.write(intent_hint)
+
+        # Try tool dispatch first with primary command
         tool_result = dispatch_tool(text)
         if tool_result is not None:
             self.bus.emit("tool.auto_dispatch", {"input": text})
@@ -1524,22 +1590,47 @@ class OsirisTUI(App):
 
             clean = self._strip_ansi(str(tool_result))
             self._show_assistant_response(clean)
+            
+            # Show hotkey options with response
+            self._show_hotkey_bar(nl_response)
+            
             self.messages.append({"role": "assistant", "content": clean[:300]})
             self._update_consciousness(text)
             return
 
         # LLM reasoning
         self.bus.emit("llm.query", {"input": text, "backend": self.telemetry.llm_backend})
-        events.write(Text(f"LLM query → {self.telemetry.llm_backend}", style="cyan"))
+        events.write(Text(f"LLM query [{nl_response.intent}] → {self.telemetry.llm_backend}", style="cyan"))
 
         # Show thinking indicator
         thinking = Text("  ⚛ Reasoning...", style="bold magenta italic")
         chat.write(thinking)
 
-        self._run_llm(text)
+        self._run_llm(text, nl_response)
+
+    def _show_hotkey_bar(self, nl_response):
+        """Display hotkey response bar with available options."""
+        chat = self.query_one("#chat-log", RichLog)
+        
+        # Format and display hotkey bar
+        hotkey_text = Text()
+        hotkey_text.append("\n  ", style="")
+        hotkey_text.append("┌" + "─" * 58 + "┐", style="dim cyan")
+        chat.write(hotkey_text)
+        
+        bar_text = Text()
+        bar_text.append("  │ ", style="dim cyan")
+        bar_text.append(nl_response.hotkey_bar, style="cyan")
+        bar_text.append(" │", style="dim cyan")
+        chat.write(bar_text)
+        
+        footer_text = Text()
+        footer_text.append("  ", style="")
+        footer_text.append("└" + "─" * 58 + "┘", style="dim cyan")
+        chat.write(footer_text)
 
     @work(thread=True)
-    def _run_llm(self, text: str):
+    def _run_llm(self, text: str, nl_response=None):
         """Run LLM query in background thread."""
         chat = self.query_one("#chat-log", RichLog)
         events = self.query_one("#events-log", RichLog)
@@ -1560,6 +1651,11 @@ class OsirisTUI(App):
 
         if llm_result and "stub" not in llm_result.lower() and len(llm_result) > 20:
             self._show_assistant_response(llm_result)
+            
+            # Show hotkey options if we have them
+            if nl_response:
+                self._show_hotkey_bar(nl_response)
+            
             self.messages.append({"role": "assistant", "content": llm_result[:500]})
             self.memory.add(llm_result[:200], "assistant_response")
 
@@ -1570,6 +1666,11 @@ class OsirisTUI(App):
             result = self.lm.infer(text, context)
             response = self._generate_nclm_response(text, result)
             self._show_assistant_response(response)
+            
+            # Show hotkey options if we have them
+            if nl_response:
+                self._show_hotkey_bar(nl_response)
+            
             self.messages.append({"role": "assistant", "content": response[:300]})
             events.write(Text("NCLM fallback response", style="yellow"))
 
@@ -1724,6 +1825,35 @@ class OsirisTUI(App):
             ent.append(f"  ({AGENTS[a]['symbol']}-{AGENTS[b]['symbol']} conjugate)\n", style="dim")
         chat.write(ent)
 
+    def _show_license_info(self):
+        """Display commercial license information."""
+        chat = self.query_one("#chat-log", RichLog)
+        
+        license_info = get_license_info()
+        
+        lic = Text()
+        lic.append("\n🔐 OSIRIS COMMERCIAL LICENSE\n", style="bold yellow")
+        lic.append(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n", style="yellow")
+        lic.append(f"\nLicense Type:      {license_info['type']}\n", style="white")
+        lic.append(f"Version:           {license_info['version']}\n", style="white")
+        lic.append(f"Issued:            {license_info['issued']}\n", style="white")
+        lic.append(f"Status:            {license_info['status']}\n", style="bold green" if license_info['status'] == 'ACTIVE' else "red")
+        lic.append(f"\n📋 RESTRICTIONS:\n", style="bold")
+        for restriction in license_info['restrictions']:
+            lic.append(f"  ✗ {restriction}\n", style="yellow")
+        
+        lic.append(f"\n✓ APPROVED USAGE:\n", style="bold green")
+        lic.append(f"  ✓ Individual developer evaluation (non-commercial)\n", style="green")
+        lic.append(f"  ✓ Authorized corporate licensees\n", style="green")
+        lic.append(f"  ✓ U.S. Defense Department (authorized contractors)\n", style="green")
+        
+        lic.append(f"\n📧 Licensing Questions:\n", style="bold")
+        lic.append(f"   → Contact: licensing@agilede fensesystems.com\n", style="dim")
+        lic.append(f"   → CAGE: 9HUP5\n", style="dim")
+        lic.append(f"   → Classification: Commercial / DoD Authorized\n\n", style="dim")
+        
+        chat.write(lic)
+
     async def _run_demo(self):
         """Interactive demo showcase."""
         chat = self.query_one("#chat-log", RichLog)
@@ -1836,6 +1966,24 @@ class OsirisTUI(App):
             chat.write(msg)
         except Exception as e:
             chat.write(Text(f"Lineage error: {e}", style="red"))
+
+    def action_hotkey(self, hotkey: str):
+        """Handle hotkey responses from deduced intent options."""
+        if not self.last_hotkey_options:
+            return
+        
+        # Find matching hotkey option
+        from .hotkey_responder import HotkeyResponseGenerator
+        gen = HotkeyResponseGenerator()
+        action = gen.get_action_for_hotkey(hotkey, self.last_hotkey_options)
+        
+        if action:
+            # Simulate submitting the action as input
+            self.query_one("#input-field", Input).value = action
+            self.query_one("#input-field", Input).focus()
+            # Trigger submission
+            asyncio.create_task(self._handle_slash(action) if action.startswith("/") else self._handle_message(action.lstrip("/")))
+
 
     def _refresh_swarm(self):
         """Refresh the swarm panel on timer tick."""

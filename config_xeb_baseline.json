@@ -1,0 +1,14 @@
+{
+  "name": "xeb_baseline_12q",
+  "description": "Establish XEB baseline on 12 qubits",
+  "n_qubits": 12,
+  "circuit_depth": 8,
+  "shots": 4000,
+  "trials": 30,
+  "backend": "ibm_torino",
+  "alpha": 0.05,
+  "min_effect_size": 0.3,
+  "hypothesis": "Random quantum circuits on real hardware produce measurable cross-entropy benchmarking (XEB) > 0",
+  "null_hypothesis": "XEB values are indistinguishable from random noise (population mean = 0)",
+  "predicted_outcome": "XEB will be positive with p < 0.05 and Cohen's d > 0.3"
+}

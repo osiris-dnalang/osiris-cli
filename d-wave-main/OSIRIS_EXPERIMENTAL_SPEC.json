@@ -1,0 +1,121 @@
+{
+  "experiments": [
+    {
+      "title": "Entropy Growth Rate: Adaptive RQC vs Static RCS",
+      "hypothesis": "Adaptive circuit evolution achieves higher entropy growth per unit depth",
+      "researcher_blind": true,
+      "pre_registration": "",
+      "phase": "design",
+      "n_qubits_range": [
+        8,
+        12,
+        16,
+        20,
+        24,
+        32
+      ],
+      "n_seeds": 20,
+      "n_iterations": 1,
+      "alpha": 0.05,
+      "power": 0.95,
+      "effect_size_min": 0.25,
+      "simulators": [
+        "ideal",
+        "nisq"
+      ],
+      "hardware_backends": [
+        "ibm_kyoto",
+        "ibm_osaka"
+      ],
+      "transpile_optimization_level": 3,
+      "code_hash": "f9851215aa02",
+      "seed_hash": "4ebbc5950ca3"
+    },
+    {
+      "title": "Cross-Entropy Benchmarking: RQC Scaling",
+      "hypothesis": "RQC achieves positive XEB with fewer circuits than RCS",
+      "researcher_blind": true,
+      "pre_registration": "",
+      "phase": "design",
+      "n_qubits_range": [
+        8,
+        12,
+        16
+      ],
+      "n_seeds": 15,
+      "n_iterations": 30,
+      "alpha": 0.05,
+      "power": 0.95,
+      "effect_size_min": 0.25,
+      "simulators": [
+        "ideal",
+        "nisq"
+      ],
+      "hardware_backends": [
+        "ibm_kyoto",
+        "ibm_osaka"
+      ],
+      "transpile_optimization_level": 3,
+      "code_hash": "f9851215aa02",
+      "seed_hash": "db6427094dc7"
+    },
+    {
+      "title": "Falsification: Linear vs Nonlinear Feedback",
+      "hypothesis": "Adaptive improvement requires feedback signal (not random parameter drift)",
+      "researcher_blind": true,
+      "pre_registration": "",
+      "phase": "design",
+      "n_qubits_range": [
+        12,
+        16
+      ],
+      "n_seeds": 25,
+      "n_iterations": 20,
+      "alpha": 0.05,
+      "power": 0.95,
+      "effect_size_min": 0.25,
+      "simulators": [
+        "ideal",
+        "nisq"
+      ],
+      "hardware_backends": [
+        "ibm_kyoto",
+        "ibm_osaka"
+      ],
+      "transpile_optimization_level": 3,
+      "code_hash": "f9851215aa02",
+      "seed_hash": "8f2332d25ced"
+    }
+  ],
+  "statistical_plan": {
+    "primary_test": "two_sample_ttest",
+    "alpha": 0.05,
+    "alternative": "two_sided",
+    "comparisons": [
+      "Entropy RQC vs RCS at each depth",
+      "XEB convergence rate RQC vs RCS",
+      "Hardware XEB RQC vs RCS (IBM Kyoto)"
+    ]
+  },
+  "hardware_playbook": {
+    "backends": [
+      "ibm_kyoto",
+      "ibm_osaka"
+    ],
+    "n_qubits_deployment": [
+      5,
+      8,
+      12,
+      16
+    ],
+    "shots_per_circuit": 8192,
+    "max_queue_time": 3600
+  },
+  "pre_registration_date": "2026-04-06T23:30:29.041185",
+  "target_journals": [
+    "Nature",
+    "Nature Physics",
+    "Science"
+  ],
+  "nobel_potential": "High (if hardware validation succeeds)"
+}

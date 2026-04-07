@@ -1,0 +1,258 @@
+{
+  "timestamp": "2026-04-07T00:08:00.227140",
+  "total_benchmarks": 12,
+  "results": [
+    {
+      "backend": "ibm_torino",
+      "qubits_tested": 4,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8999152987502331,
+      "xeb_score": 0.8713109143859585,
+      "error_rate": 0.0017262621997610587,
+      "execution_time": 0.018295,
+      "timestamp": "2026-04-07T00:08:00.224277",
+      "job_ids": [
+        "mock_job_ibm_torino_4q_4d_1024s_0",
+        "mock_job_ibm_torino_4q_4d_1024s_1",
+        "mock_job_ibm_torino_4q_4d_1024s_2",
+        "mock_job_ibm_torino_4q_4d_1024s_3",
+        "mock_job_ibm_torino_4q_4d_1024s_4"
+      ],
+      "notes": "Extreme 4q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_torino",
+      "qubits_tested": 8,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.9018736360796679,
+      "xeb_score": 0.8857469352083642,
+      "error_rate": 0.0032763984852872546,
+      "execution_time": 3.2e-05,
+      "timestamp": "2026-04-07T00:08:00.224511",
+      "job_ids": [
+        "mock_job_ibm_torino_8q_4d_1024s_0",
+        "mock_job_ibm_torino_8q_4d_1024s_1",
+        "mock_job_ibm_torino_8q_4d_1024s_2",
+        "mock_job_ibm_torino_8q_4d_1024s_3",
+        "mock_job_ibm_torino_8q_4d_1024s_4"
+      ],
+      "notes": "Extreme 8q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_torino",
+      "qubits_tested": 12,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8860426118029198,
+      "xeb_score": 0.8975600733694782,
+      "error_rate": 0.004807689039417589,
+      "execution_time": 3e-05,
+      "timestamp": "2026-04-07T00:08:00.224684",
+      "job_ids": [
+        "mock_job_ibm_torino_12q_4d_1024s_0",
+        "mock_job_ibm_torino_12q_4d_1024s_1",
+        "mock_job_ibm_torino_12q_4d_1024s_2",
+        "mock_job_ibm_torino_12q_4d_1024s_3",
+        "mock_job_ibm_torino_12q_4d_1024s_4"
+      ],
+      "notes": "Extreme 12q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_fez",
+      "qubits_tested": 4,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.9085962720526259,
+      "xeb_score": 0.8789920180652775,
+      "error_rate": 0.0011843935854017342,
+      "execution_time": 3.4e-05,
+      "timestamp": "2026-04-07T00:08:00.224930",
+      "job_ids": [
+        "mock_job_ibm_fez_4q_4d_1024s_0",
+        "mock_job_ibm_fez_4q_4d_1024s_1",
+        "mock_job_ibm_fez_4q_4d_1024s_2",
+        "mock_job_ibm_fez_4q_4d_1024s_3",
+        "mock_job_ibm_fez_4q_4d_1024s_4"
+      ],
+      "notes": "Extreme 4q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_fez",
+      "qubits_tested": 8,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.886515955627857,
+      "xeb_score": 0.8844891255421539,
+      "error_rate": 0.003364657096007831,
+      "execution_time": 2.9e-05,
+      "timestamp": "2026-04-07T00:08:00.225163",
+      "job_ids": [
+        "mock_job_ibm_fez_8q_4d_1024s_0",
+        "mock_job_ibm_fez_8q_4d_1024s_1",
+        "mock_job_ibm_fez_8q_4d_1024s_2",
+        "mock_job_ibm_fez_8q_4d_1024s_3",
+        "mock_job_ibm_fez_8q_4d_1024s_4"
+      ],
+      "notes": "Extreme 8q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_fez",
+      "qubits_tested": 12,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8886756340198231,
+      "xeb_score": 0.8743283054567208,
+      "error_rate": 0.004682049492995825,
+      "execution_time": 3.2e-05,
+      "timestamp": "2026-04-07T00:08:00.225397",
+      "job_ids": [
+        "mock_job_ibm_fez_12q_4d_1024s_0",
+        "mock_job_ibm_fez_12q_4d_1024s_1",
+        "mock_job_ibm_fez_12q_4d_1024s_2",
+        "mock_job_ibm_fez_12q_4d_1024s_3",
+        "mock_job_ibm_fez_12q_4d_1024s_4"
+      ],
+      "notes": "Extreme 12q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_nazca",
+      "qubits_tested": 4,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.9064044394303323,
+      "xeb_score": 0.8841734840049705,
+      "error_rate": 0.0014297341654454863,
+      "execution_time": 3e-05,
+      "timestamp": "2026-04-07T00:08:00.225710",
+      "job_ids": [
+        "mock_job_ibm_nazca_4q_4d_1024s_0",
+        "mock_job_ibm_nazca_4q_4d_1024s_1",
+        "mock_job_ibm_nazca_4q_4d_1024s_2",
+        "mock_job_ibm_nazca_4q_4d_1024s_3",
+        "mock_job_ibm_nazca_4q_4d_1024s_4"
+      ],
+      "notes": "Extreme 4q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_nazca",
+      "qubits_tested": 8,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8952736344762876,
+      "xeb_score": 0.8841799819871496,
+      "error_rate": 0.0034624899273581074,
+      "execution_time": 3e-05,
+      "timestamp": "2026-04-07T00:08:00.225914",
+      "job_ids": [
+        "mock_job_ibm_nazca_8q_4d_1024s_0",
+        "mock_job_ibm_nazca_8q_4d_1024s_1",
+        "mock_job_ibm_nazca_8q_4d_1024s_2",
+        "mock_job_ibm_nazca_8q_4d_1024s_3",
+        "mock_job_ibm_nazca_8q_4d_1024s_4"
+      ],
+      "notes": "Extreme 8q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_nazca",
+      "qubits_tested": 12,
+      "max_qubits": 156,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8861390059002865,
+      "xeb_score": 0.8769063599144886,
+      "error_rate": 0.004850401337848769,
+      "execution_time": 2.9e-05,
+      "timestamp": "2026-04-07T00:08:00.226152",
+      "job_ids": [
+        "mock_job_ibm_nazca_12q_4d_1024s_0",
+        "mock_job_ibm_nazca_12q_4d_1024s_1",
+        "mock_job_ibm_nazca_12q_4d_1024s_2",
+        "mock_job_ibm_nazca_12q_4d_1024s_3",
+        "mock_job_ibm_nazca_12q_4d_1024s_4"
+      ],
+      "notes": "Extreme 12q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_brisbane",
+      "qubits_tested": 4,
+      "max_qubits": 127,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8977491972143886,
+      "xeb_score": 0.8980872446157143,
+      "error_rate": 0.0016073890250108244,
+      "execution_time": 3e-05,
+      "timestamp": "2026-04-07T00:08:00.226467",
+      "job_ids": [
+        "mock_job_ibm_brisbane_4q_4d_1024s_0",
+        "mock_job_ibm_brisbane_4q_4d_1024s_1",
+        "mock_job_ibm_brisbane_4q_4d_1024s_2",
+        "mock_job_ibm_brisbane_4q_4d_1024s_3",
+        "mock_job_ibm_brisbane_4q_4d_1024s_4"
+      ],
+      "notes": "Extreme 4q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_brisbane",
+      "qubits_tested": 8,
+      "max_qubits": 127,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8919068536989201,
+      "xeb_score": 0.8806832604586488,
+      "error_rate": 0.0033228999509349647,
+      "execution_time": 3e-05,
+      "timestamp": "2026-04-07T00:08:00.226665",
+      "job_ids": [
+        "mock_job_ibm_brisbane_8q_4d_1024s_0",
+        "mock_job_ibm_brisbane_8q_4d_1024s_1",
+        "mock_job_ibm_brisbane_8q_4d_1024s_2",
+        "mock_job_ibm_brisbane_8q_4d_1024s_3",
+        "mock_job_ibm_brisbane_8q_4d_1024s_4"
+      ],
+      "notes": "Extreme 8q test at 1024 shots, depth 4"
+    },
+    {
+      "backend": "ibm_brisbane",
+      "qubits_tested": 12,
+      "max_qubits": 127,
+      "circuit_depth": 4,
+      "shots": 1024,
+      "trials": 5,
+      "avg_fidelity": 0.8902396351303586,
+      "xeb_score": 0.8822591125369528,
+      "error_rate": 0.004794696037127602,
+      "execution_time": 5.7e-05,
+      "timestamp": "2026-04-07T00:08:00.226985",
+      "job_ids": [
+        "mock_job_ibm_brisbane_12q_4d_1024s_0",
+        "mock_job_ibm_brisbane_12q_4d_1024s_1",
+        "mock_job_ibm_brisbane_12q_4d_1024s_2",
+        "mock_job_ibm_brisbane_12q_4d_1024s_3",
+        "mock_job_ibm_brisbane_12q_4d_1024s_4"
+      ],
+      "notes": "Extreme 12q test at 1024 shots, depth 4"
+    }
+  ]
+}

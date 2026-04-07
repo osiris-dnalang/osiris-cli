@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
-# OSIRIS wrapper script - no external telemetry, local SDK only
+# OSIRIS Chat-Native TUI Launcher
+# Unified entry point for quantum discovery system
 set -euo pipefail
-SCRIPT_DIR="/workspaces/osiris-cli/d-wave-main"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PY="${PY:-python3}"
-exec "$PY" "$SCRIPT_DIR/osiris_cli.py" "$@"
+
+# Ensure PYTHONPATH includes current directory
+export PYTHONPATH="${SCRIPT_DIR}:${PYTHONPATH:-}"
+
+# Check for required environment
+if [[ -z "${IBM_QUANTUM_TOKEN:-}" ]]; then
+    echo "⚠ IBM_QUANTUM_TOKEN not set - using mock execution"
+    echo "  Get token at: https://quantum.ibm.com/"
+    echo "  Set with: export IBM_QUANTUM_TOKEN='your_token'"
+fi
+
+# Run the unified launcher
+exec "$PY" "${SCRIPT_DIR}/osiris_launcher.py" "$@"

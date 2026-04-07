@@ -2412,11 +2412,16 @@ def parse_args():
 def main():
     """Main entry point"""
     try:
-        # Check if we need to launch TUI directly (no event loop)
-        args = parse_args()
+        # Enforce commercial license restrictions first
+        from dnalang_sdk.nclm.license_guard import enforce_commercial_license
+        enforce_commercial_license()
+        
+        # Quick check for interactive mode without full parsing
+        import sys
+        args = sys.argv[1:] if len(sys.argv) > 1 else ["interactive"]
 
-        # If interactive mode and no event loop running, launch TUI directly
-        if args.command == "interactive":
+        # If it's just "osiris" or "osiris interactive", launch TUI directly
+        if len(args) == 0 or (len(args) == 1 and args[0] == "interactive"):
             try:
                 asyncio.get_running_loop()
                 # We're in an event loop, use async version

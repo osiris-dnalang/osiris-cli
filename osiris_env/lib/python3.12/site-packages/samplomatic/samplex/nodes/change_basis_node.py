@@ -1,0 +1,162 @@
+# This code is a Qiskit project.
+#
+# (C) Copyright IBM 2025, 2026.
+#
+# This code is licensed under the Apache License, Version 2.0. You may
+# obtain a copy of this license in the LICENSE.txt file in the root directory
+# of this source tree or at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# Any modifications or derivative works of this code must retain this
+# copyright notice, and modified files need to carry a notice indicating
+# that they have been altered from the originals.
+
+"""ChangeBasisNode"""
+
+from collections.abc import Iterable, Sequence
+from typing import Generic, TypeVar
+
+import numpy as np
+from qiskit.circuit.library import HGate, IGate, RXGate
+
+from ...aliases import RegisterName, StrRef
+from ...serializable import Serializable
+from ...virtual_registers import C1Register, U2Register, VirtualRegister, VirtualType
+from .sampling_node import SamplingNode
+
+T = TypeVar("T")
+
+
+class BasisChange(Generic[T], metaclass=Serializable):
+    """Represents a basis change.
+
+    Args:
+        alphabet: The symbols representing the basis elements.
+        action: The basis change action for each symbol that transforms into the canonical basis.
+
+    Raises:
+        ValueError: If the number of symbols is not equal to the number of basis elements.
+        ValueError: If the number of samples of the action is not one.
+    """
+
+    def __init__(self, alphabet: Iterable[T], action: VirtualRegister):
+        self._alphabet = list(alphabet)
+        self._action = action
+
+        if len(self._alphabet) != self._action.num_subsystems:
+            raise ValueError("The number of basis elements is not equal to the number of symbols.")
+        if self._action.num_samples != 1:
+            raise ValueError("Expected the number of samples of 'action' to be 1.")
+
+        self._lookup = {
+            character: transform[0]
+            for character, transform in zip(self._alphabet, self._action.virtual_gates)
+        }
+
+    @property
+    def num_elements(self) -> int:
+        """Number of elements."""
+        return len(self._alphabet)
+
+    @property
+    def alphabet(self) -> list[T]:
+        """Character symbols of basis elements.
+
+        There should be one entry per entry in the virtual register.
+        """
+        return self._alphabet
+
+    @property
+    def action(self) -> VirtualRegister:
+        """The basis change action for each symbol that transforms into the canonical basis.
+
+        The register has ``num_samples==1``.
+        """
+        return self._action
+
+    def get_transform(self, elements: Sequence[T]) -> VirtualRegister:
+        """Return the transform gates for the basis change.
+
+        Args:
+            elements: The elements that specify the basis change.
+
+        Returns:
+            A virtual register containing the basis change.
+        """
+        return type(self.action)([[self._lookup[e]] for e in elements])
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, BasisChange)
+            and self.alphabet == other.alphabet
+            and self.action == other.action
+        )
+
+
+MEAS_PAULI_BASIS = BasisChange[np.uint8](
+    [0, 1, 2, 3],
+    U2Register(np.array([IGate(), IGate(), HGate(), RXGate(np.pi / 2)]).reshape(4, 1, 2, 2)),
+)
+"""A basis change from Pauli eigenstates into the computational basis."""
+
+PREP_PAULI_BASIS = BasisChange[np.uint8](
+    [0, 1, 2, 3],
+    U2Register(np.array([IGate(), IGate(), HGate(), RXGate(-np.pi / 2)]).reshape(4, 1, 2, 2)),
+)
+"""A basis change from the computational basis into Pauli eigenstates."""
+
+LOCAL_CLIFFORD = BasisChange[np.uint8](
+    range(24), C1Register(np.arange(24, dtype=np.uint8).reshape(24, 1))
+)
+"""A frame change with a local Clifford."""
+
+
+class ChangeBasisNode(SamplingNode):
+    """A node that instantiates a basis changing virtual register for a given measurement.
+
+    Args:
+        register_name: The name of the register to instantiate.
+        basis_change: The basis change to implement.
+        basis_ref: Unique identifier of the basis to use.
+        num_subsystems: The number of subsystems this node generates gates for.
+    """
+
+    def __init__(
+        self,
+        register_name: RegisterName,
+        basis_change: BasisChange,
+        basis_ref: StrRef,
+        num_subsystems: int,
+    ):
+        self._register_name = register_name
+        self._basis_change = basis_change
+        self._basis_ref = basis_ref
+        self._num_subsystems = num_subsystems
+
+    @property
+    def outgoing_register_type(self) -> VirtualType:
+        return self._basis_change.action.TYPE
+
+    def instantiates(self):
+        return {self._register_name: (self._num_subsystems, self._basis_change.action.TYPE)}
+
+    def sample(self, registers, rng, inputs, num_randomizations):
+        basis = inputs[self._basis_ref]
+        registers[self._register_name] = self._basis_change.get_transform(basis)
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, ChangeBasisNode)
+            and self._register_name == other._register_name
+            and self._basis_change == other._basis_change
+            and self._basis_ref == other._basis_ref
+            and self._num_subsystems == other._num_subsystems
+        )
+
+    def get_style(self):
+        return (
+            super()
+            .get_style()
+            .append_data("Register Name", repr(self._register_name))
+            .append_data("Subsystems", repr(self._num_subsystems))
+            .append_data("Basis Reference", repr(self._basis_ref))
+        )
