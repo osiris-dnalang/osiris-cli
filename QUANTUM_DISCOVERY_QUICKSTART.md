@@ -2,7 +2,7 @@
 
 ## Overview
 
-You now have a **concrete, implementable 12-week research program** to discover publishable quantum phenomena using:
+**concrete, implementable 12-week research program** to discover publishable quantum phenomena using:
 - Your 1,430+ existing IBM quantum jobs
 - High-fidelity simulation
 - Standard information-theoretic analysis
