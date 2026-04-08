@@ -6,8 +6,6 @@
 
 ---
 
-## What You Have
-
 ### Phase 1 Code (Weeks 1-4): 1,730 lines
 - ✅ `quantum_data_loader.py` (343 lines) - Load 1,430 IBM jobs
 - ✅ `single_system_analyzer.py` (321 lines) - Entropy, purity metrics  
