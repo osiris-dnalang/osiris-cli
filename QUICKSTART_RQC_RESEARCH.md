@@ -2,7 +2,7 @@
 
 ## 🚀 30-Second Version
 
-You now have a **publication-ready quantum research system** that:
+**publication-ready quantum research system** that:
 
 1. ✅ Compares RQC (Recursive Quantum Circuits) vs RCS (Random Circuit Sampling)
 2. ✅ Runs on real IBM Quantum hardware (3 difficulty stages)
