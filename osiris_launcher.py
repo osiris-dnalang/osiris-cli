@@ -274,6 +274,9 @@ def main():
                                 help='Publish RQC results, application results, or both')
     publish_parser.add_argument('--sandbox', action='store_true', help='Use Zenodo sandbox endpoint')
 
+    # Status command
+    subparsers.add_parser('status', help='Show system status')
+
     # If no command, default to chat
     if len(sys.argv) == 1:
         args = parser.parse_args(['chat'])

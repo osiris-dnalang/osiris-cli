@@ -39,7 +39,7 @@ fi
 # Create local executable wrapper
 echo "🔗 Installing local 'osiris' command into ${LOCAL_BIN}..."
 mkdir -p "${LOCAL_BIN}"
-cat > "${WRAPPER_FILE}" << EOF
+cat > "${WRAPPER_FILE}" << 'EOF'
 #!/usr/bin/env bash
 REPO_ROOT="${REPO_ROOT}"
 cd "${REPO_ROOT}"
