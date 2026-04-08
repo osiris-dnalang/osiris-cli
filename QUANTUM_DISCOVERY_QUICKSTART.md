@@ -3,7 +3,7 @@
 ## Overview
 
 **concrete, implementable 12-week research program** to discover publishable quantum phenomena using:
-- Your 1,430+ existing IBM quantum jobs
+- 1,430+ existing IBM quantum jobs
 - High-fidelity simulation
 - Standard information-theoretic analysis
 - No additional QPU time required
@@ -14,7 +14,7 @@
 
 ### Step 1: Run Phase 1 Full Analysis
 
-This will scan your existing data and begin analysis:
+This will scan existing data and begin analysis:
 
 ```bash
 cd /workspaces/osiris-cli
