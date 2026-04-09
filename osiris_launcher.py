@@ -165,6 +165,9 @@ def cmd_status(args):
         "ELO Tournament": "✓ Ready (Glicko-2 vs 6 industry competitors)",
         "Introspection": "✓ Ready (temporal + structural + semantic self-awareness)",
         "Feedback Bus": "✓ Ready (tridirectional swarm⇄intent⇄TUI relay)",
+        "FABRIC Bridge": "✓ Ready (Living Slice provisioner + Negentropic Control Plane)",
+        "Policy Upcycler": "✓ Ready (POLANCO → Living Security Organisms)",
+        "Fei Demo": "✓ Ready (3-act FABRIC + POLANCO + Convergence)",
     }
     
     for key, value in status_info.items():
@@ -403,6 +406,44 @@ def cmd_feedback(args):
         print(f"\n✓ Feedback loop results saved to {args.output}")
 
 
+def cmd_fabric(args):
+    """Run FABRIC Living Slice operations"""
+    print("\n⚛ OSIRIS FABRIC Bridge — Living Slice Provisioner...\n")
+    from osiris_fabric_bridge import demo_living_slice
+    demo_living_slice(
+        sites=args.sites,
+        topology=args.topology,
+        cycles=args.cycles,
+    )
+
+
+def cmd_policy(args):
+    """Run POLANCO policy upcycling"""
+    print("\n⚛ OSIRIS Policy Upcycler — POLANCO → Living Security Organisms...\n")
+    if args.file:
+        from osiris_policy_upcycle import PolancoUpcycler
+        from pathlib import Path as _Path
+        import json as _json
+        policy_text = _Path(args.file).read_text()
+        upcycler = PolancoUpcycler(deployment_sites=["UKY", "NCSA", "TACC"])
+        results = upcycler.upcycle_and_enforce(policy_text, cycles=args.cycles)
+        _Path("policy_upcycle_results.json").write_text(
+            _json.dumps(results, indent=2, default=str)
+        )
+        print(f"\n✓ Results → policy_upcycle_results.json")
+    else:
+        from osiris_policy_upcycle import demo_upcycle
+        demo_upcycle(policy_source=args.source, cycles=args.cycles)
+
+
+def cmd_demo(args):
+    """Run Dr. Fei demonstration"""
+    print("\n⚛ OSIRIS Demo for Dr. Zongming Fei — University of Kentucky\n")
+    from osiris_fei_demo import FeiDemo
+    demo = FeiDemo(use_fab=args.fab, use_live=args.live)
+    demo.run(acts=args.act)
+
+
 def cmd_help(args):
     """Show help"""
     help_text = """
@@ -416,6 +457,9 @@ Commands:
   orchestrate       Run full OSIRIS orchestrator pipeline
   publish           Publish results to Zenodo
   forge             Quantum-to-Matter manufacturing pipeline
+  fabric            FABRIC Living Slice provisioner (autopoietic network)
+  policy            POLANCO policy upcycler → Living Security Organisms
+  demo              Dr. Fei 3-act demonstration (FABRIC + POLANCO + convergence)
   bridges           Run CRSM physics bridges (propulsion/energy/cosmological)
   swarm             Run NCLLM 9-agent swarm deliberation
   validate          Adversarial bridge validation (sensitivity/falsification/Bayes)
@@ -436,6 +480,26 @@ Forge (3D Manufacturing):
   osiris forge multicolor --design X          Multi-color CANVAS pipeline
   osiris forge calibrate --ip 192.168.1.X     Calibrate a connected printer
   osiris forge status --ip 192.168.1.X        Check printer status
+
+FABRIC (Living Slice):
+  osiris fabric                               UKY→NCSA→TACC star topology
+  osiris fabric --sites UKY NCSA CERN TOKYO   Custom multi-site slice
+  osiris fabric --topology toroidal            Toroidal (θ-locked) topology
+  osiris fabric --cycles 20                    Extended telemetry run
+
+POLANCO (Policy Upcycling):
+  osiris policy                               UK campus POLANCO demo
+  osiris policy --source natural               NPCE natural-language demo
+  osiris policy --file my_policies.txt         Upcycle custom policies
+  osiris policy --cycles 30                    Extended enforcement sim
+
+Dr. Fei Demo:
+  osiris demo                                 Full 3-act demo
+  osiris demo --act 1                          FABRIC Living Slice only
+  osiris demo --act 2                          POLANCO upcycling only
+  osiris demo --act 1 2 3                      All acts explicitly
+  osiris demo --fab                            Include CERN/Tokyo (FAB)
+  osiris demo --live                           Use real FABRIC API
 
 Physics Bridges:
   osiris bridges                              Run all three CRSM bridges
@@ -476,6 +540,15 @@ Examples:
   
   # Run the full OSIRIS orchestrator pipeline
   osiris orchestrate
+  
+  # Provision FABRIC Living Slice
+  osiris fabric --sites UKY NCSA CERN --topology mesh
+  
+  # Upcycle POLANCO policies
+  osiris policy --source campus
+  
+  # Run Dr. Fei 3-act demo
+  osiris demo --fab
   
   # Run physics bridges
   osiris bridges --output results.json
@@ -585,6 +658,22 @@ def cmd_forge(args):
         result = forge.forge_multicolor(design=design, scale_cm=scale, printer_ip=ip)
         sym = '\u2713' if result.get('success', False) else '\u2717'
         print(f"{sym} Multi-color pipeline: {result.get('message', 'done')}")
+    elif action == 'telemetry':
+        from osiris_feedback_bus import FeedbackBus, PrinterTelemetryRelay
+        bus = FeedbackBus()
+        relay = PrinterTelemetryRelay(bus)
+        printer_type = getattr(args, 'printer', 'bambu_p1s')
+        ip = getattr(args, 'ip', '')
+        serial = getattr(args, 'serial', '')
+        code = getattr(args, 'code', '')
+        print(f"\n\u269b Polling telemetry from {printer_type} @ {ip}...\n")
+        status = relay.poll_printer(printer_type, ip, serial=serial, access_code=code)
+        state = status.get('state', 'unknown')
+        print(f"  State: {state}")
+        for k, v in status.items():
+            if k != 'state':
+                print(f"  {k}: {v}")
+        bus.print_status()
     else:
         print(forge.status_report())
 
@@ -665,15 +754,22 @@ def main():
     forge_gen.add_argument('--geometry', default='tetrahedral_lattice',
                            choices=['tetrahedral_lattice', 'toroidal_manifold',
                                     'planck_reference_cube', 'acoustic_resonance_cavity',
-                                    'quaternion_orbit_model', 'torsion_lock_visualizer'])
+                                    'quaternion_orbit_model', 'torsion_lock_visualizer',
+                                    'gyroscopic_spinner'])
     forge_gen.add_argument('--scale', type=float, default=10.0, help='Scale in cm')
     forge_gen.add_argument('--format', default='stl', choices=['3mf', 'stl', 'both'])
     forge_gen.add_argument('--printer', default='bambu_p1s',
                            choices=['bambu_p1s', 'bambu_a1_mini', 'elegoo_centauri_2',
                                     'generic_fdm', 'generic_resin'])
+    forge_gen.add_argument('--rings', type=int, default=3, help='Gyroscope gimbal ring count')
+    forge_gen.add_argument('--bearings', type=int, default=8, help='Bearings per ring gap')
 
     forge_pipe = forge_subs.add_parser('pipeline', help='Full: generate + slice + send')
-    forge_pipe.add_argument('--geometry', default='tetrahedral_lattice')
+    forge_pipe.add_argument('--geometry', default='tetrahedral_lattice',
+                            choices=['tetrahedral_lattice', 'toroidal_manifold',
+                                     'planck_reference_cube', 'acoustic_resonance_cavity',
+                                     'quaternion_orbit_model', 'torsion_lock_visualizer',
+                                     'gyroscopic_spinner'])
     forge_pipe.add_argument('--scale', type=float, default=10.0)
     forge_pipe.add_argument('--printer', default='bambu_p1s',
                             choices=['bambu_p1s', 'bambu_a1_mini', 'elegoo_centauri_2'])
@@ -700,6 +796,41 @@ def main():
     forge_cal.add_argument('--code', type=str, default='')
 
     forge_subs.add_parser('report', help='Show forge status report')
+
+    forge_telem = forge_subs.add_parser('telemetry', help='Poll printer telemetry into feedback bus')
+    forge_telem.add_argument('--printer', default='bambu_p1s',
+                             choices=['bambu_p1s', 'bambu_a1_mini', 'moonraker',
+                                      'elegoo_centauri_2'])
+    forge_telem.add_argument('--ip', type=str, required=True, help='Printer IP address')
+    forge_telem.add_argument('--serial', type=str, default='')
+    forge_telem.add_argument('--code', type=str, default='')
+
+    # FABRIC command
+    fabric_parser = subparsers.add_parser('fabric', help='FABRIC Living Slice provisioner')
+    fabric_parser.add_argument('--sites', nargs='+', default=['UKY', 'NCSA', 'TACC'],
+                               help='FABRIC sites (e.g., UKY NCSA TACC CERN TOKYO)')
+    fabric_parser.add_argument('--topology', default='star',
+                               choices=['star', 'mesh', 'linear', 'toroidal'],
+                               help='Slice topology pattern')
+    fabric_parser.add_argument('--cycles', type=int, default=10, help='Telemetry cycles')
+
+    # Policy command
+    policy_parser = subparsers.add_parser('policy', help='POLANCO policy upcycler')
+    policy_parser.add_argument('--source', default='campus',
+                               choices=['campus', 'natural'],
+                               help="Policy source: 'campus' (POLANCO) or 'natural' (NPCE)")
+    policy_parser.add_argument('--cycles', type=int, default=20, help='Enforcement simulation cycles')
+    policy_parser.add_argument('--file', type=str, default='',
+                               help='Path to custom POLANCO policy file')
+
+    # Demo command
+    demo_parser = subparsers.add_parser('demo', help='Dr. Fei 3-act demonstration')
+    demo_parser.add_argument('--act', type=int, nargs='+', default=None,
+                             help='Which acts to run (1, 2, 3)')
+    demo_parser.add_argument('--fab', action='store_true',
+                             help='Include FABRIC Across Borders (CERN, TOKYO)')
+    demo_parser.add_argument('--live', action='store_true',
+                             help='Use live FABRIC API (requires credentials)')
 
     # Bridges command
     bridges_parser = subparsers.add_parser('bridges', help='Run CRSM physics bridges')
@@ -806,6 +937,12 @@ def main():
         cmd_introspect(args)
     elif args.command == 'feedback':
         cmd_feedback(args)
+    elif args.command == 'fabric':
+        cmd_fabric(args)
+    elif args.command == 'policy':
+        cmd_policy(args)
+    elif args.command == 'demo':
+        cmd_demo(args)
     elif args.command == 'license':
         cmd_license(args)
     elif args.command == 'help':

@@ -8,3 +8,7 @@ requests>=2.31.0
 PyYAML>=6.0
 rich>=13.0.0
 textual>=0.40.0
+# Manufacturing pipeline dependencies
+trimesh>=4.0.0
+paho-mqtt>=1.6.0
+zeroconf>=0.80.0

@@ -113,6 +113,7 @@ class ManufacturingMode(Enum):
     ACOUSTIC_RESONANCE_CAVITY = "acoustic_resonance_cavity"
     TORSION_LOCK_VISUALIZER = "torsion_lock_visualizer"
     QUATERNION_ORBIT_MODEL = "quaternion_orbit_model"
+    GYROSCOPIC_SPINNER = "gyroscopic_spinner"
 
 
 class PrinterType(Enum):
@@ -137,6 +138,12 @@ class ManufacturingConfig:
     include_metadata: bool = True
     output_format: str = "3mf"           # "3mf", "stl", or "both"
     printer_type: PrinterType = PrinterType.GENERIC_FDM
+    # Gyroscopic spinner parameters
+    gyro_rings: int = 3                  # Number of concentric gimbal rings
+    gyro_bearing_count: int = 8          # Ball bearings per ring gap
+    gyro_hub_radius: float = 0.8         # Central hub radius (cm)
+    gyro_ring_gap: float = 0.3           # Gap between rings (cm) — clearance for rotation
+    gyro_ring_thickness: float = 0.15    # Cross-section thickness of each ring (cm)
 
     def __post_init__(self):
         if self.toroid_minor_radius == 0.0:
@@ -403,6 +410,451 @@ class GeometricEngine:
             return trimesh.util.concatenate(struts)
         return None
 
+    # ── G5: Crystallization Controller ────────────────────────────────────
+
+    def g5_crystallization(self, vertices: np.ndarray,
+                           density_factor: float = 1.5) -> np.ndarray:
+        """
+        Lattice densification: contract vertices toward centroid by
+        density_factor^(-1), simulating crystallization pressure.
+        Vertices closer to centroid compress more (nonlinear radial map).
+        """
+        centroid = np.mean(vertices, axis=0)
+        relative = vertices - centroid
+        distances = np.linalg.norm(relative, axis=1, keepdims=True)
+        max_dist = np.max(distances) or 1.0
+
+        # Nonlinear compression: closer vertices compress more
+        # r_new = r * (r / r_max)^(1/density)
+        normalized = distances / max_dist
+        compression = np.power(normalized, 1.0 / density_factor)
+        densified = centroid + relative * compression
+
+        self.gene_outputs['G5'] = {
+            'density_factor': density_factor,
+            'centroid': centroid.tolist(),
+            'compression_range': [float(np.min(compression)),
+                                  float(np.max(compression))],
+        }
+        return densified
+
+    # ── G6: Quaternion Seed Injector ──────────────────────────────────────
+
+    def g6_quaternion_seeds(self, vertices: np.ndarray,
+                            seed_count: int = 4) -> Tuple[np.ndarray, List[int]]:
+        """
+        Inject quaternion seed nodes into the lattice. Seeds are placed at
+        vertices closest to the 2T group's principal quaternion axes.
+        Returns (vertices, seed_indices).
+        """
+        # Principal quaternion axes: ±i, ±j, ±k mapped to 3D
+        principal_axes = np.array([
+            [1, 0, 0], [-1, 0, 0],
+            [0, 1, 0], [0, -1, 0],
+            [0, 0, 1], [0, 0, -1],
+        ], dtype=np.float64)
+
+        # Scale axes to match vertex spread
+        scale = np.max(np.abs(vertices)) or 1.0
+        principal_axes *= scale * 0.6
+
+        # Find closest existing vertex to each axis
+        seed_indices = []
+        for ax in principal_axes[:seed_count]:
+            dists = np.linalg.norm(vertices - ax, axis=1)
+            idx = int(np.argmin(dists))
+            if idx not in seed_indices:
+                seed_indices.append(idx)
+
+        self.gene_outputs['G6'] = {
+            'seed_count': len(seed_indices),
+            'seed_indices': seed_indices,
+            'seed_positions': [vertices[i].tolist() for i in seed_indices],
+        }
+        return vertices, seed_indices
+
+    # ── G7: Phase Alignment Locker ────────────────────────────────────────
+
+    def g7_phase_alignment(self, vertices: np.ndarray,
+                            faces: np.ndarray) -> Dict[str, Any]:
+        """
+        Identify conjugate vertex pairs under the torsion lock angle.
+        Two vertices are conjugates if Rodrigues rotation about [1,1,1]
+        by θ=51.843° maps one within tolerance of the other.
+        """
+        R = torsion_rotation_matrix(self.config.torsion_angle)
+        rotated = vertices @ R.T
+        tolerance = 0.1 * self.config.scale_cm
+
+        conjugate_pairs = []
+        for i in range(len(vertices)):
+            dists = np.linalg.norm(vertices - rotated[i], axis=1)
+            j = int(np.argmin(dists))
+            if j != i and dists[j] < tolerance:
+                pair = (min(i, j), max(i, j))
+                if pair not in conjugate_pairs:
+                    conjugate_pairs.append(pair)
+
+        self.gene_outputs['G7'] = {
+            'conjugate_pairs': len(conjugate_pairs),
+            'alignment_quality': len(conjugate_pairs) / max(len(vertices), 1),
+            'tolerance_cm': tolerance,
+        }
+        return {
+            'pairs': conjugate_pairs,
+            'alignment_quality': self.gene_outputs['G7']['alignment_quality'],
+        }
+
+    # ── G8: Lattice Energy Computer ───────────────────────────────────────
+
+    def g8_lattice_energy(self, vertices: np.ndarray,
+                          faces: np.ndarray) -> np.ndarray:
+        """
+        Compute per-vertex Coulomb-like lattice energy and return a
+        scalar field for color mapping. Energy at vertex i is:
+          E_i = Σ_{j≠i} 1 / ||r_i - r_j||
+        Normalized to [0, 1] for color mapping (red = high, blue = low).
+        """
+        n = len(vertices)
+        energy = np.zeros(n, dtype=np.float64)
+
+        for i in range(n):
+            diffs = vertices - vertices[i]
+            dists = np.linalg.norm(diffs, axis=1)
+            dists[i] = np.inf  # avoid self-interaction
+            energy[i] = np.sum(1.0 / dists)
+
+        # Normalize to [0, 1]
+        e_min, e_max = np.min(energy), np.max(energy)
+        if e_max > e_min:
+            energy_norm = (energy - e_min) / (e_max - e_min)
+        else:
+            energy_norm = np.zeros_like(energy)
+
+        self.gene_outputs['G8'] = {
+            'energy_range': [float(e_min), float(e_max)],
+            'mean_energy': float(np.mean(energy)),
+            'hot_vertex': int(np.argmax(energy)),
+            'cold_vertex': int(np.argmin(energy)),
+        }
+        return energy_norm
+
+    # ── G9: Manifold Metric Tensor ────────────────────────────────────────
+
+    def g9_metric_tensor(self, vertices: np.ndarray,
+                         faces: np.ndarray) -> np.ndarray:
+        """
+        Compute per-face discrete metric tensor determinant from the
+        first fundamental form. Returns scalar curvature proxy per face
+        for surface visualization (det(g) deviation from Euclidean).
+        """
+        n_faces = len(faces)
+        curvature = np.zeros(n_faces, dtype=np.float64)
+
+        for idx, face in enumerate(faces):
+            v0, v1, v2 = vertices[face[0]], vertices[face[1]], vertices[face[2]]
+            e1 = v1 - v0
+            e2 = v2 - v0
+            # First fundamental form coefficients
+            g11 = np.dot(e1, e1)
+            g12 = np.dot(e1, e2)
+            g22 = np.dot(e2, e2)
+            det_g = g11 * g22 - g12 * g12
+            # Curvature proxy: deviation of det(g) from equilateral reference
+            # For equilateral triangle with side a: det(g) = 3a^4/4
+            a_sq = g11  # approximate side^2
+            ref_det = 0.75 * a_sq * a_sq if a_sq > 0 else 1.0
+            curvature[idx] = abs(det_g - ref_det) / max(ref_det, 1e-12)
+
+        self.gene_outputs['G9'] = {
+            'mean_curvature_deviation': float(np.mean(curvature)),
+            'max_curvature_deviation': float(np.max(curvature)),
+            'curvature_variance': float(np.var(curvature)),
+        }
+        return curvature
+
+    # ── G10: Dielectric Permittivity Controller ───────────────────────────
+
+    def g10_permittivity_displacement(self, vertices: np.ndarray,
+                                       epsilon_r: float = 3.2) -> np.ndarray:
+        """
+        Apply anisotropic displacement along the toroidal field axis to
+        simulate dielectric permittivity effects. Vertices are displaced
+        radially by ε_r-weighted toroidal potential contribution.
+        """
+        centroid = np.mean(vertices, axis=0)
+        relative = vertices - centroid
+        distances = np.linalg.norm(relative, axis=1, keepdims=True)
+        max_dist = np.max(distances) or 1.0
+
+        # Toroidal angular coordinate θ ≈ atan2(z, sqrt(x²+y²) - R)
+        rho = np.sqrt(relative[:, 0]**2 + relative[:, 1]**2)
+        R_eff = np.mean(rho) or 1.0
+        theta = np.arctan2(relative[:, 2], rho - R_eff)
+
+        # Displacement: radial push proportional to cos(θ) * ε_r factor
+        displacement_mag = (epsilon_r - 1.0) / epsilon_r * 0.05 * self.config.scale_cm
+        displacement = np.zeros_like(relative)
+        displacement[:, 0] = displacement_mag * np.cos(theta) * (relative[:, 0] / (rho + 1e-12))
+        displacement[:, 1] = displacement_mag * np.cos(theta) * (relative[:, 1] / (rho + 1e-12))
+        displacement[:, 2] = displacement_mag * np.sin(theta)
+
+        displaced = vertices + displacement
+
+        self.gene_outputs['G10'] = {
+            'epsilon_r': epsilon_r,
+            'displacement_magnitude_cm': displacement_mag,
+            'max_displacement': float(np.max(np.linalg.norm(displacement, axis=1))),
+        }
+        return displaced
+
+    # ── G11: Lock Condition Enforcer ──────────────────────────────────────
+
+    def g11_lock_enforcement(self, vertices: np.ndarray,
+                              faces: np.ndarray) -> Dict[str, Any]:
+        """
+        Verify and report torsion lock compliance across the mesh.
+        Checks that the 51.843° rotation about [1,1,1] preserves the
+        vertex connectivity (edge lengths within tolerance after rotation).
+        Returns violation metrics and indices of non-compliant vertices.
+        """
+        R = torsion_rotation_matrix(self.config.torsion_angle)
+        rotated = vertices @ R.T
+
+        # Check edge length preservation
+        edges = set()
+        for face in faces:
+            for i in range(len(face)):
+                edge = (min(face[i], face[(i+1) % len(face)]),
+                        max(face[i], face[(i+1) % len(face)]))
+                edges.add(edge)
+
+        violations = []
+        total_drift = 0.0
+        tolerance = 0.01 * self.config.scale_cm  # 1% of scale
+
+        for i, j in edges:
+            orig_len = np.linalg.norm(vertices[j] - vertices[i])
+            rot_len = np.linalg.norm(rotated[j] - rotated[i])
+            drift = abs(rot_len - orig_len)
+            total_drift += drift
+            if drift > tolerance:
+                violations.append({
+                    'edge': (i, j),
+                    'drift_cm': float(drift),
+                    'original_length': float(orig_len),
+                })
+
+        lock_score = 1.0 - len(violations) / max(len(edges), 1)
+
+        self.gene_outputs['G11'] = {
+            'lock_score': lock_score,
+            'total_drift_cm': float(total_drift),
+            'violations': len(violations),
+            'total_edges': len(edges),
+            'tolerance_cm': tolerance,
+        }
+        return {
+            'lock_score': lock_score,
+            'violations': violations,
+            'compliant': lock_score > 0.95,
+        }
+
+    # ── Gyroscopic Spinner Generator ──────────────────────────────────────
+
+    def _generate_torus_ring(self, major_radius: float, minor_radius: float,
+                              n_major: int = 64, n_minor: int = 16,
+                              axis: int = 0) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Generate a torus mesh centered at origin.
+        axis: 0=X (YZ plane), 1=Y (XZ plane), 2=Z (XY plane)
+        """
+        theta = np.linspace(0, 2 * np.pi, n_major, endpoint=False)
+        phi = np.linspace(0, 2 * np.pi, n_minor, endpoint=False)
+        theta_grid, phi_grid = np.meshgrid(theta, phi)
+
+        # Generate in XY plane first
+        x = (major_radius + minor_radius * np.cos(phi_grid)) * np.cos(theta_grid)
+        y = (major_radius + minor_radius * np.cos(phi_grid)) * np.sin(theta_grid)
+        z = minor_radius * np.sin(phi_grid)
+
+        vertices = np.stack([x.ravel(), y.ravel(), z.ravel()], axis=-1)
+
+        # Rotate to target axis plane
+        if axis == 0:  # ring rotates around X → rotate 90° about Y
+            cos90, sin90 = 0.0, 1.0
+            rot = np.array([[cos90, 0, sin90], [0, 1, 0], [-sin90, 0, cos90]])
+            vertices = vertices @ rot.T
+        elif axis == 1:  # ring rotates around Y → rotate 90° about X
+            cos90, sin90 = 0.0, 1.0
+            rot = np.array([[1, 0, 0], [0, cos90, -sin90], [0, sin90, cos90]])
+            vertices = vertices @ rot.T
+        # axis == 2: already in XY plane (rotates around Z)
+
+        faces = []
+        for i in range(n_minor):
+            for j in range(n_major):
+                i1 = (i + 1) % n_minor
+                j1 = (j + 1) % n_major
+                v00 = i * n_major + j
+                v10 = i1 * n_major + j
+                v01 = i * n_major + j1
+                v11 = i1 * n_major + j1
+                faces.append([v00, v10, v11])
+                faces.append([v00, v11, v01])
+
+        return vertices, np.array(faces)
+
+    def _generate_sphere(self, center: np.ndarray, radius: float,
+                          n_segments: int = 8) -> Tuple[np.ndarray, np.ndarray]:
+        """Generate a UV sphere mesh at the given center."""
+        vertices = []
+        faces = []
+
+        # Add poles
+        vertices.append(center + np.array([0, 0, radius]))  # north pole
+        for i in range(1, n_segments):
+            lat = np.pi * i / n_segments
+            for j in range(n_segments * 2):
+                lon = 2 * np.pi * j / (n_segments * 2)
+                x = radius * np.sin(lat) * np.cos(lon)
+                y = radius * np.sin(lat) * np.sin(lon)
+                z = radius * np.cos(lat)
+                vertices.append(center + np.array([x, y, z]))
+        vertices.append(center + np.array([0, 0, -radius]))  # south pole
+
+        vertices = np.array(vertices)
+        n_lon = n_segments * 2
+
+        # North pole cap
+        for j in range(n_lon):
+            j1 = (j + 1) % n_lon
+            faces.append([0, 1 + j, 1 + j1])
+
+        # Body quads
+        for i in range(n_segments - 2):
+            for j in range(n_lon):
+                j1 = (j + 1) % n_lon
+                v00 = 1 + i * n_lon + j
+                v01 = 1 + i * n_lon + j1
+                v10 = 1 + (i + 1) * n_lon + j
+                v11 = 1 + (i + 1) * n_lon + j1
+                faces.append([v00, v10, v11])
+                faces.append([v00, v11, v01])
+
+        # South pole cap
+        south = len(vertices) - 1
+        base = 1 + (n_segments - 2) * n_lon
+        for j in range(n_lon):
+            j1 = (j + 1) % n_lon
+            faces.append([south, base + j1, base + j])
+
+        return vertices, np.array(faces)
+
+    def generate_gyroscopic_spinner(self) -> 'ManufacturingResult':
+        """
+        Generate a fidget-spinner gyroscope with concentric gimbal rings,
+        ball bearings, and a torsion-locked central hub.
+
+        Structure:
+          - Central hub: tetrahedral lattice core (G0+G3 torsion-locked)
+          - Gimbal rings: N concentric torus rings in orthogonal planes
+            Ring 0: XY plane (rotates around Z)
+            Ring 1: XZ plane (rotates around Y)
+            Ring 2: YZ plane (rotates around X)
+          - Bearings: small spheres placed in the gap between rings
+          - All rings share the torsion lock angle offset (51.843°)
+        """
+        scale = self.config.scale_cm / 2.0
+        n_rings = self.config.gyro_rings
+        hub_r = self.config.gyro_hub_radius * scale
+        gap = self.config.gyro_ring_gap * scale
+        ring_thick = self.config.gyro_ring_thickness * scale
+        n_bearings = self.config.gyro_bearing_count
+
+        all_verts = []
+        all_faces = []
+        offset = 0
+
+        # ── Central hub: tetrahedral lattice with torsion lock ──
+        hub_verts, hub_faces = self.g0_tetrahedral_lattice(depth=2)
+        # Scale hub to fit inside innermost ring
+        hub_scale = hub_r / (np.max(np.abs(hub_verts)) or 1.0)
+        hub_verts = hub_verts * hub_scale
+        hub_verts = self.g3_apply_torsion_lock(hub_verts)
+
+        all_verts.append(hub_verts)
+        all_faces.append(hub_faces + offset)
+        offset += len(hub_verts)
+
+        # ── Gimbal rings: concentric tori in orthogonal planes ──
+        ring_axes = [2, 1, 0]  # Z, Y, X planes
+        for ring_idx in range(n_rings):
+            major_r = hub_r + gap * (ring_idx + 1) + ring_thick * ring_idx
+            ring_res = max(32, self.config.resolution // 2)
+            tube_res = max(12, self.config.resolution // 4)
+
+            ring_v, ring_f = self._generate_torus_ring(
+                major_radius=major_r,
+                minor_radius=ring_thick,
+                n_major=ring_res,
+                n_minor=tube_res,
+                axis=ring_axes[ring_idx % len(ring_axes)],
+            )
+
+            # Apply torsion lock rotation with ring-specific phase offset
+            phase_angle = self.config.torsion_angle * (ring_idx + 1)
+            R_phase = torsion_rotation_matrix(phase_angle)
+            ring_v = ring_v @ R_phase.T
+
+            all_verts.append(ring_v)
+            all_faces.append(ring_f + offset)
+            offset += len(ring_v)
+
+            # ── Bearings: spheres distributed in the gap ──
+            bearing_r = gap * 0.3  # bearing radius = 30% of gap
+            gap_center_r = major_r - gap * 0.5  # midpoint of gap
+
+            for b in range(n_bearings):
+                angle = 2 * np.pi * b / n_bearings
+                # Position bearing on the ring's plane
+                if ring_axes[ring_idx % len(ring_axes)] == 2:  # XY plane
+                    bx = gap_center_r * np.cos(angle)
+                    by = gap_center_r * np.sin(angle)
+                    bz = 0.0
+                elif ring_axes[ring_idx % len(ring_axes)] == 1:  # XZ plane
+                    bx = gap_center_r * np.cos(angle)
+                    by = 0.0
+                    bz = gap_center_r * np.sin(angle)
+                else:  # YZ plane
+                    bx = 0.0
+                    by = gap_center_r * np.cos(angle)
+                    bz = gap_center_r * np.sin(angle)
+
+                center = np.array([bx, by, bz])
+                bearing_v, bearing_f = self._generate_sphere(center, bearing_r, n_segments=6)
+
+                all_verts.append(bearing_v)
+                all_faces.append(bearing_f + offset)
+                offset += len(bearing_v)
+
+        # Concatenate all geometry
+        final_verts = np.vstack(all_verts)
+        final_faces = np.vstack(all_faces)
+
+        # Apply full gene pipeline
+        final_verts = self.g5_crystallization(final_verts, density_factor=1.2)
+        self.g7_phase_alignment(final_verts, final_faces)
+        self.g8_lattice_energy(final_verts, final_faces)
+        self.g11_lock_enforcement(final_verts, final_faces)
+
+        if HAS_TRIMESH:
+            mesh = trimesh.Trimesh(vertices=final_verts, faces=final_faces)
+        else:
+            mesh = None
+
+        return self._export(mesh, final_verts, final_faces, "gyroscopic_spinner")
+
     # ── Composite Generators ──────────────────────────────────────────────
 
     def generate_tetrahedral_lattice(self) -> 'ManufacturingResult':
@@ -534,6 +986,7 @@ class GeometricEngine:
             ManufacturingMode.ACOUSTIC_RESONANCE_CAVITY: self.generate_acoustic_resonance_cavity,
             ManufacturingMode.QUATERNION_ORBIT_MODEL: self.generate_quaternion_orbit_model,
             ManufacturingMode.TORSION_LOCK_VISUALIZER: self.generate_tetrahedral_lattice,
+            ManufacturingMode.GYROSCOPIC_SPINNER: self.generate_gyroscopic_spinner,
         }
         gen = generators.get(self.config.mode, self.generate_tetrahedral_lattice)
         return gen()

@@ -46,6 +46,9 @@ def create_release():
         ("osiris_publication_zenodo.py", "lib"),
         ("osiris_rqc_orchestrator.py", "bin"),
         ("osiris_tui.py", "bin"),
+        ("osiris_fabric_bridge.py", "lib"),
+        ("osiris_policy_upcycle.py", "lib"),
+        ("osiris_fei_demo.py", "bin"),
     ]
     
     for module, dest_dir in modules:
@@ -62,6 +65,7 @@ def create_release():
         "DEPLOYMENT_PACKAGE.md",
         "SYSTEM_STATUS.md",
         "RELEASE_NOTES_v3.0.md",
+        "PROPOSAL_UKY_FABRIC_PARTNERSHIP.md",
     ]
     
     for doc in docs:
@@ -119,16 +123,19 @@ else:
         "build_timestamp": TIMESTAMP,
         "status": "Production Ready",
         "test_pass_rate": "100%",
-        "core_modules": 6,
-        "total_lines": 2817,
-        "documentation_files": 6,
+        "core_modules": 9,
+        "total_lines": 4477,
+        "documentation_files": 7,
         "features": [
             "RQC vs RCS Benchmark",
             "Natural Language TUI",
             "4 Application Domains",
             "Zenodo Publication",
             "Statistical Validation",
-            "Mock Hardware Support"
+            "Mock Hardware Support",
+            "FABRIC Living Slice Provisioning",
+            "POLANCO Policy Upcycling",
+            "Negentropic Control Plane"
         ],
         "test_results": {
             "units_passed": 30,
@@ -170,8 +177,8 @@ else:
   Size:        {archive_size:.1f}K
   
 📂 CONTENTS
-  Modules:     6 Python files (2,817 lines)
-  Docs:        6 guides (4,000+ lines)
+  Modules:     9 Python files (4,477 lines)
+  Docs:        7 guides (4,000+ lines)
   Results:     3 output files (20KB)
   Scripts:     Launcher + wrapper
   

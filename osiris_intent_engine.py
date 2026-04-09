@@ -22,6 +22,8 @@ class IntentType(Enum):
     PUBLISH = "publish"
     REFINE = "refine"
     MANUFACTURING = "manufacturing"
+    NETWORK_POLICY = "network_policy"
+    FABRIC_PROVISION = "fabric_provision"
     STATUS = "status"
     HELP = "help"
     UNKNOWN = "unknown"
@@ -139,6 +141,47 @@ class IntentEngine:
         r"lattice.*print",
         r"quaternion.*model",
         r"torsion.*lock.*model",
+        r"gyroscop",
+        r"fidget.*spin",
+        r"spinner",
+        r"gimbal.*ring",
+    ]
+
+    NETWORK_POLICY_PATTERNS = [
+        r"network.*polic",
+        r"polic.*enforc",
+        r"polanco",
+        r"allow.*to.*on",
+        r"deny.*to",
+        r"restrict.*to",
+        r"isolate.*from",
+        r"rate.?limit",
+        r"firewall",
+        r"sdn.*rule",
+        r"security.*organism",
+        r"upcycle",
+        r"netsecops",
+        r"npce",
+        r"cage.*cod",
+        r"acl",
+        r"access.*control",
+    ]
+
+    FABRIC_PROVISION_PATTERNS = [
+        r"fabric",
+        r"living.*slice",
+        r"provision",
+        r"topology",
+        r"fabric.*bridge",
+        r"fab\b",
+        r"cern",
+        r"ncsa",
+        r"tacc",
+        r"organ.*deploy",
+        r"negentropic.*control",
+        r"sovereign.*node",
+        r"neural.*bus",
+        r"transcontinental",
     ]
 
     def __init__(self):
@@ -181,7 +224,15 @@ class IntentEngine:
     def _classify_intent(self, text: str) -> IntentType:
         """Classify intent from text patterns"""
         
-        # Check each pattern
+        # Check each pattern — network/FABRIC intents first (higher priority)
+        for pattern in self.NETWORK_POLICY_PATTERNS:
+            if re.search(pattern, text):
+                return IntentType.NETWORK_POLICY
+
+        for pattern in self.FABRIC_PROVISION_PATTERNS:
+            if re.search(pattern, text):
+                return IntentType.FABRIC_PROVISION
+
         for pattern in self.MANUFACTURING_PATTERNS:
             if re.search(pattern, text):
                 return IntentType.MANUFACTURING
@@ -280,6 +331,10 @@ class IntentEngine:
             'cavity': 'acoustic_resonance_cavity',
             'quaternion': 'quaternion_orbit_model',
             'torsion': 'torsion_lock_visualizer',
+            'gyroscop': 'gyroscopic_spinner',
+            'spinner': 'gyroscopic_spinner',
+            'fidget': 'gyroscopic_spinner',
+            'gimbal': 'gyroscopic_spinner',
         }
         for pattern, geom_mode in geom_map.items():
             if pattern in text:
@@ -366,6 +421,26 @@ class IntentEngine:
                 "5. Monitor print status via MQTT"
             ]
 
+        elif intent_type == IntentType.NETWORK_POLICY:
+            actions = [
+                "1. Parse POLANCO / natural language policy definitions",
+                "2. Upcycle static rules to Living Security Organisms",
+                "3. Assign CAGE containment levels and entropy thresholds",
+                "4. Deploy organisms to FABRIC sites",
+                "5. Simulate adversarial enforcement with Φ/Γ monitoring",
+                "6. Archive enforcement results to Zenodo"
+            ]
+
+        elif intent_type == IntentType.FABRIC_PROVISION:
+            actions = [
+                "1. Initialize FABRIC Living Slice topology",
+                "2. Provision organ nodes at target sites (UKY, NCSA, TACC, CERN)",
+                "3. Deploy OSIRIS autonomous agents via SSH",
+                "4. Start Negentropic Control Plane telemetry",
+                "5. Monitor Φ/Ξ metrics and phase-conjugate healing",
+                "6. Generate experiment record for Zenodo archival"
+            ]
+
         elif intent_type == IntentType.STATUS:
             actions = [
                 "1. Check running jobs",
@@ -397,6 +472,10 @@ class IntentEngine:
             agents = ["optimizer_agent"]
         elif intent_type == IntentType.MANUFACTURING:
             agents = ["manufacturing_agent", "printer_discovery_agent", "sovereign_executor"]
+        elif intent_type == IntentType.NETWORK_POLICY:
+            agents = ["policy_upcycler_agent", "security_organism_agent", "compliance_gate"]
+        elif intent_type == IntentType.FABRIC_PROVISION:
+            agents = ["fabric_bridge_agent", "negentropic_control_agent", "telemetry_agent"]
         elif intent_type == IntentType.STATUS:
             agents = ["monitor_agent"]
         

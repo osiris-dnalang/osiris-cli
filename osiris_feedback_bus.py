@@ -49,6 +49,7 @@ class MessageType(Enum):
     ROUTING = "routing"          # intent → TUI
     ALERT = "alert"              # any → any
     IMPROVEMENT = "improvement"  # introspection → mesh
+    PRINTER_TELEMETRY = "printer_telemetry"  # printer → swarm + TUI
 
 
 @dataclass
@@ -220,6 +221,54 @@ class FeedbackBus:
             priority=0.8,
         ))
 
+    def emit_printer_telemetry(self, printer_id: str,
+                                status: Dict[str, Any],
+                                print_progress: Optional[float] = None):
+        """
+        Printer → Swarm + TUI: publish real-time printer telemetry.
+        Feeds nozzle temp, bed temp, print state, layer progress
+        into the swarm for deliberation context and TUI for dashboard.
+        """
+        payload = {
+            "printer_id": printer_id,
+            "printer_status": status,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+        if print_progress is not None:
+            payload["print_progress"] = print_progress
+
+        # To swarm (inject printer context into deliberation)
+        self.publish(BusMessage(
+            msg_type=MessageType.PRINTER_TELEMETRY,
+            source="printer",
+            target="swarm",
+            payload=payload,
+            priority=0.6,
+        ))
+        # To TUI (live printer dashboard)
+        self.publish(BusMessage(
+            msg_type=MessageType.PRINTER_TELEMETRY,
+            source="printer",
+            target="tui",
+            payload=payload,
+            priority=0.5,
+        ))
+
+        # Auto-alert on temperature anomalies
+        nozzle_t = status.get("nozzle_temp", 0)
+        bed_t = status.get("bed_temp", 0)
+        state = status.get("state", "")
+
+        if isinstance(nozzle_t, (int, float)) and nozzle_t > 280:
+            self.emit_alert("printer", f"Nozzle over-temp: {nozzle_t}°C on {printer_id}",
+                           severity=0.9, details=status)
+        if isinstance(bed_t, (int, float)) and bed_t > 120:
+            self.emit_alert("printer", f"Bed over-temp: {bed_t}°C on {printer_id}",
+                           severity=0.8, details=status)
+        if state in ("error", "failed", "fault"):
+            self.emit_alert("printer", f"Printer fault on {printer_id}: {state}",
+                           severity=0.95, details=status)
+
     # ═══════════════════════════════════════════════════════════════════════
     # STATE QUERIES
     # ═══════════════════════════════════════════════════════════════════════
@@ -299,6 +348,181 @@ class FeedbackBus:
                 print(f"    {icon} [{a.source}] {a.payload.get('message', '?')}")
 
         print(f"{'═' * 72}")
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# PRINTER TELEMETRY RELAY — Bridge from Forge to Feedback Bus
+# ════════════════════════════════════════════════════════════════════════════════
+
+class PrinterTelemetryRelay:
+    """
+    Bridges real-time printer status from OsirisForge bridges (Bambu MQTT,
+    Moonraker HTTP, Elegoo) into the Feedback Bus, enabling the NCLLM Swarm
+    to reason about physical manufacturing state during deliberation.
+
+    Usage:
+        bus = FeedbackBus()
+        relay = PrinterTelemetryRelay(bus)
+        relay.poll_printer("bambu_p1s", ip="192.168.1.100", serial="01S...", access_code="...")
+        relay.poll_printer("moonraker", ip="192.168.1.200")
+    """
+
+    def __init__(self, bus: FeedbackBus):
+        self.bus = bus
+        self._printer_states: Dict[str, Dict[str, Any]] = {}
+
+    def poll_printer(self, printer_type: str, ip: str,
+                     serial: str = "", access_code: str = "",
+                     port: int = 0) -> Dict[str, Any]:
+        """
+        Query a printer's current status and relay it to the feedback bus.
+        Returns the raw status dict.
+
+        printer_type: 'bambu_p1s', 'moonraker', 'elegoo_centauri_2'
+        """
+        status = {}
+        printer_id = f"{printer_type}@{ip}"
+
+        if printer_type.startswith("bambu"):
+            status = self._poll_bambu(ip, serial, access_code)
+        elif printer_type in ("moonraker", "elegoo_centauri_2", "elegoo_cc2"):
+            status = self._poll_moonraker(ip, port or 7125)
+        else:
+            status = {"state": "unknown", "printer_type": printer_type}
+
+        self._printer_states[printer_id] = status
+
+        # Relay to feedback bus
+        progress = None
+        if "progress" in status:
+            try:
+                progress = float(status["progress"])
+            except (ValueError, TypeError):
+                pass
+
+        self.bus.emit_printer_telemetry(printer_id, status, progress)
+
+        return status
+
+    @staticmethod
+    def _poll_bambu(ip: str, serial: str, access_code: str) -> Dict[str, Any]:
+        """Query Bambu printer via MQTT single-shot status request."""
+        try:
+            import paho.mqtt.client as mqtt
+        except ImportError:
+            return {"state": "error", "error": "paho-mqtt not installed"}
+
+        result_data: Dict[str, Any] = {"state": "connecting"}
+        received = []
+
+        def on_connect(client, userdata, flags, rc):
+            if rc == 0:
+                topic = f"device/{serial}/report"
+                client.subscribe(topic)
+                # Request status
+                push_topic = f"device/{serial}/request"
+                client.publish(push_topic, json.dumps({
+                    "pushing": {"sequence_id": "0", "command": "pushall"}
+                }))
+            else:
+                result_data["state"] = "auth_failed"
+                result_data["rc"] = rc
+
+        def on_message(client, userdata, msg):
+            try:
+                payload = json.loads(msg.payload.decode("utf-8", errors="replace"))
+                if "print" in payload:
+                    p = payload["print"]
+                    result_data.update({
+                        "state": p.get("gcode_state", "unknown"),
+                        "progress": p.get("mc_percent", 0),
+                        "nozzle_temp": p.get("nozzle_temper", 0),
+                        "bed_temp": p.get("bed_temper", 0),
+                        "layer": p.get("layer_num", 0),
+                        "total_layers": p.get("total_layer_num", 0),
+                        "fan_speed": p.get("cooling_fan_speed", 0),
+                        "wifi_signal": p.get("wifi_signal", ""),
+                    })
+                    ams = p.get("ams", {})
+                    if ams:
+                        result_data["ams"] = ams
+                received.append(True)
+            except Exception:
+                pass
+
+        client = mqtt.Client()
+        client.username_pw_set("bblp", access_code)
+        client.tls_set()
+        client.tls_insecure_set(True)
+        client.on_connect = on_connect
+        client.on_message = on_message
+
+        try:
+            client.connect(ip, 8883, keepalive=10)
+            # Non-blocking loop with timeout
+            deadline = time.time() + 5.0
+            client.loop_start()
+            while not received and time.time() < deadline:
+                time.sleep(0.1)
+            client.loop_stop()
+            client.disconnect()
+        except Exception as e:
+            result_data = {"state": "connection_failed", "error": str(e)}
+
+        return result_data
+
+    @staticmethod
+    def _poll_moonraker(ip: str, port: int = 7125) -> Dict[str, Any]:
+        """Query Moonraker/Klipper printer via HTTP API."""
+        try:
+            import requests as req
+        except ImportError:
+            return {"state": "error", "error": "requests not installed"}
+
+        base = f"http://{ip}:{port}"
+        try:
+            resp = req.get(f"{base}/printer/objects/query",
+                           params={"extruder": None, "heater_bed": None,
+                                   "print_stats": None, "toolhead": None,
+                                   "fan": None},
+                           timeout=5)
+            if resp.status_code == 200:
+                data = resp.json().get("result", {}).get("status", {})
+                extruder = data.get("extruder", {})
+                bed = data.get("heater_bed", {})
+                stats = data.get("print_stats", {})
+                toolhead = data.get("toolhead", {})
+                fan = data.get("fan", {})
+
+                progress = 0.0
+                if stats.get("print_duration", 0) > 0:
+                    # Estimate progress from file position if available
+                    resp2 = req.get(f"{base}/printer/objects/query",
+                                    params={"virtual_sdcard": None},
+                                    timeout=3)
+                    if resp2.status_code == 200:
+                        vsd = resp2.json().get("result", {}).get("status", {}).get("virtual_sdcard", {})
+                        progress = vsd.get("progress", 0) * 100
+
+                return {
+                    "state": stats.get("state", "unknown"),
+                    "nozzle_temp": extruder.get("temperature", 0),
+                    "nozzle_target": extruder.get("target", 0),
+                    "bed_temp": bed.get("temperature", 0),
+                    "bed_target": bed.get("target", 0),
+                    "print_duration": stats.get("print_duration", 0),
+                    "filename": stats.get("filename", ""),
+                    "position": toolhead.get("position", []),
+                    "fan_speed": fan.get("speed", 0),
+                    "progress": progress,
+                }
+            return {"state": "http_error", "status_code": resp.status_code}
+        except Exception as e:
+            return {"state": "connection_failed", "error": str(e)}
+
+    def get_all_states(self) -> Dict[str, Dict[str, Any]]:
+        """Return cached states from all polled printers."""
+        return dict(self._printer_states)
 
 
 # ════════════════════════════════════════════════════════════════════════════════
