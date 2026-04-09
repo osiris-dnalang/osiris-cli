@@ -68,8 +68,22 @@ EOF
     fi
 done
 
+# Compile Cython extension (optional, for IP protection)
+echo "🔧 Attempting Cython compilation..."
+if python3 -c "import Cython" 2>/dev/null; then
+    if [ -f "${REPO_ROOT}/setup_cython.py" ]; then
+        cd "${REPO_ROOT}"
+        python3 setup_cython.py build_ext --inplace 2>/dev/null && \
+            echo "  ✓ Cython torsion core compiled" || \
+            echo "  ⚠ Cython build failed — using pure-Python fallback"
+    fi
+else
+    echo "  ⚠ Cython not installed — using pure-Python torsion core"
+fi
+
 # Create discovery output directory
 mkdir -p "${REPO_ROOT}/discoveries"
+mkdir -p "${REPO_ROOT}/papers"
 
 echo ""
 echo "✓ Verifying OSIRIS installation..."
@@ -83,6 +97,9 @@ cd "${REPO_ROOT}"
 python3 -c "from osiris_auto_discovery import AutoDiscoveryPipeline; print('  ✓ osiris_auto_discovery')" 2>/dev/null || echo "  ⚠ osiris_auto_discovery import failed"
 python3 -c "from osiris_orchestrator import WorkflowScheduler; print('  ✓ osiris_orchestrator')" 2>/dev/null || echo "  ⚠ osiris_orchestrator import failed"
 python3 -c "from osiris_launcher import main; print('  ✓ osiris_launcher')" 2>/dev/null || echo "  ⚠ osiris_launcher import failed"
+python3 -c "from osiris_physics_bridges import BridgeExecutor; print('  ✓ osiris_physics_bridges')" 2>/dev/null || echo "  ⚠ osiris_physics_bridges import failed"
+python3 -c "from osiris_ncllm_swarm import NCLLMSwarm; print('  ✓ osiris_ncllm_swarm')" 2>/dev/null || echo "  ⚠ osiris_ncllm_swarm import failed"
+python3 -c "from osiris_forge import OsirisForge; print('  ✓ osiris_forge')" 2>/dev/null || echo "  ⚠ osiris_forge import failed"
 python3 -c "from rich.console import Console; print('  ✓ Rich library')" 2>/dev/null || echo "  ⚠ rich import failed"
 
 echo ""
@@ -99,6 +116,10 @@ echo ""
 echo "Helpful commands:" 
   echo "  - osiris status"
   echo "  - osiris benchmark --quick"
+  echo "  - osiris bridges --output bridges.json"
+  echo "  - osiris swarm --task 'optimize torsion solver'"
+  echo "  - osiris forge pipeline --printer elegoo_cc2 --ip 192.168.1.X"
+  echo "  - osiris forge multicolor --design shannon_map"
   echo "  - osiris publish --mode all --sandbox"
   echo "  - osiris intent --text 'run a benchmark'"
 

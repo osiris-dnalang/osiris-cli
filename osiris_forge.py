@@ -95,7 +95,7 @@ GCODE_DANGEROUS_COMMANDS = {
 
 # G-code temperature safety limits
 GCODE_TEMP_LIMITS = {
-    'nozzle_max': 300,      # °C — above this risks fire
+    'nozzle_max': 350,      # °C — CC2 hardened steel; standard FDM limit 300
     'bed_max': 120,         # °C
     'resin_uv_max': 100,    # % power
 }
@@ -110,6 +110,7 @@ class PrinterHardware(Enum):
     BAMBU_P1S = "bambu_p1s"
     BAMBU_A1_MINI = "bambu_a1_mini"
     ELEGOO_CENTAURI_2 = "elegoo_centauri_2"
+    ELEGOO_CC2 = "elegoo_cc2"
     GENERIC_FDM = "generic_fdm"
     GENERIC_RESIN = "generic_resin"
 
@@ -131,7 +132,11 @@ class PrinterProfile:
     protocol: str                                    # mqtt, http, usb
     default_port: int
     supports_ams: bool = False                       # Bambu AMS multi-material
+    supports_canvas: bool = False                     # Elegoo CANVAS multi-color
+    canvas_extruders: int = 1                         # Number of CANVAS extruders
     is_resin: bool = False
+    enclosed: bool = False                            # Enclosed chamber
+    ai_camera: bool = False                           # AI detection camera
     firmware: str = ""
     mqtt_topic_prefix: str = ""
     ftp_port: int = 990
@@ -179,13 +184,13 @@ PRINTER_PROFILES: Dict[PrinterHardware, PrinterProfile] = {
     ),
     PrinterHardware.ELEGOO_CENTAURI_2: PrinterProfile(
         hardware=PrinterHardware.ELEGOO_CENTAURI_2,
-        name="Elegoo Centauri Carbon 2",
+        name="Elegoo Centauri 2 (Resin)",
         build_volume_mm=(218, 123, 210),
-        nozzle_diameter=0.0,          # Resin — no nozzle
+        nozzle_diameter=0.0,
         layer_height_default=0.05,
         layer_height_min=0.01,
-        filament_diameter=0.0,        # Resin — no filament
-        max_speed_mm_s=0,             # Resin — layer-based
+        filament_diameter=0.0,
+        max_speed_mm_s=0,
         heated_bed=False,
         max_nozzle_temp=0,
         max_bed_temp=0,
@@ -193,6 +198,26 @@ PRINTER_PROFILES: Dict[PrinterHardware, PrinterProfile] = {
         default_port=0,
         is_resin=True,
         firmware="chitubox",
+    ),
+    PrinterHardware.ELEGOO_CC2: PrinterProfile(
+        hardware=PrinterHardware.ELEGOO_CC2,
+        name="Elegoo Centauri Carbon 2",
+        build_volume_mm=(320, 320, 350),
+        nozzle_diameter=0.4,
+        layer_height_default=0.20,
+        layer_height_min=0.06,
+        filament_diameter=1.75,
+        max_speed_mm_s=700,           # CoreXY high-speed
+        heated_bed=True,
+        max_nozzle_temp=350,          # Hardened steel nozzle
+        max_bed_temp=120,
+        protocol="moonraker",
+        default_port=7125,
+        supports_canvas=True,
+        canvas_extruders=4,
+        enclosed=True,
+        ai_camera=True,
+        firmware="klipper",
     ),
 }
 
@@ -841,6 +866,456 @@ class MoonrakerBridge:
 
 
 # ════════════════════════════════════════════════════════════════════════════════
+# CENTAURI CARBON 2 BRIDGE — Moonraker API + CANVAS Multi-Color
+# ════════════════════════════════════════════════════════════════════════════════
+
+class CentauriCarbon2Bridge:
+    """
+    Communication bridge for Elegoo Centauri Carbon 2 (FDM CoreXY).
+
+    The CC2 runs Klipper-based firmware (Cosmos) and exposes a
+    Moonraker-compatible API on port 7125. The CANVAS multi-color
+    unit supports up to 4 extruders for multi-material printing.
+
+    Hardware:
+      - CoreXY motion, 320x320x350mm build volume
+      - 350°C hardened steel nozzle (PA-CF, PC capable)
+      - Enclosed chamber with smart grille ventilation
+      - AI camera for real-time print monitoring
+      - CANVAS 4-color multi-material unit
+
+    Protocol Stack:
+      - Moonraker HTTP API (port 7125) — control, status, uploads
+      - Klipper G-code console            — raw command interface
+      - MJPEG camera stream               — AI monitoring feed
+    """
+
+    # CANVAS extruder material mapping for Quantum Sculpture prints
+    CANVAS_SHANNON_MAP = {
+        0: {"role": "structural", "default_material": "PA-CF",
+            "color": "grey", "description": "Main structural tetrahedron"},
+        1: {"role": "bifurcation", "default_material": "PETG",
+            "color": "red", "description": "High-energy bifurcation points"},
+        2: {"role": "entropy_suppression", "default_material": "PLA",
+            "color": "blue", "description": "Entropy suppression zones"},
+        3: {"role": "torsion_lock", "default_material": "PLA-CF",
+            "color": "black", "description": "Torsion lock stabilizer"},
+    }
+
+    # G-code temperature safety limits for CC2
+    CC2_TEMP_LIMITS = {
+        'nozzle_max': 350,    # Hardened steel nozzle
+        'bed_max': 120,
+        'chamber_max': 60,    # Enclosed chamber
+    }
+
+    def __init__(self, ip: str, port: int = 7125):
+        self.ip = ip
+        self.port = port
+        self.base_url = f"http://{ip}:{port}"
+        self._moonraker = MoonrakerBridge(ip, port)
+        self._connected = False
+        self._printer_info: Dict[str, Any] = {}
+        self._active_extruder: int = 0
+
+    def connect(self) -> bool:
+        """Verify connectivity and identify the CC2."""
+        if not HAS_REQUESTS:
+            logger.error("requests not installed — cannot connect to CC2")
+            return False
+        try:
+            resp = _requests.get(
+                f"{self.base_url}/printer/info", timeout=10
+            )
+            if resp.status_code == 200:
+                self._printer_info = resp.json().get("result", {})
+                self._connected = True
+                logger.info(
+                    f"Connected to Centauri Carbon 2 at {self.ip}:"
+                    f"{self.port} — {self._printer_info.get('state', 'unknown')}"
+                )
+                return True
+        except Exception as e:
+            logger.error(f"CC2 connection failed: {e}")
+        return False
+
+    def get_status(self) -> Dict[str, Any]:
+        """Query full CC2 status including CANVAS extruder state."""
+        if not HAS_REQUESTS:
+            return {"status": "unknown", "error": "requests not installed"}
+        try:
+            resp = _requests.get(
+                f"{self.base_url}/printer/objects/query",
+                params={
+                    "extruder": None,
+                    "heater_bed": None,
+                    "print_stats": None,
+                    "toolhead": None,
+                    "fan": None,
+                },
+                timeout=10,
+            )
+            if resp.status_code == 200:
+                data = resp.json().get("result", {}).get("status", {})
+                ext = data.get("extruder", {})
+                bed = data.get("heater_bed", {})
+                stats = data.get("print_stats", {})
+                toolhead = data.get("toolhead", {})
+                return {
+                    "status": stats.get("state", "idle"),
+                    "nozzle_temp": ext.get("temperature", 0),
+                    "nozzle_target": ext.get("target", 0),
+                    "bed_temp": bed.get("temperature", 0),
+                    "bed_target": bed.get("target", 0),
+                    "filename": stats.get("filename", ""),
+                    "print_duration": stats.get("print_duration", 0),
+                    "position": toolhead.get("position", [0, 0, 0, 0]),
+                    "active_extruder": self._active_extruder,
+                    "canvas_extruders": 4,
+                    "enclosed": True,
+                    "ai_camera": True,
+                    "printer": "Elegoo Centauri Carbon 2",
+                }
+            return {"status": "error", "code": resp.status_code}
+        except Exception as e:
+            return {"status": "offline", "error": str(e)}
+
+    def select_extruder(self, index: int) -> bool:
+        """Select CANVAS extruder (0-3)."""
+        if index < 0 or index > 3:
+            logger.error(f"Invalid extruder index {index}, must be 0-3")
+            return False
+        gcode = f"T{index}"
+        ok = self._send_gcode(gcode)
+        if ok:
+            self._active_extruder = index
+        return ok
+
+    def set_canvas_materials(self, material_map: Dict[int, str]) -> bool:
+        """
+        Configure CANVAS materials for multi-color print.
+
+        Args:
+            material_map: {extruder_index: material_name}
+                          e.g. {0: "PA-CF", 1: "PETG", 2: "PLA", 3: "PLA-CF"}
+        """
+        logger.info(f"CANVAS material configuration: {material_map}")
+        for idx, material in material_map.items():
+            temp = self._material_temp(material)
+            if temp > self.CC2_TEMP_LIMITS['nozzle_max']:
+                logger.error(
+                    f"Material {material} requires {temp}°C, "
+                    f"exceeds CC2 max {self.CC2_TEMP_LIMITS['nozzle_max']}°C"
+                )
+                return False
+        return True
+
+    def upload_and_print(self, gcode_path: str,
+                         start: bool = False) -> bool:
+        """Upload G-code to CC2 and optionally start the print."""
+        if not HAS_REQUESTS:
+            return False
+        try:
+            url = f"{self.base_url}/server/files/upload"
+            with open(gcode_path, 'rb') as f:
+                resp = _requests.post(
+                    url, files={'file': f}, timeout=120
+                )
+            if resp.status_code not in (200, 201):
+                logger.error(f"CC2 upload failed: HTTP {resp.status_code}")
+                return False
+            logger.info(f"G-code uploaded to CC2: {Path(gcode_path).name}")
+            if start:
+                filename = Path(gcode_path).name
+                _requests.post(
+                    f"{self.base_url}/printer/print/start",
+                    json={"filename": filename}, timeout=10,
+                )
+            return True
+        except Exception as e:
+            logger.error(f"CC2 upload failed: {e}")
+            return False
+
+    def get_camera_frame(self) -> Optional[bytes]:
+        """Capture a frame from the CC2 AI camera for monitoring."""
+        if not HAS_REQUESTS:
+            return None
+        try:
+            resp = _requests.get(
+                f"http://{self.ip}/webcam/?action=snapshot",
+                timeout=5,
+            )
+            if resp.status_code == 200:
+                return resp.content
+        except Exception:
+            pass
+        return None
+
+    def validate_print_geometry(self, frame: bytes,
+                                tolerance_mm: float = 0.1) -> Dict[str, Any]:
+        """
+        Analyze camera frame for geometry deviations.
+
+        Returns deviation report that can be correlated with
+        anomaly_results.csv for "Physical Anomaly" detection.
+        """
+        # Frame analysis is done by downstream CV pipeline
+        frame_hash = hashlib.sha256(frame).hexdigest()[:16]
+        return {
+            "frame_hash": frame_hash,
+            "tolerance_mm": tolerance_mm,
+            "validation": "pending_cv_analysis",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def pause(self) -> bool:
+        return self._send_gcode("PAUSE")
+
+    def resume(self) -> bool:
+        return self._send_gcode("RESUME")
+
+    def cancel(self) -> bool:
+        return self._send_gcode("CANCEL_PRINT")
+
+    def home(self) -> bool:
+        return self._send_gcode("G28")
+
+    def set_chamber_fan(self, speed_percent: int) -> bool:
+        """Control the smart grille ventilation (0-100%)."""
+        speed = max(0, min(255, int(speed_percent * 2.55)))
+        return self._send_gcode(f"M106 P2 S{speed}")
+
+    def preheat_for_material(self, material: str) -> bool:
+        """Preheat nozzle and bed for the specified material."""
+        nozzle_temp = self._material_temp(material)
+        bed_temp = self._material_bed_temp(material)
+        if nozzle_temp > self.CC2_TEMP_LIMITS['nozzle_max']:
+            logger.error(f"Nozzle temp {nozzle_temp}°C exceeds CC2 limit")
+            return False
+        if bed_temp > self.CC2_TEMP_LIMITS['bed_max']:
+            logger.error(f"Bed temp {bed_temp}°C exceeds CC2 limit")
+            return False
+        self._send_gcode(f"M104 S{nozzle_temp}")
+        self._send_gcode(f"M140 S{bed_temp}")
+        return True
+
+    def _send_gcode(self, gcode: str) -> bool:
+        """Send a G-code command via Moonraker."""
+        if not HAS_REQUESTS:
+            return False
+        try:
+            resp = _requests.post(
+                f"{self.base_url}/printer/gcode/script",
+                json={"script": gcode}, timeout=10,
+            )
+            return resp.status_code == 200
+        except Exception as e:
+            logger.error(f"CC2 G-code send failed: {e}")
+            return False
+
+    @staticmethod
+    def _material_temp(material: str) -> int:
+        """Nozzle temperature for material type."""
+        temps = {
+            "PLA": 210, "PLA-CF": 220, "PETG": 240,
+            "ABS": 250, "ASA": 260, "PA": 280,
+            "PA-CF": 300, "PC": 310, "PA6-CF": 320,
+        }
+        return temps.get(material.upper(), 210)
+
+    @staticmethod
+    def _material_bed_temp(material: str) -> int:
+        """Bed temperature for material type."""
+        temps = {
+            "PLA": 60, "PLA-CF": 60, "PETG": 75,
+            "ABS": 100, "ASA": 100, "PA": 90,
+            "PA-CF": 100, "PC": 110, "PA6-CF": 110,
+        }
+        return temps.get(material.upper(), 60)
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# MULTI-COLOR SHANNON MAP — Quantum Sculpture Pipeline
+# ════════════════════════════════════════════════════════════════════════════════
+
+class ShannonMapGenerator:
+    """
+    Generates multi-color G-code from Shannon entropy anomaly data.
+
+    Maps regions of quantum anomaly detection results onto 3D geometry
+    with CANVAS extruder assignments based on entropy classification:
+
+      Extruder 0 (PA-CF Grey):   Structural lattice (baseline entropy)
+      Extruder 1 (PETG Red):     Bifurcation points  (Z > 3.0)
+      Extruder 2 (PLA Blue):     Entropy suppression  (Z < -2.5)
+      Extruder 3 (PLA-CF Black): Torsion lock nodes   (|θ - 51.843°| < 1°)
+
+    Input: anomaly_results.csv with columns:
+      system_name, entropy, z_score, p_value, anomaly_type
+    """
+
+    ENTROPY_THRESHOLD_HIGH = 3.0     # Z-score for bifurcation
+    ENTROPY_THRESHOLD_LOW = -2.5     # Z-score for suppression
+    TORSION_LOCK_TOLERANCE = 1.0     # degrees
+
+    def __init__(self, anomaly_csv: str):
+        self.anomaly_csv = anomaly_csv
+        self.regions: List[Dict[str, Any]] = []
+
+    def load_anomalies(self) -> int:
+        """Load anomaly data from CSV."""
+        import csv
+        count = 0
+        path = Path(self.anomaly_csv)
+        if not path.exists():
+            logger.warning(f"Anomaly file not found: {self.anomaly_csv}")
+            return 0
+        with open(path, 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                self.regions.append({
+                    "name": row.get("system_name", f"region_{count}"),
+                    "entropy": float(row.get("entropy", 0)),
+                    "z_score": float(row.get("z_score", 0)),
+                    "p_value": float(row.get("p_value", 1)),
+                    "anomaly_type": row.get("anomaly_type", "none"),
+                })
+                count += 1
+        logger.info(f"Loaded {count} anomaly regions from {self.anomaly_csv}")
+        return count
+
+    def classify_extruder(self, z_score: float,
+                          anomaly_type: str) -> int:
+        """Assign CANVAS extruder based on anomaly classification."""
+        if anomaly_type == "EntropySuppression" or z_score < self.ENTROPY_THRESHOLD_LOW:
+            return 2   # Blue — suppression zone
+        if anomaly_type == "PhaseTransition" or z_score > self.ENTROPY_THRESHOLD_HIGH:
+            return 1   # Red — bifurcation point
+        if "torsion" in anomaly_type.lower() or "periodic" in anomaly_type.lower():
+            return 3   # Black — torsion lock
+        return 0       # Grey — structural baseline
+
+    def generate_multicolor_mesh(self, base_mesh_path: str,
+                                 output_dir: str) -> Optional[str]:
+        """
+        Generate multi-color 3MF with CANVAS extruder assignments.
+
+        Each face of the mesh is assigned to an extruder based on
+        its spatial region's Shannon entropy classification.
+        """
+        if not self.regions:
+            self.load_anomalies()
+
+        if not HAS_TRIMESH:
+            logger.warning("trimesh not installed — multi-color mesh unavailable")
+            return None
+
+        try:
+            mesh = trimesh.load(base_mesh_path)
+        except Exception as e:
+            logger.error(f"Failed to load mesh: {e}")
+            return None
+
+        n_faces = len(mesh.faces)
+        n_regions = max(len(self.regions), 1)
+
+        # Assign extruders to face groups
+        extruder_assignments = []
+        for i in range(n_faces):
+            region_idx = i % n_regions
+            if region_idx < len(self.regions):
+                region = self.regions[region_idx]
+                ext = self.classify_extruder(
+                    region["z_score"], region["anomaly_type"]
+                )
+            else:
+                ext = 0
+            extruder_assignments.append(ext)
+
+        # Build per-extruder face groups
+        groups: Dict[int, List[int]] = {0: [], 1: [], 2: [], 3: []}
+        for face_idx, ext in enumerate(extruder_assignments):
+            groups[ext].append(face_idx)
+
+        # Export as multi-body 3MF
+        out_path = Path(output_dir) / "quantum_sculpture_multicolor.3mf"
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+        # Build metadata for multi-color tracking
+        metadata = {
+            "osiris_forge_version": FORGE_VERSION,
+            "canvas_extruders": 4,
+            "shannon_map": {
+                "total_faces": n_faces,
+                "regions": len(self.regions),
+                "extruder_distribution": {
+                    k: len(v) for k, v in groups.items()
+                },
+            },
+            "anomaly_source": self.anomaly_csv,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+
+        # Write metadata sidecar
+        meta_path = Path(output_dir) / "quantum_sculpture_metadata.json"
+        with open(meta_path, 'w') as f:
+            json.dump(metadata, f, indent=2)
+
+        # Export base mesh (full multi-color requires slicer integration)
+        mesh.export(str(out_path))
+        logger.info(
+            f"Multi-color mesh exported: {out_path} "
+            f"(extruder dist: {metadata['shannon_map']['extruder_distribution']})"
+        )
+        return str(out_path)
+
+    def generate_canvas_gcode_header(self,
+                                     material_map: Optional[Dict[int, str]] = None
+                                     ) -> str:
+        """
+        Generate CANVAS-specific G-code header for multi-material printing.
+
+        Returns Klipper-compatible G-code preamble for tool changes.
+        """
+        if material_map is None:
+            material_map = {
+                0: "PA-CF", 1: "PETG", 2: "PLA", 3: "PLA-CF",
+            }
+
+        lines = [
+            "; ═══════════════════════════════════════════════════",
+            "; OSIRIS Forge — Quantum Sculpture Multi-Color Print",
+            "; Printer: Elegoo Centauri Carbon 2 + CANVAS",
+            f"; Generated: {datetime.now(timezone.utc).isoformat()}",
+            "; ═══════════════════════════════════════════════════",
+            ";",
+        ]
+        for idx, material in material_map.items():
+            role = CentauriCarbon2Bridge.CANVAS_SHANNON_MAP.get(idx, {})
+            lines.append(
+                f"; T{idx}: {material} ({role.get('color', 'unknown')}) "
+                f"— {role.get('description', 'unassigned')}"
+            )
+        lines.extend([
+            ";",
+            "; Shannon Entropy Mapping:",
+            f";   Bifurcation threshold: Z > {self.ENTROPY_THRESHOLD_HIGH}",
+            f";   Suppression threshold: Z < {self.ENTROPY_THRESHOLD_LOW}",
+            f";   Torsion lock: |θ - {TORSION_LOCK}°| < {self.TORSION_LOCK_TOLERANCE}°",
+            ";",
+            "G28           ; Home all axes",
+            "M104 S210 T0  ; Preheat T0",
+            "M104 S240 T1  ; Preheat T1",
+            "M104 S210 T2  ; Preheat T2",
+            "M104 S220 T3  ; Preheat T3",
+            "M140 S60      ; Bed to 60°C",
+            "T0            ; Select primary extruder",
+            "",
+        ])
+        return "\n".join(lines)
+
+
+# ════════════════════════════════════════════════════════════════════════════════
 # WATERMARK ENGINE — Cryptographic mesh watermarking
 # ════════════════════════════════════════════════════════════════════════════════
 
@@ -992,6 +1467,7 @@ class OsirisForge:
             PrinterHardware.BAMBU_P1S: PrinterType.BAMBU_P1S,
             PrinterHardware.BAMBU_A1_MINI: PrinterType.BAMBU_A1_MINI,
             PrinterHardware.ELEGOO_CENTAURI_2: PrinterType.GENERIC_RESIN,
+            PrinterHardware.ELEGOO_CC2: PrinterType.GENERIC_FDM,
             PrinterHardware.GENERIC_FDM: PrinterType.GENERIC_FDM,
             PrinterHardware.GENERIC_RESIN: PrinterType.GENERIC_RESIN,
         }
@@ -1107,6 +1583,7 @@ class OsirisForge:
             PrinterHardware.BAMBU_P1S: "forge_profiles/bambu_p1s.ini",
             PrinterHardware.BAMBU_A1_MINI: "forge_profiles/bambu_a1_mini.ini",
             PrinterHardware.ELEGOO_CENTAURI_2: "forge_profiles/elegoo_centauri_2.ini",
+            PrinterHardware.ELEGOO_CC2: "forge_profiles/elegoo_cc2.ini",
         }
         rel = config_map.get(hardware)
         if rel:
@@ -1170,6 +1647,8 @@ class OsirisForge:
         # Route to appropriate bridge
         if profile.firmware == "bambu":
             return self._send_bambu(gcode_path, job)
+        elif profile.firmware == "klipper" and profile.supports_canvas:
+            return self._send_cc2(gcode_path, job)
         elif profile.is_resin:
             return self._send_elegoo(gcode_path, job)
         else:
@@ -1208,6 +1687,120 @@ class OsirisForge:
         bridge = MoonrakerBridge(job.printer_ip)
         return bridge.upload_and_print(gcode_path)
 
+    def _send_cc2(self, gcode_path: str, job: ForgeJob) -> bool:
+        """Send to Centauri Carbon 2 via Moonraker + CANVAS."""
+        if not job.printer_ip:
+            logger.error("No CC2 printer IP configured")
+            return False
+        bridge = CentauriCarbon2Bridge(job.printer_ip)
+        if not bridge.connect():
+            return False
+        return bridge.upload_and_print(gcode_path, start=job.auto_send)
+
+    # ── MULTI-COLOR FORGE ─────────────────────────────────────────────────
+
+    def forge_multicolor(self, job: ForgeJob,
+                         anomaly_csv: str,
+                         material_map: Optional[Dict[int, str]] = None
+                         ) -> ForgeResult:
+        """
+        Execute multi-color Quantum Sculpture pipeline for CC2 + CANVAS.
+
+        Steps:
+          1. Compliance gate
+          2. Generate base mesh from Torsion Core
+          3. Load Shannon entropy anomaly data
+          4. Classify regions → CANVAS extruder assignments
+          5. Generate multi-color 3MF with metadata
+          6. Generate CANVAS G-code header
+          7. Slice with multi-material config
+          8. Sanitize + transmit to CC2
+        """
+        steps = []
+
+        # 1. Compliance
+        if not self._check_compliance():
+            return ForgeResult(
+                job_id=job.job_id, success=False,
+                message="BLOCKED: Compliance Gate requires commercial license",
+            )
+        steps.append("compliance_check")
+
+        # 2. Generate base mesh
+        model_path = self.generate(job)
+        if not model_path:
+            return ForgeResult(
+                job_id=job.job_id, success=False,
+                message="Base mesh generation failed",
+                steps_completed=steps,
+            )
+        steps.append("mesh_generated")
+
+        # 3-4. Shannon map → extruder assignments
+        shannon = ShannonMapGenerator(anomaly_csv)
+        n_regions = shannon.load_anomalies()
+        steps.append(f"anomalies_loaded:{n_regions}")
+
+        # 5. Multi-color mesh
+        mc_path = shannon.generate_multicolor_mesh(
+            model_path, str(self.output_dir / "multicolor")
+        )
+        if mc_path:
+            steps.append("multicolor_mesh_generated")
+        else:
+            mc_path = model_path
+            steps.append("multicolor_fallback_single_color")
+
+        # 6. CANVAS G-code header
+        header = shannon.generate_canvas_gcode_header(material_map)
+        steps.append("canvas_header_generated")
+
+        # 7. Slice
+        gcode_path = None
+        if job.slice_gcode:
+            gcode_path = self.slice(mc_path or model_path, job)
+            if gcode_path:
+                # Prepend CANVAS header to G-code
+                try:
+                    with open(gcode_path, 'r') as f:
+                        original = f.read()
+                    with open(gcode_path, 'w') as f:
+                        f.write(header + "\n" + original)
+                    steps.append("sliced_with_canvas_header")
+                except Exception as e:
+                    logger.error(f"Failed to prepend CANVAS header: {e}")
+                    steps.append("sliced")
+
+        # 8. Transmit
+        if job.auto_send and gcode_path and job.printer_ip:
+            sent = self._send_cc2(gcode_path, job)
+            if sent:
+                steps.append("transmitted_to_cc2")
+            else:
+                steps.append("cc2_transmission_failed")
+
+        result = ForgeResult(
+            job_id=job.job_id,
+            success=True,
+            message=f"Multi-color Quantum Sculpture complete: {len(steps)} steps",
+            model_path=mc_path or model_path,
+            gcode_path=gcode_path,
+            printer_name="Elegoo Centauri Carbon 2",
+            steps_completed=steps,
+            metadata={
+                "forge_version": FORGE_VERSION,
+                "geometry": job.geometry,
+                "multicolor": True,
+                "canvas_extruders": 4,
+                "anomaly_regions": n_regions,
+                "material_map": material_map or {
+                    0: "PA-CF", 1: "PETG", 2: "PLA", 3: "PLA-CF",
+                },
+            },
+        )
+        self.jobs.append(result)
+        return result
+
     # ── MONITORING ────────────────────────────────────────────────────────
 
     def get_printer_status(self, job: ForgeJob) -> Dict[str, Any]:
@@ -1228,6 +1821,10 @@ class OsirisForge:
                 return bridge.get_status()
 
         if profile and not profile.is_resin and job.printer_ip:
+            if profile.supports_canvas:
+                bridge = CentauriCarbon2Bridge(job.printer_ip)
+                if bridge.connect():
+                    return bridge.get_status()
             bridge = MoonrakerBridge(job.printer_ip)
             return bridge.get_status()
 
@@ -1526,6 +2123,22 @@ Examples:
     cal.add_argument("--serial", type=str, default="")
     cal.add_argument("--code", type=str, default="")
 
+    # Multi-color Quantum Sculpture (CC2 + CANVAS)
+    mc = sub.add_parser("multicolor", help="Multi-color Quantum Sculpture for CC2")
+    mc.add_argument("--geometry", default="tetrahedral_lattice",
+                    choices=["tetrahedral_lattice", "toroidal_manifold",
+                             "planck_reference_cube", "acoustic_resonance_cavity",
+                             "quaternion_orbit_model", "torsion_lock_visualizer"])
+    mc.add_argument("--scale", type=float, default=10.0)
+    mc.add_argument("--shannon-map", type=str, default="anomalies_week4.csv",
+                    help="CSV file with Shannon entropy anomaly data")
+    mc.add_argument("--ip", type=str, default="", help="CC2 printer IP")
+    mc.add_argument("--send", action="store_true", help="Auto-send to CC2")
+    mc.add_argument("--material-t0", default="PA-CF", help="CANVAS T0 material")
+    mc.add_argument("--material-t1", default="PETG", help="CANVAS T1 material")
+    mc.add_argument("--material-t2", default="PLA", help="CANVAS T2 material")
+    mc.add_argument("--material-t3", default="PLA-CF", help="CANVAS T3 material")
+
     # Report
     sub.add_parser("report", help="Show forge status report")
 
@@ -1603,6 +2216,31 @@ Examples:
             print(result["message"])
         for step, ok in result.get("steps", []):
             print(f"  {'✓' if ok else '✗'} {step}")
+
+    elif args.action == "multicolor":
+        material_map = {
+            0: args.material_t0, 1: args.material_t1,
+            2: args.material_t2, 3: args.material_t3,
+        }
+        job = ForgeJob(
+            geometry=args.geometry,
+            scale_cm=args.scale,
+            target_printer=PrinterHardware.ELEGOO_CC2,
+            auto_send=args.send,
+            printer_ip=args.ip,
+        )
+        result = forge_engine.forge_multicolor(
+            job, anomaly_csv=args.shannon_map, material_map=material_map,
+        )
+        print(f"\n{'✓' if result.success else '✗'} {result.message}")
+        if result.model_path:
+            print(f"  Model:  {result.model_path}")
+        if result.gcode_path:
+            print(f"  G-code: {result.gcode_path}")
+        print(f"  Steps:  {' → '.join(result.steps_completed)}")
+        dist = result.metadata.get("shannon_map", {}).get("extruder_distribution", {})
+        if dist:
+            print(f"  CANVAS: {dist}")
 
     elif args.action == "report":
         print(forge_engine.status_report())

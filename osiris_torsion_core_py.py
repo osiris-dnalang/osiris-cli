@@ -142,6 +142,68 @@ def phase_conjugate_healing(signal_degraded: float, chi: float) -> float:
 
 
 # ════════════════════════════════════════════════════════════════════════════════
+# BRIDGE INTERFACE — Propulsion, Energy, Cosmological
+# ════════════════════════════════════════════════════════════════════════════════
+
+def poynting_flux_torsion(R: float, r: float, eps_r: float,
+                          omega: float, n_samples: int = 64) -> float:
+    """
+    Compute net Poynting flux for a toroidal dielectric under torsion rotation.
+
+    Args:
+        R: Torus major radius (m).
+        r: Torus minor radius (m).
+        eps_r: Relative permittivity of core material.
+        omega: Angular velocity (rad/s).
+        n_samples: Angular resolution.
+
+    Returns:
+        Net Poynting flux (W).
+    """
+    epsilon_0 = 8.854187812813e-12
+    mu_0 = 1.2566370621e-6
+    lock_rad = math.radians(THETA_LOCK)
+    d_theta = 2 * math.pi / n_samples
+    d_phi = 2 * math.pi / n_samples
+    total = 0.0
+    P_eff = epsilon_0 * (eps_r - 1) * omega * r
+    I_eff = P_eff * omega * r
+    for i in range(n_samples):
+        theta = i * d_theta
+        cos_lock = math.cos(theta - lock_rad) ** 2
+        E = P_eff * math.cos(theta)
+        for j in range(n_samples):
+            B = mu_0 * I_eff / (2 * math.pi * (R + r * math.cos(theta)))
+            S = abs(E * B * cos_lock) / mu_0
+            dA = r * (R + r * math.cos(theta)) * d_theta * d_phi
+            total += S * dA
+    return total
+
+
+def tetrahedral_resonance_freq(edge_length: float, eps_r: float,
+                                mode_n: int = 1) -> float:
+    """
+    Resonance frequency for mode n in a tetrahedral micro-lattice.
+
+    f_n = n * c / (2 * L_eff * sqrt(eps_r))
+    L_eff = a * cos(theta_lock) * sqrt(2/3)
+    """
+    lock_rad = math.radians(THETA_LOCK)
+    L_eff = edge_length * math.cos(lock_rad) * math.sqrt(2.0 / 3.0)
+    return mode_n * C_LIGHT / (2 * L_eff * math.sqrt(eps_r))
+
+
+def substrate_pressure(r: float, P_0: float, r_scale: float) -> float:
+    """
+    CRSM vacuum substrate pressure at radial distance r.
+
+    P_sub(r) = P_0 * exp(-r/r_s) * cos^2(theta_lock)
+    """
+    lock_rad = math.radians(THETA_LOCK)
+    return P_0 * math.exp(-r / r_scale) * math.cos(lock_rad) ** 2
+
+
+# ════════════════════════════════════════════════════════════════════════════════
 # LICENSE VERIFICATION (PURE PYTHON — USE COMPILED VERSION FOR PROTECTION)
 # ════════════════════════════════════════════════════════════════════════════════
 

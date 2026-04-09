@@ -211,6 +211,41 @@ def cmd_intent(args):
         cmd_help(args)
 
 
+def cmd_bridges(args):
+    """Run CRSM physics bridges"""
+    print("\n⚛ Running CRSM Physics Bridges...\n")
+    from osiris_physics_bridges import BridgeExecutor
+    executor = BridgeExecutor()
+    report = executor.run_all()
+    print(f"  Propulsion Bridge:  p={report['propulsion']['bootstrap_p']:.4f}  "
+          f"Poynting flux={report['propulsion']['integrated_flux']:.3e} W")
+    print(f"  Energy Bridge:      modes={report['energy']['n_modes']}  "
+          f"peak R_n={report['energy']['peak_spectral_deviation']:.8f}")
+    print(f"  Cosmological Bridge: chi2_flat={report['cosmological']['chi2_flat']:.2f}  "
+          f"chi2_crsm={report['cosmological']['chi2_crsm']:.2f}")
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(report, f, indent=2, default=str)
+        print(f"\n✓ Results saved to {args.output}")
+
+
+def cmd_swarm(args):
+    """Run NCLLM 9-agent swarm"""
+    print("\n⚛ Launching NCLLM 9-Agent Swarm...\n")
+    from osiris_ncllm_swarm import NCLLMSwarm
+    swarm = NCLLMSwarm()
+    result = swarm.deliberate(args.task, max_rounds=args.rounds)
+    print(f"  Consensus: {result.get('consensus', 'N/A')}")
+    print(f"  Rounds:    {result.get('rounds', 0)}")
+    print(f"  Quality:   {result.get('quality_score', 0):.3f}")
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(result, f, indent=2, default=str)
+        print(f"\n✓ Results saved to {args.output}")
+
+
 def cmd_help(args):
     """Show help"""
     help_text = """
@@ -224,6 +259,8 @@ Commands:
   orchestrate       Run full OSIRIS orchestrator pipeline
   publish           Publish results to Zenodo
   forge             Quantum-to-Matter manufacturing pipeline
+  bridges           Run CRSM physics bridges (propulsion/energy/cosmological)
+  swarm             Run NCLLM 9-agent swarm deliberation
   status            Show system status
   intent            Route natural language into OSIRIS commands
   help              Show this help
@@ -233,8 +270,18 @@ Forge (3D Manufacturing):
   osiris forge generate --geometry X          Generate mesh from Torsion Core
   osiris forge discover                       Scan network for 3D printers
   osiris forge pipeline --printer bambu_p1s   Full generate+slice+send pipeline
+  osiris forge pipeline --printer elegoo_cc2  Full pipeline for Elegoo CC2 / CANVAS
+  osiris forge multicolor --design X          Multi-color CANVAS pipeline
   osiris forge calibrate --ip 192.168.1.X     Calibrate a connected printer
   osiris forge status --ip 192.168.1.X        Check printer status
+
+Physics Bridges:
+  osiris bridges                              Run all three CRSM bridges
+  osiris bridges --output bridges.json        Save results to file
+
+NCLLM Swarm:
+  osiris swarm --task "your task"             Deliberate via 9-agent swarm
+  osiris swarm --task "..." --rounds 5        Set max deliberation rounds
 
 Publishing:
   osiris publish --mode all            Publish both RQC and application results
@@ -267,6 +314,12 @@ Examples:
   
   # Run the full OSIRIS orchestrator pipeline
   osiris orchestrate
+  
+  # Run physics bridges
+  osiris bridges --output results.json
+  
+  # Launch 9-agent swarm
+  osiris swarm --task "optimize torsion field solver"
   
   # Check system status
   osiris status
@@ -347,6 +400,14 @@ def cmd_forge(args):
         print(f"\n\u269b Calibration: {'Complete' if cal_ok else 'Failed'}")
         if result.get('message'):
             print(result['message'])
+    elif action == 'multicolor':
+        print("\n\u269b Running multi-color CANVAS pipeline...\n")
+        design = getattr(args, 'design', 'shannon_map')
+        scale = getattr(args, 'scale', 10.0)
+        ip = getattr(args, 'ip', '')
+        result = forge.forge_multicolor(design=design, scale_cm=scale, printer_ip=ip)
+        sym = '\u2713' if result.get('success', False) else '\u2717'
+        print(f"{sym} Multi-color pipeline: {result.get('message', 'done')}")
     else:
         print(forge.status_report())
 
@@ -463,6 +524,23 @@ def main():
 
     forge_subs.add_parser('report', help='Show forge status report')
 
+    # Bridges command
+    bridges_parser = subparsers.add_parser('bridges', help='Run CRSM physics bridges')
+    bridges_parser.add_argument('--output', type=str, default='', help='Save results to JSON file')
+
+    # Swarm command
+    swarm_parser = subparsers.add_parser('swarm', help='Run NCLLM 9-agent swarm')
+    swarm_parser.add_argument('--task', type=str, required=True, help='Task for swarm deliberation')
+    swarm_parser.add_argument('--rounds', type=int, default=3, help='Max deliberation rounds')
+    swarm_parser.add_argument('--output', type=str, default='', help='Save results to JSON file')
+
+    # Forge multicolor subcommand
+    forge_multi = forge_subs.add_parser('multicolor', help='Multi-color CANVAS pipeline')
+    forge_multi.add_argument('--design', default='shannon_map',
+                             choices=['shannon_map', 'torsion_gradient', 'bridge_report'])
+    forge_multi.add_argument('--scale', type=float, default=10.0)
+    forge_multi.add_argument('--ip', type=str, default='', help='CC2 printer IP')
+
     # License command
     license_parser = subparsers.add_parser('license', help='License compliance check')
     license_parser.add_argument('--validate', type=str, help='Validate a license key')
@@ -502,6 +580,10 @@ def main():
         cmd_intent(args)
     elif args.command == 'forge':
         cmd_forge(args)
+    elif args.command == 'bridges':
+        cmd_bridges(args)
+    elif args.command == 'swarm':
+        cmd_swarm(args)
     elif args.command == 'license':
         cmd_license(args)
     elif args.command == 'help':
