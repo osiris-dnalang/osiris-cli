@@ -452,18 +452,20 @@ class NCLLMSwarm:
     Nine-agent Non-Causal Living Language Model swarm.
 
     Execution loop per task:
-      1. Orchestrator decomposes task
-      2. All 9 agents deliberate in parallel
-      3. Majority-vote gating (weighted by influence)
-      4. Self-Reflector computes distillation reward
-      5. Personality traits evolve based on reward
-      6. Repeat if consensus is "reject" (max 5 rounds)
-      7. Emit final distilled output
+      1. Causal graph determines agent execution order
+      2. Orchestrator decomposes task
+      3. Agents deliberate in causal-topological order
+      4. Bayesian trust-weighted voting (replaces static influence)
+      5. Self-Reflector computes distillation reward
+      6. Cognitive mesh updates: trust, Hebbian, Nash, Shapley
+      7. Personality traits evolve based on reward
+      8. Repeat if consensus is "reject" (max 5 rounds)
+      9. Emit final distilled output
     """
 
     MAX_ROUNDS = 5
 
-    def __init__(self, user_id: str = "default"):
+    def __init__(self, user_id: str = "default", enable_mesh: bool = True):
         self.personality = NCLMPersonality.for_user(user_id)
         self.agents: Dict[AgentID, SwarmAgent] = {
             AgentID.ORCHESTRATOR: OrchestratorAgent(),
@@ -478,6 +480,29 @@ class NCLLMSwarm:
         }
         self._round_history: List[SwarmRound] = []
 
+        # Cognitive mesh integration
+        self._mesh_enabled = enable_mesh
+        self._mesh = None
+        if enable_mesh:
+            try:
+                from osiris_cognitive_mesh import CognitiveMesh
+                self._mesh = CognitiveMesh(
+                    [aid.value for aid in AgentID]
+                )
+            except ImportError:
+                logger.warning("CognitiveMesh not available; using static influence")
+                self._mesh_enabled = False
+
+        # Introspection engine (tridirectional self-awareness)
+        self._introspection = None
+        try:
+            from osiris_introspection import IntrospectionEngine
+            self._introspection = IntrospectionEngine(
+                [aid.value for aid in AgentID]
+            )
+        except ImportError:
+            logger.warning("IntrospectionEngine not available; no self-awareness")
+
     def solve(self, task: str, max_rounds: int = 0) -> SwarmResult:
         """Run the full swarm deliberation loop."""
         if max_rounds <= 0:
@@ -490,6 +515,18 @@ class NCLLMSwarm:
         for r in range(1, max_rounds + 1):
             rnd = self._deliberation_round(task, r)
             rounds.append(rnd)
+
+            # Introspection: observe each round
+            if self._introspection is not None:
+                resp_dicts = [
+                    {"agent": rsp.agent, "confidence": rsp.confidence,
+                     "vote": rsp.vote or "abstain"}
+                    for rsp in rnd.responses
+                ]
+                self._introspection.observe_round(
+                    resp_dicts, rnd.consensus or "abstain",
+                    rnd.distillation_reward
+                )
 
             if rnd.consensus == "approve":
                 # Distill best response
@@ -514,6 +551,60 @@ class NCLLMSwarm:
         self.personality.evolve(quality, "creativity")
         self.personality.evolve(1.0 - (elapsed / 10000), "speed_bias")
 
+        # Post-task cognitive mesh update (Shapley attribution)
+        mesh_data = {}
+        if self._mesh_enabled and self._mesh is not None:
+            agent_qualities = {}
+            for rnd in rounds:
+                for resp in rnd.responses:
+                    old_q = agent_qualities.get(resp.agent, [])
+                    old_q.append(resp.confidence)
+                    agent_qualities[resp.agent] = old_q
+            avg_qualities = {
+                a: sum(qs) / len(qs) for a, qs in agent_qualities.items()
+            }
+            self._mesh.post_task_update(quality, avg_qualities)
+            mesh_data = {
+                "dynamic_influence": {
+                    a: round(self._mesh.get_dynamic_influence(a), 4)
+                    for a in self._mesh.agent_ids
+                },
+                "shapley_values": {
+                    a: round(v, 4)
+                    for a, v in self._mesh.shapley.values.items()
+                },
+                "nash_convergence": round(
+                    self._mesh.nash.convergence_metric(), 6
+                ),
+                "causal_order": self._mesh.get_execution_order(),
+                "emergent_coalitions": [
+                    list(c) for c in self._mesh.hebbian.emergent_coalitions()
+                ],
+            }
+
+        # Introspection: observe completed task + run improvement cycle
+        introspection_data = {}
+        if self._introspection is not None:
+            self._introspection.observe_task(
+                task, final_output, quality, success=(quality >= 0.6)
+            )
+            # Run self-improvement cycle (feeds back into mesh)
+            actions = self._introspection.run_improvement_cycle(
+                mesh=self._mesh
+            )
+            introspection_data = {
+                "improvement_actions": [a.to_dict() for a in actions[:5]],
+                "cognitive_entropy": round(
+                    self._introspection.structural.cognitive_entropy(), 4
+                ),
+                "echo_chamber_score": round(
+                    self._introspection.structural.echo_chamber_score(), 4
+                ),
+                "quality_forecast": self._introspection.temporal.quality_forecast(3),
+                "capability_map": self._introspection.semantic.capability_map(),
+                "blind_spots": self._introspection.semantic.blind_spots(),
+            }
+
         return SwarmResult(
             task=task,
             rounds=rounds,
@@ -530,23 +621,54 @@ class NCLLMSwarm:
                 "user_hash": self.personality.user_hash,
                 "personality_vector": self.personality.gene_vector(),
                 "interaction_count": self.personality.interaction_count,
+                "cognitive_mesh": mesh_data,
+                "introspection": introspection_data,
             },
         )
 
     def _deliberation_round(self, task: str, round_num: int) -> SwarmRound:
-        """One round of all-agent deliberation."""
+        """One round of agent deliberation, ordered by causal graph."""
         context = {"round": round_num, "history_len": len(self._round_history)}
         responses = []
 
-        for agent in self.agents.values():
+        # Determine execution order
+        if self._mesh_enabled and self._mesh is not None:
+            exec_order = self._mesh.get_execution_order()
+            agent_order = []
+            for name in exec_order:
+                try:
+                    agent_order.append(AgentID(name))
+                except ValueError:
+                    pass
+            # Add any agents not in the causal graph
+            for aid in self.agents:
+                if aid not in agent_order:
+                    agent_order.append(aid)
+        else:
+            agent_order = list(self.agents.keys())
+
+        for aid in agent_order:
+            agent = self.agents[aid]
+            # Inject upstream context when mesh is active
+            if self._mesh_enabled and self._mesh is not None:
+                upstream = self._mesh.causal_graph.upstream_context(aid.value)
+                upstream_outputs = [
+                    r.content[:100] for r in responses
+                    if r.agent in upstream
+                ]
+                if upstream_outputs:
+                    context["upstream"] = upstream_outputs
             resp = agent.respond(task, context, self.personality)
             responses.append(resp)
 
-        # Weighted vote
+        # Weighted vote — use dynamic influence from mesh if available
         vote_scores = {"approve": 0.0, "reject": 0.0, "abstain": 0.0}
         for resp in responses:
-            agent_obj = self.agents.get(AgentID(resp.agent))
-            weight = agent_obj.influence if agent_obj else 1.0
+            if self._mesh_enabled and self._mesh is not None:
+                weight = self._mesh.get_dynamic_influence(resp.agent)
+            else:
+                agent_obj = self.agents.get(AgentID(resp.agent))
+                weight = agent_obj.influence if agent_obj else 1.0
             vote = resp.vote or "abstain"
             vote_scores[vote] += weight * resp.confidence
 
@@ -559,6 +681,11 @@ class NCLLMSwarm:
             sum(r.confidence for r in approvers) / len(approvers)
             if approvers else 0.0
         )
+
+        # Update cognitive mesh
+        if self._mesh_enabled and self._mesh is not None:
+            votes_map = {r.agent: (r.vote or "abstain") for r in responses}
+            self._mesh.post_round_update(votes_map, consensus, reward)
 
         rnd = SwarmRound(
             round_num=round_num,
@@ -614,8 +741,30 @@ class NCLLMSwarm:
         lines.extend([
             "",
             f"  Strategy store: {len(getattr(self.agents.get(AgentID.SELF_REFLECTOR), 'strategy_store', []))} entries",
-            "=" * 65,
+            f"  Cognitive mesh: {'ACTIVE' if self._mesh_enabled else 'DISABLED'}",
         ])
+        if self._mesh_enabled and self._mesh is not None:
+            lines.append(f"  Mesh rounds: {self._mesh._round_count}")
+            lines.append(f"  Nash convergence: {self._mesh.nash.convergence_metric():.6f}")
+            coalitions = self._mesh.hebbian.emergent_coalitions()
+            if coalitions:
+                for i, c in enumerate(coalitions):
+                    lines.append(f"  Coalition {i+1}: {', '.join(sorted(c))}")
+        # Introspection summary
+        lines.append(f"  Introspection:  {'ACTIVE' if self._introspection else 'DISABLED'}")
+        if self._introspection is not None:
+            entropy = self._introspection.structural.cognitive_entropy()
+            echo = self._introspection.structural.echo_chamber_score()
+            forecast = self._introspection.temporal.quality_forecast(3)
+            lines.append(f"  Cognitive entropy:  {entropy:.3f}")
+            lines.append(f"  Echo chamber score: {echo:.3f}")
+            lines.append(f"  Quality forecast:   {' → '.join(f'{f:.2f}' for f in forecast)}")
+            alerts = self._introspection.temporal.recent_alerts(3)
+            if alerts:
+                lines.append(f"  Recent alerts:")
+                for a in alerts:
+                    lines.append(f"    [{a.agent_id}] {a.context}")
+        lines.append("=" * 65)
         return "\n".join(lines)
 
 

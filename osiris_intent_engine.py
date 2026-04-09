@@ -418,6 +418,79 @@ class IntentEngine:
         """Get current context"""
         return self.context_memory.copy()
 
+    # ═════════════════════════════════════════════════════════════════════════
+    # ADAPTIVE CONFIDENCE — learns from swarm introspection feedback
+    # ═════════════════════════════════════════════════════════════════════════
+
+    def __init_adaptive(self):
+        """Initialize adaptive confidence system (called from __init__)."""
+        if not hasattr(self, '_intent_success_log'):
+            self._intent_success_log: Dict[str, List[float]] = {}
+            self._confidence_adjustments: Dict[str, float] = {}
+            self._swarm_feedback: Dict[str, Any] = {}
+
+    def receive_swarm_feedback(self, intent_type: str, quality: float,
+                               introspection: Optional[Dict] = None):
+        """
+        Receive feedback from swarm execution to adjust future confidence.
+
+        This creates a closed loop:
+          Intent → Swarm → Quality → Introspection → adjusted Confidence → better Intent
+
+        Args:
+            intent_type: The IntentType.value that was routed
+            quality: Quality score from the swarm execution (0-1)
+            introspection: Optional introspection data from the swarm
+        """
+        self.__init_adaptive()
+
+        self._intent_success_log.setdefault(intent_type, []).append(quality)
+
+        # Adaptive confidence: if a particular intent type consistently
+        # leads to low-quality results, reduce confidence in that routing
+        recent = self._intent_success_log[intent_type][-10:]
+        avg_quality = sum(recent) / len(recent)
+
+        if avg_quality < 0.4:
+            self._confidence_adjustments[intent_type] = -0.15
+        elif avg_quality < 0.6:
+            self._confidence_adjustments[intent_type] = -0.05
+        elif avg_quality > 0.8:
+            self._confidence_adjustments[intent_type] = 0.05
+        else:
+            self._confidence_adjustments[intent_type] = 0.0
+
+        # Store introspection data for context-aware routing
+        if introspection:
+            self._swarm_feedback = introspection
+
+    def get_adaptive_confidence(self, base_confidence: float,
+                                intent_type: IntentType) -> float:
+        """
+        Adjust base confidence using learned feedback.
+        """
+        self.__init_adaptive()
+        adjustment = self._confidence_adjustments.get(
+            intent_type.value, 0.0
+        )
+        return max(0.1, min(0.99, base_confidence + adjustment))
+
+    def get_swarm_capability_context(self) -> Dict[str, Any]:
+        """
+        Returns swarm capability context that the TUI/CLI can display.
+        Shows what the swarm is good/bad at based on introspection feedback.
+        """
+        self.__init_adaptive()
+        return {
+            "intent_success_rates": {
+                k: round(sum(v[-10:]) / max(len(v[-10:]), 1), 3)
+                for k, v in self._intent_success_log.items()
+            },
+            "confidence_adjustments": dict(self._confidence_adjustments),
+            "swarm_feedback": self._swarm_feedback,
+        }
+
+
 
 if __name__ == "__main__":
     engine = IntentEngine()

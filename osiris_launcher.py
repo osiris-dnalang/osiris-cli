@@ -160,6 +160,11 @@ def cmd_status(args):
         "Benchmarker": "✓ Ready",
         "Pipeline": "✓ Ready",
         "Orchestrator": "✓ Ready",
+        "Cognitive Mesh": "✓ Ready (Bayesian trust + Shapley + Nash + Causal DAG)",
+        "Bridge Validator": "✓ Ready (adversarial falsification + sensitivity tornado)",
+        "ELO Tournament": "✓ Ready (Glicko-2 vs 6 industry competitors)",
+        "Introspection": "✓ Ready (temporal + structural + semantic self-awareness)",
+        "Feedback Bus": "✓ Ready (tridirectional swarm⇄intent⇄TUI relay)",
     }
     
     for key, value in status_info.items():
@@ -246,6 +251,158 @@ def cmd_swarm(args):
         print(f"\n✓ Results saved to {args.output}")
 
 
+def cmd_validate(args):
+    """Run adversarial bridge validation"""
+    print("\n⚛ Running Adversarial Bridge Validation...\n")
+    from osiris_bridge_validator import AdversarialBridgeValidator
+    validator = AdversarialBridgeValidator(
+        mc_trials=args.trials,
+        sensitivity_sigma=args.sigma,
+    )
+    report = validator.validate()
+    print(f"  Overall verdict: {report.overall_verdict}")
+    print(f"  Bayes factor:    {report.bayes_factor:.4f}")
+    print(f"  Elapsed:         {report.elapsed_seconds:.1f}s")
+    # Sensitivity summary
+    if report.sensitivity:
+        unstable = [s for s in report.sensitivity if not s.conclusion_stable]
+        print(f"  Sensitivity:     {len(report.sensitivity)} params tested, "
+              f"{len(unstable)} unstable")
+    # Falsification summary
+    for f in report.falsification:
+        print(f"  Falsification [{f.bridge}]: {f.verdict} "
+              f"({f.n_significant}/{f.n_trials} significant)")
+    # Consistency summary
+    passed = sum(1 for c in report.consistency if c.passed)
+    print(f"  Consistency:     {passed}/{len(report.consistency)} checks passed")
+    # Publication readiness
+    for venue, info in report.publication_readiness.items():
+        ready = info.get("ready", False)
+        print(f"  {venue}: {'✓ READY' if ready else '✗ not ready'}")
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(report.to_dict(), f, indent=2, default=str)
+        print(f"\n✓ Validation report saved to {args.output}")
+
+
+def cmd_tournament(args):
+    """Run ELO tournament"""
+    print("\n⚛ Running OSIRIS ELO Tournament...\n")
+    from osiris_elo_tournament import EloTournament
+    tournament = EloTournament()
+    results = tournament.run_tournament(rounds_per_matchup=args.rounds)
+    tournament.print_results()
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(results, f, indent=2, default=str)
+        print(f"\n✓ Tournament results saved to {args.output}")
+
+
+def cmd_mesh(args):
+    """Show cognitive mesh dashboard"""
+    print("\n⚛ Loading Cognitive Mesh Dashboard...\n")
+    from osiris_cognitive_mesh import CognitiveMesh
+    mesh = CognitiveMesh()
+    if args.simulate:
+        import random
+        # Run simulated rounds to populate the mesh
+        for _ in range(args.simulate):
+            vote_options = ["approve", "reject", "abstain"]
+            votes = {a: random.choice(vote_options) for a in mesh.agent_ids}
+            consensus = max(set(votes.values()), key=list(votes.values()).count)
+            quality = random.gauss(0.7, 0.15)
+            mesh.post_round_update(votes, consensus, quality)
+        agent_q = {a: random.gauss(0.7, 0.15) for a in mesh.agent_ids}
+        mesh.post_task_update(
+            sum(q for q in agent_q.values()) / len(agent_q),
+            agent_q
+        )
+    mesh.print_dashboard()
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(mesh.status_report(), f, indent=2, default=str)
+        print(f"\n✓ Mesh report saved to {args.output}")
+
+
+def cmd_introspect(args):
+    """Run introspection engine dashboard"""
+    print("\n⚛ Loading Introspection Engine...\n")
+    from osiris_introspection import IntrospectionEngine
+
+    engine = IntrospectionEngine()
+
+    if args.simulate:
+        import random
+        agents = engine.agent_ids
+        # Simulate deliberation rounds
+        for r in range(args.simulate):
+            responses = []
+            for a in agents:
+                vote = random.choice(["approve", "reject", "refine"])
+                conf = max(0.1, min(1.0, random.gauss(0.7, 0.2)))
+                responses.append({"agent": a, "vote": vote, "confidence": conf})
+            consensus = random.choice(["approve", "reject", "refine"])
+            quality = max(0.0, min(1.0, random.gauss(0.6 + r * 0.02, 0.15)))
+            engine.observe_round(responses, consensus, quality)
+        # Simulate task observations
+        task_descs = [
+            ("fix the authentication bug", "patched JWT validation"),
+            ("create a data pipeline", "ETL pipeline with 3 stages"),
+            ("optimize the query planner", "added index hints"),
+            ("analyze memory usage patterns", "found 2 leaks"),
+            ("build a monitoring dashboard", "Grafana config generated"),
+        ]
+        for task, output in task_descs[:min(5, args.simulate)]:
+            quality = max(0.0, min(1.0, random.gauss(0.65, 0.15)))
+            engine.observe_task(task, output, quality)
+        # Run improvement cycle if mesh available
+        try:
+            from osiris_cognitive_mesh import CognitiveMesh
+            mesh = CognitiveMesh()
+            actions = engine.run_improvement_cycle(mesh=mesh)
+            if actions:
+                print(f"  Applied {len(actions)} improvement actions")
+        except ImportError:
+            engine.run_improvement_cycle()
+
+    engine.print_dashboard()
+    if args.output:
+        import json
+        report = engine.full_report()
+        with open(args.output, 'w') as f:
+            json.dump(report, f, indent=2, default=str)
+        print(f"\n✓ Introspection report saved to {args.output}")
+
+
+def cmd_feedback(args):
+    """Run full tridirectional feedback loop"""
+    print("\n⚛ Launching Tridirectional Feedback Loop...\n")
+    from osiris_feedback_bus import OsirisIntelligenceLoop
+
+    loop = OsirisIntelligenceLoop()
+    result = loop.execute(args.task, max_rounds=args.rounds)
+
+    # Print result summary
+    intent_info = result.get("intent", {})
+    swarm_result = result.get("result", {})
+    print(f"  Intent:     {intent_info.get('type', '?')} "
+          f"(confidence={intent_info.get('confidence', 0):.3f})")
+    print(f"  Quality:    {swarm_result.get('quality_score', 0):.3f}")
+    print(f"  Consensus:  {swarm_result.get('consensus_reached', False)}")
+
+    # Print full dashboard
+    loop.print_full_dashboard()
+
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(result, f, indent=2, default=str)
+        print(f"\n✓ Feedback loop results saved to {args.output}")
+
+
 def cmd_help(args):
     """Show help"""
     help_text = """
@@ -261,6 +418,11 @@ Commands:
   forge             Quantum-to-Matter manufacturing pipeline
   bridges           Run CRSM physics bridges (propulsion/energy/cosmological)
   swarm             Run NCLLM 9-agent swarm deliberation
+  validate          Adversarial bridge validation (sensitivity/falsification/Bayes)
+  tournament        ELO tournament benchmark vs industry AI tools
+  mesh              Cognitive mesh dashboard (Bayesian trust / Shapley / Nash)
+  introspect        Introspection engine (temporal / structural / semantic)
+  feedback          Tridirectional feedback loop (swarm + intent + bus)
   status            Show system status
   intent            Route natural language into OSIRIS commands
   help              Show this help
@@ -320,6 +482,21 @@ Examples:
   
   # Launch 9-agent swarm
   osiris swarm --task "optimize torsion field solver"
+  
+  # Adversarial bridge validation
+  osiris validate --trials 500 --output validation.json
+  
+  # ELO tournament against industry competitors
+  osiris tournament --rounds 10 --output tournament.json
+  
+  # Cognitive mesh dashboard with simulated rounds
+  osiris mesh --simulate 20
+  
+  # Introspection engine with simulated rounds
+  osiris introspect --simulate 15 --output introspection.json
+  
+  # Full tridirectional feedback loop
+  osiris feedback --task "optimize torsion field solver" --rounds 5
   
   # Check system status
   osiris status
@@ -545,6 +722,41 @@ def main():
     license_parser = subparsers.add_parser('license', help='License compliance check')
     license_parser.add_argument('--validate', type=str, help='Validate a license key')
 
+    # Validate command (adversarial bridge validator)
+    validate_parser = subparsers.add_parser('validate', help='Adversarial bridge validation')
+    validate_parser.add_argument('--trials', type=int, default=500, help='Monte Carlo trials')
+    validate_parser.add_argument('--sigma', type=int, default=3, help='Sensitivity perturbation sigma')
+    validate_parser.add_argument('--output', type=str, default='', help='Save validation report to JSON')
+
+    # Tournament command (ELO benchmark)
+    tournament_parser = subparsers.add_parser('tournament', help='ELO tournament benchmark')
+    tournament_parser.add_argument('--rounds', type=int, default=10, help='Rounds per matchup')
+    tournament_parser.add_argument('--output', type=str, default='', help='Save tournament results to JSON')
+
+    # Mesh command (cognitive mesh dashboard)
+    mesh_parser = subparsers.add_parser('mesh', help='Cognitive mesh dashboard')
+    mesh_parser.add_argument('--simulate', type=int, default=0,
+                             help='Run N simulated rounds to populate mesh state')
+    mesh_parser.add_argument('--output', type=str, default='', help='Save mesh report to JSON')
+
+    # Introspect command (tridirectional self-awareness dashboard)
+    introspect_parser = subparsers.add_parser('introspect',
+                                               help='Introspection engine dashboard')
+    introspect_parser.add_argument('--simulate', type=int, default=0,
+                                    help='Run N simulated rounds to populate introspection state')
+    introspect_parser.add_argument('--output', type=str, default='',
+                                    help='Save introspection report to JSON')
+
+    # Feedback command (full tridirectional intelligence loop)
+    feedback_parser = subparsers.add_parser('feedback',
+                                             help='Tridirectional feedback loop (swarm+intent+bus)')
+    feedback_parser.add_argument('--task', type=str, required=True,
+                                  help='Task for tridirectional intelligence loop')
+    feedback_parser.add_argument('--rounds', type=int, default=5,
+                                  help='Max deliberation rounds')
+    feedback_parser.add_argument('--output', type=str, default='',
+                                  help='Save feedback results to JSON')
+
     # If no command, default to chat
     if len(sys.argv) == 1:
         args = parser.parse_args(['chat'])
@@ -584,6 +796,16 @@ def main():
         cmd_bridges(args)
     elif args.command == 'swarm':
         cmd_swarm(args)
+    elif args.command == 'validate':
+        cmd_validate(args)
+    elif args.command == 'tournament':
+        cmd_tournament(args)
+    elif args.command == 'mesh':
+        cmd_mesh(args)
+    elif args.command == 'introspect':
+        cmd_introspect(args)
+    elif args.command == 'feedback':
+        cmd_feedback(args)
     elif args.command == 'license':
         cmd_license(args)
     elif args.command == 'help':
