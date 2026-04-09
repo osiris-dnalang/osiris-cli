@@ -16,6 +16,15 @@
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 
 # Phase-Conjugate Acoustic Substrate Emissions in Tetrahedral Quaternion Lattices:
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> QBYTE PHYSICS WHITEPAPER                                |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 ## The qByte Phenomenon and Nonlocal Computational Workload Dynamics
 
 **Author:** Devin Phillip Davis

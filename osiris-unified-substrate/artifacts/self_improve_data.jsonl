@@ -1,0 +1,200 @@
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: A pool has 127 liters. 68 liters drain out. How many remain?\nAssistant: We need to find the result.\n127 - 68 = 59\n\nThe answer is 59."}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: What year did World War II end?\nAssistant: 1945"}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Write a function to reverse a string.\nAssistant: def reverse_string(s: str) -> str:\n    return s[::-1]"}
+{"text": "User: Calculate: 2070 * 2113\nAssistant: Step 1: We need to compute 2070 * 2113\nStep 2: 2070 * 2113 = 4373910\n\nThe answer is 4373910."}
+{"text": "User: What programming language was created by Guido van Rossum?\nAssistant: Python"}
+{"text": "User: What is the capital of Japan?\nAssistant: Tokyo"}
+{"text": "User: Calculate: 8433 - 3909\nAssistant: Step 1: We need to compute 8433 - 3909\nStep 2: 8433 - 3909 = 4524\n\nThe answer is 4524."}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: What organelle is the powerhouse of the cell?\nAssistant: Mitochondria"}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: Alice has $166. They earn $193 more. What's the total?\nAssistant: We need to find the result.\n166 + 193 = 359\n\nThe answer is 359."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: What organelle is the powerhouse of the cell?\nAssistant: Mitochondria"}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: Calculate: 6128 * 7187\nAssistant: Step 1: We need to compute 6128 * 7187\nStep 2: 6128 * 7187 = 44041936\n\nThe answer is 44041936."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: What organelle is the powerhouse of the cell?\nAssistant: Mitochondria"}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: Alice reads 40 pages per day for 153 days. Total pages?\nAssistant: We need to find the result.\n40 * 153 = 6120\n\nThe answer is 6120."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Diana reads 213 pages per day for 125 days. Total pages?\nAssistant: We need to find the result.\n213 * 125 = 26625\n\nThe answer is 26625."}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: Calculate: 6606 + 5569\nAssistant: Step 1: We need to compute 6606 + 5569\nStep 2: 6606 + 5569 = 12175\n\nThe answer is 12175."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: Calculate: 127 * 1173\nAssistant: Step 1: We need to compute 127 * 1173\nStep 2: 127 * 1173 = 148971\n\nThe answer is 148971."}
+{"text": "User: What organelle is the powerhouse of the cell?\nAssistant: Mitochondria"}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: Alice reads 447 pages per day for 103 days. Total pages?\nAssistant: We need to find the result.\n447 * 103 = 46041\n\nThe answer is 46041."}
+{"text": "User: Bob has $76. They earn $109 more. What's the total?\nAssistant: We need to find the result.\n76 + 109 = 185\n\nThe answer is 185."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: What is the largest planet in our solar system?\nAssistant: Jupiter"}
+{"text": "User: What is the Pythagorean theorem?\nAssistant: a² + b² = c²"}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: Calculate: 7972 * 1143\nAssistant: Step 1: We need to compute 7972 * 1143\nStep 2: 7972 * 1143 = 9111996\n\nThe answer is 9111996."}
+{"text": "User: Alice reads 34 pages per day for 131 days. Total pages?\nAssistant: We need to find the result.\n34 * 131 = 4454\n\nThe answer is 4454."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: What is the Pythagorean theorem?\nAssistant: a² + b² = c²"}
+{"text": "User: What is the Big O of binary search?\nAssistant: O(log n)"}
+{"text": "User: What is Schrödinger's equation used for?\nAssistant: Describing how quantum states evolve over time"}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: What is the largest planet in our solar system?\nAssistant: Jupiter"}
+{"text": "User: Write a function to reverse a string.\nAssistant: def reverse_string(s: str) -> str:\n    return s[::-1]"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Alice has $418. They earn $141 more. What's the total?\nAssistant: We need to find the result.\n418 + 141 = 559\n\nThe answer is 559."}
+{"text": "User: Ethan reads 500 pages per day for 15 days. Total pages?\nAssistant: We need to find the result.\n500 * 15 = 7500\n\nThe answer is 7500."}
+{"text": "User: Diana reads 199 pages per day for 1 days. Total pages?\nAssistant: We need to find the result.\n199 * 1 = 199\n\nThe answer is 199."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: Calculate: 524 + 5423\nAssistant: Step 1: We need to compute 524 + 5423\nStep 2: 524 + 5423 = 5947\n\nThe answer is 5947."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Calculate: 3933 + 959\nAssistant: Step 1: We need to compute 3933 + 959\nStep 2: 3933 + 959 = 4892\n\nThe answer is 4892."}
+{"text": "User: What year did World War II end?\nAssistant: 1945"}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: What is the pH of pure water at 25°C?\nAssistant: 7"}
+{"text": "User: What is Newton's second law?\nAssistant: F = ma (Force equals mass times acceleration)"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: What is the chemical symbol for water?\nAssistant: H₂O"}
+{"text": "User: Calculate: 4352 * 8655\nAssistant: Step 1: We need to compute 4352 * 8655\nStep 2: 4352 * 8655 = 37666560\n\nThe answer is 37666560."}
+{"text": "User: Calculate: 3691 - 1059\nAssistant: Step 1: We need to compute 3691 - 1059\nStep 2: 3691 - 1059 = 2632\n\nThe answer is 2632."}
+{"text": "User: Calculate: 1598 - 7072\nAssistant: Step 1: We need to compute 1598 - 7072\nStep 2: 1598 - 7072 = -5474\n\nThe answer is -5474."}
+{"text": "User: Calculate: 2177 * 9365\nAssistant: Step 1: We need to compute 2177 * 9365\nStep 2: 2177 * 9365 = 20387605\n\nThe answer is 20387605."}
+{"text": "User: What is the capital of Japan?\nAssistant: Tokyo"}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: A store has 239 apples. 160 more arrive. How many apples total?\nAssistant: We need to find the result.\n239 + 160 = 399\n\nThe answer is 399."}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: What is Newton's second law?\nAssistant: F = ma (Force equals mass times acceleration)"}
+{"text": "User: What is Schrödinger's equation used for?\nAssistant: Describing how quantum states evolve over time"}
+{"text": "User: Calculate: 7407 + 1992\nAssistant: Step 1: We need to compute 7407 + 1992\nStep 2: 7407 + 1992 = 9399\n\nThe answer is 9399."}
+{"text": "User: Ethan reads 211 pages per day for 31 days. Total pages?\nAssistant: We need to find the result.\n211 * 31 = 6541\n\nThe answer is 6541."}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: Calculate: 897 + 1622\nAssistant: Step 1: We need to compute 897 + 1622\nStep 2: 897 + 1622 = 2519\n\nThe answer is 2519."}
+{"text": "User: What is the Pythagorean theorem?\nAssistant: a² + b² = c²"}
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}
+{"text": "User: Charlie has $84. They earn $49 more. What's the total?\nAssistant: We need to find the result.\n84 + 49 = 133\n\nThe answer is 133."}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: What is the pH of pure water at 25°C?\nAssistant: 7"}
+{"text": "User: Charlie reads 348 pages per day for 166 days. Total pages?\nAssistant: We need to find the result.\n348 * 166 = 57768\n\nThe answer is 57768."}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}
+{"text": "User: What is the pH of pure water at 25°C?\nAssistant: 7"}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: What is the speed of light approximately?\nAssistant: 3 × 10⁸ meters per second"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: What organelle is the powerhouse of the cell?\nAssistant: Mitochondria"}
+{"text": "User: A pool has 479 liters. 117 liters drain out. How many remain?\nAssistant: We need to find the result.\n479 - 117 = 362\n\nThe answer is 362."}
+{"text": "User: What is the speed of light approximately?\nAssistant: 3 × 10⁸ meters per second"}
+{"text": "User: Write a function to reverse a string.\nAssistant: def reverse_string(s: str) -> str:\n    return s[::-1]"}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: Calculate: 3780 + 9651\nAssistant: Step 1: We need to compute 3780 + 9651\nStep 2: 3780 + 9651 = 13431\n\nThe answer is 13431."}
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: What is Newton's second law?\nAssistant: F = ma (Force equals mass times acceleration)"}
+{"text": "User: Calculate: 3305 - 5117\nAssistant: Step 1: We need to compute 3305 - 5117\nStep 2: 3305 - 5117 = -1812\n\nThe answer is -1812."}
+{"text": "User: Calculate: 9305 + 1300\nAssistant: Step 1: We need to compute 9305 + 1300\nStep 2: 9305 + 1300 = 10605\n\nThe answer is 10605."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: Calculate: 974 + 3760\nAssistant: Step 1: We need to compute 974 + 3760\nStep 2: 974 + 3760 = 4734\n\nThe answer is 4734."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: What is the derivative of x²?\nAssistant: 2x"}
+{"text": "User: What organelle is the powerhouse of the cell?\nAssistant: Mitochondria"}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: What data structure uses FIFO ordering?\nAssistant: Queue"}
+{"text": "User: A store has 304 apples. 123 more arrive. How many apples total?\nAssistant: We need to find the result.\n304 + 123 = 427\n\nThe answer is 427."}
+{"text": "User: What year did World War II end?\nAssistant: 1945"}
+{"text": "User: Ethan has $361. They earn $188 more. What's the total?\nAssistant: We need to find the result.\n361 + 188 = 549\n\nThe answer is 549."}
+{"text": "User: What is the chemical symbol for water?\nAssistant: H₂O"}
+{"text": "User: What year did World War II end?\nAssistant: 1945"}
+{"text": "User: What is the derivative of x²?\nAssistant: 2x"}
+{"text": "User: A store has 338 apples. 139 more arrive. How many apples total?\nAssistant: We need to find the result.\n338 + 139 = 477\n\nThe answer is 477."}
+{"text": "User: Write a function to reverse a string.\nAssistant: def reverse_string(s: str) -> str:\n    return s[::-1]"}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: Ethan reads 103 pages per day for 49 days. Total pages?\nAssistant: We need to find the result.\n103 * 49 = 5047\n\nThe answer is 5047."}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: What is the largest planet in our solar system?\nAssistant: Jupiter"}
+{"text": "User: Calculate: 354 * 9648\nAssistant: Step 1: We need to compute 354 * 9648\nStep 2: 354 * 9648 = 3415392\n\nThe answer is 3415392."}
+{"text": "User: Alice reads 301 pages per day for 153 days. Total pages?\nAssistant: We need to find the result.\n301 * 153 = 46053\n\nThe answer is 46053."}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: What is the derivative of x²?\nAssistant: 2x"}
+{"text": "User: What is the pH of pure water at 25°C?\nAssistant: 7"}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: What programming language was created by Guido van Rossum?\nAssistant: Python"}
+{"text": "User: What is the speed of light approximately?\nAssistant: 3 × 10⁸ meters per second"}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: Write a function to reverse a string.\nAssistant: def reverse_string(s: str) -> str:\n    return s[::-1]"}
+{"text": "User: A pool has 483 liters. 67 liters drain out. How many remain?\nAssistant: We need to find the result.\n483 - 67 = 416\n\nThe answer is 416."}
+{"text": "User: Calculate: 6949 - 6745\nAssistant: Step 1: We need to compute 6949 - 6745\nStep 2: 6949 - 6745 = 204\n\nThe answer is 204."}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: Calculate: 7797 + 9017\nAssistant: Step 1: We need to compute 7797 + 9017\nStep 2: 7797 + 9017 = 16814\n\nThe answer is 16814."}
+{"text": "User: A store has 387 apples. 81 more arrive. How many apples total?\nAssistant: We need to find the result.\n387 + 81 = 468\n\nThe answer is 468."}
+{"text": "User: If all roses are flowers and all flowers are plants, are all roses plants?\nAssistant: Yes. Since all roses are flowers, and all flowers are plants, by transitivity all roses are plants."}
+{"text": "User: What is Schrödinger's equation used for?\nAssistant: Describing how quantum states evolve over time"}
+{"text": "User: A pool has 241 liters. 64 liters drain out. How many remain?\nAssistant: We need to find the result.\n241 - 64 = 177\n\nThe answer is 177."}
+{"text": "User: What is the pH of pure water at 25°C?\nAssistant: 7"}
+{"text": "User: What is the pH of pure water at 25°C?\nAssistant: 7"}
+{"text": "User: A store has 219 apples. 169 more arrive. How many apples total?\nAssistant: We need to find the result.\n219 + 169 = 388\n\nThe answer is 388."}
+{"text": "User: What programming language was created by Guido van Rossum?\nAssistant: Python"}
+{"text": "User: What organelle is the powerhouse of the cell?\nAssistant: Mitochondria"}
+{"text": "User: Calculate: 7754 - 3991\nAssistant: Step 1: We need to compute 7754 - 3991\nStep 2: 7754 - 3991 = 3763\n\nThe answer is 3763."}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: Calculate: 6679 + 3129\nAssistant: Step 1: We need to compute 6679 + 3129\nStep 2: 6679 + 3129 = 9808\n\nThe answer is 9808."}
+{"text": "User: What is the chemical symbol for water?\nAssistant: H₂O"}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Calculate: 7963 * 3520\nAssistant: Step 1: We need to compute 7963 * 3520\nStep 2: 7963 * 3520 = 28029760\n\nThe answer is 28029760."}
+{"text": "User: Calculate: 6942 * 3480\nAssistant: Step 1: We need to compute 6942 * 3480\nStep 2: 6942 * 3480 = 24158160\n\nThe answer is 24158160."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: A store has 479 apples. 193 more arrive. How many apples total?\nAssistant: We need to find the result.\n479 + 193 = 672\n\nThe answer is 672."}
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: What is Schrödinger's equation used for?\nAssistant: Describing how quantum states evolve over time"}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: Three boxes: one has apples, one has oranges, one has both. All labels are wrong. You pick one fruit from the 'both' box. How do you label all boxes?\nAssistant: Since all labels are wrong, the 'both' box has only one type. Pick a fruit — that tells you what it actually contains. Then the remaining two labels are also wrong, so you can deduce the rest."}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: What is the chemical symbol for water?\nAssistant: H₂O"}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: Who painted the Mona Lisa?\nAssistant: Leonardo da Vinci"}
+{"text": "User: A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?\nAssistant: Let ball = x. Bat = x + 1. So x + (x+1) = 1.10 → 2x = 0.10 → x = 0.05. The ball costs $0.05."}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}
+{"text": "User: If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?\nAssistant: Each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in 5 minutes."}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}
+{"text": "User: What is the chemical symbol for water?\nAssistant: H₂O"}
+{"text": "User: What is the speed of light approximately?\nAssistant: 3 × 10⁸ meters per second"}

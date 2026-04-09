@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> CHAT README                                             |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # OSIRIS Chat-Native TUI System
 
 ## Overview

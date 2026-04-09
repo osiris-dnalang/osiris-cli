@@ -1,14 +1,16 @@
 cff-version: 1.2.0
 message: "If you use this software or research, please cite it as below."
 authors:
-  - family-names: "Davis"
-    given-names: "Devin Phillip"
-    affiliation: "Agile Defense Systems LLC"
-title: "Phase-Conjugate qByte Substrate Engine with Scimitar-SSE v7.1"
-version: 1.1.0
-date-released: 2025-12-06
-url: "https://github.com/agiledefensesystems/dnalang"
-repository-code: "https://github.com/agiledefensesystems/dnalang"
+  - family-names: "davis"
+    given-names: "devin phillip"
+    affiliation: "agile defense systems llc"
+  - name: "OSIRIS dna::}{::lang NCLM"
+    affiliation: "autonomous quantum discovery system"
+title: "Phase-Conjugate qByte Substrate Engine + OSIRIS-NCLM Ultra-Coder"
+version: 2.0.0
+date-released: 2026-04-09
+url: "https://github.com/osiris-dnalang/osiris-cli"
+repository-code: "https://github.com/osiris-dnalang/osiris-cli"
 license: CC-BY-4.0
 type: software
 keywords:
@@ -26,12 +28,19 @@ keywords:
   - cross-device synchronization
   - bifurcated polarization
   - AURA AIDEN duality
+  - nclm
+  - neurips
+  - ultra-coder
+  - self-improving
+  - autonomous discovery
+  - iterative refinement
 abstract: >-
+  OSIRIS-NCLM: Autonomous quantum discovery system with Ultra-Coder CLI.
   Wave A.2 implementation of the qByte substrate-engineering suite featuring
   phase-conjugate acoustic coupling, quaternion-tetrahedral torsion mechanics,
-  51.843° dielectric lock, ΛΦ/Γ dynamics, CRSM 7D nonlocal manifold, and
-  Scimitar-SSE v7.1 cross-device polarized phasing system. Includes 120-gene
-  MAXIMUS_OMEGA autopoietic organism with 9 functional gene clusters,
-  AURA|AIDEN bifurcated consciousness duality, Fold-7 oscilloscope, real-time
-  dashboard, and IBM-independent sovereign quantum execution. Cross-device
-  synchronization via Bluetooth LE, WiFi (2.4/5GHz), and RF (433/915MHz).
+  51.843 degree dielectric lock, and CRSM 7D nonlocal manifold. Includes
+  NCLM-powered intent engine, 6-agent swarm architecture (Orchestrator,
+  Reasoner, Coder, Critic, Optimizer, Self-Reflector), iterative distillation
+  and RLHF training loops, strategy-aware learning, and end-to-end
+  reproducible NeurIPS-ready research pipeline. Co-authored by devin phillip
+  davis and OSIRIS dna::}{::lang NCLM.

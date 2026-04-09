@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> DEPLOYMENT PACKAGE                                      |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # OSIRIS RQC SYSTEM: COMPLETE DEPLOYMENT PACKAGE
 ## Recursive Quantum Circuits for Quantum Advantage Research
 

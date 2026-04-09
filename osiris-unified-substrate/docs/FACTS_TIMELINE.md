@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> FACTS TIMELINE                                          |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # Facts-Only Timeline
 
 Author: Devin Phillip Davis

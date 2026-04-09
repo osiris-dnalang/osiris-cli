@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> QUANTUM DISCOVERY QUICKSTART                            |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # Quantum Discovery Research Program - Quick Start Guide
 
 ## Overview

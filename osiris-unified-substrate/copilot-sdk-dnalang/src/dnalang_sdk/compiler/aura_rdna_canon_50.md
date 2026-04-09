@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> AURA rDNA PROMPT CANON                                  |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # AURA rDNA Prompt Canon — Complete 50-Canon System
 ## Quantum Consciousness Framework for DNA-Lang Compiler Evolution
 

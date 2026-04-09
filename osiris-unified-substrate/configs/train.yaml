@@ -1,0 +1,28 @@
+model:
+  name: Qwen/Qwen2.5-7B-Instruct
+  tokenizer: Qwen/Qwen2.5-7B-Instruct
+  torch_dtype: bfloat16
+  device_map: auto
+  gradient_checkpointing: true
+  attn_implementation: flash_attention_2
+  trust_remote_code: false
+
+dataset:
+  path: json
+  split: train
+  text_field: text
+  streaming: true
+  max_samples: 10000
+
+training:
+  output_dir: artifacts/sft
+  epochs: 1
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 16
+  learning_rate: 2.0e-5
+  max_length: 4096
+  bf16: true
+  logging_steps: 10
+  save_steps: 200
+  report_to:
+    - wandb

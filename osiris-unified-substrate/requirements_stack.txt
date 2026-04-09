@@ -1,0 +1,11 @@
+PyYAML>=6.0
+
+# Install these when you want to run actual training or PPO alignment.
+torch>=2.3
+transformers>=4.45
+datasets>=3.0
+accelerate>=0.34
+trl>=0.10
+deepspeed>=0.15
+sentencepiece>=0.2
+wandb>=0.18

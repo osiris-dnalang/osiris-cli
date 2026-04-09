@@ -1,0 +1,50 @@
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: Write a function to reverse a string.\nAssistant: def reverse_string(s: str) -> str:\n    return s[::-1]"}
+{"text": "User: A pool has 300 liters. 50 liters drain out. How many remain?\nAssistant: We need to find the result.\n300 - 50 = 250\n\nThe answer is 250."}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Calculate: 8289 + 9873\nAssistant: Step 1: We need to compute 8289 + 9873\nStep 2: 8289 + 9873 = 18162\n\nThe answer is 18162."}
+{"text": "User: A store has 343 apples. 59 more arrive. How many apples total?\nAssistant: We need to find the result.\n343 + 59 = 402\n\nThe answer is 402."}
+{"text": "User: Bob reads 194 pages per day for 91 days. Total pages?\nAssistant: We need to find the result.\n194 * 91 = 17654\n\nThe answer is 17654."}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: Calculate: 6934 - 5584\nAssistant: Step 1: We need to compute 6934 - 5584\nStep 2: 6934 - 5584 = 1350\n\nThe answer is 1350."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Calculate: 4516 + 4022\nAssistant: Step 1: We need to compute 4516 + 4022\nStep 2: 4516 + 4022 = 8538\n\nThe answer is 8538."}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: Calculate: 2296 * 1689\nAssistant: Step 1: We need to compute 2296 * 1689\nStep 2: 2296 * 1689 = 3877944\n\nThe answer is 3877944."}
+{"text": "User: Charlie reads 115 pages per day for 196 days. Total pages?\nAssistant: We need to find the result.\n115 * 196 = 22540\n\nThe answer is 22540."}
+{"text": "User: A pool has 418 liters. 12 liters drain out. How many remain?\nAssistant: We need to find the result.\n418 - 12 = 406\n\nThe answer is 406."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: A store has 52 apples. 98 more arrive. How many apples total?\nAssistant: We need to find the result.\n52 + 98 = 150\n\nThe answer is 150."}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: A store has 442 apples. 60 more arrive. How many apples total?\nAssistant: We need to find the result.\n442 + 60 = 502\n\nThe answer is 502."}
+{"text": "User: Write a function to count vowels in a string.\nAssistant: def count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in 'aeiou')"}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: A pool has 429 liters. 161 liters drain out. How many remain?\nAssistant: We need to find the result.\n429 - 161 = 268\n\nThe answer is 268."}
+{"text": "User: Write a function to merge two sorted lists.\nAssistant: def merge_sorted(a, b):\n    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    result.extend(a[i:])\n    result.extend(b[j:])\n    return result"}
+{"text": "User: Write a binary search function.\nAssistant: def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1"}
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: Charlie has $147. They earn $117 more. What's the total?\nAssistant: We need to find the result.\n147 + 117 = 264\n\nThe answer is 264."}
+{"text": "User: Calculate: 1834 * 419\nAssistant: Step 1: We need to compute 1834 * 419\nStep 2: 1834 * 419 = 768446\n\nThe answer is 768446."}
+{"text": "User: A store has 477 apples. 97 more arrive. How many apples total?\nAssistant: We need to find the result.\n477 + 97 = 574\n\nThe answer is 574."}
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: Bob reads 278 pages per day for 187 days. Total pages?\nAssistant: We need to find the result.\n278 * 187 = 51986\n\nThe answer is 51986."}
+{"text": "User: Calculate: 6922 + 530\nAssistant: Step 1: We need to compute 6922 + 530\nStep 2: 6922 + 530 = 7452\n\nThe answer is 7452."}
+{"text": "User: Write a function to compute the nth Fibonacci number.\nAssistant: def fibonacci(n: int) -> int:\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b"}
+{"text": "User: Calculate: 116 * 2625\nAssistant: Step 1: We need to compute 116 * 2625\nStep 2: 116 * 2625 = 304500\n\nThe answer is 304500."}
+{"text": "User: Calculate: 7369 - 9664\nAssistant: Step 1: We need to compute 7369 - 9664\nStep 2: 7369 - 9664 = -2295\n\nThe answer is -2295."}
+{"text": "User: Calculate: 9205 * 3267\nAssistant: Step 1: We need to compute 9205 * 3267\nStep 2: 9205 * 3267 = 30072735\n\nThe answer is 30072735."}
+{"text": "User: Calculate: 8945 * 1434\nAssistant: Step 1: We need to compute 8945 * 1434\nStep 2: 8945 * 1434 = 12827130\n\nThe answer is 12827130."}
+{"text": "User: Calculate: 1545 + 3592\nAssistant: Step 1: We need to compute 1545 + 3592\nStep 2: 1545 + 3592 = 5137\n\nThe answer is 5137."}
+{"text": "User: Write a function to reverse a string.\nAssistant: def reverse_string(s: str) -> str:\n    return s[::-1]"}
+{"text": "User: Write a function to find the GCD of two numbers.\nAssistant: def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"}
+{"text": "User: Calculate: 8938 + 6883\nAssistant: Step 1: We need to compute 8938 + 6883\nStep 2: 8938 + 6883 = 15821\n\nThe answer is 15821."}
+{"text": "User: A pool has 438 liters. 89 liters drain out. How many remain?\nAssistant: We need to find the result.\n438 - 89 = 349\n\nThe answer is 349."}
+{"text": "User: A pool has 364 liters. 175 liters drain out. How many remain?\nAssistant: We need to find the result.\n364 - 175 = 189\n\nThe answer is 189."}
+{"text": "User: Write a function to flatten a nested list.\nAssistant: def flatten(lst):\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result"}
+{"text": "User: Write a function to check if a number is prime.\nAssistant: def is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"}

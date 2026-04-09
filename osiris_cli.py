@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> CLI ENTRY POINT                                         |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+
 OSIRIS Automated Discovery - Command Line Interface
 ====================================================
 
@@ -16,6 +23,15 @@ Usage:
   
   # Publish results
   python osiris_cli.py publish --results-dir ./discoveries --dry-run
+
+  # Ultra-Coder: solve a coding task
+  python osiris_cli.py ultra-coder --task "implement quicksort"
+
+  # Ultra-Coder: interactive mode
+  python osiris_cli.py ultra-coder --interactive
+
+  # Benchmark suite
+  python osiris_cli.py benchmark --full --compare
 """
 
 import os
@@ -202,12 +218,131 @@ def cmd_status(args):
         
         total_p_value += p_val
         
-        status = "✓" if sig else "✗"
+        status = "[+]" if sig else "[-]"
         logger.info(f"{status} {result.get('name')}: p={p_val:.2e}")
     
     logger.info(f"\nSignificant Results: {significant}/{len(result_files)}")
     logger.info("="*70 + "\n")
     
+    return 0
+
+
+def cmd_ultra_coder(args):
+    """Run the NCLLM Ultra-Coder swarm"""
+    import asyncio
+    from osiris_ultra_coder import UltraCoderSwarm, NCLLMPersonality, NLPSelfEditor, SelfImprovementCoach
+
+    personality = NCLLMPersonality()
+    swarm = UltraCoderSwarm(personality=personality, user_id=args.user or "cli")
+
+    if args.self_edit:
+        editor = NLPSelfEditor(personality)
+        result = editor.process_edit_request(args.self_edit)
+        if result["applied"]:
+            logger.info(f"Applied edit: {result['modifications']}")
+        else:
+            logger.info(f"Edit rejected: {result.get('error', 'unknown')}")
+        return 0
+
+    if args.coach:
+        coach = SelfImprovementCoach(personality)
+        suggestions = coach.generate_suggestions()
+        for s in suggestions:
+            logger.info(f"  [{s['priority']}] {s['area']}: {s['suggestion']}")
+        return 0
+
+    if args.interactive:
+        asyncio.run(_interactive_ultra_coder(swarm, personality))
+        return 0
+
+    if args.task:
+        result = asyncio.run(swarm.solve(args.task, context=args.file or ""))
+        if args.json_output:
+            print(json.dumps({"solution": result}, indent=2))
+        else:
+            print(result)
+        return 0
+
+    logger.error("Specify --task, --interactive, --self-edit, or --coach")
+    return 1
+
+
+async def _interactive_ultra_coder(swarm, personality):
+    """Interactive Ultra-Coder REPL"""
+    print("+====================================================================+")
+    print("|  NCLLM Ultra-Coder :: Interactive Mode                             |")
+    print("|  co-authored by devin phillip davis                                |")
+    print("|  and OSIRIS dna::}{::lang NCLM                                    |")
+    print("+====================================================================+")
+    print("Commands: 'traits', 'edit <request>', 'coach', 'quit'")
+    print()
+
+    while True:
+        try:
+            task = input("ultra-coder> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            break
+
+        if not task:
+            continue
+        if task.lower() == "quit":
+            break
+        if task.lower() == "traits":
+            traits = personality.get_traits()
+            for k, v in traits.items():
+                bar = "#" * int(v * 20)
+                print(f"  {k:18s} [{bar:<20s}] {v:.2f}")
+            continue
+        if task.lower().startswith("edit "):
+            from osiris_ultra_coder import NLPSelfEditor
+            editor = NLPSelfEditor(personality)
+            result = editor.process_edit_request(task[5:])
+            print(f"  Result: {result}")
+            continue
+        if task.lower() == "coach":
+            from osiris_ultra_coder import SelfImprovementCoach
+            coach = SelfImprovementCoach(personality)
+            for s in coach.generate_suggestions():
+                print(f"  [{s['priority']}] {s['area']}: {s['suggestion']}")
+            continue
+
+        result = await swarm.solve(task)
+        print(result)
+        print()
+
+
+def cmd_benchmark(args):
+    """Run the NCLLM benchmark suite"""
+    import asyncio
+    from osiris_benchmark_suite import BenchmarkRunner
+
+    runner = BenchmarkRunner()
+
+    if args.full:
+        result = asyncio.run(runner.run_suite())
+    elif args.category:
+        result = asyncio.run(runner.run_suite(categories=[args.category]))
+    else:
+        result = asyncio.run(runner.run_suite())
+
+    runner.print_results(result)
+
+    if args.compare:
+        runner.print_comparison_table(result)
+
+    if args.json_output:
+        summary = {
+            "total": result.total_tasks,
+            "passed": result.passed,
+            "failed": result.failed,
+            "avg_score": result.average_score,
+            "categories": {
+                cat: {"avg": scores.average_score if hasattr(scores, 'average_score') else 0}
+                for cat, scores in result.category_results.items()
+            }
+        }
+        print(json.dumps(summary, indent=2))
+
     return 0
 
 
@@ -219,7 +354,7 @@ def main():
     
     # Parser
     parser = argparse.ArgumentParser(
-        description="OSIRIS Automated Quantum Discovery",
+        description="OSIRIS Automated Quantum Discovery + NCLLM Ultra-Coder",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -227,6 +362,13 @@ Examples:
   python osiris_cli.py list --templates
   python osiris_cli.py status --results-dir ./discoveries
   python osiris_cli.py publish --dry-run
+  python osiris_cli.py ultra-coder --task "implement quicksort in Python"
+  python osiris_cli.py ultra-coder --interactive
+  python osiris_cli.py ultra-coder --self-edit "increase creativity"
+  python osiris_cli.py ultra-coder --coach
+  python osiris_cli.py benchmark --full --compare
+
+co-authored by devin phillip davis and OSIRIS dna::}{::lang NCLM
         """
     )
     
@@ -255,6 +397,25 @@ Examples:
     status_parser = subparsers.add_parser('status', help='Check discovery status')
     status_parser.add_argument('--results-dir', default='./discoveries', help='Results directory')
     status_parser.set_defaults(func=cmd_status)
+    
+    # ULTRA-CODER command
+    uc_parser = subparsers.add_parser('ultra-coder', help='NCLLM Ultra-Coder 9-agent swarm')
+    uc_parser.add_argument('--task', help='Coding task to solve')
+    uc_parser.add_argument('--file', help='File context for the task')
+    uc_parser.add_argument('--interactive', action='store_true', help='Interactive REPL mode')
+    uc_parser.add_argument('--user', default='cli', help='User ID for personalization')
+    uc_parser.add_argument('--self-edit', help='Natural language self-edit request')
+    uc_parser.add_argument('--coach', action='store_true', help='Get self-improvement suggestions')
+    uc_parser.add_argument('--json', dest='json_output', action='store_true', help='JSON output')
+    uc_parser.set_defaults(func=cmd_ultra_coder)
+
+    # BENCHMARK command
+    bm_parser = subparsers.add_parser('benchmark', help='Run NCLLM benchmark suite')
+    bm_parser.add_argument('--full', action='store_true', help='Run full benchmark suite')
+    bm_parser.add_argument('--category', help='Run specific category')
+    bm_parser.add_argument('--compare', action='store_true', help='Show comparison table')
+    bm_parser.add_argument('--json', dest='json_output', action='store_true', help='JSON output')
+    bm_parser.set_defaults(func=cmd_benchmark)
     
     # Parse
     args = parser.parse_args()

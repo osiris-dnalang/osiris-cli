@@ -34,7 +34,7 @@ HISTORY_FILE = REPO_ROOT / ".osiris_history.jsonl"
 CONFIG_DIR = REPO_ROOT / ".config"
 STATE_DIR = REPO_ROOT / ".osiris_state"
 AUTOADVANCE_DIR = REPO_ROOT / ".autoadvance"
-VERSION = "0.54.0"  # Updated version with auto-enhance and auto-advance
+VERSION = "0.57.0"  # Mentor-Protégé dual-swarm + scientific defensibility
 
 # Ensure required directories exist
 CONFIG_DIR.mkdir(exist_ok=True, parents=True)
@@ -49,6 +49,8 @@ from nclm.enhanced_config import NCLMEnhancedConfig, NCLMMode
 from nclm.enhanced_client import EnhancedDNALangCopilotClient
 from nclm.quantum_cognitive import QuantumCognitiveProcessor
 from nclm.deep_understanding import DeepUnderstandingProcessor
+from nclm.production.stack import refine_world_class_llm_stack
+from ultra_agent.swarm import AgentSwarm
 
 def validate_sdk() -> None:
     """Validate that the SDK is available"""
@@ -1206,6 +1208,219 @@ async def do_auto_complete(prompt: str) -> None:
         logger.error(f"Auto-complete pipeline failed: {exc}")
         print(f"Error: {exc}")
 
+async def do_stack_refinement(prompt: str, iterations: int = 3, save: bool = False) -> None:
+    """Refine a production-ready LLM stack blueprint from a high-level goal."""
+    prompt = normalize_prompt(prompt)
+
+    try:
+        result = refine_world_class_llm_stack(prompt, iterations=iterations)
+
+        print(f"\n{'='*70}")
+        print("OSIRIS NCLM PRODUCTION STACK REFINEMENT")
+        print("="*70)
+        print(f"\nObjective: {result['intent']['objective']}")
+        print(f"Capabilities: {', '.join(result['intent']['must_have_capabilities'])}")
+        print(f"Benchmarks: {', '.join(result['intent']['benchmark_focus'])}")
+        print(f"Priorities: {', '.join(result['intent']['engineering_priorities'])}\n")
+
+        print("[AUTO-ENHANCE CHAIN]")
+        for item in result["enhancement_chain"]:
+            added = ", ".join(item["added_capabilities"]) or "no additional capabilities"
+            print(f"- Iteration {item['iteration']}: {added}")
+
+        print("\n[AUTO-ADVANCE STAGES]")
+        for item in result["advancement_chain"]:
+            print(f"- {item['stage'].title()}: {'; '.join(item['actions'])}")
+
+        print("\n[EXECUTION ORDER]")
+        for index, step in enumerate(result["execution_order"], 1):
+            print(f"{index}. {step}")
+
+        print("\n[BENCHMARK TARGETS]")
+        print(json.dumps(result["benchmark_output"], indent=2))
+
+        print("\n[SUMMARY]")
+        print(result["final_summary"])
+
+        if save:
+            timestamp = datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')
+            out_file = AUTOADVANCE_DIR / f"stack_{timestamp}.json"
+            with open(out_file, "w", encoding="utf-8") as handle:
+                json.dump(result, handle, indent=2)
+            print(f"\nBlueprint saved to: {out_file}")
+
+    except Exception as exc:
+        logger.error(f"Stack refinement failed: {exc}")
+        print(f"Error: {exc}")
+
+
+async def do_ultra_agent(task: str, loops: int = 3, threshold: float = 0.75) -> None:
+    """Run the Ultra-Agent autonomous reasoning swarm."""
+    task = normalize_prompt(task)
+    try:
+        swarm = AgentSwarm(max_refinement_loops=loops, quality_threshold=threshold)
+        result = swarm.run(task)
+        r = result.to_dict()
+        perf = r.get("performance", {})
+        tokens = r.get("token_accounting", {})
+
+        print(f"\n{'='*70}")
+        print("OSIRIS ULTRA-AGENT")
+        print("="*70)
+        print(f"Task:    {r['task'][:80]}")
+        print(f"Domain:  {r['domain']}")
+        print(f"Mode:    {r.get('inference_mode', 'unknown')}")
+        print(f"Quality: {perf.get('quality_score', 0):.3f}  "
+              f"Verdict: {perf.get('verdict', '?')}")
+        print(f"Loops:   {r['iterations']}  "
+              f"Elapsed: {r['elapsed_ms']:.0f}ms")
+        if tokens:
+            print(f"Tokens:  prompt={tokens.get('prompt_tokens', 0)}  "
+                  f"generated={tokens.get('generated_tokens', 0)}  "
+                  f"inference={tokens.get('inference_latency_ms', 0):.1f}ms")
+        print(f"\n--- Reasoning ---")
+        for step in r.get("reasoning", {}).get("steps", []):
+            print(f"  {step}")
+        print(f"\n--- Solution ---")
+        print(r.get("solution", "(none)"))
+        print(f"\n--- Critique ---")
+        for s in r.get("critique", {}).get("strengths", []):
+            print(f"  + {s}")
+        for w in r.get("critique", {}).get("weaknesses", []):
+            print(f"  - {w}")
+        print(f"\n--- Reflection ---")
+        refl = r.get("reflection", {})
+        print(f"  Assessment: {refl.get('process_assessment', '')}")
+        print(f"  Meta-Q:     {refl.get('meta_question', '')}")
+        for d in refl.get("improvement_directives", [])[:3]:
+            print(f"  → {d}")
+        print()
+
+        # Save
+        timestamp = datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')
+        out_file = AUTOADVANCE_DIR / f"ultra_{timestamp}.json"
+        with open(out_file, "w", encoding="utf-8") as fh:
+            json.dump(r, fh, indent=2)
+        print(f"Saved to: {out_file}")
+
+    except Exception as exc:
+        logger.error(f"Ultra-Agent failed: {exc}")
+        print(f"Error: {exc}")
+
+
+async def do_ultra_benchmark(task: str) -> None:
+    """Benchmark Ultra-Agent against baseline tools."""
+    task = normalize_prompt(task)
+    try:
+        swarm = AgentSwarm()
+        b = swarm.benchmark(task)
+
+        print(f"\n{'='*70}")
+        print("ULTRA-AGENT BENCHMARK")
+        print("="*70)
+        print(f"Task:  {b['task'][:80]}")
+        print(f"Score: {b['ultra_agent_score']:.3f}")
+        print(f"Mode:  {b.get('benchmark_mode', 'unknown')}")
+        print(f"Outperforms ALL: {b['outperforms_all']}")
+        if b.get("disclaimer"):
+            print(f"⚠ {b['disclaimer']}")
+        tokens = b.get("token_accounting", {})
+        if tokens:
+            print(f"Tokens: prompt={tokens.get('prompt_tokens', 0)}  "
+                  f"generated={tokens.get('generated_tokens', 0)}")
+        print()
+        for tool, data in b.get("comparisons", {}).items():
+            marker = "✓" if data["outperforms"] else "✗"
+            print(f"  {marker} vs {tool:15s}  "
+                  f"baseline={data['baseline']:.2f}  "
+                  f"Δ={data['delta']:+.3f}")
+        print()
+
+    except Exception as exc:
+        logger.error(f"Ultra-Agent benchmark failed: {exc}")
+        print(f"Error: {exc}")
+
+
+async def do_ultra_improve(iterations: int = 3) -> None:
+    """Run self-improvement via mentor-protégé distillation + meta-loop."""
+    try:
+        swarm = AgentSwarm()
+        report = swarm.self_improve(iterations=iterations)
+        print(f"\n{'='*70}")
+        print("ULTRA-AGENT SELF-IMPROVEMENT")
+        print("="*70)
+        print(f"Mode:            {report.get('mode', 'unknown')}")
+        print(f"Epochs:          {report.get('epochs', 'N/A')}")
+        print(f"Records:         {report.get('total_records', 'N/A')}")
+        print(f"Latency:         {report.get('total_latency_ms', 0):.0f}ms")
+
+        rewards = report.get("rewards_summary", {})
+        if rewards and rewards.get("status") != "no_data":
+            print(f"\n--- Rewards ---")
+            print(f"  Samples:    {rewards.get('total_samples', 0)}")
+            print(f"  Positive:   {rewards.get('positive_rewards', 0)}")
+            print(f"  Avg reward: {rewards.get('avg_reward', 0):.4f}")
+            print(f"  PPO-usable: {rewards.get('usable_for_ppo', 0)}")
+
+        pstats = report.get("protege_stats", {})
+        trend = pstats.get("improvement_trend", {})
+        if trend and trend.get("status") == "tracking":
+            print(f"\n--- Protégé ---")
+            print(f"  Positive rate: {trend.get('positive_rate', 0):.1%}")
+            print(f"  Quality: {trend.get('quality_start', 0):.3f} → "
+                  f"{trend.get('quality_end', 0):.3f}")
+
+        if report.get("legacy_data_generated"):
+            print(f"\n  Legacy data generated: {report['legacy_data_generated']}")
+        print()
+    except Exception as exc:
+        logger.error(f"Ultra-Agent self-improvement failed: {exc}")
+        print(f"Error: {exc}")
+
+
+async def do_ultra_distill(epochs: int = 3, tasks_per_epoch: int = 3,
+                            domains: list = None) -> None:
+    """Run standalone mentor-protégé distillation loop."""
+    try:
+        from ultra_agent.mentorship.distillation import DistillationEngine
+        from ultra_agent.model_interface import get_model_interface
+
+        engine = DistillationEngine(model_interface=get_model_interface())
+        report = engine.run(
+            iterations=epochs,
+            domains=domains,
+            tasks_per_iteration=tasks_per_epoch,
+        )
+
+        print(f"\n{'='*70}")
+        print("MENTOR-PROTÉGÉ DISTILLATION")
+        print("="*70)
+        print(f"Epochs:  {report.get('epochs', 0)}")
+        print(f"Records: {report.get('total_records', 0)}")
+        print(f"Mode:    {report.get('mode', 'unknown')}")
+        print(f"Output:  {report.get('output_path', '')}")
+        print(f"Latency: {report.get('total_latency_ms', 0):.0f}ms")
+
+        rewards = report.get("rewards_summary", {})
+        if rewards and rewards.get("status") != "no_data":
+            print(f"\n--- Rewards (RLHF-compatible) ---")
+            print(f"  Samples:    {rewards.get('total_samples', 0)}")
+            print(f"  Positive:   {rewards.get('positive_rewards', 0)}")
+            print(f"  Avg reward: {rewards.get('avg_reward', 0):.4f}")
+            print(f"  PPO-usable: {rewards.get('usable_for_ppo', 0)}")
+
+        evolution = report.get("mentor_evolution", {})
+        if evolution.get("adjustments"):
+            print(f"\n--- Mentor Evolution ---")
+            for adj in evolution["adjustments"]:
+                print(f"  ⟳ {adj}")
+        print()
+
+    except Exception as exc:
+        logger.error(f"Distillation failed: {exc}")
+        print(f"Error: {exc}")
+
+
 async def do_session_analysis(session_id: str) -> None:
     """Analyze a previous auto-advance session"""
     try:
@@ -1584,6 +1799,7 @@ async def main_async() -> None:
   osiris enhance "Explain quantum entanglement" --iterations 4
   osiris advance "Explore quantum cognition" --iterations 5 --depth 3
   osiris complete "Investigate quantum AI applications"
+    osiris stack "Build a leaderboard-ready OSIRIS NCLM with RLHF and evals" --iterations 4 --save
   osiris session <session_id>
   osiris zenodo "quantum computing" --max 10
   osiris quantum
@@ -1645,6 +1861,14 @@ async def main_async() -> None:
     complete_parser.add_argument("prompt", nargs="?", help="Topic to process completely")
     complete_parser.add_argument("--file", "-f", help="Read prompt from file")
     complete_parser.add_argument("--stdin", action="store_true", help="Read prompt from stdin")
+
+    # Stack command
+    stack_parser = subparsers.add_parser("stack", help="Recursively refine a production-ready LLM stack blueprint")
+    stack_parser.add_argument("prompt", nargs="?", help="High-level stack objective")
+    stack_parser.add_argument("--file", "-f", help="Read prompt from file")
+    stack_parser.add_argument("--stdin", action="store_true", help="Read prompt from stdin")
+    stack_parser.add_argument("--iterations", type=int, default=3, help="Number of recursive refinement iterations")
+    stack_parser.add_argument("--save", action="store_true", help="Persist the generated blueprint to disk")
 
     # Session command
     session_parser = subparsers.add_parser("session", help="Analyze a previous auto-advance session")
@@ -1723,6 +1947,34 @@ async def main_async() -> None:
     swarm_parser.add_argument("--agents", type=int, default=11, help="Number of agents")
     swarm_parser.add_argument("--iterations", type=int, default=100, help="Evolution iterations")
 
+    # Ultra-Agent command
+    ultra_parser = subparsers.add_parser("ultra", help="Autonomous Ultra-Agent reasoning engine")
+    ultra_sub = ultra_parser.add_subparsers(dest="ultra_command", help="Ultra-Agent sub-commands")
+    ultra_run = ultra_sub.add_parser("run", help="Solve a task autonomously")
+    ultra_run.add_argument("task", help="Task description")
+    ultra_run.add_argument("--loops", type=int, default=3, help="Max refinement loops")
+    ultra_run.add_argument("--threshold", type=float, default=0.75, help="Quality threshold")
+    ultra_bench = ultra_sub.add_parser("benchmark", help="Benchmark against baseline tools")
+    ultra_bench.add_argument("task", help="Task to benchmark")
+    ultra_imp = ultra_sub.add_parser("improve", help="Self-improvement via mentor-protégé")
+    ultra_imp.add_argument("--iterations", type=int, default=3, help="Meta-loop iterations")
+    ultra_sub.add_parser("status", help="Show agent swarm status")
+    ultra_dist = ultra_sub.add_parser("distill", help="Mentor-protégé distillation loop")
+    ultra_dist.add_argument("--epochs", type=int, default=3, help="Distillation epochs")
+    ultra_dist.add_argument("--tasks-per-epoch", type=int, default=3, help="Tasks per epoch")
+    ultra_dist.add_argument("--domains", nargs="*", help="Domains: code math reasoning adversarial")
+
+    # Meta-loop command
+    meta_parser = subparsers.add_parser("meta-loop", help="Run self-improving meta-loop")
+    meta_parser.add_argument("prompt", nargs="?", default="Improve OSIRIS NCLM", help="Improvement objective")
+    meta_parser.add_argument("--iterations", type=int, default=5, help="Meta-loop iterations")
+
+    # Autogen command
+    autogen_parser = subparsers.add_parser("autogen", help="Auto-generate training datasets")
+    autogen_parser.add_argument("--count", type=int, default=200, help="Number of samples")
+    autogen_parser.add_argument("--domains", nargs="+", help="Domains: math qa code reasoning")
+    autogen_parser.add_argument("--output", default="artifacts/autogen_dataset.jsonl", help="Output path")
+
     # Interactive shell
     subparsers.add_parser("interactive", help="Start interactive cognitive shell")
 
@@ -1777,6 +2029,12 @@ async def main_async() -> None:
             if not prompt:
                 raise ValueError("Prompt is required for complete pipeline")
             await do_auto_complete(prompt)
+
+        elif args.command == "stack":
+            prompt = get_prompt_from_args(args)
+            if not prompt:
+                raise ValueError("Prompt is required for stack refinement")
+            await do_stack_refinement(prompt, iterations=args.iterations, save=args.save)
 
         elif args.command == "session":
             await do_session_analysis(args.session_id)
@@ -1856,6 +2114,40 @@ async def main_async() -> None:
                 iterations=args.iterations
             )
 
+        elif args.command == "ultra":
+            if args.ultra_command == "run":
+                await do_ultra_agent(args.task, loops=args.loops, threshold=args.threshold)
+            elif args.ultra_command == "benchmark":
+                await do_ultra_benchmark(args.task)
+            elif args.ultra_command == "improve":
+                await do_ultra_improve(iterations=args.iterations)
+            elif args.ultra_command == "status":
+                s = AgentSwarm()
+                print(json.dumps(s.status(), indent=2))
+            elif args.ultra_command == "distill":
+                await do_ultra_distill(
+                    epochs=args.epochs,
+                    tasks_per_epoch=getattr(args, 'tasks_per_epoch', 3),
+                    domains=args.domains,
+                )
+            else:
+                print("Usage: osiris ultra {run|benchmark|improve|distill|status}")
+
+        elif args.command == "meta-loop":
+            from nclm.production.meta_loop import run_meta_loop
+            prompt = get_prompt_from_args(args) if hasattr(args, 'prompt') and args.prompt else "Improve OSIRIS NCLM"
+            result = run_meta_loop(objective=prompt, max_iterations=args.iterations)
+            print(f"\n{'='*70}")
+            print("OSIRIS META-LOOP")
+            print("="*70)
+            print(json.dumps(result, indent=2))
+
+        elif args.command == "autogen":
+            from nclm.production.data.autogen import generate_dataset, save_sft_jsonl
+            samples = generate_dataset(count=args.count, domains=args.domains)
+            path = save_sft_jsonl(samples, args.output)
+            print(f"Generated {len(samples)} samples → {path}")
+
         elif args.command == "interactive":
             await interactive_shell()
 
@@ -1883,6 +2175,7 @@ def print_interactive_help():
       understand:<prompt> - Develop deep understanding of a complex topic
       analyze:<prompt>  - Full cognitive analysis with quantum processing
       enhance:<prompt>  - Automatically enhance a prompt through iterations
+            stack:<prompt>    - Recursively define a production LLM stack blueprint
       advance:<prompt>   - Automatically advance understanding through refinement
       complete:<prompt> - Run complete auto-enhance and auto-advance pipeline
       concept <prompt>   - Generate cognitive concept map

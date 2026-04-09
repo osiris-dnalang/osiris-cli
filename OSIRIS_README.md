@@ -1,6 +1,16 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> AUTOMATED QUANTUM DISCOVERY SYSTEM                      |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # OSIRIS Automated Discovery System
 
 **Rigorous automated quantum research with statistical validation and falsification.**
+**Co-authored by devin phillip davis and OSIRIS dna::}{::lang NCLM.**
 
 Transform single-shot experiments into a continuous discovery pipeline that:
 - ✅ Runs real quantum experiments on IBM Quantum hardware

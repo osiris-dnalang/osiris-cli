@@ -1,0 +1,141 @@
+{
+  "task": "Explain gradient descent",
+  "domain": "reasoning",
+  "plan": {
+    "task": "Explain gradient descent",
+    "domain": "reasoning",
+    "steps": [
+      {
+        "agent": "reasoner",
+        "action": "analyze",
+        "input": "Explain gradient descent"
+      },
+      {
+        "agent": "coder",
+        "action": "execute",
+        "input": "reasoner.output"
+      },
+      {
+        "agent": "critic",
+        "action": "evaluate",
+        "input": "coder.output"
+      },
+      {
+        "agent": "optimizer",
+        "action": "optimize",
+        "input": "critic.feedback"
+      },
+      {
+        "agent": "self_reflector",
+        "action": "reflect",
+        "input": "all.results"
+      }
+    ],
+    "strategy": "analyze-argue-conclude",
+    "constraints": [
+      "standard"
+    ],
+    "estimated_depth": 1
+  },
+  "reasoning": {
+    "task": "Explain gradient descent",
+    "steps": [
+      "UNDERSTAND: The task requests 'explain' in the domain of 'reasoning'.",
+      "IDENTIFY: The core challenge is a focused task requiring precise execution.",
+      "REQUIRE: Key requirements \u2014 correctness, clarity.",
+      "APPROACHES: Possible strategies \u2014 structured argumentation with evidence mapping; multi-perspective analysis with synthesis; first-principles decomposition.",
+      "SELECT: Best approach \u2014 structured argumentation with evidence mapping \u2014 because it minimises complexity while meeting requirements.",
+      "PLAN: Execute structured argumentation with evidence mapping with verification at each step."
+    ],
+    "sub_problems": [
+      "Explain gradient descent"
+    ],
+    "assumptions": [
+      "Standard operating conditions"
+    ],
+    "conclusion": "After 6-step analysis across reasoning domain, the task ('explain') can be solved by addressing 1 sub-problems in sequence with verification at each stage.",
+    "confidence": 0.9199999999999999,
+    "depth": 6
+  },
+  "solution": "# Task: Explain gradient descent\ndef explain_gradient_descent(*args, **kwargs):\n    \"\"\"\n    Explain gradient descent\n    \"\"\"\n    # Step 1: UNDERSTAND: The task requests 'explain' in the domain of 'reasoning'.\n    # Step 2: IDENTIFY: The core challenge is a focused task requiring precise execution.\n    # Step 3: REQUIRE: Key requirements \u2014 correctness, clarity.\n    # Step 4: APPROACHES: Possible strategies \u2014 structured argumentation with evidence mapping\n    # Step 5: SELECT: Best approach \u2014 structured argumentation with evidence mapping \u2014 because\n    # TODO: implement\n    raise NotImplementedError\n",
+  "critique": {
+    "overall_score": 0.733,
+    "axis_scores": {
+      "correctness": 0.2,
+      "completeness": 1.0,
+      "efficiency": 0.7,
+      "readability": 1.0,
+      "robustness": 0.5,
+      "reasoning_quality": 1.0
+    },
+    "strengths": [
+      "Strong completeness (1.00)",
+      "Strong readability (1.00)",
+      "Well-reasoned approach (1.00)"
+    ],
+    "weaknesses": [
+      "Weak correctness (0.20)"
+    ],
+    "suggestions": [
+      "Verify output against expected results",
+      "Add assertion checks for correctness",
+      "Review algorithm logic for off-by-one errors"
+    ],
+    "verdict": "needs-work"
+  },
+  "optimization": {
+    "original_score": 0.733,
+    "target_score": 0.773,
+    "actions_taken": [
+      "[correctness] Apply formal verification techniques",
+      "[correctness] Add invariant assertions at loop boundaries",
+      "[robustness] Wrap external calls in try/except with specific exceptions",
+      "[robustness] Add input validation at function entry points"
+    ],
+    "efficiency_gains": [],
+    "quality_improvements": [
+      "Improve correctness from 0.20 \u2192 target 0.80+",
+      "Improve robustness from 0.50 \u2192 target 0.80+"
+    ],
+    "meta_insights": [
+      "Iteration 3: Focus on highest-delta improvements first",
+      "Quality is high \u2014 diminishing returns on further optimisation",
+      "Correctness AND robustness are both weak \u2014 add comprehensive input validation which improves both simultaneously"
+    ]
+  },
+  "reflection": {
+    "task": "Explain gradient descent",
+    "solved_correctly": false,
+    "quality_score": 0.733,
+    "reasoning_depth": 6,
+    "process_assessment": "Good execution with minor issues. The critic identified actionable improvements that the optimizer has planned.",
+    "improvement_directives": [
+      "Address: Weak correctness (0.20)",
+      "Apply: Iteration 3: Focus on highest-delta improvements first",
+      "Apply: Quality is high \u2014 diminishing returns on further optimisation",
+      "Apply: Correctness AND robustness are both weak \u2014 add comprehensive input validation which improves both simultaneously"
+    ],
+    "pattern_signals": [
+      "stable-quality"
+    ],
+    "meta_question": "What specific knowledge would push quality from 0.73 to 0.90+ for this task type?"
+  },
+  "performance": {
+    "quality_score": 0.733,
+    "verdict": "needs-work",
+    "refinement_loops": 3,
+    "reasoning_depth": 6,
+    "autonomy": "full",
+    "self_improvement": true,
+    "memory_entries": 8,
+    "improvement_trend": 0.0
+  },
+  "iterations": 3,
+  "elapsed_ms": 1.5,
+  "inference_mode": "simulation",
+  "token_accounting": {
+    "prompt_tokens": 47,
+    "generated_tokens": 8,
+    "inference_latency_ms": 0.0
+  }
+}

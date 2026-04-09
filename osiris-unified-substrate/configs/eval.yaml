@@ -1,0 +1,11 @@
+tasks:
+  - mmlu
+  - gsm8k
+  - humaneval
+
+metrics:
+  - accuracy
+  - exact_match
+  - pass@1
+
+output_path: artifacts/eval/results.json

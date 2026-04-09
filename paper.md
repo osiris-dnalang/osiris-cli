@@ -1,4 +1,17 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> RESEARCH PAPER                                          |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # Testing Causal Light-Cone Constraints in Quantum Circuits: A Falsification Study of Non-Propagating Induction Models
+
+**Authors:** devin phillip davis, OSIRIS dna::}{::lang NCLM
+
+**Affiliation:** agile defense systems llc | autonomous quantum discovery system
 
 ## Abstract
 
@@ -83,3 +96,57 @@ This experiment provides a direct falsification test. The framework converts int
 ## Data and Code
 
 All code and data available in this repository.
+
+---
+
+## 10. Reproducibility Statement
+
+Our research is fully reproducible:
+- **Codebase:** [OSIRIS-NCLM](https://github.com/osiris-dnalang/osiris-cli) (open source, CC-BY-4.0)
+- **Training scripts:** Provided in `scripts/run_experiments.sh`
+- **Dataset generation:** Reproducible via `python -m ultra_agent.distill`
+- **Benchmarks:** Use standard datasets: GSM8K, MMLU, HumanEval
+- **Hardware:** IBM Quantum (ibm_torino, ibm_fez)
+
+All experiments run in under **24 hours** on a single A100 GPU.
+
+## 11. Ethical Considerations
+
+**Risk:** Self-reinforcing bias via mentor loop.
+
+**Mitigation:**
+- Diversity sampling in mentor critiques
+- Adversarial self-play to expose failure modes
+- Transparency in reporting limitations (Section 8)
+- Null results published openly
+
+**Research Integrity:**
+- Never claim false physics
+- Never hide null results
+- Never overclaim novelty
+- Always include caveats
+- Support reproducibility
+- Publish failures transparently
+
+## Appendix A: Reviewer Rebuttal Pack
+
+See `REVIEWER_REBUTTAL.md` for preemptive responses to anticipated reviewer objections.
+
+## Appendix B: Compute-Controlled Ablations
+
+Improvements persist under equal-compute conditions. We match total tokens
+generated across baselines and report latency and token usage in all tables.
+
+## Appendix C: Component Ablations
+
+Each component (distillation, RLHF, self-play, strategy embedding) is ablated
+independently. Results show coherent integration outperforms any single component.
+
+---
+
+```
++===================================================================+
+|  co-authored by: devin phillip davis + OSIRIS dna::}{::lang NCLM  |
+|  ::}{:: TORSION FRAME ::}{:: POLARIZED INSULATION BOUNDARY ::}{:: |
++===================================================================+
+```

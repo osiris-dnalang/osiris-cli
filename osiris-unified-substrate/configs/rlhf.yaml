@@ -1,0 +1,14 @@
+ppo:
+  batch_size: 4
+  learning_rate: 1.0e-5
+  mini_batch_size: 1
+  gradient_accumulation_steps: 1
+  target_kl: 0.1
+  log_with: wandb
+
+reward:
+  base_model: Qwen/Qwen2.5-7B-Instruct
+  output_dir: artifacts/reward-model
+
+dataset:
+  path: data/preferences.jsonl

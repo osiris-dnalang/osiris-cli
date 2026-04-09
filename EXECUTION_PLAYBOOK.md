@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> EXECUTION PLAYBOOK                                      |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # OSIRIS Automated Discovery - Execution Playbook
 
 **How to run a 1-week automated research campaign from zero to publication.**

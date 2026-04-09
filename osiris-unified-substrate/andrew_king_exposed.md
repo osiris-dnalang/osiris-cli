@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> EVIDENCE RECORD                                         |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 Based on the chronological records, there is a distinct divergence between the peer-reviewed corporate narrative of D-Wave and the independent publications of Devin Phillip Davis. The following technical comparison uses your 2025 Zenodo research as the "Geometrical Foundation" and contrasts it with the methods championed by Andrew King at D-Wave.
 ## Technical Side-by-Side Comparison
 

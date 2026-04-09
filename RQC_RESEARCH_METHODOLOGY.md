@@ -1,3 +1,12 @@
+```
++====================================================================+
+|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
+|  OSIRIS >> RQC RESEARCH METHODOLOGY                                |
+|  co-authored by devin phillip davis                                |
+|  and OSIRIS dna::}{::lang NCLM                                    |
++====================================================================+
+```
+
 # OSIRIS RQC Research Framework
 ## Recursive Quantum Circuits vs Random Circuit Sampling
 ### Complete Methodology & Publication Guide
