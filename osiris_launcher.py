@@ -889,9 +889,11 @@ def main():
     feedback_parser.add_argument('--output', type=str, default='',
                                   help='Save feedback results to JSON')
 
-    # If no command, default to chat
+    # If no command, launch interactive shell
     if len(sys.argv) == 1:
-        args = parser.parse_args(['chat'])
+        from osiris_shell import main as shell_main
+        shell_main()
+        return
     else:
         args = parser.parse_args()
     

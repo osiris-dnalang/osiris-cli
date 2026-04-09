@@ -39,12 +39,16 @@ fi
 # Create local executable wrapper
 echo "🔗 Installing local 'osiris' command into ${LOCAL_BIN}..."
 mkdir -p "${LOCAL_BIN}"
-cat > "${WRAPPER_FILE}" << 'EOF'
+cat > "${WRAPPER_FILE}" << WRAPPER
 #!/usr/bin/env bash
 REPO_ROOT="${REPO_ROOT}"
-cd "${REPO_ROOT}"
-exec "${REPO_ROOT}/venv/bin/python3" "${REPO_ROOT}/osiris_launcher.py" "$@"
-EOF
+cd "\${REPO_ROOT}"
+if [ \$# -eq 0 ]; then
+    exec "\${REPO_ROOT}/venv/bin/python3" "\${REPO_ROOT}/osiris_shell.py"
+else
+    exec "\${REPO_ROOT}/venv/bin/python3" "\${REPO_ROOT}/osiris_launcher.py" "\$@"
+fi
+WRAPPER
 chmod +x "${WRAPPER_FILE}"
 
 # Add ~/.local/bin to shell profile if needed
