@@ -28,6 +28,12 @@ try:
 except ImportError:
     HAS_TEXTUAL = False
 
+if not HAS_TEXTUAL:
+    try:
+        from rich.console import Console
+    except ImportError:
+        pass
+
 # OSIRIS components
 from osiris_intent_engine import IntentEngine, IntentType
 from osiris_quantum_benchmarker import QuantumHardwareBenchmarker, BenchmarkResult
@@ -35,7 +41,10 @@ from osiris_auto_discovery import AutoDiscoveryPipeline, ExperimentConfig
 from osiris_orchestrator import campaign_week1_foundation, campaign_week1_adaptive
 from osiris_rqc_orchestrator import ResearchOrchestrator
 
-console = Console()
+try:
+    console = Console()
+except NameError:
+    console = None
 
 @dataclass
 class ChatMessage:

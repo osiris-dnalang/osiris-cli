@@ -243,14 +243,15 @@ def cmd_swarm(args):
     print("\n⚛ Launching NCLLM 9-Agent Swarm...\n")
     from osiris_ncllm_swarm import NCLLMSwarm
     swarm = NCLLMSwarm()
-    result = swarm.deliberate(args.task, max_rounds=args.rounds)
-    print(f"  Consensus: {result.get('consensus', 'N/A')}")
-    print(f"  Rounds:    {result.get('rounds', 0)}")
-    print(f"  Quality:   {result.get('quality_score', 0):.3f}")
+    result = swarm.solve(args.task, max_rounds=args.rounds)
+    consensus = result.rounds[-1].consensus if result.rounds else "N/A"
+    print(f"  Consensus: {consensus}")
+    print(f"  Rounds:    {len(result.rounds)}")
+    print(f"  Quality:   {result.quality_score:.3f}")
     if args.output:
         import json
         with open(args.output, 'w') as f:
-            json.dump(result, f, indent=2, default=str)
+            json.dump(result.to_dict(), f, indent=2, default=str)
         print(f"\n✓ Results saved to {args.output}")
 
 
