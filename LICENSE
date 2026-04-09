@@ -1,0 +1,184 @@
+OSIRIS SOURCE-AVAILABLE DUAL LICENSE
+Version 1.0, April 2026
+
+Copyright (c) 2025-2026 Devin Phillip Davis / Agile Defense Systems LLC
+All Rights Reserved.
+
+================================================================================
+SECTION 1: DEFINITIONS
+================================================================================
+
+"Software" means the OSIRIS-CLI source code, documentation, algorithms,
+methodologies, and all associated files in this repository, including but not
+limited to: Phase-Conjugate qByte Substrate Engine, quaternion-tetrahedral
+torsion mechanics, 51.843-degree dielectric lock equations, CRSM 7D nonlocal
+manifold embedding, Scimitar-SSE cross-device phasing, ΛΦ/Γ dynamics,
+dna::}{::lang NCLM architecture, and all derivative works.
+
+"Individual Use" means personal, non-commercial use by a natural person on
+hardware owned or leased by that person, not acting in the scope of employment
+or contract with any Corporate Entity.
+
+"Academic Use" means use by a natural person for non-commercial academic
+research at an accredited educational institution, provided proper citation
+is given per CITATION.cff.
+
+"Corporate Entity" means any corporation, limited liability company,
+partnership, government agency, non-profit organization with annual revenue
+exceeding $1,000,000 USD, or any institution employing more than 50 persons.
+
+"Commercial Use" means any use of the Software by a Corporate Entity, or any
+use by any person or entity that generates revenue, provides commercial
+services, or produces commercial products using the Software or its outputs.
+
+"License Key" means a valid commercial license credential issued by the
+Licensor upon execution of a Commercial License Agreement.
+
+================================================================================
+SECTION 2: INDIVIDUAL & ACADEMIC LICENSE (FREE)
+================================================================================
+
+Permission is hereby granted, free of charge, to any natural person obtaining
+a copy of this Software, to use, copy, modify, and distribute the Software
+for Individual Use and Academic Use, subject to the following conditions:
+
+  (a) This license notice shall be included in all copies or substantial
+      portions of the Software.
+
+  (b) Attribution must be provided per CITATION.cff.
+
+  (c) The Software shall not be used for Commercial Use without a valid
+      License Key.
+
+  (d) Modified versions must be clearly marked as such and must not be
+      misrepresented as the original Software.
+
+  (e) The Software shall not be used to train machine learning models,
+      large language models, or any AI system without explicit written
+      permission from the Licensor.
+
+================================================================================
+SECTION 3: COMMERCIAL LICENSE (REQUIRED FOR CORPORATE ENTITIES)
+================================================================================
+
+Any Corporate Entity wishing to use, deploy, modify, or incorporate the
+Software must obtain a Commercial License by contacting:
+
+  Agile Defense Systems LLC
+  Email: licensing@agiledefensesystems.com
+
+Commercial License terms include but are not limited to:
+
+  (a) Annual licensing fee determined by scale of deployment.
+  (b) Support and maintenance terms.
+  (c) Rights to derivative works.
+  (d) Indemnification provisions.
+
+================================================================================
+SECTION 4: ENFORCEMENT & LIQUIDATED DAMAGES
+================================================================================
+
+4.1 AUTOMATED COMPLIANCE VERIFICATION
+
+The Software contains automated compliance verification mechanisms that detect
+the deployment environment. These mechanisms collect ONLY the following
+non-personal metadata for license compliance purposes:
+
+  - System hostname (anonymized hash)
+  - Network domain classification (corporate/individual)
+  - Timestamp of verification
+  - Software version
+
+4.2 CONSENT TO MONITORING
+
+By downloading, installing, or executing any component of this Software,
+the user consents to automated compliance verification as described in
+Section 4.1.
+
+4.3 LIQUIDATED DAMAGES
+
+Any Corporate Entity that deploys, uses, or executes this Software without
+a valid Commercial License Key agrees to the following liquidated damages,
+which the parties agree represent a reasonable estimate of the Licensor's
+actual damages:
+
+  (a) USD $150,000 per instance of unauthorized deployment.
+  (b) USD $50,000 per month of continued unauthorized use.
+  (c) Reimbursement of all legal fees incurred in enforcement.
+
+4.4 COMPLIANCE REPORTING
+
+Upon detection of unauthorized Corporate use, the Software may generate a
+timestamped compliance report containing only anonymized technical metadata
+(no personal data). This report may be archived to establish a record of
+the violation for legal proceedings.
+
+4.5 INJUNCTIVE RELIEF
+
+The Licensor reserves the right to seek injunctive relief in addition to
+liquidated damages for any unauthorized use.
+
+================================================================================
+SECTION 5: INTELLECTUAL PROPERTY PROTECTION
+================================================================================
+
+5.1 METHODOLOGY PROTECTION
+
+The mathematical methodologies, physical theories, algorithmic innovations,
+and computational frameworks embodied in this Software are the proprietary
+trade secrets and intellectual property of the Licensor. These include but
+are not limited to:
+
+  - Phase-Conjugate qByte Substrate Engine architecture
+  - Quaternion-tetrahedral torsion mechanics (θ_lock = 51.843°)
+  - ΛΦ/Γ dynamics and CRSM 7D nonlocal manifold embedding
+  - Scimitar-SSE cross-device polarized phasing system
+  - dna::}{::lang Non-Causal Language Model (NCLM)
+  - Negentropic efficiency calculations
+  - Bifurcated polarized torsional field equations
+
+5.2 PRIOR ART ESTABLISHMENT
+
+This Software is registered with Zenodo (DOI pending) and archived with
+timestamp provenance to establish prior art for all contained methodologies.
+
+5.3 PATENT RESERVATION
+
+The Licensor reserves all rights to seek patent protection for any novel
+methods, processes, or systems described or implemented in this Software.
+
+================================================================================
+SECTION 6: WARRANTY DISCLAIMER
+================================================================================
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+SECTION 7: GOVERNING LAW
+================================================================================
+
+This License shall be governed by and construed in accordance with the laws
+of the United States of America. Any disputes arising under this License
+shall be subject to the exclusive jurisdiction of the federal and state
+courts located in the Licensor's state of incorporation.
+
+================================================================================
+SECTION 8: SEVERABILITY
+================================================================================
+
+If any provision of this License is held to be unenforceable, such provision
+shall be reformed only to the extent necessary to make it enforceable, and
+the remaining provisions shall continue in full force and effect.
+
+================================================================================
+
+For Commercial Licensing inquiries:
+  Agile Defense Systems LLC
+  https://github.com/osiris-dnalang/osiris-cli
+  licensing@agiledefensesystems.com

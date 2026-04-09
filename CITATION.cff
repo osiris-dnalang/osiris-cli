@@ -11,7 +11,7 @@ version: 2.0.0
 date-released: 2026-04-09
 url: "https://github.com/osiris-dnalang/osiris-cli"
 repository-code: "https://github.com/osiris-dnalang/osiris-cli"
-license: CC-BY-4.0
+license: LicenseRef-OSIRIS-Dual-v1.0
 type: software
 keywords:
   - quantum computing

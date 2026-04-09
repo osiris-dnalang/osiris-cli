@@ -4,8 +4,12 @@ from qiskit import transpile
 import json
 import os
 
-# Set token
-os.environ["IBM_QUANTUM_TOKEN"] = "y54pB-JlRo2JOJ9mZeZ3do8u50UjMupYAKcUDojunLxw"
+# Token must be set via environment variable — never hardcode credentials
+if not os.environ.get("IBM_QUANTUM_TOKEN"):
+    raise EnvironmentError(
+        "IBM_QUANTUM_TOKEN not set. Export it:\n"
+        "  export IBM_QUANTUM_TOKEN='your_token_from_quantum.ibm.com'"
+    )
 
 service = QiskitRuntimeService()
 backend = service.backend("ibm_fez")

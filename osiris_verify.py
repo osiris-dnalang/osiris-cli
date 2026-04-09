@@ -4,9 +4,11 @@ OSIRIS System Verification & Demo
 ==================================
 
 Runs comprehensive tests of all subsystems to verify functionality.
+Includes license compliance verification as the first gate.
 """
 
 import asyncio
+import os
 import sys
 from pathlib import Path
 
@@ -22,6 +24,11 @@ from osiris_auto_discovery import (
 from osiris_orchestrator import WorkflowScheduler, ExperimentTemplates
 from osiris_agents import AgentManager, AgentRole
 from osiris_zenodo_publisher import PublishingWorkflow
+try:
+    from osiris_license import ComplianceGate, EnvironmentDetector
+    HAS_LICENSE = True
+except ImportError:
+    HAS_LICENSE = False
 
 def print_section(title: str):
     """Print formatted section header"""
@@ -51,13 +58,46 @@ passed = 0
 failed = 0
 
 # ════════════════════════════════════════════════════════════════════════════════
+# TEST 0: License Compliance Verification
+# ════════════════════════════════════════════════════════════════════════════════
+
+print_section("TEST 0: License Compliance Verification")
+
+if not HAS_LICENSE:
+    print_result("License module", False, "osiris_license not available")
+    failed += 1
+else:
+    try:
+        detector = EnvironmentDetector()
+        signature = detector.detect()
+        print_result("Environment detection", True, f"Class: {signature.domain_class}")
+        passed += 1
+    except Exception as e:
+        print_result("Environment detection", False, str(e))
+        failed += 1
+
+    try:
+        compliant, msg = ComplianceGate.check(strict=False)
+        print_result("License compliance", compliant, 
+                     f"{'Compliant' if compliant else 'Non-compliant'} — {signature.domain_class}")
+        if compliant:
+            passed += 1
+        else:
+            print(f"\n  ⚠ {msg}")
+            failed += 1
+    except Exception as e:
+        print_result("License compliance", False, str(e))
+        failed += 1
+
+# ════════════════════════════════════════════════════════════════════════════════
 # TEST 1: Core Discovery Pipeline
 # ════════════════════════════════════════════════════════════════════════════════
 
 print_section("TEST 1: Core Discovery Pipeline")
 
 try:
-    pipeline = AutoDiscoveryPipeline()
+    token = os.environ.get('IBM_QUANTUM_TOKEN', 'test_token')
+    pipeline = AutoDiscoveryPipeline(api_token=token)
     print_result("Pipeline initialization", True)
     passed += 1
 except Exception as e:
@@ -67,12 +107,13 @@ except Exception as e:
 try:
     config = ExperimentConfig(
         name="test_experiment",
-        num_runs=3,
+        hypothesis="Test system verification",
         circuit_depth=4,
-        num_qubits=5,
-        shots_per_run=1000
+        n_qubits=5,
+        shots=1000,
+        trials=10
     )
-    print_result("ExperimentConfig creation", True, f"depth={config.circuit_depth}, qubits={config.num_qubits}")
+    print_result("ExperimentConfig creation", True, f"depth={config.circuit_depth}, qubits={config.n_qubits}")
     passed += 1
 except Exception as e:
     print_result("ExperimentConfig creation", False, str(e))
@@ -80,7 +121,7 @@ except Exception as e:
 
 try:
     generator = RandomCircuitGenerator()
-    circuit = generator.generate_circuit(num_qubits=5, depth=4)
+    circuit = generator.random_circuit(n_qubits=5, depth=4)
     print_result("Circuit generation", True, f"Created {circuit.num_qubits}-qubit circuit")
     passed += 1
 except Exception as e:
@@ -88,9 +129,11 @@ except Exception as e:
     failed += 1
 
 try:
+    import numpy as np
     validator = StatisticalValidator()
-    mock_data = [0.087, 0.089, 0.085, 0.088, 0.086]
-    results = validator.validate(mock_data)
+    group1 = np.array([0.087, 0.089, 0.085, 0.088, 0.086, 0.090, 0.084, 0.091])
+    group2 = np.array([0.075, 0.078, 0.072, 0.076, 0.074, 0.077, 0.073, 0.079])
+    results = validator.test_hypothesis(group1, group2)
     print_result("Statistical validation", True, f"p-value={results['p_value']:.4f}")
     passed += 1
 except Exception as e:
@@ -104,7 +147,9 @@ except Exception as e:
 print_section("TEST 2: Workflow Orchestration")
 
 try:
-    scheduler = WorkflowScheduler()
+    token = os.environ.get('IBM_QUANTUM_TOKEN', 'test_token')
+    pipeline_for_scheduler = AutoDiscoveryPipeline(api_token=token)
+    scheduler = WorkflowScheduler(pipeline=pipeline_for_scheduler)
     print_result("WorkflowScheduler initialization", True)
     passed += 1
 except Exception as e:
@@ -112,7 +157,11 @@ except Exception as e:
     failed += 1
 
 try:
-    templates = ExperimentTemplates.get_all_templates()
+    templates = [
+        ExperimentTemplates.xeb_vs_depth(),
+        ExperimentTemplates.entropy_saturation(),
+        ExperimentTemplates.noise_robustness(),
+    ]
     print_result("Experiment templates", True, f"Found {len(templates)} templates")
     passed += 1
 except Exception as e:
@@ -120,9 +169,8 @@ except Exception as e:
     failed += 1
 
 try:
-    # Create a simple experiment campaign
-    campaign = ExperimentTemplates.xeb_benchmark()
-    print_result("Campaign creation", True, f"3 experiments in campaign")
+    template = ExperimentTemplates.xeb_vs_depth()
+    print_result("Campaign creation", True, f"Template: {template['name']}")
     passed += 1
 except Exception as e:
     print_result("Campaign creation", False, str(e))
@@ -198,7 +246,8 @@ failed += agent_f
 print_section("TEST 4: Zenodo Publishing")
 
 try:
-    publisher = PublishingWorkflow(use_sandbox=True, enable_dry_run=True)
+    zenodo_token = os.environ.get('ZENODO_TOKEN', 'test_token_placeholder')
+    publisher = PublishingWorkflow(zenodo_token=zenodo_token, use_sandbox=True)
     print_result("PublishingWorkflow initialization", True, "Sandbox mode enabled")
     passed += 1
 except Exception as e:
@@ -238,10 +287,11 @@ try:
     # Verify data flow compatibility
     config = ExperimentConfig(
         name="integration_test",
-        num_runs=1,
+        hypothesis="Integration verification",
         circuit_depth=4,
-        num_qubits=5,
-        shots_per_run=1000
+        n_qubits=5,
+        shots=1000,
+        trials=10
     )
     
     # Config should be serializable for agent passing

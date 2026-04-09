@@ -14,15 +14,19 @@ from dataclasses import dataclass
 from contextlib import redirect_stdout, redirect_stderr
 
 # Textual TUI framework
-from textual.app import App, ComposeResult, on
-from textual.containers import Container, Vertical, Horizontal, ScrollableContainer
-from textual.widgets import Header, Footer, Static, Input, Label, Button, RichLog
-from textual.binding import Binding
-from textual import work
-from rich.table import Table
-from rich.text import Text
-from rich.panel import Panel
-from rich.console import Console
+try:
+    from textual.app import App, ComposeResult, on
+    from textual.containers import Container, Vertical, Horizontal, ScrollableContainer
+    from textual.widgets import Header, Footer, Static, Input, Label, Button, RichLog
+    from textual.binding import Binding
+    from textual import work
+    from rich.table import Table
+    from rich.text import Text
+    from rich.panel import Panel
+    from rich.console import Console
+    HAS_TEXTUAL = True
+except ImportError:
+    HAS_TEXTUAL = False
 
 # OSIRIS components
 from osiris_intent_engine import IntentEngine, IntentType
@@ -469,6 +473,12 @@ class OsirisTextualApp(App):
 
 def run_textual_mode() -> None:
     """Run the Textual OSIRIS application"""
+    if not HAS_TEXTUAL:
+        print("✗ Textual TUI requires 'textual' and 'rich' packages.")
+        print("  Install with: pip install textual rich")
+        print("  Falling back to CLI mode...")
+        asyncio.run(run_cli_mode())
+        return
     OsirisTextualApp().run()
 
 

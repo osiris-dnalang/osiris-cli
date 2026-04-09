@@ -97,10 +97,12 @@ def cmd_run(args):
     # Run campaign (this will use mock if no token)
     results = []
     for exp in campaign.experiments:
-        print(f"\n  → {exp.name}")
-        result = pipeline.run_hypothesis_test(exp.config)
+        print(f"\n  → {exp['name']}")
+        from osiris_auto_discovery import ExperimentConfig
+        config = ExperimentConfig(**exp)
+        result = pipeline.run_hypothesis_test(config)
         results.append(result)
-        print(f"    p={result.get('p_value', 'N/A'):.6f}")
+        print(f"    p={result.p_value or 0:.6f}")
     
     print(f"\n✓ Campaign complete! {len(results)} experiments executed")
 
@@ -116,6 +118,33 @@ def cmd_orchestrate(args):
         orchestrator.step_3_application_experiments()
     else:
         asyncio.run(orchestrator.run_full_pipeline())
+
+
+def cmd_publish(args):
+    """Publish results to Zenodo"""
+    print("\n⚛ Publishing results to Zenodo...\n")
+
+    from osiris_zenodo_publisher import PublishingWorkflow
+
+    zenodo_token = os.getenv('ZENODO_TOKEN')
+    if not zenodo_token:
+        print("✗ ZENODO_TOKEN not set. Set it with:")
+        print("  export ZENODO_TOKEN='your_token'")
+        return
+
+    use_sandbox = getattr(args, 'sandbox', False)
+    workflow = PublishingWorkflow(zenodo_token=zenodo_token, use_sandbox=use_sandbox)
+    mode = getattr(args, 'mode', 'all')
+
+    print(f"→ Mode: {mode}")
+    print(f"→ Endpoint: {'sandbox' if use_sandbox else 'production'}")
+
+    if not workflow.zenodo.test_connection():
+        print("✗ Cannot connect to Zenodo API")
+        return
+
+    print("✓ Zenodo connection verified")
+    print("⚠ Use the orchestrate command to generate results first, then publish.")
 
 
 def cmd_status(args):
@@ -194,9 +223,18 @@ Commands:
   run               Execute experiment campaign
   orchestrate       Run full OSIRIS orchestrator pipeline
   publish           Publish results to Zenodo
+  forge             Quantum-to-Matter manufacturing pipeline
   status            Show system status
   intent            Route natural language into OSIRIS commands
   help              Show this help
+
+Forge (3D Manufacturing):
+  osiris forge report                         Show forge status
+  osiris forge generate --geometry X          Generate mesh from Torsion Core
+  osiris forge discover                       Scan network for 3D printers
+  osiris forge pipeline --printer bambu_p1s   Full generate+slice+send pipeline
+  osiris forge calibrate --ip 192.168.1.X     Calibrate a connected printer
+  osiris forge status --ip 192.168.1.X        Check printer status
 
 Publishing:
   osiris publish --mode all            Publish both RQC and application results
@@ -234,6 +272,110 @@ Examples:
   osiris status
 """
     print(help_text)
+
+def cmd_forge(args):
+    """Launch Quantum-to-Matter Manufacturing Forge"""
+    from osiris_forge import OsirisForge, ForgeJob, PrinterHardware
+
+    forge = OsirisForge()
+
+    action = getattr(args, 'forge_action', 'report')
+
+    if action == 'generate':
+        job = ForgeJob(
+            geometry=getattr(args, 'geometry', 'tetrahedral_lattice'),
+            scale_cm=getattr(args, 'scale', 10.0),
+            output_format=getattr(args, 'format', 'stl'),
+            target_printer=PrinterHardware(getattr(args, 'printer', 'bambu_p1s')),
+            slice_gcode=False,
+        )
+        path = forge.generate(job)
+        if path:
+            print(f"\n\u2713 Model generated: {path}")
+        else:
+            print("\n\u2717 Generation failed")
+    elif action == 'pipeline':
+        job = ForgeJob(
+            geometry=getattr(args, 'geometry', 'tetrahedral_lattice'),
+            scale_cm=getattr(args, 'scale', 10.0),
+            target_printer=PrinterHardware(getattr(args, 'printer', 'bambu_p1s')),
+            infill_percent=getattr(args, 'infill', 20),
+            infill_pattern=getattr(args, 'pattern', 'gyroid'),
+            auto_send=getattr(args, 'send', False),
+            export_flash=getattr(args, 'flash', False),
+            printer_ip=getattr(args, 'ip', ''),
+            printer_serial=getattr(args, 'serial', ''),
+            access_code=getattr(args, 'code', ''),
+        )
+        result = forge.run(job)
+        sym = '\u2713' if result.success else '\u2717'
+        print(f"\n{sym} {result.message}")
+        if result.model_path:
+            print(f"  Model:  {result.model_path}")
+        if result.gcode_path:
+            print(f"  G-code: {result.gcode_path}")
+        print(f"  Steps:  {' -> '.join(result.steps_completed)}")
+    elif action == 'discover':
+        print("\n\u269b Scanning local network for 3D printers...\n")
+        printers = forge.discover_printers()
+        if printers:
+            for p in printers:
+                print(f"  {p['name']} ({p['type']}) @ {p['ip']}:{p['port']} [{p['protocol']}]")
+        else:
+            print("  No printers found.")
+    elif action == 'status':
+        job = ForgeJob(
+            target_printer=PrinterHardware(getattr(args, 'printer', 'bambu_p1s')),
+            printer_ip=getattr(args, 'ip', ''),
+            printer_serial=getattr(args, 'serial', ''),
+            access_code=getattr(args, 'code', ''),
+        )
+        status = forge.get_printer_status(job)
+        print(f"\n\u269b Printer Status: {status.get('status', 'unknown')}")
+        for k, v in status.items():
+            if k != 'raw':
+                print(f"  {k}: {v}")
+    elif action == 'calibrate':
+        job = ForgeJob(
+            target_printer=PrinterHardware(getattr(args, 'printer', 'bambu_p1s')),
+            printer_ip=getattr(args, 'ip', ''),
+            printer_serial=getattr(args, 'serial', ''),
+            access_code=getattr(args, 'code', ''),
+        )
+        result = forge.calibrate_printer(job)
+        cal_ok = result.get('success', False)
+        print(f"\n\u269b Calibration: {'Complete' if cal_ok else 'Failed'}")
+        if result.get('message'):
+            print(result['message'])
+    else:
+        print(forge.status_report())
+
+    forge.cleanup()
+
+
+def cmd_license(args):
+    """Run license compliance check"""
+    from osiris_license import ComplianceGate, EnvironmentDetector, LicenseValidator
+    
+    if hasattr(args, 'validate') and args.validate:
+        valid, msg = LicenseValidator.validate(args.validate)
+        print(f"{'✓' if valid else '✗'} {msg}")
+        return
+    
+    detector = EnvironmentDetector()
+    sig = detector.detect()
+    
+    print(f"\n{'='*50}")
+    print(f"  OSIRIS License Compliance")
+    print(f"{'='*50}")
+    print(f"  Environment:  {sig.domain_class}")
+    print(f"  License Key:  {'Present' if sig.license_key_present else 'Not found'}")
+    print(f"  Compliant:    {'✓ Yes' if sig.compliant else '✗ No'}")
+    print(f"  Indicators:   {len(sig.domain_indicators)} found")
+    for ind in sig.domain_indicators:
+        print(f"    - {ind}")
+    print(f"{'='*50}\n")
+
 
 def main():
     """Main entry point"""
@@ -277,6 +419,54 @@ def main():
     # Status command
     subparsers.add_parser('status', help='Show system status')
 
+    # Forge command
+    forge_parser = subparsers.add_parser('forge', help='Quantum-to-Matter manufacturing pipeline')
+    forge_subs = forge_parser.add_subparsers(dest='forge_action', help='Forge action')
+
+    forge_gen = forge_subs.add_parser('generate', help='Generate 3D mesh')
+    forge_gen.add_argument('--geometry', default='tetrahedral_lattice',
+                           choices=['tetrahedral_lattice', 'toroidal_manifold',
+                                    'planck_reference_cube', 'acoustic_resonance_cavity',
+                                    'quaternion_orbit_model', 'torsion_lock_visualizer'])
+    forge_gen.add_argument('--scale', type=float, default=10.0, help='Scale in cm')
+    forge_gen.add_argument('--format', default='stl', choices=['3mf', 'stl', 'both'])
+    forge_gen.add_argument('--printer', default='bambu_p1s',
+                           choices=['bambu_p1s', 'bambu_a1_mini', 'elegoo_centauri_2',
+                                    'generic_fdm', 'generic_resin'])
+
+    forge_pipe = forge_subs.add_parser('pipeline', help='Full: generate + slice + send')
+    forge_pipe.add_argument('--geometry', default='tetrahedral_lattice')
+    forge_pipe.add_argument('--scale', type=float, default=10.0)
+    forge_pipe.add_argument('--printer', default='bambu_p1s',
+                            choices=['bambu_p1s', 'bambu_a1_mini', 'elegoo_centauri_2'])
+    forge_pipe.add_argument('--ip', type=str, default='', help='Printer IP address')
+    forge_pipe.add_argument('--serial', type=str, default='', help='Bambu serial number')
+    forge_pipe.add_argument('--code', type=str, default='', help='Bambu LAN access code')
+    forge_pipe.add_argument('--infill', type=int, default=20, help='Infill percent')
+    forge_pipe.add_argument('--pattern', default='gyroid')
+    forge_pipe.add_argument('--send', action='store_true', help='Auto-send to printer')
+    forge_pipe.add_argument('--flash', action='store_true', help='Export to USB flash drive')
+
+    forge_subs.add_parser('discover', help='Scan network for 3D printers')
+
+    forge_stat = forge_subs.add_parser('status', help='Check printer status')
+    forge_stat.add_argument('--printer', default='bambu_p1s')
+    forge_stat.add_argument('--ip', type=str, required=True)
+    forge_stat.add_argument('--serial', type=str, default='')
+    forge_stat.add_argument('--code', type=str, default='')
+
+    forge_cal = forge_subs.add_parser('calibrate', help='Run printer calibration')
+    forge_cal.add_argument('--printer', default='bambu_p1s')
+    forge_cal.add_argument('--ip', type=str, required=True)
+    forge_cal.add_argument('--serial', type=str, default='')
+    forge_cal.add_argument('--code', type=str, default='')
+
+    forge_subs.add_parser('report', help='Show forge status report')
+
+    # License command
+    license_parser = subparsers.add_parser('license', help='License compliance check')
+    license_parser.add_argument('--validate', type=str, help='Validate a license key')
+
     # If no command, default to chat
     if len(sys.argv) == 1:
         args = parser.parse_args(['chat'])
@@ -285,6 +475,15 @@ def main():
     
     # Check environment
     check_environment()
+    
+    # Run license compliance gate
+    try:
+        from osiris_license import ComplianceGate
+        compliant, msg = ComplianceGate.check(strict=False)
+        if not compliant:
+            print(msg)
+    except ImportError:
+        pass  # License module not available — skip check
     
     # Execute command
     if args.command == 'chat':
@@ -301,6 +500,10 @@ def main():
         cmd_status(args)
     elif args.command == 'intent':
         cmd_intent(args)
+    elif args.command == 'forge':
+        cmd_forge(args)
+    elif args.command == 'license':
+        cmd_license(args)
     elif args.command == 'help':
         cmd_help(args)
     else:

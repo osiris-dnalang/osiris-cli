@@ -13,6 +13,7 @@ Full integration layer connecting:
 """
 
 import asyncio
+import os
 import sys
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -64,19 +65,21 @@ class OsirisContext:
             console.print("[cyan]Initializing OSIRIS subsystems...[/cyan]")
             
             # Initialize discovery pipeline
-            self.discovery_pipeline = AutoDiscoveryPipeline()
+            self.discovery_pipeline = AutoDiscoveryPipeline(
+                api_token=os.environ.get('IBM_QUANTUM_TOKEN', 'not_set')
+            )
             
             # Initialize agent manager
             self.agent_manager = AgentManager()
             await self.agent_manager.initialize()
             
             # Initialize workflow scheduler
-            self.workflow_scheduler = WorkflowScheduler()
+            self.workflow_scheduler = WorkflowScheduler(pipeline=self.discovery_pipeline)
             
             # Initialize publishing workflow
             self.publishing_workflow = PublishingWorkflow(
-                use_sandbox=True,
-                enable_dry_run=False
+                zenodo_token=os.environ.get('ZENODO_TOKEN', 'not_set'),
+                use_sandbox=True
             )
             
             console.print("[green]✓ All subsystems initialized[/green]")
@@ -126,10 +129,11 @@ class IntentHandlers:
         # Create experiment configuration
         config = ExperimentConfig(
             name=goal,
-            num_runs=5,
+            hypothesis=f"Testing: {goal}",
             circuit_depth=8,
-            num_qubits=20,
-            shots_per_run=4000,
+            n_qubits=20,
+            shots=4000,
+            trials=5,
             backend=backend
         )
         
@@ -139,7 +143,7 @@ class IntentHandlers:
             goal,
             {
                 'backend': backend,
-                'shots': config.shots_per_run,
+                'shots': config.shots,
                 'depth': config.circuit_depth
             }
         )

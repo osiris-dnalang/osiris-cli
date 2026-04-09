@@ -6,3 +6,5 @@ scipy>=1.10.0
 matplotlib>=3.7.0
 requests>=2.31.0
 PyYAML>=6.0
+rich>=13.0.0
+textual>=0.40.0

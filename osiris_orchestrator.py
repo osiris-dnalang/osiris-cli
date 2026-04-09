@@ -14,11 +14,16 @@ Manages:
 import os
 import sys
 import json
-import yaml
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 import logging
+
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
 
 logger = logging.getLogger('OSIRIS_ORCHESTRATOR')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
@@ -339,7 +344,7 @@ class PublicationDecisionEngine:
             ],
             'creators': [{'name': 'OSIRIS Automated Discovery'}],
             'access_right': 'open',
-            'license': 'cc-by-4.0',
+            'license': 'other-closed',
             'upload_type': 'dataset',
         }
 

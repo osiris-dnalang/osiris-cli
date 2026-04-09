@@ -599,7 +599,333 @@ class ZenodoPublisher:
 
 
 # ════════════════════════════════════════════════════════════════════════════════
-# 7. MAIN EXECUTION
+# 7. PRINTER DISCOVERY SERVICE — Bambu Lab / Elegoo / Generic
+# ════════════════════════════════════════════════════════════════════════════════
+
+try:
+    from zeroconf import ServiceBrowser, Zeroconf, ServiceStateChange
+    HAS_ZEROCONF = True
+except ImportError:
+    HAS_ZEROCONF = False
+
+try:
+    import paho.mqtt.client as mqtt
+    HAS_MQTT = True
+except ImportError:
+    HAS_MQTT = False
+
+
+@dataclass
+class DiscoveredPrinter:
+    """A 3D printer discovered on the local network."""
+    name: str
+    printer_type: str           # bambu_p1s, bambu_a1_mini, elegoo_centauri_2, generic
+    ip_address: str
+    port: int
+    protocol: str               # mqtt, ipp, ftp, http
+    serial: str = ""
+    model: str = ""
+    status: str = "unknown"     # idle, printing, error, offline
+    properties: Dict[str, Any] = field(default_factory=dict)
+    discovered_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+
+class PrinterDiscoveryService:
+    """
+    Automated network discovery for 3D printers via mDNS (ZeroConf).
+
+    Scans the local WiFi network for:
+      • Bambu Lab P1S / A1 Mini  — _bambulab._tcp service
+      • Elegoo Centauri 2        — IPP / HTTP ports
+      • Generic network printers — _ipp._tcp, _printer._tcp
+
+    Discovered printers are registered as Physicalization Nodes.
+    """
+
+    # mDNS service types to scan
+    SERVICE_TYPES = [
+        "_bambulab._tcp.local.",     # Bambu Lab printers
+        "_ipp._tcp.local.",          # IPP (Internet Printing Protocol)
+        "_printer._tcp.local.",      # Generic network printers
+        "_http._tcp.local.",         # HTTP services (Elegoo web interface)
+        "_ftp._tcp.local.",          # FTP (Bambu file transfer)
+    ]
+
+    # Bambu Lab model identification patterns
+    BAMBU_MODELS = {
+        "P1S": "bambu_p1s",
+        "P1P": "bambu_p1p",
+        "X1C": "bambu_x1c",
+        "X1": "bambu_x1",
+        "A1 mini": "bambu_a1_mini",
+        "A1 Mini": "bambu_a1_mini",
+        "A1mini": "bambu_a1_mini",
+        "A1": "bambu_a1",
+    }
+
+    # Elegoo identification patterns
+    ELEGOO_MODELS = {
+        "Centauri": "elegoo_centauri_2",
+        "Saturn": "elegoo_saturn",
+        "Mars": "elegoo_mars",
+        "Neptune": "elegoo_neptune",
+    }
+
+    def __init__(self):
+        self.discovered: List[DiscoveredPrinter] = []
+        self._zeroconf = None
+        self._browsers = []
+
+    def scan(self, timeout: float = 10.0) -> List[DiscoveredPrinter]:
+        """
+        Scan the local network for 3D printers.
+
+        Uses mDNS/ZeroConf if available, falls back to port scanning.
+        """
+        self.discovered.clear()
+
+        if HAS_ZEROCONF:
+            self._scan_mdns(timeout)
+        else:
+            logger.warning("zeroconf not installed — using port scan fallback")
+            self._scan_ports()
+
+        # Deduplicate by IP
+        seen_ips = set()
+        unique = []
+        for p in self.discovered:
+            if p.ip_address not in seen_ips:
+                seen_ips.add(p.ip_address)
+                unique.append(p)
+        self.discovered = unique
+
+        logger.info(f"Printer discovery complete: {len(self.discovered)} printers found")
+        return self.discovered
+
+    def _scan_mdns(self, timeout: float):
+        """Scan via mDNS/ZeroConf service discovery."""
+        import socket as sock
+        self._zeroconf = Zeroconf()
+
+        discovered_services = []
+
+        class Listener:
+            def __init__(self, parent):
+                self.parent = parent
+
+            def add_service(self, zc, type_, name):
+                info = zc.get_service_info(type_, name)
+                if info:
+                    discovered_services.append((type_, name, info))
+
+            def remove_service(self, zc, type_, name):
+                pass
+
+            def update_service(self, zc, type_, name):
+                pass
+
+        listener = Listener(self)
+        for svc_type in self.SERVICE_TYPES:
+            try:
+                browser = ServiceBrowser(self._zeroconf, svc_type, listener)
+                self._browsers.append(browser)
+            except Exception:
+                pass
+
+        # Wait for discovery
+        import time as _time
+        _time.sleep(min(timeout, 15))
+
+        # Process discovered services
+        for svc_type, name, info in discovered_services:
+            try:
+                addresses = info.parsed_addresses()
+                ip = addresses[0] if addresses else "0.0.0.0"
+                port = info.port or 0
+                props = {k.decode() if isinstance(k, bytes) else k:
+                         v.decode() if isinstance(v, bytes) else str(v)
+                         for k, v in (info.properties or {}).items()}
+
+                printer = self._classify_service(svc_type, name, ip, port, props)
+                if printer:
+                    self.discovered.append(printer)
+            except Exception as e:
+                logger.debug(f"Error processing {name}: {e}")
+
+        self._zeroconf.close()
+
+    def _classify_service(self, svc_type: str, name: str, ip: str,
+                          port: int, props: Dict) -> Optional[DiscoveredPrinter]:
+        """Classify a discovered service as a known printer type."""
+        name_lower = name.lower()
+
+        # Bambu Lab detection
+        if "_bambulab" in svc_type or "bambu" in name_lower:
+            model = "unknown"
+            printer_type = "bambu_generic"
+            for pattern, ptype in self.BAMBU_MODELS.items():
+                if pattern.lower() in name_lower or pattern.lower() in str(props).lower():
+                    model = pattern
+                    printer_type = ptype
+                    break
+            return DiscoveredPrinter(
+                name=name.split('.')[0],
+                printer_type=printer_type,
+                ip_address=ip,
+                port=port or 8883,      # Bambu MQTT default port
+                protocol="mqtt",
+                serial=props.get("serial", props.get("sn", "")),
+                model=model,
+                properties=props,
+            )
+
+        # Elegoo detection
+        for pattern, ptype in self.ELEGOO_MODELS.items():
+            if pattern.lower() in name_lower:
+                return DiscoveredPrinter(
+                    name=name.split('.')[0],
+                    printer_type=ptype,
+                    ip_address=ip,
+                    port=port or 80,
+                    protocol="http",
+                    model=pattern,
+                    properties=props,
+                )
+
+        # Generic IPP printer
+        if "_ipp" in svc_type or "_printer" in svc_type:
+            return DiscoveredPrinter(
+                name=name.split('.')[0],
+                printer_type="generic_network",
+                ip_address=ip,
+                port=port or 631,
+                protocol="ipp",
+                properties=props,
+            )
+
+        return None
+
+    def _scan_ports(self):
+        """Fallback: scan common printer ports on local subnet."""
+        import socket as sock
+
+        # Get local IP to determine subnet
+        try:
+            s = sock.socket(sock.AF_INET, sock.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            local_ip = s.getsockname()[0]
+            s.close()
+        except Exception:
+            local_ip = "192.168.1.1"
+
+        subnet = ".".join(local_ip.split(".")[:3])
+        printer_ports = [80, 443, 631, 8883, 990, 21]  # HTTP, HTTPS, IPP, MQTT, FTP
+
+        logger.info(f"Port scanning subnet {subnet}.0/24...")
+
+        for host_id in range(1, 255):
+            ip = f"{subnet}.{host_id}"
+            for port in printer_ports:
+                try:
+                    s = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
+                    s.settimeout(0.3)
+                    if s.connect_ex((ip, port)) == 0:
+                        # Determine type from port
+                        if port == 8883:
+                            ptype, proto = "bambu_generic", "mqtt"
+                        elif port == 631:
+                            ptype, proto = "generic_network", "ipp"
+                        else:
+                            ptype, proto = "generic_network", "http"
+
+                        self.discovered.append(DiscoveredPrinter(
+                            name=f"printer_{ip}",
+                            printer_type=ptype,
+                            ip_address=ip,
+                            port=port,
+                            protocol=proto,
+                        ))
+                    s.close()
+                except Exception:
+                    pass
+
+    def get_bambu_status(self, printer: DiscoveredPrinter) -> Dict[str, Any]:
+        """
+        Query Bambu Lab printer status via MQTT.
+
+        Bambu Lab uses MQTT on port 8883 (TLS) with FTP for file transfer.
+        """
+        if not HAS_MQTT:
+            return {"status": "unknown", "error": "paho-mqtt not installed"}
+
+        status = {"status": "unknown"}
+
+        try:
+            client = mqtt.Client(client_id="osiris_monitor", protocol=mqtt.MQTTv311)
+            client.tls_set()  # Bambu uses TLS
+
+            received = []
+
+            def on_message(client, userdata, msg):
+                try:
+                    payload = json.loads(msg.payload.decode())
+                    received.append(payload)
+                except Exception:
+                    pass
+
+            client.on_message = on_message
+            client.connect(printer.ip_address, printer.port, keepalive=10)
+            client.subscribe(f"device/{printer.serial}/report")
+            client.loop_start()
+
+            import time as _time
+            _time.sleep(5)
+            client.loop_stop()
+            client.disconnect()
+
+            if received:
+                latest = received[-1]
+                status = {
+                    "status": latest.get("print", {}).get("gcode_state", "idle"),
+                    "progress": latest.get("print", {}).get("mc_percent", 0),
+                    "nozzle_temp": latest.get("print", {}).get("nozzle_temper", 0),
+                    "bed_temp": latest.get("print", {}).get("bed_temper", 0),
+                    "layer": latest.get("print", {}).get("layer_num", 0),
+                    "raw": latest,
+                }
+        except Exception as e:
+            status = {"status": "error", "error": str(e)}
+
+        return status
+
+    def report(self) -> str:
+        """Generate a human-readable report of discovered printers."""
+        if not self.discovered:
+            return "No 3D printers found on the local network."
+
+        lines = [
+            "═" * 60,
+            "  OSIRIS PRINTER DISCOVERY — LOCAL NETWORK",
+            "═" * 60,
+            "",
+        ]
+        for i, p in enumerate(self.discovered, 1):
+            lines.extend([
+                f"  Printer {i}: {p.name}",
+                f"    Type:     {p.printer_type}",
+                f"    Model:    {p.model}",
+                f"    IP:       {p.ip_address}:{p.port}",
+                f"    Protocol: {p.protocol}",
+                f"    Serial:   {p.serial or 'N/A'}",
+                f"    Status:   {p.status}",
+                "",
+            ])
+        lines.append("═" * 60)
+        return "\n".join(lines)
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# 8. MAIN EXECUTION
 # ════════════════════════════════════════════════════════════════════════════════
 
 def main():

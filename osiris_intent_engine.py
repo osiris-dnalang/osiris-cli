@@ -21,6 +21,7 @@ class IntentType(Enum):
     ANALYZE = "analyze"
     PUBLISH = "publish"
     REFINE = "refine"
+    MANUFACTURING = "manufacturing"
     STATUS = "status"
     HELP = "help"
     UNKNOWN = "unknown"
@@ -108,7 +109,38 @@ class IntentEngine:
         r"progress",
         r"results"
     ]
-    
+
+    MANUFACTURING_PATTERNS = [
+        r"3d.*print",
+        r"print.*3d",
+        r"manufacture",
+        r"additive",
+        r"physicalize",
+        r"tetrahedral.*cube",
+        r"planck.*scale.*cube",
+        r"detect.*printer",
+        r"scan.*printer",
+        r"printer.*status",
+        r"bambu",
+        r"elegoo",
+        r"p1s",
+        r"a1.*mini",
+        r"centauri",
+        r"g-?code",
+        r"gcode",
+        r"slic(?:e|er|ing)",
+        r"mesh.*gen",
+        r"stl",
+        r"3mf",
+        r"flash.*drive",
+        r"export.*gcode",
+        r"resonance.*cavity",
+        r"toroid",
+        r"lattice.*print",
+        r"quaternion.*model",
+        r"torsion.*lock.*model",
+    ]
+
     def __init__(self):
         """Initialize intent engine"""
         self.conversation_history: List[Dict] = []
@@ -150,6 +182,10 @@ class IntentEngine:
         """Classify intent from text patterns"""
         
         # Check each pattern
+        for pattern in self.MANUFACTURING_PATTERNS:
+            if re.search(pattern, text):
+                return IntentType.MANUFACTURING
+
         for pattern in self.BENCHMARK_PATTERNS:
             if re.search(pattern, text):
                 return IntentType.BENCHMARK
@@ -218,7 +254,38 @@ class IntentEngine:
         trials_match = re.search(r'(\d+)\s*trial', text)
         if trials_match:
             params['trials'] = int(trials_match.group(1))
-        
+
+        # Extract scale (cm)
+        scale_match = re.search(r'(\d+(?:\.\d+)?)\s*cm', text)
+        if scale_match:
+            params['scale_cm'] = float(scale_match.group(1))
+
+        # Extract printer target
+        printer_map = {
+            'p1s': 'bambu_p1s', 'bambu p1s': 'bambu_p1s',
+            'a1 mini': 'bambu_a1_mini', 'a1mini': 'bambu_a1_mini',
+            'centauri': 'elegoo_centauri_2', 'elegoo': 'elegoo_centauri_2',
+        }
+        for pattern, printer_type in printer_map.items():
+            if pattern in text:
+                params['printer_type'] = printer_type
+                break
+
+        # Extract manufacturing geometry mode
+        geom_map = {
+            'tetrahedral': 'tetrahedral_lattice',
+            'toroid': 'toroidal_manifold',
+            'planck': 'planck_reference_cube',
+            'resonance': 'acoustic_resonance_cavity',
+            'cavity': 'acoustic_resonance_cavity',
+            'quaternion': 'quaternion_orbit_model',
+            'torsion': 'torsion_lock_visualizer',
+        }
+        for pattern, geom_mode in geom_map.items():
+            if pattern in text:
+                params['manufacturing_mode'] = geom_mode
+                break
+
         return params
     
     def _calculate_confidence(self, text: str, intent_type: IntentType) -> float:
@@ -290,6 +357,15 @@ class IntentEngine:
                 "5. Generate archive manifest"
             ]
         
+        elif intent_type == IntentType.MANUFACTURING:
+            actions = [
+                "1. Scan local network for 3D printers",
+                "2. Generate mesh from organism structural genes",
+                "3. Slice model to G-code for target printer",
+                "4. Transmit G-code or export to flash drive",
+                "5. Monitor print status via MQTT"
+            ]
+
         elif intent_type == IntentType.STATUS:
             actions = [
                 "1. Check running jobs",
@@ -319,6 +395,8 @@ class IntentEngine:
             agents = ["analyzer_agent"]
         elif intent_type == IntentType.REFINE:
             agents = ["optimizer_agent"]
+        elif intent_type == IntentType.MANUFACTURING:
+            agents = ["manufacturing_agent", "printer_discovery_agent", "sovereign_executor"]
         elif intent_type == IntentType.STATUS:
             agents = ["monitor_agent"]
         

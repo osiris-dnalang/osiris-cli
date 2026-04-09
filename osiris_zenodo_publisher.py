@@ -13,7 +13,12 @@ import logging
 from pathlib import Path
 from typing import Dict, Optional, Tuple, List
 from datetime import datetime
-import requests
+try:
+    import requests
+    HAS_REQUESTS = True
+except ImportError:
+    HAS_REQUESTS = False
+    requests = None
 
 logger = logging.getLogger('OSIRIS_ZENODO')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
@@ -47,8 +52,8 @@ class ZenodoPubisher:
         """Test Zenodo API connection"""
         try:
             response = requests.get(
-                f"{self.api_url}?access_token={self.token}",
-                headers=self.headers,
+                self.api_url,
+                headers=self._auth_headers(),
                 timeout=10
             )
             if response.status_code == 200:
@@ -65,9 +70,9 @@ class ZenodoPubisher:
         """Create new deposition"""
         try:
             response = requests.post(
-                f"{self.api_url}?access_token={self.token}",
+                self.api_url,
                 json=metadata,
-                headers=self.headers,
+                headers=self._auth_headers(),
                 timeout=30
             )
             
@@ -91,9 +96,13 @@ class ZenodoPubisher:
             
             with open(filepath, 'rb') as f:
                 files = {'file': (filename, f)}
-                files_url = f"{self.api_url}/{deposition_id}/files?access_token={self.token}"
+                files_url = f"{self.api_url}/{deposition_id}/files"
                 
-                response = requests.post(files_url, files=files, timeout=60)
+                response = requests.post(
+                    files_url, files=files,
+                    headers={"Authorization": f"Bearer {self.token}"},
+                    timeout=60
+                )
             
             if response.status_code == 201:
                 logger.info(f"  ✓ Uploaded: {filename}")
@@ -110,8 +119,8 @@ class ZenodoPubisher:
         """Publish deposition"""
         try:
             response = requests.post(
-                f"{self.api_url}/{deposition_id}/actions/publish?access_token={self.token}",
-                headers=self.headers,
+                f"{self.api_url}/{deposition_id}/actions/publish",
+                headers=self._auth_headers(),
                 timeout=30
             )
             
@@ -205,7 +214,7 @@ class ResultPackager:
                 ),
                 'creators': [{'name': 'OSIRIS Automated Discovery Pipeline'}],
                 'keywords': keywords,
-                'license': 'cc-by-4.0',
+                'license': 'other-closed',
                 'access_right': 'open',
                 'upload_type': 'dataset',
                 'publication_date': datetime.now().isoformat()[:10],
