@@ -1,0 +1,60 @@
+name: OSIRIS CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy requests PyYAML rich
+          pip install pytest pytest-cov
+
+      - name: Run import smoke tests
+        run: |
+          python -c "from osiris import __version__; assert __version__ == '4.0.0'; print('osiris pkg OK')"
+          python -c "from osiris.agents import BaseAgent, AURA, AIDEN, CHEOPS, CHRONOS; print('osiris.agents OK')"
+          python -c "from osiris.compiler import Lexer, Parser, IROpType; print('osiris.compiler OK')"
+          python -c "from osiris.defense import Sentinel, ZeroTrust, PCRB; print('osiris.defense OK')"
+          python -c "from osiris.crsm import OsirisPenteract; print('osiris.crsm OK')"
+          python -c "from osiris.organisms import Gene, Genome, Organism; print('osiris.organisms OK')"
+          python -c "from osiris.sovereign import SovereignAgent; print('osiris.sovereign OK')"
+          python -c "from osiris.nclm import NCLM; print('osiris.nclm OK')"
+          python -c "from osiris.qbyte import QByteMiner; print('osiris.qbyte OK')"
+          python -c "from osiris.core.intent_engine import IntentEngine; print('osiris.core OK')"
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short --strict-markers
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Lint with ruff
+        run: ruff check --select E,F,W --ignore E501 osiris_launcher.py osiris_cli.py osiris_livlm.py nclm/ qbyte_system/ osiris/

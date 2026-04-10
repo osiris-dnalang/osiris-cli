@@ -35,6 +35,7 @@ import hashlib
 import json
 import logging
 import math
+import threading
 import time
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
@@ -42,6 +43,46 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger("OSIRIS_SWARM")
+
+# ── Text Generation Backends ─────────────────────────────────────────────────
+# Priority: Ollama (real LLM) → LivLM (quantum) → Template (fallback)
+
+# 1) Ollama — local LLM via HTTP API
+_OLLAMA_AVAILABLE = False
+_OLLAMA_ENGINE = None
+try:
+    from osiris_ollama import AgentTextEngine, get_engine, check_ollama
+    _status = check_ollama()
+    if _status.available:
+        _OLLAMA_ENGINE = get_engine()
+        _OLLAMA_AVAILABLE = True
+        logger.info(f"Ollama connected: {_status.selected_model}")
+    else:
+        logger.info(f"Ollama not reachable: {_status.error}")
+except ImportError:
+    logger.info("osiris_ollama not available")
+except Exception as e:
+    logger.info(f"Ollama init error: {e}")
+
+# 2) LivLM — quantum text generation
+_LIVLM_AVAILABLE = False
+_LIVLM_CORPUS_LOADED = False
+_SHARED_CORPUS = None
+_SHARED_LIVLM = None
+_LIVLM_LOCK = threading.Lock()
+try:
+    from osiris_livlm import LivLM, LivLMConfig, Corpus
+    _LIVLM_AVAILABLE = True
+except ImportError:
+    logger.info("LivLM not available; agents will use template fallback")
+
+# 3) Master system prompt — injected as default context for all agents
+_MASTER_PROMPT = ""
+try:
+    from osiris_master_prompt import OSIRIS_MASTER_PROMPT
+    _MASTER_PROMPT = OSIRIS_MASTER_PROMPT
+except ImportError:
+    logger.info("osiris_master_prompt not available; agents will use built-in identity")
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -166,12 +207,52 @@ class NCLMPersonality:
 # ════════════════════════════════════════════════════════════════════════════════
 
 class SwarmAgent:
-    """Base class for all swarm agents."""
+    """Base class for all swarm agents — Ollama → LivLM → template fallback."""
 
     def __init__(self, agent_id: AgentID, influence: float = 1.0):
         self.id = agent_id
         self.influence = influence
         self._call_count = 0
+
+    def _ollama_generate(self, task: str, context: Optional[Dict] = None,
+                         max_tokens: int = 256) -> str:
+        """Generate text via Ollama (priority 1). Injects master prompt as system context."""
+        if _OLLAMA_AVAILABLE and _OLLAMA_ENGINE is not None:
+            try:
+                ctx = dict(context) if context else {}
+                if _MASTER_PROMPT and "system_prompt" not in ctx:
+                    ctx["system_prompt"] = _MASTER_PROMPT
+                return _OLLAMA_ENGINE.generate_for_agent(
+                    self.id.value, task, context=ctx,
+                    max_tokens=max_tokens,
+                )
+            except Exception as e:
+                logger.warning(f"Ollama failed for {self.id.value}: {e}")
+        return ""
+
+    def _livlm_generate(self, prompt: str, max_length: int = 128) -> str:
+        """Generate text via LivLM qByte circuit (priority 2). Thread-safe."""
+        global _SHARED_LIVLM, _LIVLM_CORPUS_LOADED
+        if not _LIVLM_AVAILABLE:
+            return ""
+        try:
+            with _LIVLM_LOCK:
+                if _SHARED_LIVLM is None:
+                    config = LivLMConfig(
+                        max_generations=15, population_size=12,
+                        sample_length=16, n_layers=2,
+                    )
+                    _SHARED_LIVLM = LivLM(config)
+                if not _LIVLM_CORPUS_LOADED:
+                    _SHARED_LIVLM.load_corpus()
+                    _LIVLM_CORPUS_LOADED = True
+                text = _SHARED_LIVLM.generate(
+                    prompt=prompt, length=max_length,
+                )
+            return text.strip() if text else ""
+        except Exception as e:
+            logger.debug(f"LivLM failed for {self.id.value}: {e}")
+            return ""
 
     def respond(self, task: str, context: Dict[str, Any],
                 personality: NCLMPersonality) -> AgentResponse:
@@ -202,6 +283,23 @@ class OrchestratorAgent(SwarmAgent):
         super().__init__(AgentID.ORCHESTRATOR)
 
     def _think(self, task, ctx, pers):
+        # Try Ollama first (priority 1)
+        gen = self._ollama_generate(f"Orchestrator plan for: {task}\n1.", max_tokens=120)
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Strategic decomposition:\n{gen}",
+                0.85, "approve",
+                ["Execute plan steps in order"],
+            )
+        # Try LivLM qByte generation (priority 2)
+        gen = self._livlm_generate(f"Plan: {task}\n1.", max_length=80)
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Strategic decomposition (LivLM):\n{gen}",
+                0.80, "approve",
+                ["Execute plan steps in order"],
+            )
+        # Fallback to structured decomposition
         steps = self._decompose(task)
         plan = "\n".join(f"  {i+1}. {s}" for i, s in enumerate(steps))
         return (
@@ -244,6 +342,20 @@ class ReasonerAgent(SwarmAgent):
         super().__init__(AgentID.REASONER)
 
     def _think(self, task, ctx, pers):
+        gen = self._ollama_generate(f"Logical analysis of: {task}\nH0:", max_tokens=100)
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Logical analysis:\n{gen}",
+                0.80, "approve",
+                ["Formalise constraints", "Design test for H0 rejection"],
+            )
+        gen = self._livlm_generate(f"H0: {task}\n", max_length=80)
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Logical analysis (LivLM):\n  H0: {gen}",
+                0.75, "approve",
+                ["Formalise constraints", "Design test for H0 rejection"],
+            )
         h0 = self._null_hypothesis(task)
         return (
             f"Logical analysis:\n"
@@ -265,6 +377,24 @@ class CoderAgent(SwarmAgent):
         super().__init__(AgentID.CODER)
 
     def _think(self, task, ctx, pers):
+        gen = self._ollama_generate(f"def solve_{task[:20].replace(' ','_')}():\n    ", max_tokens=120)
+        if gen and len(gen.strip()) > 10:
+            creativity = pers.creativity
+            approach = "novel generative" if creativity > 0.7 else "idiomatic reference"
+            return (
+                f"Implementation ({approach} style):\n```python\n{gen}\n```",
+                0.82, "approve",
+                ["Generate test suite", "Add type annotations"],
+            )
+        gen = self._livlm_generate(f"def solve({task[:30]}):\n", max_length=80)
+        if gen and len(gen.strip()) > 10:
+            creativity = pers.creativity
+            approach = "novel generative" if creativity > 0.7 else "idiomatic reference"
+            return (
+                f"Implementation ({approach} style, LivLM):\n```python\n{gen}\n```",
+                0.77, "approve",
+                ["Generate test suite", "Add type annotations"],
+            )
         creativity = pers.creativity
         approach = "novel generative" if creativity > 0.7 else "idiomatic reference"
         return (
@@ -285,8 +415,14 @@ class CriticAgent(SwarmAgent):
         super().__init__(AgentID.CRITIC)
 
     def _think(self, task, ctx, pers):
+        gen = self._ollama_generate(f"Quality review of: {task}\nIssues found:\n-", max_tokens=100)
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Quality review:\n{gen}",
+                0.78, "approve",
+                ["Review completed via LivLM analysis"],
+            )
         issues = []
-        # Simulate quality checks
         if "security" in task.lower() or "auth" in task.lower():
             issues.append("Verify OWASP Top-10 compliance")
         if "performance" in task.lower() or "speed" in task.lower():
@@ -308,6 +444,13 @@ class OptimizerAgent(SwarmAgent):
         super().__init__(AgentID.OPTIMIZER)
 
     def _think(self, task, ctx, pers):
+        gen = self._ollama_generate(f"Optimization for: {task}\n- Memory:", max_tokens=100)
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Optimisation assessment:\n{gen}",
+                0.76, "approve",
+                ["Profile before optimising", "Consider caching"],
+            )
         return (
             "Optimisation assessment:\n"
             "  - Memory: check for unnecessary copies\n"
@@ -329,11 +472,27 @@ class SelfReflectorAgent(SwarmAgent):
         # Check for similar past strategies
         similar = self._retrieve_strategy(task)
         if similar:
+            gen = self._ollama_generate(
+                f"Reflecting on previous strategy: {similar['strategy'][:40]}\n"
+                f"Applied to: {task[:40]}\nInsight:", max_tokens=80
+            )
+            reflection = gen if gen and len(gen.strip()) > 10 else (
+                f"similar task solved before with strategy "
+                f"'{similar['strategy'][:60]}' (reward={similar['reward']:.2f})"
+            )
             return (
-                f"Meta-reflection: similar task solved before with strategy "
-                f"'{similar['strategy'][:60]}' (reward={similar['reward']:.2f})",
+                f"Meta-reflection: {reflection}",
                 0.88, "approve",
                 [f"Reuse strategy: {similar['strategy'][:40]}"],
+            )
+        gen = self._ollama_generate(
+            f"Self-reflection on novel task: {task[:40]}\nStrategy:", max_tokens=80
+        )
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Meta-reflection: {gen}",
+                0.72, "approve",
+                ["Log successful strategies after completion"],
             )
         return (
             "Meta-reflection: novel task; logging reasoning trace for future retrieval.",
@@ -378,6 +537,15 @@ class RebelAgent(SwarmAgent):
                 "Rebel: user prefers conservative approach; deferring to core agents.",
                 0.40, "abstain", [],
             )
+        gen = self._ollama_generate(
+            f"Contrarian view on: {task}\nWhat if", max_tokens=100
+        )
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Rebel perspective:\n{gen}",
+                0.55, "approve",
+                ["Challenge primary assumption", "Propose dual-problem formulation"],
+            )
         return (
             "Rebel perspective:\n"
             "  - What if the fundamental assumption is wrong?\n"
@@ -398,6 +566,15 @@ class EmpathAgent(SwarmAgent):
         verbosity = pers.verbosity
         formality = pers.formality
         style = "concise, technical" if formality > 0.6 else "conversational, exploratory"
+        gen = self._ollama_generate(
+            f"User intent for: {task}\nStyle: {style}\nResponse:", max_tokens=80
+        )
+        if gen and len(gen.strip()) > 10:
+            return (
+                f"Empath assessment:\n  - Style: {style}\n  - {gen}",
+                0.70, "approve",
+                [f"Adjust output verbosity to {verbosity:.1f}"],
+            )
         return (
             f"Empath assessment:\n"
             f"  - User style preference: {style}\n"
@@ -430,13 +607,21 @@ class SatiricalAgent(SwarmAgent):
     def _think(self, task, ctx, pers):
         round_count = ctx.get("round", 0)
         if round_count > 3:
+            gen = self._ollama_generate(
+                f"Satirical take after {round_count} rounds on: {task}\n", max_tokens=80
+            )
             return (
-                "Satirical observation: we have debated this for "
-                f"{round_count} rounds. Are we over-engineering? "
-                "Ship the 80% solution.",
+                gen if gen and len(gen.strip()) > 10 else (
+                    f"Satirical observation: we have debated this for "
+                    f"{round_count} rounds. Are we over-engineering? "
+                    "Ship the 80% solution."
+                ),
                 0.65, "approve",
                 ["Consider shipping early", "Diminishing returns detected"],
             )
+        gen = self._ollama_generate(f"Quick sanity check on: {task}\n", max_tokens=60)
+        if gen and len(gen.strip()) > 10:
+            return (f"Satirical check: {gen}", 0.50, "abstain", [])
         return (
             "Satirical check: no absurdity detected yet. Carry on.",
             0.50, "abstain", [],

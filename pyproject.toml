@@ -1,0 +1,143 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "osiris-cli"
+version = "4.0.0"
+description = "OSIRIS Autonomous Quantum Discovery System — Phase-Conjugate qByte Substrate Engine + DNA::}{::lang NCLM + Full Agent Constellation + 11D-CRSM"
+readme = "README.md"
+license = {text = "LicenseRef-OSIRIS-Dual-v1.0"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Devin Phillip Davis", email = "devin@agiledefensesystems.com"},
+]
+keywords = [
+    "quantum-computing",
+    "phase-conjugation",
+    "qbyte",
+    "autonomous-discovery",
+    "sovereign-compute",
+    "dna-lang",
+    "nclm",
+    "consciousness",
+    "genetic-evolution",
+    "swarm-intelligence",
+    "crsm-manifold",
+    "agent-constellation",
+    "tesseract-decoder",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "requests>=2.31.0",
+    "PyYAML>=6.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+quantum = [
+    "qiskit>=0.43.0",
+    "qiskit-ibm-runtime>=0.14.0",
+    "qiskit-aer>=0.13.0",
+]
+tui = [
+    "textual>=0.40.0",
+]
+plot = [
+    "matplotlib>=3.7.0",
+]
+forge = [
+    "trimesh>=4.0.0",
+    "paho-mqtt>=1.6.0",
+    "zeroconf>=0.80.0",
+]
+all = [
+    "osiris-cli[quantum,tui,plot,forge]",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/osiris-dnalang/osiris-cli"
+Repository = "https://github.com/osiris-dnalang/osiris-cli"
+Issues = "https://github.com/osiris-dnalang/osiris-cli/issues"
+
+[project.scripts]
+osiris = "osiris_launcher:main"
+
+[tool.setuptools]
+py-modules = [
+    "osiris_launcher",
+    "osiris_cli",
+    "osiris_livlm",
+    "osiris_ncllm_swarm",
+    "osiris_ultra_coder",
+    "osiris_auto_discovery",
+    "osiris_orchestrator",
+    "osiris_rqc_framework",
+    "osiris_rqc_orchestrator",
+    "osiris_ibm_execution",
+    "osiris_ibm_runtime",
+    "osiris_quantum_benchmarker",
+    "osiris_benchmark_suite",
+    "osiris_sovereign_executor",
+    "osiris_torsion_core_py",
+    "osiris_physics_bridges",
+    "osiris_cognitive_mesh",
+    "osiris_bridge_validator",
+    "osiris_elo_tournament",
+    "osiris_introspection",
+    "osiris_feedback_bus",
+    "osiris_intent_engine",
+    "osiris_ollama",
+    "osiris_shell",
+    "osiris_tui",
+    "osiris_tui_core",
+    "osiris_integrated",
+    "osiris_forge",
+    "osiris_fabric_bridge",
+    "osiris_policy_upcycle",
+    "osiris_fei_demo",
+    "osiris_manufacturing_3mf",
+    "osiris_zenodo_publisher",
+    "osiris_publication_zenodo",
+    "osiris_license",
+    "osiris_verify",
+    "osiris_agents",
+    "osiris_applications",
+    "osiris_master_prompt",
+]
+
+[tool.setuptools.packages.find]
+include = ["osiris*", "nclm*", "qbyte_system*", "quantum_discovery*", "scimitar_sse*"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"

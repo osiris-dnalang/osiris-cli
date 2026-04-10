@@ -48,11 +48,12 @@ BOOT_LOGO = r"""
 
 BOOT_SEQUENCE = [
     ("[36m  ⚛[0m  Initializing NCLLM 9-Agent Swarm", 0.08),
+    ("[36m  ⚛[0m  Connecting Ollama language engine", 0.06),
     ("[36m  ⚛[0m  Loading Intent Engine (regex NLP classifier)", 0.05),
     ("[36m  ⚛[0m  Calibrating Bayesian Trust Network", 0.06),
     ("[36m  ⚛[0m  Loading Cognitive Mesh (Shapley + Nash + Hebbian)", 0.05),
     ("[36m  ⚛[0m  Starting Introspection Engine", 0.04),
-    ("[36m  ⚛[0m  Registering 20 command modules", 0.03),
+    ("[36m  ⚛[0m  Registering 21 command modules", 0.03),
     ("[36m  ⚛[0m  Checking IBM Quantum token", 0.02),
     ("[36m  ⚛[0m  Checking Zenodo token", 0.02),
 ]
@@ -71,10 +72,23 @@ def print_boot_screen():
     ibm = os.getenv("IBM_QUANTUM_TOKEN")
     zen = os.getenv("ZENODO_TOKEN")
     print()
+
+    # Ollama status
+    try:
+        from osiris_ollama import check_ollama, get_client
+        if check_ollama():
+            client = get_client()
+            model = client.model or "detecting..."
+            print(f"  [32m✓[0m  Ollama:       [1;32mONLINE[0m  ({model})")
+        else:
+            print("  [33m⚠[0m  Ollama:       [33mOFFLINE[0m (install: curl -fsSL https://ollama.com/install.sh | sh)")
+    except Exception:
+        print("  [33m⚠[0m  Ollama:       [33mNOT AVAILABLE[0m")
+
     if ibm:
         print("  [32m✓[0m  IBM Quantum: [1;32mCONNECTED[0m")
     else:
-        print("  [33m⚠[0m  IBM Quantum: [33mNO TOKEN[0m (mock mode)")
+        print("  [33m⚠[0m  IBM Quantum: [33mNO TOKEN[0m (Local QVM active)")
     if zen:
         print("  [32m✓[0m  Zenodo:      [1;32mCONNECTED[0m")
     else:
@@ -82,8 +96,9 @@ def print_boot_screen():
 
     print()
     print("  [1;37mType anything in natural language. OSIRIS will figure it out.[0m")
-    print("  [90mExamples: 'benchmark ibm_torino', 'run swarm on decoherence',[0m")
+    print("  [90mExamples: 'benchmark ibm_torino', 'swarm decoherence analysis',[0m")
     print("  [90m          'status', 'forge tetrahedral cube', 'help'[0m")
+    print("  [90m          'ollama pull qwen2.5:1.5b', 'run git status'[0m")
     print("  [90mType 'quit' or Ctrl+C to exit.[0m")
     print()
 
@@ -190,6 +205,7 @@ def run_status(params: dict) -> str:
         "Ultra-Coder": "osiris_ultra_coder",
         "Intent Engine": "osiris_intent_engine",
         "License Gate": "osiris_license",
+        "Ollama Bridge": "osiris_ollama",
     }
     lines = [
         "═" * 60,
@@ -197,8 +213,23 @@ def run_status(params: dict) -> str:
         "═" * 60,
         f"  IBM Quantum : {ibm}",
         f"  Zenodo      : {zen}",
-        "",
     ]
+
+    # Ollama status in dashboard
+    try:
+        from osiris_ollama import check_ollama, get_client
+        if check_ollama():
+            client = get_client()
+            st = client.status()
+            oll_model = st.model or "auto"
+            oll_count = len(st.models)
+            lines.append(f"  Ollama      : ONLINE ({oll_model}, {oll_count} models)")
+        else:
+            lines.append("  Ollama      : OFFLINE")
+    except Exception:
+        lines.append("  Ollama      : NOT AVAILABLE")
+
+    lines.append("")
     for name, mod in modules.items():
         try:
             __import__(mod)
@@ -360,6 +391,54 @@ def run_license(params: dict) -> str:
         return f"License error: {e}"
 
 
+def run_livlm(params: dict) -> str:
+    """Run the Living Language Model — evolve and generate text."""
+    try:
+        from osiris_livlm import LivLM, LivLMConfig, quick_demo
+
+        action = params.get("action", "generate")
+        prompt_text = params.get("task", "")
+
+        if action == "demo":
+            text = quick_demo(generations=10, length=48, verbose=True)
+            return f"\n  LivLM demo output: {repr(text)}"
+
+        if action == "status":
+            m = LivLM()
+            return json.dumps(m.status(), indent=2)
+
+        # Default: evolve and generate
+        gens = int(params.get("generations", 12))
+        length = int(params.get("length", 64))
+        seed = prompt_text or "# "
+
+        cfg = LivLMConfig(
+            n_layers=2,
+            population_size=20,
+            max_generations=gens,
+            sample_length=16,
+            temperature=0.85,
+        )
+        model = LivLM(cfg)
+        print("  \033[90m⚛ Loading corpus...\033[0m", end="", flush=True)
+        model.load_corpus()
+        print(f" ({model.corpus.size:,} bytes)")
+
+        print(f"  \033[90m⚛ Evolving ({gens} generations)...\033[0m")
+        result = model.evolve(seed_text=seed, verbose=True)
+        print(f"  \033[90m⚛ Best Ξ={result['best_fitness']:.4f}  "
+              f"Φ={result['best_phi']:.4f}  "
+              f"State: {result['consciousness_state']}\033[0m")
+
+        print(f"  \033[90m⚛ Generating {length} characters...\033[0m")
+        text = model.generate(prompt=seed, length=length)
+        return f"\n  LivLM Output:\n  {repr(text)}\n\n  Params: {model.gen_circuit.n_params}  |  State: {result['consciousness_state']}"
+
+    except Exception as e:
+        import traceback
+        return f"LivLM error: {e}\n{traceback.format_exc()}"
+
+
 def run_analyze(params: dict) -> str:
     """Analyze results."""
     # Check for recent result files
@@ -374,6 +453,54 @@ def run_analyze(params: dict) -> str:
     return "No recent result files found. Run an experiment or benchmark first."
 
 
+def run_ollama(params: dict) -> str:
+    """Interact with Ollama directly or show status."""
+    try:
+        from osiris_ollama import get_client, check_ollama
+        if not check_ollama():
+            return (
+                "Ollama is not running.\n"
+                "  Install:  curl -fsSL https://ollama.com/install.sh | sh\n"
+                "  Start:    ollama serve\n"
+                "  Pull:     ollama pull qwen2.5:1.5b"
+            )
+        client = get_client()
+        action = params.get("action", "status")
+        if action == "status":
+            st = client.status()
+            lines = [
+                "═" * 50,
+                "  OLLAMA STATUS",
+                "═" * 50,
+                f"  Running:  {'Yes' if st.running else 'No'}",
+                f"  Model:    {st.model or 'none selected'}",
+                f"  Models:   {', '.join(st.models) if st.models else 'none'}",
+                "═" * 50,
+            ]
+            return "\n".join(lines)
+        # Chat mode
+        task = params.get("task", "Hello")
+        resp = client.generate(task, max_tokens=512)
+        return resp.text
+    except Exception as e:
+        return f"Ollama error: {e}"
+
+
+def run_chat(params: dict) -> str:
+    """Direct chat using Ollama — no swarm, just conversation."""
+    task = params.get("task", "")
+    if not task:
+        return "Usage: chat <message>"
+    try:
+        from osiris_ollama import get_engine, check_ollama
+        if not check_ollama():
+            return "Ollama offline. Use 'swarm <task>' for template-based responses."
+        engine = get_engine()
+        return engine.generate_for_agent("orchestrator", task, max_tokens=512)
+    except Exception as e:
+        return f"Chat error: {e}"
+
+
 def run_help(params: dict) -> str:
     """Show help."""
     return textwrap.dedent("""\
@@ -381,10 +508,14 @@ def run_help(params: dict) -> str:
 
     [1;36mCore[0m
       benchmark [backend]     Run quantum hardware benchmarks
-      experiment / run        Execute experiment campaign
+      experiment              Execute experiment campaign
       orchestrate / pipeline  Full research pipeline
       status                  System status dashboard
       help                    This message
+
+    [1;36mShell Passthrough[0m
+      run <cmd>               Execute a system command (ollama, git, pip, etc.)
+      ollama pull <model>     Directly runs ollama commands
 
     [1;36mSwarm & Intelligence[0m
       swarm <task>            9-agent NCLLM deliberation
@@ -406,6 +537,17 @@ def run_help(params: dict) -> str:
       forge / 3d print        Generate mesh, slice, print
       forge tetrahedral       Tetrahedral lattice model
       forge toroid            Toroidal manifold model
+
+    [1;36mLiving Language Model[0m
+      livlm                   Evolve + generate text via LivLM
+      livlm demo              Quick LivLM demonstration
+      generate <prompt>       Generate text from evolved qByte circuits
+      evolve                  Genetically evolve circuit parameters
+
+    [1;36mOllama LLM[0m
+      chat <message>          Direct conversation via Ollama
+      ollama                  Ollama status and model info
+      ollama status           Show available models
 
     [1;36mPublishing[0m
       publish / zenodo        Publish results to Zenodo
@@ -456,10 +598,14 @@ DIRECT_COMMANDS = {
     "zenodo":       run_publish,
     "analyze":      run_analyze,
     "experiment":   run_experiment,
-    "run":          run_experiment,
     "orchestrate":  run_orchestrate,
     "pipeline":     run_orchestrate,
     "feedback":     run_feedback,
+    "livlm":        run_livlm,
+    "generate":     run_livlm,
+    "evolve":       run_livlm,
+    "chat":         run_chat,
+    "ollama":       run_ollama,
 }
 
 
@@ -523,6 +669,44 @@ def route_through_swarm(user_input: str, intent, params: dict) -> str:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# Shell Passthrough
+# ═══════════════════════════════════════════════════════════════════════════
+
+SHELL_PASSTHROUGH = {"ollama", "pip", "pip3", "git", "docker", "kubectl",
+                     "curl", "wget", "ssh", "npm", "node", "python",
+                     "python3", "pytest", "gh"}
+
+
+def _exec_shell(cmd: str) -> str:
+    """Execute a system command with live streaming output."""
+    import subprocess
+    print(f"  [90m⚛ Running: {cmd}[0m")
+    # Use Popen for streaming — critical for long-running commands like ollama pull
+    try:
+        proc = subprocess.Popen(
+            cmd, shell=True,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, bufsize=1
+        )
+        lines = []
+        for line in proc.stdout:
+            print(f"  {line}", end="", flush=True)
+            lines.append(line)
+        proc.wait(timeout=300)
+        out = "".join(lines).strip()
+        if proc.returncode != 0 and not out:
+            return f"(exit code {proc.returncode})"
+        return out if out else "(command completed)"
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        return "Command timed out after 300 s."
+    except FileNotFoundError:
+        return f"Command not found: {cmd.split()[0]}"
+    except Exception as e:
+        return f"Shell error: {e}"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # Main REPL
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -538,9 +722,21 @@ def process_input(user_input: str, intent_engine) -> str:
     if not text:
         return ""
 
+    # Strip shell-style comments (# ...)
+    if text.startswith("#"):
+        return "  (comment ignored)"
+
     # Direct command shortcut (first word)
     words = text.split()
     first_word = words[0].lower()
+
+    # ── Shell passthrough: recognised system commands ──
+    # "run <tool> ..." → execute shell command (not experiment)
+    if first_word == "run" and len(words) > 1 and words[1].lower() in SHELL_PASSTHROUGH:
+        return _exec_shell(" ".join(words[1:]))
+    # Bare system tool invocation (e.g. "ollama pull ...")
+    if first_word in SHELL_PASSTHROUGH and first_word not in DIRECT_COMMANDS:
+        return _exec_shell(text)
 
     # "swarm" keyword → always route through NCLLM directly
     if first_word == "swarm":
@@ -599,7 +795,19 @@ def process_input(user_input: str, intent_engine) -> str:
         intent_engine.add_to_history(text, result[:200])
         return result
 
-    # Unknown or low confidence — let the swarm figure it out
+    # Unknown or low confidence — try Ollama direct, then swarm
+    try:
+        from osiris_ollama import check_ollama, get_engine
+        if check_ollama():
+            print("  [90m⚛ Querying Ollama...[0m")
+            engine = get_engine()
+            response = engine.generate_for_agent("orchestrator", text, max_tokens=512)
+            if response and len(response.strip()) > 5:
+                intent_engine.add_to_history(text, response[:200])
+                return response
+    except Exception:
+        pass
+
     print("  [90m⚛ Routing to NCLLM swarm for deliberation...[0m")
     swarm_result = route_through_swarm(text, intent, params)
     intent_engine.add_to_history(text, swarm_result[:200])
@@ -625,9 +833,26 @@ def main():
     # Just test import
     try:
         from osiris_ncllm_swarm import NCLLMSwarm
-        print("  [32m✓[0m  NCLLM Swarm loaded. 9 agents standing by.\n")
+        print("  [32m✓[0m  NCLLM Swarm loaded. 9 agents standing by.")
     except Exception as e:
-        print(f"  [33m⚠[0m  NCLLM Swarm: {e}\n")
+        print(f"  [33m⚠[0m  NCLLM Swarm: {e}")
+
+    # Check Ollama and show model info
+    try:
+        from osiris_ollama import check_ollama, get_client
+        if check_ollama():
+            client = get_client()
+            st = client.status()
+            if st.models:
+                print(f"  [32m✓[0m  Ollama ready: {', '.join(st.models[:3])}")
+            else:
+                print("  [33m⚠[0m  Ollama running but no models. Run: ollama pull qwen2.5:1.5b")
+        else:
+            print("  [33m⚠[0m  Ollama offline — using template fallback")
+    except Exception:
+        print("  [33m⚠[0m  Ollama module unavailable")
+
+    print()
 
     # REPL
     while True:

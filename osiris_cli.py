@@ -32,6 +32,18 @@ Usage:
 
   # Benchmark suite
   python osiris_cli.py benchmark --full --compare
+
+  # NCLM: evolve circuit parameters
+  python osiris_cli.py nclm --evolve --generations 50
+
+  # NCLM: generate text from evolved genome
+  python osiris_cli.py nclm --generate --seed "# Hello" --length 100
+
+  # NCLM: interactive chat
+  python osiris_cli.py nclm --chat
+
+  # NCLM: benchmark suite
+  python osiris_cli.py nclm --benchmark
 """
 
 import os
@@ -311,6 +323,119 @@ async def _interactive_ultra_coder(swarm, personality):
         print()
 
 
+def cmd_nclm(args):
+    """Run the NCLM (Non-Causal Living Model) module"""
+    from nclm.core.qbyte_generator import QByteTextGenerator
+    from nclm.benchmark.harness import NCLMBenchmark
+    from osiris_livlm import LivLMConfig
+
+    if args.benchmark:
+        print("\n  NCLM Benchmark Suite")
+        print("  " + "-" * 40)
+        config = LivLMConfig(
+            max_generations=args.generations or 10,
+            population_size=args.population or 15,
+            sample_length=16,
+        )
+        bench = NCLMBenchmark(config)
+        results = bench.run_suite(evolve_first=True, verbose=True)
+        bench.print_report(results)
+        if args.json_output:
+            print(json.dumps(results, indent=2, default=str))
+        if args.output:
+            bench.save_results(results, args.output)
+            logger.info(f"Results saved to {args.output}")
+        return 0
+
+    # Create generator
+    config = LivLMConfig(
+        max_generations=args.generations or 50,
+        population_size=args.population or 30,
+        n_layers=args.layers or 3,
+    )
+    gen = QByteTextGenerator(config=config, genome_path=args.genome)
+
+    if args.evolve:
+        print("\n  NCLM Evolution")
+        print("  " + "-" * 40)
+        gen.load_corpus()
+        result = gen.evolve(
+            seed_text=args.seed or "# ",
+            verbose=True,
+        )
+        gen.save_genome()
+        print(f"\n  Evolution complete:")
+        print(f"    Generations: {result['generations']}")
+        print(f"    Best Ξ:      {result['best_fitness']:.6f}")
+        print(f"    Best Φ:      {result['best_phi']:.6f}")
+        print(f"    State:       {result['consciousness_state']}")
+        print(f"    Genome:      {gen._genome_path}")
+        if args.json_output:
+            print(json.dumps(result, indent=2, default=str))
+        return 0
+
+    if args.generate:
+        seed = args.seed or "# "
+        length = args.length or 64
+        # Try to load existing genome
+        if not gen.auto_load():
+            print("  No evolved genome found — evolving first...")
+            gen.load_corpus()
+            gen.evolve(seed_text=seed, verbose=True)
+            gen.save_genome()
+
+        text = gen.generate(prompt=seed, max_length=length,
+                            temperature=args.temperature)
+        print(f"\n  Seed: {seed!r}")
+        print(f"  Generated ({length} chars):\n")
+        print(text)
+        if args.json_output:
+            print(json.dumps({
+                'seed': seed, 'length': length,
+                'output': text, 'metrics': gen._last_metrics,
+            }, indent=2))
+        return 0
+
+    if args.chat:
+        print("\n+====================================================================+")
+        print("|  NCLM Living Chat — DNA::}{::lang Quantum Text Generation          |")
+        print("|  co-authored by devin phillip davis                                |")
+        print("|  and OSIRIS dna::}{::lang NCLM                                    |")
+        print("+====================================================================+")
+        print("  Type 'quit' to exit, 'status' for model info\n")
+        gen.load_corpus()
+        if not gen.auto_load():
+            print("  Evolving initial genome...")
+            gen.evolve(verbose=True)
+            gen.save_genome()
+        while True:
+            try:
+                user_input = input("nclm> ").strip()
+            except (EOFError, KeyboardInterrupt):
+                break
+            if not user_input:
+                continue
+            if user_input.lower() == "quit":
+                break
+            if user_input.lower() == "status":
+                for k, v in gen.status().items():
+                    print(f"  {k}: {v}")
+                continue
+            response = gen.respond(user_input, max_length=args.length or 128)
+            print(response)
+            print()
+        return 0
+
+    if args.status:
+        status = gen.status()
+        for k, v in status.items():
+            print(f"  {k}: {v}")
+        return 0
+
+    logger.error("Specify --evolve, --generate, --chat, --benchmark, or --status")
+    return 1
+
+
 def cmd_benchmark(args):
     """Run the NCLLM benchmark suite"""
     import asyncio
@@ -367,6 +492,10 @@ Examples:
   python osiris_cli.py ultra-coder --self-edit "increase creativity"
   python osiris_cli.py ultra-coder --coach
   python osiris_cli.py benchmark --full --compare
+  python osiris_cli.py nclm --evolve --generations 50
+  python osiris_cli.py nclm --generate --seed "# Hello" --length 100
+  python osiris_cli.py nclm --chat
+  python osiris_cli.py nclm --benchmark
 
 co-authored by devin phillip davis and OSIRIS dna::}{::lang NCLM
         """
@@ -408,6 +537,24 @@ co-authored by devin phillip davis and OSIRIS dna::}{::lang NCLM
     uc_parser.add_argument('--coach', action='store_true', help='Get self-improvement suggestions')
     uc_parser.add_argument('--json', dest='json_output', action='store_true', help='JSON output')
     uc_parser.set_defaults(func=cmd_ultra_coder)
+
+    # NCLM command
+    nclm_parser = subparsers.add_parser('nclm', help='NCLM Non-Causal Living Model')
+    nclm_parser.add_argument('--evolve', action='store_true', help='Evolve circuit parameters via genetic algorithm')
+    nclm_parser.add_argument('--generate', action='store_true', help='Generate text from evolved genome')
+    nclm_parser.add_argument('--chat', action='store_true', help='Interactive NCLM chat REPL')
+    nclm_parser.add_argument('--benchmark', action='store_true', help='Run NCLM benchmark suite')
+    nclm_parser.add_argument('--status', action='store_true', help='Show NCLM model status')
+    nclm_parser.add_argument('--seed', help='Seed text for generation/evolution')
+    nclm_parser.add_argument('--length', type=int, help='Generation length in characters')
+    nclm_parser.add_argument('--temperature', type=float, help='Generation temperature (0.1-2.0)')
+    nclm_parser.add_argument('--generations', type=int, help='Evolution generations')
+    nclm_parser.add_argument('--population', type=int, help='Evolution population size')
+    nclm_parser.add_argument('--layers', type=int, help='Circuit depth (number of rotation layers)')
+    nclm_parser.add_argument('--genome', default='nclm_genome.json', help='Genome file path')
+    nclm_parser.add_argument('--output', help='Output file for benchmark results')
+    nclm_parser.add_argument('--json', dest='json_output', action='store_true', help='JSON output')
+    nclm_parser.set_defaults(func=cmd_nclm)
 
     # BENCHMARK command
     bm_parser = subparsers.add_parser('benchmark', help='Run NCLLM benchmark suite')

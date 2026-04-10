@@ -141,13 +141,34 @@ class QuantumHardwareBenchmarker:
         start_time = datetime.now()
         
         if self.mock_mode:
-            # Simulate realistic results
-            fidelities = [0.95 - (depth * 0.01) - (n_qubits * 0.002) + np.random.normal(0, 0.02) for _ in range(trials)]
-            xeb_scores = [0.92 - (depth * 0.008) + np.random.normal(0, 0.03) for _ in range(trials)]
-            errors = [0.001 * depth * (n_qubits / 10) + np.random.normal(0, 0.0005) for _ in range(trials)]
-            
-            # Simulate job IDs
-            job_ids = [f"mock_job_{backend}_{n_qubits}q_{depth}d_{shots}s_{i}" for i in range(trials)]
+            # Local QVM execution — real tetrahedral quaternionic computation
+            try:
+                from osiris_local_qvm import LocalQVM
+                qvm_qubits = max(2, min(n_qubits, 12))
+                for trial_i in range(trials):
+                    qvm = LocalQVM(n_qubits=qvm_qubits, seed=trial_i)
+                    result_qvm = qvm.execute(
+                        circuit_type="random", depth=depth, shots=shots
+                    )
+                    fidelities.append(float(result_qvm.fidelity))
+                    xeb_scores.append(float(result_qvm.xeb_score))
+                    errors.append(float(1.0 - result_qvm.fidelity))
+                    job_ids.append(
+                        f"qvm_{backend}_{qvm_qubits}q_{depth}d_{trial_i}_{result_qvm.circuit_hash}"
+                    )
+                logger.info(f"    → Local QVM: {qvm_qubits}q, XEB={np.mean(xeb_scores):.4f}")
+            except Exception as e:
+                logger.warning(f"    → Local QVM failed ({e}), using product-state model")
+                # Deterministic product-state model (no random noise)
+                for trial_i in range(trials):
+                    # Physics-based degradation: fidelity decays with depth and qubit count
+                    gate_error = 0.001  # single-gate error rate
+                    n_gates = depth * n_qubits * 1.5  # approx gates per circuit
+                    f = (1.0 - gate_error) ** n_gates
+                    fidelities.append(f)
+                    xeb_scores.append(max(0.0, 2 * f - 1.0))
+                    errors.append(1.0 - f)
+                    job_ids.append(f"model_{backend}_{n_qubits}q_{depth}d_{shots}s_{trial_i}")
         else:
             # Real hardware execution
             try:
@@ -156,11 +177,27 @@ class QuantumHardwareBenchmarker:
                 )
             except Exception as e:
                 logger.error(f"  ✗ Execution failed: {e}")
-                # Fall back to mock
-                fidelities = [0.85 + np.random.normal(0, 0.05) for _ in range(trials)]
-                xeb_scores = [0.80 + np.random.normal(0, 0.05) for _ in range(trials)]
-                errors = [0.01 + np.random.normal(0, 0.005) for _ in range(trials)]
-                job_ids = [f"failed_job_{i}" for i in range(trials)]
+                # Fall back to Local QVM
+                try:
+                    from osiris_local_qvm import LocalQVM
+                    qvm_qubits = max(2, min(n_qubits, 12))
+                    for trial_i in range(trials):
+                        qvm = LocalQVM(n_qubits=qvm_qubits, seed=trial_i + 100)
+                        r = qvm.execute(circuit_type="random", depth=depth, shots=shots)
+                        fidelities.append(float(r.fidelity))
+                        xeb_scores.append(float(r.xeb_score))
+                        errors.append(float(1.0 - r.fidelity))
+                        job_ids.append(f"qvm_fallback_{trial_i}_{r.circuit_hash}")
+                except Exception:
+                    # Ultimate fallback: deterministic product-state model
+                    for trial_i in range(trials):
+                        gate_error = 0.001
+                        n_gates = depth * n_qubits * 1.5
+                        f = (1.0 - gate_error) ** n_gates
+                        fidelities.append(f)
+                        xeb_scores.append(max(0.0, 2 * f - 1.0))
+                        errors.append(1.0 - f)
+                        job_ids.append(f"model_fallback_{trial_i}")
         
         elapsed = (datetime.now() - start_time).total_seconds()
         

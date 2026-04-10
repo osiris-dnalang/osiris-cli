@@ -6,9 +6,9 @@ authors:
     affiliation: "agile defense systems llc"
   - name: "OSIRIS dna::}{::lang NCLM"
     affiliation: "autonomous quantum discovery system"
-title: "Phase-Conjugate qByte Substrate Engine + OSIRIS-NCLM Ultra-Coder"
-version: 2.0.0
-date-released: 2026-04-09
+title: "OSIRIS: Autonomous Quantum Discovery System"
+version: 4.0.0
+date-released: 2026-04-10
 url: "https://github.com/osiris-dnalang/osiris-cli"
 repository-code: "https://github.com/osiris-dnalang/osiris-cli"
 license: LicenseRef-OSIRIS-Dual-v1.0
@@ -35,12 +35,12 @@ keywords:
   - autonomous discovery
   - iterative refinement
 abstract: >-
-  OSIRIS-NCLM: Autonomous quantum discovery system with Ultra-Coder CLI.
-  Wave A.2 implementation of the qByte substrate-engineering suite featuring
-  phase-conjugate acoustic coupling, quaternion-tetrahedral torsion mechanics,
-  51.843 degree dielectric lock, and CRSM 7D nonlocal manifold. Includes
-  NCLM-powered intent engine, 6-agent swarm architecture (Orchestrator,
-  Reasoner, Coder, Critic, Optimizer, Self-Reflector), iterative distillation
-  and RLHF training loops, strategy-aware learning, and end-to-end
-  reproducible NeurIPS-ready research pipeline. Co-authored by devin phillip
+  OSIRIS: Sovereign quantum computing framework with 8-qubit DNA-encoded
+  registers (qByte system), genetically evolved Living Language Model (LivLM),
+  Non-Causal Living Model (NCLM) for quantum text generation, 9-agent NCLLM
+  deliberation swarm, Bayesian cognitive mesh governance, tridirectional
+  introspection engine, adversarial bridge validator, CRSM 7D torsion physics,
+  FABRIC NSF testbed integration, Quantum-to-Matter 3D manufacturing pipeline,
+  and automated Zenodo publishing. 25+ CLI commands, zero external LLM
+  dependencies, pure NumPy quantum execution. Co-authored by devin phillip
   davis and OSIRIS dna::}{::lang NCLM.
