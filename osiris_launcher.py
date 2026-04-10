@@ -638,6 +638,81 @@ def cmd_nclm(args):
     print("Specify --evolve, --generate, --chat, --benchmark, or --status")
 
 
+def cmd_nclm_train(args):
+    """Train the SovereignTransformer language model."""
+    import logging
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
+    from osiris.nclm.transformer import SovereignTransformer, SovereignConfig
+    from osiris.nclm.trainer import Trainer, TrainingConfig
+
+    config = SovereignConfig(
+        dim=args.dim,
+        n_layers=args.layers,
+        n_heads=args.heads,
+        ff_dim=args.ff_dim,
+        max_seq_len=args.context,
+    )
+    model = SovereignTransformer(config)
+    print(f"\n⚛ SovereignTransformer — {model.num_parameters():,} parameters")
+
+    train_cfg = TrainingConfig(
+        batch_size=args.batch_size,
+        seq_len=min(args.context, 256),
+        lr=args.lr,
+        epochs=args.epochs,
+        max_steps=args.max_steps,
+        checkpoint_dir=args.checkpoint_dir,
+    )
+    trainer = Trainer(model, train_cfg, corpus_path=args.corpus)
+    result = trainer.train()
+    print(f"\n✓ Training complete — {result['total_steps']} steps, "
+          f"best val_loss={result['best_val_loss']:.4f}")
+
+    if args.export:
+        from osiris.nclm.inference import export_huggingface
+        export_huggingface(model, args.export, model_name=args.name)
+        print(f"✓ Exported to {args.export}/")
+
+
+def cmd_nclm_generate(args):
+    """Generate text with a trained SovereignTransformer."""
+    from osiris.nclm.inference import generate, load_model_safetensors
+    from osiris.nclm.trainer import Trainer
+
+    # Load model
+    checkpoint = args.checkpoint
+    if checkpoint.endswith(".safetensors"):
+        model = load_model_safetensors(checkpoint)
+    else:
+        model = Trainer.load_checkpoint(checkpoint)
+    print(f"⚛ Loaded — {model.num_parameters():,} parameters")
+
+    text = generate(
+        model,
+        prompt=args.prompt,
+        max_new_tokens=args.length,
+        temperature=args.temperature,
+        top_k=args.top_k,
+        top_p=args.top_p,
+    )
+    print(text)
+
+
+def cmd_nclm_export(args):
+    """Export a trained SovereignTransformer for Hugging Face."""
+    from osiris.nclm.inference import export_huggingface, load_model_safetensors
+    from osiris.nclm.trainer import Trainer
+
+    checkpoint = args.checkpoint
+    if checkpoint.endswith(".safetensors"):
+        model = load_model_safetensors(checkpoint)
+    else:
+        model = Trainer.load_checkpoint(checkpoint)
+
+    export_huggingface(model, args.output_dir, model_name=args.name)
+    print(f"✓ Exported to {args.output_dir}/ — {model.num_parameters():,} parameters")
+
+
 def cmd_ultra_coder(args):
     """Run the NCLLM Ultra-Coder swarm."""
     import asyncio
@@ -1564,6 +1639,46 @@ def main():
     nclm_parser.add_argument('--output', type=str, default='', help='Output file')
     nclm_parser.add_argument('--json', dest='json_output', action='store_true', help='JSON output')
 
+    # NCLM-Train — Train the SovereignTransformer
+    nclm_train_parser = subparsers.add_parser('nclm-train',
+                                               help='Train SovereignTransformer language model')
+    nclm_train_parser.add_argument('--corpus', type=str, default='.', help='Corpus directory (default: .)')
+    nclm_train_parser.add_argument('--dim', type=int, default=256, help='Hidden dimension (default: 256)')
+    nclm_train_parser.add_argument('--layers', type=int, default=6, help='Transformer layers (default: 6)')
+    nclm_train_parser.add_argument('--heads', type=int, default=4, help='Attention heads (default: 4)')
+    nclm_train_parser.add_argument('--ff-dim', type=int, default=512, help='FFN dimension (default: 512)')
+    nclm_train_parser.add_argument('--context', type=int, default=512, help='Context length (default: 512)')
+    nclm_train_parser.add_argument('--batch-size', type=int, default=4, help='Batch size (default: 4)')
+    nclm_train_parser.add_argument('--lr', type=float, default=3e-4, help='Learning rate (default: 3e-4)')
+    nclm_train_parser.add_argument('--epochs', type=int, default=10, help='Training epochs (default: 10)')
+    nclm_train_parser.add_argument('--max-steps', type=int, default=0, help='Max steps (0 = use epochs)')
+    nclm_train_parser.add_argument('--checkpoint-dir', type=str, default='checkpoints',
+                                    help='Checkpoint dir (default: checkpoints)')
+    nclm_train_parser.add_argument('--export', type=str, default='', help='Export dir for HuggingFace')
+    nclm_train_parser.add_argument('--name', type=str, default='sovereign-transformer',
+                                    help='Model name for export')
+
+    # NCLM-Generate — Generate text with trained model
+    nclm_gen_parser = subparsers.add_parser('nclm-generate',
+                                             help='Generate text with trained SovereignTransformer')
+    nclm_gen_parser.add_argument('--checkpoint', type=str, required=True,
+                                  help='Path to .npz or .safetensors checkpoint')
+    nclm_gen_parser.add_argument('--prompt', type=str, default='# ', help='Prompt text')
+    nclm_gen_parser.add_argument('--length', type=int, default=256, help='Max tokens to generate')
+    nclm_gen_parser.add_argument('--temperature', type=float, default=0.8, help='Temperature (default: 0.8)')
+    nclm_gen_parser.add_argument('--top-k', type=int, default=40, help='Top-k sampling (default: 40)')
+    nclm_gen_parser.add_argument('--top-p', type=float, default=0.95, help='Top-p sampling (default: 0.95)')
+
+    # NCLM-Export — Export model for Hugging Face
+    nclm_export_parser = subparsers.add_parser('nclm-export',
+                                                help='Export SovereignTransformer for Hugging Face')
+    nclm_export_parser.add_argument('--checkpoint', type=str, required=True,
+                                     help='Path to .npz or .safetensors checkpoint')
+    nclm_export_parser.add_argument('--output-dir', type=str, default='sovereign-transformer-export',
+                                     help='Output directory')
+    nclm_export_parser.add_argument('--name', type=str, default='sovereign-transformer',
+                                     help='Model name')
+
     # QVM — Local Quantum Virtual Machine
     qvm_parser = subparsers.add_parser('qvm', help='Local Quantum Virtual Machine')
     qvm_parser.add_argument('--qubits', type=int, default=4, help='Number of qubits (default: 4)')
@@ -1720,6 +1835,12 @@ def main():
         cmd_license(args)
     elif args.command == 'nclm':
         cmd_nclm(args)
+    elif args.command == 'nclm-train':
+        cmd_nclm_train(args)
+    elif args.command == 'nclm-generate':
+        cmd_nclm_generate(args)
+    elif args.command == 'nclm-export':
+        cmd_nclm_export(args)
     elif args.command == 'ultra-coder':
         cmd_ultra_coder(args)
     elif args.command == 'qvm':
