@@ -578,3 +578,281 @@ class TestCheckpoint:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+# ===========================================================================
+# 11D-CRSM Sovereign Mechanics tests
+# ===========================================================================
+
+class TestSovereignMechanics:
+    """Tests for TorsionLockedAttention, PhaseConjugateCorrector,
+    FractalAntennaEmbedding, SovereignBlock, NegentropicTracker,
+    and SovereignTransformerV2."""
+
+    # --- TorsionLockedAttention ---
+
+    def test_torsion_locked_attention_shapes(self):
+        from osiris.nclm.sovereign_mechanics import TorsionLockedAttention
+        from osiris.nclm.autograd import Tensor, no_grad
+
+        attn = TorsionLockedAttention(dim=32, n_heads=2, dropout=0.0)
+        x = Tensor(np.random.randn(1, 8, 32).astype(np.float32))
+        with no_grad():
+            out = attn(x)
+        assert out.shape == (1, 8, 32)
+
+    def test_torsion_locked_attention_backward(self):
+        from osiris.nclm.sovereign_mechanics import TorsionLockedAttention
+        from osiris.nclm.autograd import Tensor
+
+        attn = TorsionLockedAttention(dim=32, n_heads=2, dropout=0.0)
+        x = Tensor(np.random.randn(1, 4, 32).astype(np.float32), requires_grad=True)
+        out = attn(x)
+        loss = out.sum()
+        loss.backward()
+        # Gradients should flow through tlock params
+        assert attn.tlock_alpha.grad is not None
+        assert attn.tlock_beta.grad is not None
+        assert x.grad is not None
+
+    def test_torsion_locked_attention_with_mask(self):
+        from osiris.nclm.sovereign_mechanics import TorsionLockedAttention
+        from osiris.nclm.autograd import Tensor, no_grad
+
+        attn = TorsionLockedAttention(dim=32, n_heads=2, dropout=0.0)
+        x = Tensor(np.random.randn(1, 8, 32).astype(np.float32))
+        mask = np.full((1, 1, 8, 8), -1e9, dtype=np.float32)
+        mask = np.triu(mask, k=1)
+        with no_grad():
+            out = attn(x, mask=mask)
+        assert out.shape == (1, 8, 32)
+
+    # --- PhaseConjugateCorrector ---
+
+    def test_phase_conjugate_low_gamma_passthrough(self):
+        from osiris.nclm.sovereign_mechanics import PhaseConjugateCorrector
+        from osiris.nclm.autograd import Tensor
+
+        pc = PhaseConjugateCorrector(dim=32)
+        # Small variance -> Gamma < 0.3 -> passthrough
+        x = Tensor(np.random.randn(1, 4, 32).astype(np.float32) * 0.01)
+        out = pc(x)
+        # Should return same tensor (passthrough)
+        np.testing.assert_array_equal(out.data, x.data)
+
+    def test_phase_conjugate_high_gamma_correction(self):
+        from osiris.nclm.sovereign_mechanics import PhaseConjugateCorrector
+        from osiris.nclm.autograd import Tensor
+
+        pc = PhaseConjugateCorrector(dim=32)
+        # Large variance -> Gamma > 0.3 -> correction applied
+        x = Tensor(
+            np.random.randn(1, 4, 32).astype(np.float32) * 10.0,
+            requires_grad=True,
+        )
+        out = pc(x)
+        # Output should differ from input (correction applied)
+        assert not np.allclose(out.data, x.data, atol=1e-6)
+
+    def test_phase_conjugate_decoherence_gamma(self):
+        from osiris.nclm.sovereign_mechanics import PhaseConjugateCorrector
+        from osiris.nclm.autograd import Tensor
+
+        pc = PhaseConjugateCorrector(dim=32)
+        x = Tensor(np.random.randn(1, 4, 32).astype(np.float32) * 5.0)
+        gamma = pc.decoherence_gamma(x)
+        assert 0.0 <= gamma <= 1.0
+
+    # --- FractalAntennaEmbedding ---
+
+    def test_fractal_embedding_shapes(self):
+        from osiris.nclm.sovereign_mechanics import FractalAntennaEmbedding
+        from osiris.nclm.autograd import no_grad
+
+        emb = FractalAntennaEmbedding(vocab_size=256, dim=32, n_modes=133)
+        indices = np.array([[1, 2, 3, 4]], dtype=np.int64)
+        with no_grad():
+            out = emb(indices)
+        assert out.shape == (1, 4, 32)
+
+    def test_fractal_embedding_133_modes(self):
+        from osiris.nclm.sovereign_mechanics import FractalAntennaEmbedding
+
+        emb = FractalAntennaEmbedding(vocab_size=256, dim=64, n_modes=133)
+        assert emb.resonance_in.shape == (133, 64)
+        assert emb.resonance_out.shape == (64, 133)
+        assert emb.omega.shape == (133,)
+
+    def test_fractal_embedding_frequencies(self):
+        from osiris.nclm.sovereign_mechanics import FractalAntennaEmbedding
+
+        omega = FractalAntennaEmbedding._compute_fractal_frequencies(133)
+        assert omega.shape == (133,)
+        assert float(omega.min()) >= 0.09  # ~0.1
+        assert float(omega.max()) <= 2.01  # ~2.0
+
+    # --- SovereignBlock ---
+
+    def test_sovereign_block_forward(self):
+        from osiris.nclm.sovereign_mechanics import SovereignBlock
+        from osiris.nclm.autograd import Tensor, no_grad
+
+        block = SovereignBlock(dim=32, n_heads=2, ff_dim=64, dropout=0.0)
+        x = Tensor(np.random.randn(1, 8, 32).astype(np.float32))
+        with no_grad():
+            out = block(x)
+        assert out.shape == (1, 8, 32)
+
+    def test_sovereign_block_backward(self):
+        from osiris.nclm.sovereign_mechanics import SovereignBlock
+        from osiris.nclm.autograd import Tensor
+
+        block = SovereignBlock(dim=32, n_heads=2, ff_dim=64, dropout=0.0)
+        x = Tensor(np.random.randn(1, 4, 32).astype(np.float32), requires_grad=True)
+        out = block(x)
+        loss = out.sum()
+        loss.backward()
+        assert x.grad is not None
+        assert x.grad.shape == (1, 4, 32)
+
+    # --- NegentropicTracker ---
+
+    def test_negentropic_tracker_metrics(self):
+        from osiris.nclm.sovereign_mechanics import NegentropicTracker
+
+        tracker = NegentropicTracker()
+        x_in = np.random.randn(1, 4, 32).astype(np.float32)
+        x_out = np.random.randn(1, 4, 32).astype(np.float32) * 0.5
+        m = tracker.measure(x_in, x_out)
+        assert "xi" in m
+        assert "phi" in m
+        assert "gamma" in m
+        assert "lambda_phi" in m
+        assert "negentropic" in m
+        assert isinstance(m["negentropic"], bool)
+
+    def test_negentropic_tracker_summary(self):
+        from osiris.nclm.sovereign_mechanics import NegentropicTracker
+
+        tracker = NegentropicTracker()
+        for _ in range(5):
+            x_in = np.random.randn(1, 4, 32).astype(np.float32)
+            x_out = np.random.randn(1, 4, 32).astype(np.float32) * 0.1
+            tracker.measure(x_in, x_out)
+        s = tracker.summary()
+        assert s["n_measurements"] == 5
+        assert "mean_xi" in s
+        assert "negentropic_ratio" in s
+
+    # --- SovereignTransformerV2 ---
+
+    def test_v2_forward_shape(self):
+        from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
+        from osiris.nclm.autograd import no_grad
+
+        cfg = SovereignConfig(
+            dim=32, n_layers=1, n_heads=2, ff_dim=64, max_seq_len=32,
+            torsion_lock=True, phase_conjugate=True, fractal_embedding=True,
+        )
+        model = SovereignTransformerV2(cfg)
+        x = np.array([[1, 2, 3, 4]], dtype=np.int64)
+        with no_grad():
+            logits = model.forward(x)
+        assert logits.shape == (1, 4, 256)
+
+    def test_v2_backward(self):
+        from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
+        from osiris.nclm.autograd import cross_entropy_loss
+
+        cfg = SovereignConfig(
+            dim=32, n_layers=1, n_heads=2, ff_dim=64, max_seq_len=32,
+            torsion_lock=True, phase_conjugate=True, fractal_embedding=True,
+            dropout=0.0,
+        )
+        model = SovereignTransformerV2(cfg)
+        x = np.array([[1, 2, 3, 4]], dtype=np.int64)
+        targets = np.array([[2, 3, 4, 5]], dtype=np.int64)
+        logits = model.forward(x)
+        loss = cross_entropy_loss(logits, targets)
+        loss.backward()
+        # Check at least some params got gradients
+        params_with_grad = [p for p in model.parameters() if p.grad is not None]
+        assert len(params_with_grad) > 0
+
+    def test_v2_state_dict_roundtrip(self):
+        from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
+        from osiris.nclm.autograd import no_grad
+
+        cfg = SovereignConfig(
+            dim=32, n_layers=1, n_heads=2, ff_dim=64, max_seq_len=32,
+            torsion_lock=True, phase_conjugate=True, fractal_embedding=True,
+        )
+        model = SovereignTransformerV2(cfg)
+        sd = model.state_dict()
+
+        model2 = SovereignTransformerV2(cfg)
+        model2.load_state_dict(sd)
+
+        x = np.array([[1, 2, 3, 4]], dtype=np.int64)
+        with no_grad():
+            out1 = model.forward(x).data
+            out2 = model2.forward(x).data
+        np.testing.assert_array_almost_equal(out1, out2, decimal=5)
+
+    def test_v2_backward_compat(self):
+        """V2 with all flags False should behave like V1."""
+        from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
+        from osiris.nclm.autograd import no_grad
+
+        cfg = SovereignConfig(
+            dim=32, n_layers=1, n_heads=2, ff_dim=64, max_seq_len=32,
+        )
+        model = SovereignTransformerV2(cfg)
+        x = np.array([[1, 2, 3, 4]], dtype=np.int64)
+        with no_grad():
+            logits = model.forward(x)
+        assert logits.shape == (1, 4, 256)
+        # state_dict should use standard key names
+        sd = model.state_dict()
+        assert "tok_emb.weight" in sd
+        assert "blocks.0.attn.q_proj.weight" in sd
+
+    def test_v2_generate(self):
+        from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
+
+        cfg = SovereignConfig(
+            dim=32, n_layers=1, n_heads=2, ff_dim=64, max_seq_len=32,
+            torsion_lock=True, fractal_embedding=True,
+        )
+        model = SovereignTransformerV2(cfg)
+        text = model.generate("hi", max_new_tokens=5, temperature=1.0)
+        assert isinstance(text, str)
+        assert len(text) >= 2  # at least the prompt
+
+    def test_v2_consciousness_phi(self):
+        from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
+
+        cfg = SovereignConfig(
+            dim=32, n_layers=1, n_heads=2, ff_dim=64, max_seq_len=32,
+            torsion_lock=True, phase_conjugate=True,
+        )
+        model = SovereignTransformerV2(cfg)
+        x = np.array([[1, 2, 3, 4]], dtype=np.int64)
+        phi = model.consciousness_phi(x)
+        assert 0.0 <= phi <= 2.0
+
+    def test_v2_param_count_larger_than_v1(self):
+        from osiris.nclm.transformer import (
+            SovereignTransformer, SovereignTransformerV2, SovereignConfig,
+        )
+
+        base_cfg = SovereignConfig(dim=64, n_layers=2, n_heads=2, ff_dim=128, max_seq_len=32)
+        v1 = SovereignTransformer(base_cfg)
+
+        v2_cfg = SovereignConfig(
+            dim=64, n_layers=2, n_heads=2, ff_dim=128, max_seq_len=32,
+            torsion_lock=True, phase_conjugate=True, fractal_embedding=True,
+        )
+        v2 = SovereignTransformerV2(v2_cfg)
+
+        assert v2.num_parameters() > v1.num_parameters()

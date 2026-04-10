@@ -14,7 +14,11 @@ from .core.engine import (
 from .autograd import Tensor, softmax, log_softmax, gelu, cross_entropy_loss, no_grad
 from .layers import Module, Embedding, Linear, LayerNorm, GELU, Dropout
 from .positions import phase_conjugate_positional_encoding
-from .transformer import SovereignTransformer, SovereignConfig
+from .transformer import SovereignTransformer, SovereignTransformerV2, SovereignConfig
+from .sovereign_mechanics import (
+    TorsionLockedAttention, PhaseConjugateCorrector,
+    FractalAntennaEmbedding, SovereignBlock, NegentropicTracker,
+)
 from .optimizer import AdamW, LRSchedule
 from .trainer import Trainer, TrainingConfig
 from .inference import (
@@ -34,7 +38,10 @@ __all__ = [
     # Positions
     "phase_conjugate_positional_encoding",
     # Transformer
-    "SovereignTransformer", "SovereignConfig",
+    "SovereignTransformer", "SovereignTransformerV2", "SovereignConfig",
+    # 11D-CRSM Mechanics
+    "TorsionLockedAttention", "PhaseConjugateCorrector",
+    "FractalAntennaEmbedding", "SovereignBlock", "NegentropicTracker",
     # Optimizer
     "AdamW", "LRSchedule",
     # Trainer
