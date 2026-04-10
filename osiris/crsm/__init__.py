@@ -31,6 +31,7 @@ from .tau_phase_analyzer import (
     SweepPoint,
 )
 from .bridge_cli import OsirisBridgeCLI
+from .fleet_consciousness import FleetConsciousness, FleetState
 
 
 def get_nonlocal_agent():
@@ -46,5 +47,6 @@ __all__ = [
     "AURAObserver", "AIDENExecutor", "ResolutionEngine",
     "TauPhaseAnalyzer", "AnalysisResult", "JobRecord", "SweepPoint",
     "OsirisBridgeCLI", "get_nonlocal_agent",
+    "FleetConsciousness", "FleetState",
     "LAMBDA_PHI_M", "THETA_LOCK_DEG", "PHI_THRESHOLD", "GAMMA_CRITICAL", "CHI_PC_QUALITY",
 ]

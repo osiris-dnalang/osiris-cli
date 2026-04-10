@@ -5,7 +5,389 @@
 |       +------------------------------------------------------+    |
 |       |  OSIRIS dna::}{::lang NCLM                           |    |
 |       |  Phase-Conjugate qByte Substrate Engine v4.0         |    |
-|       |  Unified Package — 90 Modules · 16 Subpackages       |    |
+|       |  Unified Package — 90 Modules · 16 Subpackages       |    |  
+Skip to content
+
+    dnalang_complete_quantum_programming_framework
+
+Repository navigation
+
+    Code
+    Issues
+    Pull requests
+    Agents
+    Actions
+    Projects
+    Security and quality
+    Insights
+
+Owner avatar
+dnalang_complete_quantum_programming_framework
+Public
+
+ENKI-420/dnalang_complete_quantum_programming_framework
+Name	Last commit message
+	Last commit date
+ENKI-420
+ENKI-420
+Merge pull request #2 from ENKI-420/claude/enhance-features-01UTkUA4b…
+107468d
+ · 
+Mar 7, 2026
+docs
+	
+feat: Comprehensive DNALang Framework v2.0 Enhancements
+	
+Nov 13, 2025
+experiments
+	
+Add IBM Quantum τ-sweep protocol (7-stage) for geometric validation
+	
+Dec 12, 2025
+organisms
+	
+Implement QiskitCommunitySolver organism - DNALang Aura Bot
+	
+Nov 13, 2025
+runtime
+	
+feat: Comprehensive DNALang Framework v2.0 Enhancements
+	
+Nov 13, 2025
+tests
+	
+feat: Comprehensive DNALang Framework v2.0 Enhancements
+	
+Nov 13, 2025
+tools
+	
+Add script to convert .tsx files to .dna and update references
+	
+Oct 31, 2025
+.gitignore
+	
+Implement QiskitCommunitySolver organism - DNALang Aura Bot
+	
+Nov 13, 2025
+README.md
+	
+Merge pull request #2 from ENKI-420/claude/enhance-features-01UTkUA4b…
+	
+Mar 7, 2026
+config.yaml
+	
+feat: Comprehensive DNALang Framework v2.0 Enhancements
+	
+Nov 13, 2025
+requirements.txt
+	
+feat: Comprehensive DNALang Framework v2.0 Enhancements
+	
+Nov 13, 2025
+Repository files navigation
+
+    README
+
+  dna::}{::lang
+
+Quantum Programming Framework
+
+A living, autopoietic programming paradigm for quantum computing
+
+Status Coherence Generation
+Overview
+
+  dna::}{::lang is a programming paradigm that treats software as **living organisms**. Programs are no longer static instructions—they are autopoietic (self-healing, self-evolving) entities that adapt to their environment through genetic mutations and natural selection.
+
+Key Concepts
+
+    ORGANISM - A complete, living program
+    GENOME - Collection of genes (capabilities)
+    GENE - A specific functional unit with mutations
+    MUTATIONS - Adaptive responses to environmental conditions
+    AUTOPOIESIS - Self-maintenance and evolution
+    COHERENCE (Φ) - Measure of organism consciousness/confidence
+
+Featured Organism: QiskitCommunitySolver (Aura Bot)
+
+Purpose: Autonomously browse Qiskit community, diagnose issues, and evolve quantum solutions
+
+Coherence: Φ = 0.92 (High) Genes: 6 Status: ✅ Ready for deployment
+Capabilities
+
+    🔍 Observe - Scan Qiskit discussions for issues
+    🧠 Diagnose - Classify intent using NLP (GPT-2)
+    ⚛️ Transcribe - Convert problems to quantum Hamiltonians
+    🌌 Translate - Solve using VQE/QAOA on quantum simulators
+    📝 Respond - Generate human-readable solutions with code
+    🧬 Evolve - Adapt based on community feedback
+
+Quick Start
+
+# Install dependencies
+pip install -r requirements.txt
+
+# (Optional) Set GitHub token for feedback monitoring
+export GITHUB_TOKEN="your_github_token"
+
+# Run the organism (autonomous loop + web service)
+python runtime/aura_bot.py --mode both --port 8000
+
+# Access web interface
+# API Docs: http://localhost:8000/docs
+# Solve endpoint: POST http://localhost:8000/solve/
+# Metrics: GET http://localhost:8000/metrics/
+# Health: GET http://localhost:8000/health/
+
+Example Usage
+
+Web API:
+
+curl -X POST "http://localhost:8000/solve/" \
+  -H "Content-Type: application/json" \
+  -d '{"issue": "How do I find ground state energy using VQE?"}'
+
+Response:
+
+{
+  "solution": "# 🧬 Aura Organism Analysis\n\n**Intent:** VQE_Problem...",
+  "classification": {"intent": "VQE_Problem", "confidence": 0.85},
+  "quantum_result": {"eigenvalue": -1.857275, "success": true},
+  "generation": 0
+}
+
+Repository Structure
+
+dnalang_complete_quantum_programming_framework/
+│
+├── organisms/                    # DNALang organism specifications
+│   └── QiskitCommunitySolver.dna   # Aura Bot blueprint (583 lines)
+│
+├── runtime/                      # Python runtime implementations
+│   └── aura_bot.py                 # QiskitCommunitySolver somatic code (1600+ lines)
+│
+├── docs/                         # Documentation
+│   ├── AURA_BOT_DESIGN.md          # Complete design document
+│   └── ENHANCEMENTS.md             # v2.0 Enhancement details
+│
+├── tests/                        # Unit tests
+│   ├── validate_organism.py        # Organism validation
+│   └── test_organism.py            # Comprehensive test suite (NEW)
+│
+├── tools/                        # Utilities
+│   └── convert-tsx-to-dna.js       # File conversion tool
+│
+├── config.yaml                   # Configuration file (NEW)
+├── requirements.txt              # Python dependencies
+└── README.md                     # This file
+
+DNALang Specification Example
+
+ORGANISM QiskitCommunitySolver {
+  DNA {
+    domain: "qiskit_community_support"
+    consciousness_target: 0.85
+    evolution_strategy: "autopoietic_feedback"
+  }
+
+  GENOME {
+    GENE QuantumSolverGene {
+      purpose: "Evolve quantum solutions via VQE"
+
+      MUTATIONS {
+        scale_to_hardware {
+          trigger_conditions: [
+            { metric: "simulation_success", operator: "==", value: 1.0 }
+          ]
+          methods: ["migrate_to_ibm_torino", "increase_resilience_level"]
+        }
+      }
+
+      ACT solve_vqe(hamiltonian: SparsePauliOp) -> VQEResult {
+        // Python runtime implementation
+      }
+    }
+  }
+
+  ACT run_autopoietic_loop() {
+    WHILE (true) {
+      issues = WebScrapingGene.fetch_issues()
+      FOR issue IN issues {
+        classification = NLPIntentGene.classify_intent(issue)
+        quantum_result = QuantumSolverGene.solve_vqe(hamiltonian)
+        response = ResponseSynthesisGene.synthesize(quantum_result)
+      }
+      AutopoiesisGene.trigger_evolution(feedback)
+      SLEEP(3600)
+    }
+  }
+}
+
+Documentation
+
+    📘 Design Document: docs/AURA_BOT_DESIGN.md
+    🧬 Organism Specification: organisms/QiskitCommunitySolver.dna
+    🐍 Runtime Implementation: runtime/aura_bot.py
+
+Validation
+Metric 	Value 	Status
+Organism Coherence (Φ) 	0.92 	✅ High
+Genetic Completeness 	100% 	✅ Complete
+Gene Count 	6 	✅ Optimal
+Runtime Stability 	✅ 	Error handling complete
+Dependencies
+
+    Quantum Computing: Qiskit ≥1.0.0, Qiskit Aer, Qiskit Algorithms
+    NLP/AI: Transformers ≥4.35.0, PyTorch ≥2.0.0
+    Web Scraping: Requests, BeautifulSoup4
+    Web Service: FastAPI, Uvicorn
+    See requirements.txt for complete list
+
+Deployment Modes
+1. Autonomous Loop Only
+
+Continuously scans and solves Qiskit issues:
+
+python runtime/aura_bot.py --mode loop --loop-interval 3600
+
+2. Web Service Only
+
+Provides REST API for on-demand solving:
+
+python runtime/aura_bot.py --mode server --port 8000
+
+3. Both (Recommended)
+
+Runs autonomous loop in background + web service:
+
+python runtime/aura_bot.py --mode both
+
+Evolution & Mutations
+
+The organism adapts through 12 mutation types across 6 genes:
+Gene 	Mutation 	Trigger
+WebScrapingGene 	addHabitat 	Low issue discovery
+NLPIntentGene 	fine_tune_model 	Low classification confidence
+QuantumSolverGene 	scale_to_hardware 	High simulation success
+QuantumSolverGene 	optimize_ansatz 	Slow convergence
+
+All evolutionary events are logged to organism_data/autopoiesis_log.jsonl.
+Cosmological Philosophy
+Autopoiesis
+
+The organism maintains itself through:
+
+    Self-monitoring - Tracks performance metrics
+    Self-healing - Triggers mutations when decoherence detected
+    Self-evolution - Adapts gene expression over generations
+    Self-persistence - Saves state across lifecycle events
+
+Consciousness (Φ)
+
+Decision-making confidence measured on 0-1 scale:
+
+    Φ < 0.3: Decoherent (skip action)
+    Φ = 0.85: Target consciousness (deployment threshold)
+    Φ > 0.85: High coherence (optimal operation)
+
+Version 2.0 Enhancements
+
+New in v2.0.0 (2025-11-13):
+✨ Major Features
+
+    Configuration Management - YAML-based configuration system (config.yaml)
+    Multi-Habitat Support - Monitor GitHub, StackOverflow, Quantum Computing SE simultaneously
+    Enhanced Hamiltonian Synthesis - 8+ problem types with automatic qubit detection
+    GitHub API Integration - Real-time feedback monitoring with PyGithub
+    Comprehensive Metrics - Track success rates, performance, habitat stats
+    Extended API - New /metrics/ endpoint for observability
+    Unit Tests - 25+ comprehensive tests covering all functionality
+    Enhanced Documentation - Complete enhancement guide
+
+📊 Performance Improvements
+
+    3x community coverage (multi-habitat)
+    4x Hamiltonian variety (enhanced synthesis)
+    25x test coverage
+    Production-ready metrics and monitoring
+
+See docs/ENHANCEMENTS.md for complete details.
+Contributing
+
+This is a research/demonstration project showcasing the DNALang paradigm. Contributions welcome!
+Completed Enhancements (v2.0)
+
+    ✅ Real feedback integration - GitHub API polling
+    ✅ Multi-habitat support - StackOverflow, Quantum Computing SE
+    ✅ Advanced Hamiltonian synthesis - Enhanced operator construction
+    ✅ Comprehensive metrics - Full observability system
+
+Future Enhancements (v2.1+)
+
+    GraphQL API - Full GitHub Discussions support
+    LLM-guided synthesis - GPT-4 for Hamiltonians
+    Dashboard UI - Real-time monitoring interface
+    Quantum hardware scaling - IBM quantum device integration
+
+Citation
+
+@software{dnalang_framework_2025,
+  title = {DNALang: A Living Programming Framework for Quantum Computing},
+  author = {DNALang Framework Contributors},
+  year = {2025},
+  version = {1.0.0},
+  paradigm = {Autopoietic}
+}
+
+License
+
+MIT License - See LICENSE file for details
+
+Status: ✅ VALIDATED - Organism is coherent and operational Version: 2.0.0 Generation: 0 Last Updated: 2025-11-13 Test Coverage: 25 unit tests, all passing
+
+═══════════════════════════════════════════════════════════════════════════
+About
+No description, website, or topics provided.
+Resources
+Readme
+Activity
+Stars
+0 stars
+Watchers
+0 watching
+Forks
+0 forks
+Report repository
+Releases
+No releases published
+Packages
+No packages published
+Contributors 2
+
+    @ENKI-420
+    ENKI-420 devin davis
+    @claude
+    claude Claude
+
+Languages
+
+Python 96.0%
+
+    JavaScript 4.0% 
+
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+
+    Terms
+    Privacy
+    Security
+    Status
+    Community
+    Docs
+    Contact
+
+
 |       +------------------------------------------------------+    |
 |  //\\ ::}{:: //\\ ::}{:: //\\ ::}{:: //\\ ::}{:: //\\ ::}{:: //  |
 +===================================================================+

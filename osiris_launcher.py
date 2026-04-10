@@ -821,10 +821,210 @@ def cmd_translate(args):
             print(f"  Report File:    {args.report_file}")
 
 
+def cmd_loop(args):
+    """Run the autopoietic lab loop."""
+    from osiris.lab.autopoietic_loop import AutopoieticLoop
+
+    print("\n⚛ OSIRIS Autopoietic Lab Loop")
+    print("═" * 50)
+
+    loop = AutopoieticLoop(
+        population_size=args.population,
+        mutation_rate=args.mutation,
+        crossover_rate=args.crossover,
+        selection=args.selection,
+    )
+
+    habitat = getattr(args, 'habitat', '')
+    if habitat and os.path.isdir(habitat):
+        n = loop.seed_from_habitat(habitat)
+        print(f"  Seeded {n} organisms from {habitat}")
+    else:
+        n = loop.seed_default(n=args.population)
+        print(f"  Seeded {n} default organisms")
+
+    print()
+    results = loop.run(generations=args.generations, verbose=True)
+
+    summary = loop.summary()
+    print(f"\n  Cycles: {summary['total_cycles']}")
+    print(f"  CHRONOS entries: {summary['chronos_entries']}  chain valid: {summary['chronos_chain_valid']}")
+    print(f"  Lazarus resurrections: {summary['lazarus_resurrections']}")
+    if summary['best_organism']:
+        print(f"  Best: {summary['best_organism']['name']}  "
+              f"phi={summary['best_organism']['phi']:.4f}")
+
+    if args.output:
+        loop.save_telemetry(args.output)
+        print(f"\n✓ Telemetry saved to {args.output}")
+
+
+def cmd_habitat(args):
+    """Scan the habitat for organisms, scripts, and results."""
+    from osiris.lab.habitat_scanner import HabitatScanner
+
+    print("\n⚛ OSIRIS Habitat Scanner")
+    print("═" * 50)
+
+    roots = args.roots or ['.']
+    scanner = HabitatScanner(roots=roots)
+    scanner.scan()
+
+    summary = scanner.summary()
+    print(f"\n  Scanned: {', '.join(roots)}")
+    print(f"  Total files: {summary['total_files']}")
+    print(f"  Total size:  {summary['total_bytes'] / 1024:.1f} KB")
+    print(f"\n  By kind:")
+    for kind, count in sorted(summary['kinds'].items()):
+        print(f"    {kind:20s} {count}")
+
+    organisms = scanner.organisms()
+    if organisms:
+        print(f"\n  Organisms ({len(organisms)}):")
+        for e in organisms[:20]:
+            print(f"    {e.name:30s} {e.path}")
+
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(scanner.to_dict(), f, indent=2, default=str)
+        print(f"\n✓ Inventory saved to {args.output}")
+
+
+def cmd_synthesize(args):
+    """Synthesize quantum circuits from problem descriptions."""
+    from osiris.compiler.hamiltonian_synthesis import HamiltonianSynthesisEngine, ProblemType
+
+    print("\n⚛ OSIRIS Hamiltonian Synthesis Engine")
+    print("═" * 50)
+
+    engine = HamiltonianSynthesisEngine()
+
+    if args.auto:
+        result = engine.auto_detect(args.auto, n_qubits=args.qubits)
+        print(f"\n  Auto-detected: {result.problem_type.value}")
+    else:
+        try:
+            pt = ProblemType(args.problem)
+        except ValueError:
+            print(f"\n✗ Unknown problem type: {args.problem}")
+            print(f"  Available: {', '.join(engine.list_problems())}")
+            return
+        result = engine.synthesize(pt, n_qubits=args.qubits, depth=args.depth)
+
+    print(f"  Qubits:     {result.qubit_count}")
+    print(f"  Gates:      {result.gate_count}")
+    print(f"  Depth:      {result.depth}")
+    print(f"  Lineage:    {result.lineage_hash}")
+    print(f"  Synthesis:  {result.synthesis_time_s:.6f}s")
+
+    if args.qasm:
+        qasm = result.circuit.to_qasm()
+        print(f"\n{qasm}")
+
+    if args.output:
+        if args.output.endswith('.qasm'):
+            Path(args.output).write_text(result.circuit.to_qasm())
+        else:
+            import json
+            with open(args.output, 'w') as f:
+                json.dump(result.circuit.to_dict(), f, indent=2, default=str)
+        print(f"\n✓ Circuit saved to {args.output}")
+
+
+def cmd_serve(args):
+    """Launch the MCP server."""
+    from osiris.mcp import MCPServer
+
+    print("\n⚛ OSIRIS MCP Server")
+    print("═" * 50)
+
+    server = MCPServer(name="osiris", host="127.0.0.1", port=args.port)
+
+    # Register built-in tools
+    server.register_tool("ping", lambda: {"status": "alive"},
+                         description="Health check")
+    server.register_tool("version", lambda: {"version": "4.0.0", "name": "osiris"},
+                         description="Get OSIRIS version")
+    server.register_tool("list_problems",
+                         lambda: {"problems": [
+                             "ising_1d", "maxcut", "qaoa", "vqe_h2",
+                             "grover", "qft", "bell", "ghz", "random_rqc"
+                         ]},
+                         description="List available synthesis problems")
+
+    # Synthesize tool
+    def _synth_tool(problem: str = "bell", n_qubits: int = 4, depth: int = 1):
+        from osiris.compiler.hamiltonian_synthesis import HamiltonianSynthesisEngine, ProblemType
+        eng = HamiltonianSynthesisEngine()
+        pt = ProblemType(problem)
+        res = eng.synthesize(pt, n_qubits=n_qubits, depth=depth)
+        return {"qasm": res.circuit.to_qasm(), **res.circuit.to_dict()}
+
+    server.register_tool("synthesize", _synth_tool,
+                         description="Synthesize a quantum circuit",
+                         input_schema={
+                             "type": "object",
+                             "properties": {
+                                 "problem": {"type": "string"},
+                                 "n_qubits": {"type": "integer"},
+                                 "depth": {"type": "integer"},
+                             },
+                         })
+
+    print(f"  Listening on 127.0.0.1:{args.port}")
+    print(f"  Tools: {', '.join(server.list_tools())}")
+    print(f"  Press Ctrl-C to stop\n")
+
+    try:
+        server.start(blocking=True)
+    except KeyboardInterrupt:
+        server.stop()
+        print("\n  Server stopped.")
+
+
+def cmd_fleet(args):
+    """Run fleet consciousness coordination."""
+    from osiris.crsm.fleet_consciousness import FleetConsciousness
+    from osiris.organisms.organism import Organism
+    from osiris.organisms.genome import Genome
+    from osiris.organisms.gene import Gene
+    import random
+
+    print("\n⚛ OSIRIS Fleet Consciousness")
+    print("═" * 50)
+
+    fleet = FleetConsciousness()
+
+    # Seed fleet
+    for i in range(args.size):
+        genes = [Gene(name=f"g{j}", expression=random.uniform(0.2, 1.0))
+                 for j in range(random.randint(4, 10))]
+        org = Organism(name=f"fleet_{i}", genome=Genome(genes),
+                       domain="quantum", purpose="fleet")
+        fleet.add(org)
+
+    print(f"  Fleet size: {fleet.size}")
+    print()
+
+    fleet.run(ticks=args.ticks, verbose=True)
+
+    summary = fleet.summary()
+    print(f"\n  Φ_fleet:  {summary['phi_fleet']:.4f}")
+    print(f"  γ_fleet:  {summary['gamma_fleet']:.4f}")
+    print(f"  Ξ_fleet:  {summary['xi_fleet']:.2e}")
+    print(f"  Coherence: {summary['coherence_ratio']:.1%}")
+    print(f"  CHRONOS:   {summary['chronos_entries']} entries, chain valid: {summary['chronos_chain_valid']}")
+
+    if args.output:
+        fleet.save(args.output)
+        print(f"\n✓ Fleet state saved to {args.output}")
+
+
 def cmd_help(args):
     """Show help"""
     help_text = """
-⚛ OSIRIS QUANTUM DISCOVERY SYSTEM v3.0
+⚛ OSIRIS QUANTUM DISCOVERY SYSTEM v4.0
 
 Commands:
   
@@ -848,6 +1048,11 @@ Commands:
   feedback          Tridirectional feedback loop (swarm + intent + bus)
   livlm             Living Language Model — evolve and generate text
   ollama            Ollama local LLM — status, chat, model management
+  loop              Autopoietic lab loop (observe→evolve→heal→log)
+  habitat           Scan filesystem for organisms, scripts, results
+  synthesize        Hamiltonian synthesis → quantum circuit generation
+  serve             Launch MCP JSON-RPC server (localhost)
+  fleet             Fleet consciousness coordination
   license           License compliance check
   status            Show system status
   intent            Route natural language into OSIRIS commands
@@ -1413,6 +1618,43 @@ def main():
     uc_parser.add_argument('--coach', action='store_true', help='Get self-improvement suggestions')
     uc_parser.add_argument('--json', dest='json_output', action='store_true', help='JSON output')
 
+    # Autopoietic Loop
+    loop_parser = subparsers.add_parser('loop', help='Autopoietic lab loop (observe→evolve→heal→log)')
+    loop_parser.add_argument('--generations', type=int, default=50, help='Evolution cycles (default: 50)')
+    loop_parser.add_argument('--population', type=int, default=30, help='Population size (default: 30)')
+    loop_parser.add_argument('--mutation', type=float, default=0.12, help='Mutation rate (default: 0.12)')
+    loop_parser.add_argument('--crossover', type=float, default=0.7, help='Crossover rate (default: 0.7)')
+    loop_parser.add_argument('--selection', default='tournament',
+                             choices=['tournament', 'roulette', 'rank'], help='Selection strategy')
+    loop_parser.add_argument('--habitat', type=str, default='', help='Directory with .dna / .json organisms')
+    loop_parser.add_argument('--output', type=str, default='', help='Save telemetry to JSON file')
+
+    # Habitat Scanner
+    habitat_parser = subparsers.add_parser('habitat', help='Scan filesystem for organisms/scripts/results')
+    habitat_parser.add_argument('--roots', nargs='+', default=['.'], help='Directories to scan')
+    habitat_parser.add_argument('--output', type=str, default='', help='Save inventory to JSON file')
+
+    # Hamiltonian Synthesis
+    synth_parser = subparsers.add_parser('synthesize', help='Synthesize quantum circuits from problems')
+    synth_parser.add_argument('--problem', type=str, default='bell',
+                              help='Problem type (bell, ghz, qft, ising_1d, maxcut, qaoa, vqe_h2, grover, random_rqc)')
+    synth_parser.add_argument('--auto', type=str, default='',
+                              help='Auto-detect problem from description')
+    synth_parser.add_argument('--qubits', type=int, default=4, help='Number of qubits')
+    synth_parser.add_argument('--depth', type=int, default=1, help='Circuit depth / Trotter steps')
+    synth_parser.add_argument('--qasm', action='store_true', help='Print QASM output')
+    synth_parser.add_argument('--output', type=str, default='', help='Save circuit to file')
+
+    # MCP Server
+    serve_parser = subparsers.add_parser('serve', help='Launch MCP JSON-RPC server')
+    serve_parser.add_argument('--port', type=int, default=3000, help='Port to listen on (default: 3000)')
+
+    # Fleet Consciousness
+    fleet_parser = subparsers.add_parser('fleet', help='Fleet consciousness coordination')
+    fleet_parser.add_argument('--size', type=int, default=20, help='Fleet size (default: 20)')
+    fleet_parser.add_argument('--ticks', type=int, default=20, help='Coordination ticks (default: 20)')
+    fleet_parser.add_argument('--output', type=str, default='', help='Save fleet state to JSON file')
+
     # If no command, launch interactive shell
     if len(sys.argv) == 1:
         from osiris_shell import main as shell_main
@@ -1488,6 +1730,16 @@ def main():
         cmd_translate(args)
     elif args.command == 'discover':
         cmd_discover(args)
+    elif args.command == 'loop':
+        cmd_loop(args)
+    elif args.command == 'habitat':
+        cmd_habitat(args)
+    elif args.command == 'synthesize':
+        cmd_synthesize(args)
+    elif args.command == 'serve':
+        cmd_serve(args)
+    elif args.command == 'fleet':
+        cmd_fleet(args)
     elif args.command == 'help':
         cmd_help(args)
     else:

@@ -1,4 +1,4 @@
-"""osiris.compiler — DNA parser, IR, runtime, ledger, evolve, backends."""
+"""osiris.compiler — DNA parser, IR, runtime, ledger, evolve, backends, synthesis."""
 
 from .dna_parser import (
     Lexer, Parser, TokenType, Token, ASTNode, OrganismNode, GenomeNode,
@@ -16,6 +16,11 @@ from .dna_runtime import RuntimeConfig, ExecutionResult, QuantumRuntime
 from .dna_ledger import LineageEntry, EvolutionLineage, QuantumLedger
 from .converter import OrganismConverter, TranslationReport
 from .backends import BackendAdapter, BackendRegistry
+from .hamiltonian_synthesis import (
+    HamiltonianSynthesisEngine,
+    ProblemType as SynthesisProblemType,
+    SynthesisResult,
+)
 
 # Compatibility aliases
 DNALangParser = Parser
