@@ -1,0 +1,14 @@
+[
+  {
+    "platform": "LocalSimulator",
+    "backend": "LocalSimulator",
+    "lambda_phi_measured": 1000528.574426897,
+    "uncertainty": 269.5022145374795,
+    "bell_fidelity": 0.8688035092960658,
+    "fidelity_uncertainty": 0.00020884073437256188,
+    "total_shots": 81920,
+    "timestamp": "2025-12-08T10:31:15.582733",
+    "raw_data_path": "/home/dnalang/dnalang-quantum-corpus-v1.0/validation_results/LocalSimulator/raw_data.json",
+    "consistent_with_claim": false
+  }
+]
