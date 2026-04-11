@@ -1,0 +1,75 @@
+{
+  "__type__": "PrimitiveResult",
+  "__value__": {
+    "pub_results": [
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydUztOxTAQXHs6TpEuIKXgISoOQAeioaBCES+IAvGeEqABTsGFiePZj1sSRbZ317uzs5Pf2/ubu4ckn/LV76flae6vuv77Y9cPXf98mN/n8e3xMO+nYr8eX5dptS8v43Faz6e784vLodudDd1P97/nRASASFm2T/fltPnKdt0lqZ+FCwOy8CIdTIRqo8Xy2Cr1gVfJjFsNmeU1m1RvOIIVxMB4qgrGLMQMSZkIGJGgOBmrt9gk/C7JEbGWNKmvai5gzcKLeQvLVk6JUDadULKvwDeC3aOYCCB6qjOH4Sn1Es8S7wHeKHTuBrDNzYk65LRZU2RYI+FyAhydoMke+shZ5WEwUyMznwNUlIqeJLmItVIDwvTIEB+GNy5o2nUCM9o5WZBNTZXraom6cNimYljdRlfNEOyHdOJLkhSDlKDkbESKSF1CBGT+9f0DIkwhcQ=="
+                    },
+                    "num_bits": 2
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      }
+    ],
+    "metadata": {
+      "execution": {
+        "execution_spans": {
+          "__type__": "ExecutionSpans",
+          "__value__": {
+            "spans": [
+              {
+                "__type__": "DoubleSliceSpan",
+                "__value__": {
+                  "start": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-07T10:00:14.346692"
+                  },
+                  "stop": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-07T10:00:15.435594"
+                  },
+                  "data_slices": {
+                    "0": [
+                      [
+                        1024
+                      ],
+                      0,
+                      1,
+                      0,
+                      1024
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "version": 2
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "__type__": "PrimitiveResult",
+  "__value__": {
+    "pub_results": [
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "meas"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "meas": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydVLFuVEEMtNcdX/G6R6QrCKJAfAAdEQ0FFTqRQxSIoLuEJuEr+GHe2/WMZ1NyOq12veuxPR6/vzefPnz87PbbHtfb0+XreX23rE8P1+thWb/dne/Px59f7s63p93+/vjjctrsl+/HX6ft/PL1qzdvD8v11WH5s/zf74VZRFjk2sL4i7zaTY3G6HZscOgvd1vTFwFoG1Dm2+qGEzZ5P4MNcCC5hMUbXnM/TtvakJtgp6f3gGNhtumc1mBsk+zyn/klXC4h20CORjisRiMzQspmcJ+e2QTVpPoKmi4VCNCDOa2jaJdCNIW5GiMVWmzVl0QIHWhD0CtoJrXSJ8ZAysPFRyQXWjKdolLxVXHZOWfxyuMOSu5aZkONVrbBtBAtSgwcDejeUqIeKAwlsUMFRWGVeIwUco5q36evb9wYfTdOEusJ9AuMyqT8TTutdI/gKBzzZs+KVOULJj8F+xGwdFDWps49J1i1r7cUl7wegfrGS/I2vZHQoLC0MtRAfoW2yr+caqikw1QtSyvZsYU6X0zQqjqIePpQWJgWne3wSSFekkPZIi9cteHm2qYuCQnLXlX50/ylq9cAzKyojqXLMpEpxmpz9QCrqlxwQVxwyGrwh/5r3kuHJVPrFIwXLr1v1aQKCEqMV9A8R9T6N4pfDCKgG9XpINOTLKw6KYJnVOE9JnZq3ITjaaZqADqYh0p0/7dJTSJzkL8zFf8AsZ0nVw=="
+                    },
+                    "num_bits": 2
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      }
+    ],
+    "metadata": {
+      "execution": {
+        "execution_spans": {
+          "__type__": "ExecutionSpans",
+          "__value__": {
+            "spans": [
+              {
+                "__type__": "DoubleSliceSpan",
+                "__value__": {
+                  "start": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-16T12:57:16.313751"
+                  },
+                  "stop": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-16T12:57:17.834134"
+                  },
+                  "data_slices": {
+                    "0": [
+                      [
+                        2048
+                      ],
+                      0,
+                      1,
+                      0,
+                      2048
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "version": 2
+    }
+  }
+}

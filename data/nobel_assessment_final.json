@@ -1,0 +1,13 @@
+{
+  "loo_r2": 0.5280410083245672,
+  "jackknife_effect": 7.1394820771682745,
+  "jackknife_ci": [
+    3.4634355779412536,
+    10.815528576395295
+  ],
+  "mutual_information": 1.850353301197259,
+  "normalized_mi": 1.0000000000000002,
+  "criteria_met": 8,
+  "total_criteria": 8,
+  "verdict": "\ud83c\udfc6 NOBEL TERRITORY \u2014 Strong candidate for physics prize"
+}

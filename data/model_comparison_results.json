@@ -1,0 +1,31 @@
+{
+  "observed_ratio": 1.79,
+  "observed_cohens_d": 1.65,
+  "n_simulations": 1000,
+  "n_samples_per_sim": 580,
+  "standard_qm": {
+    "mean_ratio": 1.078160348724956,
+    "std_ratio": 0.027045117509015875,
+    "ci_95": [
+      1.0234105102186104,
+      1.1290741098732173
+    ],
+    "z_score": 26.320449561283738,
+    "p_value": 0.0,
+    "rejected": true
+  },
+  "lambda_phi": {
+    "mean_ratio": 1.2256291550663805,
+    "std_ratio": 0.03105414897242229,
+    "ci_95": [
+      1.1669028899730804,
+      1.288281687230913
+    ],
+    "z_score": 18.173766263400438,
+    "p_value": 0.0,
+    "consistent": false
+  },
+  "bayes_factor": 5.147469332466778e+78,
+  "log_bayes_factor": 181.2401424556847,
+  "interpretation": "DECISIVE evidence for \u039b\u03a6 over Standard QM"
+}

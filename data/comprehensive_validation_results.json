@@ -1,0 +1,45 @@
+{
+  "dataset": {
+    "n_jobs": 580,
+    "n_aligned": 285,
+    "n_anti_aligned": 295
+  },
+  "primary_effect": {
+    "ratio_aligned_anti": 1.808335505288121,
+    "hedges_g": 0.688948610029458,
+    "cles": 0.6871519271292597,
+    "interpretation": "MEDIUM effect"
+  },
+  "statistical_tests": {
+    "anova_p": 1.2828361643678879e-14,
+    "kruskal_p": 2.631296273873717e-13,
+    "mann_whitney_p": 2.121754536688698e-15,
+    "n_significant_bonferroni": 3
+  },
+  "bayesian": {
+    "bayes_factor_sinusoid_vs_null": 28.094366014298313,
+    "interpretation": "STRONG evidence for \u039b\u03a6 model"
+  },
+  "period_estimation": {
+    "tau_0_estimated_us": 52.17849069056512,
+    "tau_0_95ci_us": [
+      35.801475886242095,
+      91.99999999999982
+    ],
+    "consistent_with_46us": true
+  },
+  "fourier": {
+    "dominant_frequency": 0.1,
+    "power_fraction": 0.7774626692973781,
+    "consistent_with_1_cycle": false
+  },
+  "modulation": {
+    "modulation_index": 0.4104263737390242,
+    "modulation_depth_pct": 80.6245624059154,
+    "snr": 1.371063764676546
+  },
+  "power_analysis": {
+    "required_n_99pct_power": 102,
+    "current_n_sufficient": true
+  }
+}

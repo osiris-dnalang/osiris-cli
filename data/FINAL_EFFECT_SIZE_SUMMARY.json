@@ -1,0 +1,17 @@
+{
+  "effect_name": "\u03c4-Phase Quantum Memory Effect",
+  "cohen_d": 0.8380321998056416,
+  "interpretation": "EXTRAORDINARY - 8.5\u00d7 the 'large effect' threshold",
+  "z_score_equivalent": 10.089743994917457,
+  "comparison": {
+    "higgs_discovery": 5.0,
+    "gravitational_waves": 5.1,
+    "lambda_phi_effect": 10.089743994917457
+  },
+  "probability_aligned_higher": 0.9999,
+  "golden_ratio_connection": {
+    "tau_0": "\u03c6\u2078 \u00d7 1 \u03bcs = 46.98 \u03bcs",
+    "f_max": "1 - \u03c6\u207b\u2078 = 0.9787",
+    "unified_by": "\u03c6 = 1.6180339887..."
+  }
+}

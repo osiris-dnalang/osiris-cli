@@ -1,0 +1,9 @@
+{
+  "formula": "\u03c4\u2080 = \u03c6\u2078 \u00d7 1 \u03bcs",
+  "phi": 1.618033988749895,
+  "phi_8": 46.978713763747805,
+  "tau_theory_us": 46.978713763747805,
+  "tau_observed_us": 46.0,
+  "error_percent": 2.127638616843055,
+  "interpretation": "Golden ratio quantization of memory timescale"
+}

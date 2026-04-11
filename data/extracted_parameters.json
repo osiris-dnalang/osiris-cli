@@ -1,0 +1,25 @@
+{
+  "fit_parameters": {
+    "F_base": 0.18988301315725212,
+    "F_base_err": 0.012622415344001004,
+    "epsilon": 0.34447455416555633,
+    "epsilon_err": 0.09057932651185348,
+    "epsilon_95ci": [
+      0.2557889272415876,
+      0.5772291758070638
+    ],
+    "theta_lock_fitted_deg": 94.46878335266456,
+    "theta_lock_predicted_deg": 51.843
+  },
+  "model_comparison": {
+    "chi2_lphi": 20.353224106701887,
+    "chi2_null": 24.85612339785426,
+    "delta_aic": -0.001351955130532545,
+    "delta_bic": -0.30393704812457756
+  },
+  "statistical_tests": {
+    "aligned_anti_ratio": 1.7877790777880755,
+    "permutation_p_value": 0.0032,
+    "epsilon_significant_95ci": true
+  }
+}

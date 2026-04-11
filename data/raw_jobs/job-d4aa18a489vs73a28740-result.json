@@ -1,0 +1,239 @@
+{
+  "__type__": "PrimitiveResult",
+  "__value__": {
+    "pub_results": [
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydk89uJEUMxqfWctzb828dy+tOMZ2d24CUA0GceABuIC4cOKGIDeKAWJQAF9in4IX5VR6Bbmm6psr+/Pn7XP9++/033/3QNn9t/r68f3z+6eny1fnyz5/3l7vz5ecPT388Pfz244en949j/+uHX58f2X/+5eH3R/5/ev/5F1/ene8/uzt/PP+/Z262irayrK3uTe2mVKpZullvEvt92rQQlaIpLaup5q5FmrDOrNKtpWbepJEWSbqpJ/G1NBUvl5xH5Ihyvt5My+Yaj3mqhmuLaiuraRmIuyDbXp5SXdXVTGRpRvm01uM2CxQvXZzsLAqKlb0dbRzZtvEmZfQ47Spz0pGqkNZUSZspkBlWn4AMZx/xlU0PbYZnHjNWCHvTyjpQVPS2CRj0zqvrWMVcdp27rTmoqSZU7A4RraLKyRNqIhFOn4eUbb6jdkMRdQ9ouTWWMrQJj36g2MaU34FGhTDXfUMMd6s3xOcQT1JCGppxQKdZUfYGztpyTl3agNUoQSBambrrEgkasNFW51PSzdEipMOz1TxIyIuVaNRwDGlcpCvNv4qO0TjXlX6H6QSxwKAmSnF9G9iEf7gQrV40Fmxahx6u+Rply4JDTqHhr2HNFqQQNw4eBGv064rbqDV15tDzKLpbkCq0BpqqhQNYok6qpl3T0bpeZbA2fsaU6KlxjFMRq287HY+KuuL/CTltA/M8FEAID42OHYzSzMTrsYge28agj+lQoYOIXGpPbHUIYw5jUuMu7MfMb1g2XGiM88RZC91RCVun1jrWE9vewY8OcI8KTMdENh1wkWyn/fZgk151kxjQzigOZVrecDsWxg2yiI1t01XMgTEy5yoyLswrGeOJtJNAVj0WjIwWPR0XJ9MVs018OoWcThNUaig7DVyhF6PD9P8AttBS0Q=="
+                    },
+                    "num_bits": 5
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydUj1PxDAMvQgxlOmiLPcUIXULSB0oYuIHsIFYGJhQdVfEgDjUAgvwK/jDJE7qOC0TkZwPO35+z8nPzd317b1afaw+3a4ft4O7rN3Xe+ua2j3uh7ehe3nYD7s++K+657H3/vGpe+39+aQ9O79o6va0qb/r/40jbXUYVgMafuPtOKxakT+cFc20hxYbb0ZPscVAukg4HjylgMNGgCY/VTI5nQoAojziHYsUX0fsDM1VwMcgERC1Iy5nMqMsOYYMwmBcsIoMLcXynjQkXfG2lQTIeSgyVITWqVnEA0k3MlHE1dsGovGsy1I/gOpPSnO6LL4MRZctIdJLp6fxC5ZNgGbGHBENzYn5zN+o4FUymmjG1ZQF5/SZQxgKMxQwh+KLySKb6Qg964qVNYrytFsjfzwCOCjThSqmpRL9haT8+tkwPaIpbkmaJperDF/xZsJ3rBihYP4LCc1mMA=="
+                    },
+                    "num_bits": 5
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydkz2OU0EQhPsHERD1dEvEzgzSBiwi4gBkIBICIrRijQgQIC+QAKfgwnw1Fhfg2bueN9Ovurqq3p9Xb16+fuv2w34eb09378/H54fjr+/Xx6vD8cOX87fzzed3X863J+2/uPl0d2L/7uPN1xP3j66fPH12dbh+fHX4ffi/60GZxfANa0uLZtnR7bEs9n0+9A5OK2wqojPLevVERnEaXFXNNW1WHVmRKrTSQQJnLCZ9qOyo9JoSmKAuZbTmJNQ8VrUDUzxbxrf5g8Dy8ggPcUvw9d9W11Dbe3uVr4BELDg4XFjzSSGBGpGqTjX1Ab8D2NK3elHIxUJDGpuLbgAb+EklyCIYiNVtDn1GYpbkrsuYyRLgEskom85gw6iXMkgGC9EvwUF3IfhIaO4pSjG9ByqPAI68MIAwkxgDePeClMGbtjxJveSCgshrBGoXH98WzRpa4WBzHFLxoq+mcOjKBuNnAIYDHWPkGkS3S6zogTOOuKFtcMRrQEYhhh7UliTOZMjkmBGuoGjWVPFSHakQIZdqNp4M3LI+ilp8Nq2hydwi6XIptxzbSTQoRuFOQdihUEqYqP+FZkFOsdOWgqOg9k4Wk+EocRiagE/z3o6THxCgadv91Ckmo0cZvmNILXAYUQlAfW/FONHPxzUX9oFzn6e7fJRPWbV5kg5+d1+CTqkEoiF8Ybpgw6xyXylSkHSOeCN40jDDJgLIfLD1PmA+BOWFz7qMJd9HEaQseULtWNWq/V715f0qNUWT/copAMRT7+p+D0ecu/4CJSxCiA=="
+                    },
+                    "num_bits": 5
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydUrtOxDAQDJKLAfmuTuHCXUBKQRAVH0AHoqGgQhEXRIHuUAI0wFfww9ixvfZuTlewUhLvzs4+Jv69vb+5eziqPquvZjNMT2NzZZvvj65pbfO8G9/Hfvu4GzeDj1/3r9Pg4tNL/zY4/7Q7v7hsbXfW2h/7PzuB9gYDbcJpfpT2LgKovRuhbAYU4gD35gh0qI6MVo6PTHCOIXCVoobQPVVFO/BpaPYE+AXnb70cJrRCWYBYB1oXNldUOVNRcwM3CqjZOs7Gx1XlJuks+8IsoDroVmwbNxXMpSoHNBWKkxxBn1hCSQbzkaMMQ5qMfn1OMgWDrc9AWdNQjT1XIecXvmJi5WsPnoo8LeQm/J4kucGSAmktc9Ml8e9aS+P/EbIxuCh1OkBSWf6xoEYLU/8B1j9K9Q=="
+                    },
+                    "num_bits": 5
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      },
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydUz1P3EAQvShXPHtmPW2kNO4M0hU5lIofQAdKk4IqOsEhChSiu0BD8iv4w8y82bWTlrV83p2v93bm3evV98tv1x9Wz6uX6XZ/vDlM5+P052k7bcbp7vHw+7D7+ePxcLsP+8Xu4bh3+/F+92vv55Ptl7Ovm3F7uhn/ju9bvaqoGhSDKEx9QTTXUL9QXfODAnQ09QoPNlHTztxjgLvhGf6NBH8j3aPqOZd9Nk9CYrjL95EYuFh7GZMZ0/RTbCK6twjiY25YMwWs7b8Y/IE5XGn8nZoqi7IgJK8SWF6AnNIvaSbrLizVpwtpQvM0GE89aRgkPXPsHGfGK5HwikDJdYm07JJYp6QU4Nq2UJZfSoMW6dkOdxTUQogmEwaOafUiyHKNtKLd1hlbnTFJNDQORDvQpqjkhcWENLP1os1SJxabkkDGmQpvwJEGliUe8gLJjL2BlgzMKVQ62W3TxbpKIQTCR7RpylqXHKn6avqI+kNrmk8sGamrg5KTNqYgZlTpP3OJmQ5B2qzQJtFwo661n+PypXqTaaPO4jm50sqiaiMs0YoUuFRcsmOnS7T5P+G1jUjr1IC8gVVXFUL8gXUWRe1fiEkwF50bVJqoOEEpbwl0SOQ="
+                    },
+                    "num_bits": 5
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      }
+    ],
+    "metadata": {
+      "execution": {
+        "execution_spans": {
+          "__type__": "ExecutionSpans",
+          "__value__": {
+            "spans": [
+              {
+                "__type__": "DoubleSliceSpan",
+                "__value__": {
+                  "start": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-12T14:58:50.108664"
+                  },
+                  "stop": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-12T14:58:52.645065"
+                  },
+                  "data_slices": {
+                    "0": [
+                      [
+                        1024
+                      ],
+                      0,
+                      1,
+                      0,
+                      1024
+                    ],
+                    "1": [
+                      [
+                        1024
+                      ],
+                      0,
+                      1,
+                      0,
+                      1024
+                    ],
+                    "2": [
+                      [
+                        1024
+                      ],
+                      0,
+                      1,
+                      0,
+                      1024
+                    ],
+                    "3": [
+                      [
+                        1024
+                      ],
+                      0,
+                      1,
+                      0,
+                      1024
+                    ],
+                    "4": [
+                      [
+                        1024
+                      ],
+                      0,
+                      1,
+                      0,
+                      1024
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "version": 2
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tau_phase_effect": {
+    "aligned_mean": 0.2478536452480227,
+    "anti_aligned_mean": 0.14006714342167548,
+    "ratio": 1.7695345188975076,
+    "p_value": 4.19e-321,
+    "cohens_d": 6.848556970239105
+  },
+  "phi_threshold_effect": {
+    "below_threshold_fidelity": 0.004115950457215196,
+    "above_threshold_fidelity": 0.21242554159770177,
+    "cohens_d": 1.6532560676812869
+  },
+  "golden_ratio_derivations": {
+    "tau_predicted_us": 46.978713763747805,
+    "tau_observed_us": 46,
+    "tau_error_percent": 2.127638616843055,
+    "f_max_predicted": 0.9787137637477918,
+    "f_max_observed": 0.9857536764705882,
+    "f_max_error_percent": 0.7193025155627115
+  },
+  "ccce_regime": {
+    "n_coherent_jobs": 73,
+    "max_xi": 1.148000466495132
+  },
+  "temporal_stability": {
+    "n_days": 6,
+    "drift_significant": false
+  }
+}

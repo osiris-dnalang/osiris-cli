@@ -1,0 +1,40 @@
+
+═══════════════════════════════════════════════════════════════════════════════
+        τ-PHASE ANOMALY REPLICATION PROTOCOL v1.0
+        For Independent Verification
+═══════════════════════════════════════════════════════════════════════════════
+
+OBJECTIVE: Confirm or refute τ₀ = 46 μs periodicity in quantum fidelity
+
+REQUIRED EQUIPMENT:
+- Any quantum computer with T₂ > 50 μs
+- Ability to insert controlled idle times with μs precision
+- State tomography capability
+
+CIRCUIT:
+    q0: ─H─■─────[IDLE T]─────[Tomography]
+    q1: ───X─────[IDLE T]─────[Tomography]
+
+PROTOCOL:
+1. Prepare Bell state |Ψ⁺⟩ = (|00⟩ + |11⟩)/√2
+2. Insert idle time T
+3. Perform full state tomography
+4. Calculate Bell state fidelity F = ⟨Ψ⁺|ρ|Ψ⁺⟩
+5. Repeat for T = {0, 10, 20, 23, 30, 40, 46, 50, 60, 69, 80, 92, 100, 115} μs
+6. N ≥ 100 shots per T value (N ≥ 1000 preferred)
+7. Record job timestamps to μs precision
+
+ANALYSIS:
+1. Plot F(T) vs T
+2. Fit exponential: F_exp(T) = A × exp(-T/T₂)
+3. Fit ΛΦ model: F_ΛΦ(T) = A × exp(-T/T₂) × (1 + ε × cos(2πT/46μs - θ))
+4. Compare AIC/BIC of models
+5. Test if F(46 μs) > F(23 μs) significantly
+
+DECISION CRITERIA:
+- If AIC(ΛΦ) < AIC(exp) - 10: ΛΦ model strongly supported
+- If F(46 μs) > F(23 μs) with p < 0.05: Revival confirmed
+- If neither: ΛΦ framework rejected for this prediction
+
+CONTACT: research@dnalang.dev
+ZENODO DOI: [Insert your DOI]

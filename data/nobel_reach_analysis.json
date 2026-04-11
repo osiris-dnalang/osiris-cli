@@ -1,0 +1,26 @@
+{
+  "permutation_test": {
+    "observed_diff": 0.09068970878073995,
+    "p_value": 0.0,
+    "passed": true
+  },
+  "confounder_analysis": {
+    "time_of_day_controlled": false
+  },
+  "backend_effects": {
+    "ibm_fez": {
+      "ratio": 1.0833125271385151,
+      "cohens_d": 0.1016741224527194,
+      "p_value": 0.6879320517703169,
+      "effect_direction": "positive"
+    }
+  },
+  "theoretical_predictions": {
+    "theta_lock_derived": 51.843,
+    "tau_0_predicted": 46,
+    "peak_at_46us": 0.8247569679287454,
+    "trough_at_23us": 0.7683227386513487
+  },
+  "criteria_met": 8,
+  "total_criteria": 9
+}

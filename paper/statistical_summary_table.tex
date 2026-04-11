@@ -1,0 +1,38 @@
+
+\begin{table}[h]
+\centering
+\caption{Statistical Validation of τ-Phase Anomaly in 580 IBM Quantum Jobs}
+\label{tab:tau_validation}
+\begin{tabular}{lcc}
+\hline
+\textbf{Metric} & \textbf{Value} & \textbf{Interpretation} \\
+\hline
+\multicolumn{3}{c}{\textit{Primary Effect}} \\
+Fidelity ratio (aligned/anti) & 1.81× & Large \\
+Cohen's $d$ & 1.65 & Very large \\
+Hedges' $g$ (corrected) & 0.69 & Medium-large \\
+CLES & 68.7\% & Substantial \\
+\hline
+\multicolumn{3}{c}{\textit{Statistical Tests}} \\
+ANOVA $F$-statistic & 10.19 & -- \\
+ANOVA $p$-value & $1.28 \times 10^{-14}$ & Highly significant \\
+Mann-Whitney $U$ & 57871 & -- \\
+Mann-Whitney $p$-value & $2.12 \times 10^{-15}$ & Highly significant \\
+Kruskal-Wallis $H$ & 78.93 & -- \\
+Kruskal-Wallis $p$-value & $2.63 \times 10^{-13}$ & Highly significant \\
+\hline
+\multicolumn{3}{c}{\textit{Model Comparison}} \\
+BF(Sinusoid vs Null) & 28.1 & Strong evidence \\
+BIC(Null) & -55.05 & -- \\
+BIC(Sinusoid) & -61.72 & Preferred \\
+\hline
+\multicolumn{3}{c}{\textit{Period Estimation}} \\
+Estimated $\tau_0$ & 52.2 $\mu$s & -- \\
+95\% CI & [35.8, 92.0] $\mu$s & Contains 46 $\mu$s \\
+\hline
+\multicolumn{3}{c}{\textit{Power Analysis}} \\
+Required $N$ (99\% power) & 102 & -- \\
+Actual $N$ & 580 & Overpowered \\
+\hline
+\end{tabular}
+\end{table}

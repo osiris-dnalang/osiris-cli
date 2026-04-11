@@ -1,0 +1,87 @@
+{
+  "__type__": "PrimitiveResult",
+  "__value__": {
+    "pub_results": [
+      {
+        "__type__": "SamplerPubResult",
+        "__value__": {
+          "data": {
+            "__type__": "DataBin",
+            "__value__": {
+              "field_names": [
+                "c",
+                "meas"
+              ],
+              "field_types": [
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>",
+                "<class 'qiskit.primitives.containers.bit_array.BitArray'>"
+              ],
+              "shape": [],
+              "fields": {
+                "c": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJyb7BfqGxDJyFDGUK2eklqcXKRupaBeU2qorqOgnpZfVFKUmBefX5SSChJ3S8wpTgWKF2ckFqQC+RpGBiYWOgqGmjoKtQrkAS6GUTAKRsEoGAWjYBSMOAAAIFMb8g=="
+                    },
+                    "num_bits": 3
+                  }
+                },
+                "meas": {
+                  "__type__": "BitArray",
+                  "__value__": {
+                    "array": {
+                      "__type__": "ndarray",
+                      "__value__": "eJydVbtuHDEMpERX+YrtNgGusIMUgT/AXQw3LlwZh/iCFEFs3NluEn+Ffzi7ojgz2jLC3q5E8c0h7/369tvNXbFX+zM/HE7fj/PlNP99uZh30/zj8fh83P++fzw+HFb61f7X6bDQTz/3T4fl/PHz+Zevu+ni0256m/5vfXDzZdn6tvZp7+Up7WBxs5KCXtphOdW+sX6BT3KGkFMB+YPo7T6MBtEKpDrNi6eqfMCMb2jqe0ubLj6EU8vvrJntIaegelnTrc5o6aBBAmnBtfWVur3mPtkkGcKsi5qZdEggAuQwX5kNEI3mMkuS5mCscMihIzRUSBirGvJniGXFRj+w2HEovRTwBPiSSEG0rEPLu+O8hQXLk9nsJgKF4mZGiNATC42zF4yVM0qzeIozugIoJGiEgzoYwrqpJZRWhsHkbrbEKnGNBqkbnK8JKxvnB4iggkQdkchsDhhBnokOG9g2RWNC3KpMgbQ8TAIUuquokmVBI+A6SCthWaWZ6wIyXMSsTJAV79mKGQxBYBoSq8iSo95OnLanChRd0AuyoRcyturZOibChB1tSzb7dWGEBiutXb24hIGGkxQA6uiWcSrCYeSfmFj/ByynYsLJiFrgB6ReljZKIeDxz6FYH7CCDpb+c2omBBA/oN0FSiu0+iM45Rk4RLaTXjdxjDbBLG0iOszb7POKGRCGC3yn3+gnUTs2T/qsneGkh2YUNZ1uJAUyXUa/EPIh9w8+9CdS"
+                    },
+                    "num_bits": 3
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "circuit_metadata": {}
+          }
+        }
+      }
+    ],
+    "metadata": {
+      "execution": {
+        "execution_spans": {
+          "__type__": "ExecutionSpans",
+          "__value__": {
+            "spans": [
+              {
+                "__type__": "DoubleSliceSpan",
+                "__value__": {
+                  "start": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-05T10:47:19.204311"
+                  },
+                  "stop": {
+                    "__type__": "datetime",
+                    "__value__": "2025-11-05T10:47:20.618585"
+                  },
+                  "data_slices": {
+                    "0": [
+                      [
+                        2048
+                      ],
+                      0,
+                      1,
+                      0,
+                      2048
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "version": 2
+    }
+  }
+}
