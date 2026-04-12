@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-<<<<<<< HEAD
 """
 +====================================================================+
 |  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
@@ -47,11 +46,6 @@ Usage:
   python osiris_cli.py nclm --benchmark
 """
 
-import os
-import sys
-import json
-=======
->>>>>>> a42d389e (Production enhancements, security audit, and documentation updates. No Apple or exfiltration code.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>)
 import argparse
 import asyncio
 import json
@@ -188,7 +182,6 @@ async def create_nclm_client() -> EnhancedDNALangCopilotClient:
     else:
         config = NCLMEnhancedConfig()
 
-<<<<<<< HEAD
 
 def cmd_list(args):
     """List available templates and campaigns"""
@@ -625,7 +618,6 @@ co-authored by devin phillip davis and OSIRIS dna::}{::lang NCLM
     if not args.command:
         parser.print_help()
         return 1
-=======
     # Create client with persistent state
     client = EnhancedDNALangCopilotClient(
         config=config,
@@ -1830,7 +1822,6 @@ async def do_physics_discovery(domain: str, num_principles: int, iterations: int
     print(f"Domain: {domain.replace('_', ' ').title()}")
     print(f"Principles to synthesize: {num_principles}")
     print(f"Refinement iterations: {iterations}\n")
->>>>>>> a42d389e (Production enhancements, security audit, and documentation updates. No Apple or exfiltration code.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>)
     
     try:
         from nclm.physics_discovery import PhysicsDiscoveryEngine

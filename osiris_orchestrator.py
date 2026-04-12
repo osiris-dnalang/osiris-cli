@@ -1,15 +1,5 @@
-#!/usr/bin/env python3
-"""
-OSIRIS Experiment Orchestrator
-===============================
-
-High-level workflow manager for automated discovery campaigns.
-Manages:
-  • Experiment scheduling
-  • Result tracking
-  • Validation pipelines
-  • Publishing decisions
-"""
+# DEPRECATED: Unified into osiris_cli.py
+# This file is now an alias and should not be used as an entry point.
 
 import os
 import sys

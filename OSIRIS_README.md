@@ -91,7 +91,9 @@ result = pipeline.run_hypothesis_test(config)
 
 ---
 
-### `osiris_orchestrator.py`
+### `osiris_orchestrator.py` (DEPRECATED: Use `osiris_cli.py`)
+
+This file is now deprecated. Please use `osiris_cli.py` as the unified CLI entry point for all orchestration and experiment management tasks.
 **Workflow management** - Manages:
 - Experiment campaigns (related experiments)
 - Week-1 timeline breakdown

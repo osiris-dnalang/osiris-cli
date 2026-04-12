@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'lib'))
+
+if len(sys.argv) < 2 or sys.argv[1] in ['tui', 'help']:
+    from osiris_tui import main
+    main()
+else:
+    # Run orchestrator
+    import subprocess
+    subprocess.run([sys.executable, 'bin/osiris_rqc_orchestrator.py'] + sys.argv[1:])

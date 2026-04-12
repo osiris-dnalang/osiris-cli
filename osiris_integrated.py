@@ -1,16 +1,5 @@
-#!/usr/bin/env python3
-"""
-OSIRIS Integrated Console
-======================
-
-Full integration layer connecting:
-- Chat-first TUI interface
-- Intent parsing
-- Agent orchestration
-- Quantum discovery pipeline
-- Zenodo publishing
-- Statistical validation
-"""
+# DEPRECATED: Unified into osiris_cli.py
+# This file is now an alias and should not be used as an entry point.
 
 import asyncio
 import os

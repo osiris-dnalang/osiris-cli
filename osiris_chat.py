@@ -1,15 +1,5 @@
-#!/usr/bin/env python3
-"""
-OSIRIS Chat Interface — Main Entry Point
-========================================
-
-Launches the intelligent, chat-first OSIRIS interface.
-
-Usage:
-  python osiris_chat.py              # Interactive chat session
-  python osiris_chat.py --no-tui     # Plain text mode
-  python osiris_chat.py --help       # Show help
-"""
+# DEPRECATED: Unified into osiris_cli.py
+# This file is now an alias and should not be used as an entry point.
 
 import asyncio
 import sys
