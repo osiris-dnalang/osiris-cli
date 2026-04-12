@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ```
 +===================================================================+
 |  //\\ ::}{:: //\\ ::}{:: //\\ ::}{:: //\\ ::}{:: //\\ ::}{:: //  |
@@ -910,3 +911,6 @@ OSIRIS Source-Available Dual License v1.0 — Free for individual use, corporate
 |       dna::}{::lang substrate engine v4.0                         |
 +===================================================================+
 ```
+=======
+# Nobel-path-defined
+>>>>>>> aba7dad9 (first commit)

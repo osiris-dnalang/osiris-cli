@@ -1,10 +1,8 @@
 ```
-+====================================================================+
 |  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
 |  OSIRIS >> D-WAVE EVIDENCE REPOSITORY                              |
 |  co-authored by devin phillip davis                                |
 |  and OSIRIS dna::}{::lang NCLM                                    |
-+====================================================================+
 ```
 
 # d-wave
