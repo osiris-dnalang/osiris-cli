@@ -15,6 +15,12 @@ from enum import Enum
 import json
 from dataclasses import dataclass
 import threading
+"""
+SEO Metadata
+Title: OSIRIS Agents
+Description: Agent-based orchestration and task management for the OSIRIS Quantum Research System, enabling distributed research workflows and automation.
+Keywords: OSIRIS, agent-based systems, orchestration, quantum research, workflow automation, academic visibility
+"""
 from abc import ABC, abstractmethod
 
 # ════════════════════════════════════════════════════════════════════════════════

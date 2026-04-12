@@ -22,6 +22,12 @@ import time
 import sys
 import os
 from typing import Dict, List, Any, Optional
+"""
+SEO Metadata
+Title: OSIRIS Ultra Coder
+Description: Multi-agent code generation and reasoning engine for the OSIRIS Quantum Research System, supporting advanced research automation and reproducibility.
+Keywords: OSIRIS, code generation, multi-agent systems, quantum research, reproducibility, academic visibility
+"""
 from dataclasses import dataclass, field, asdict
 from enum import Enum
 from abc import ABC, abstractmethod

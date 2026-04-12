@@ -145,6 +145,9 @@ async def create_nclm_client() -> EnhancedDNALangCopilotClient:
 
     return client
 
+from osiris_spin_system import SpinSystem
+from osiris_agents import JudgeAgent
+
 class AutoEnhanceEngine:
     """Engine for automatically enhancing prompts and responses"""
 
@@ -152,6 +155,7 @@ class AutoEnhanceEngine:
         self.client = client
         self.enhancement_history = deque(maxlen=10)
         self.feedback_loop = []
+        self.spin_system = SpinSystem()
         self.enhancement_strategies = [
             self._enhance_with_memory,
             self._enhance_with_quantum,
@@ -161,7 +165,7 @@ class AutoEnhanceEngine:
         ]
 
     async def auto_enhance_prompt(self, prompt: str, iterations: int = 3) -> Dict:
-        """Automatically enhance a prompt through multiple iterations"""
+        """Automatically enhance a prompt through multiple iterations, now with spin/entropy/chaos feedback"""
         original_prompt = prompt
         current_prompt = prompt
         enhancement_chain = []
@@ -169,13 +173,24 @@ class AutoEnhanceEngine:
         for i in range(iterations):
             logger.info(f"Auto-enhancement iteration {i+1}/{iterations}")
 
+            # Spin system step: update agent spins and tune chaos
+            self.spin_system.step()
+            entropy = self.spin_system.entropy()
+            epsilon = self.spin_system.tune_chaos()
+            logger.info(f"[SpinSystem] Entropy: {entropy:.3f}, Chaos (epsilon): {epsilon:.3f}, Spins: {self.spin_system.get_state()}")
+
+            # Select active agents based on entropy
+            from agent_selection import active_agents
+            agents = active_agents(entropy)
+            logger.info(f"[SpinSystem] Active agents: {agents}")
+
             # Analyze current prompt
             analysis = await self.client.cognitive_analysis(current_prompt)
             if analysis.get("status") != "success":
                 logger.warning(f"Failed to analyze prompt in iteration {i+1}")
                 break
 
-            # Select enhancement strategy based on analysis
+            # Select enhancement strategy based on analysis and entropy
             strategy = self._select_enhancement_strategy(analysis)
             enhanced = await strategy(current_prompt, analysis)
 
@@ -185,11 +200,25 @@ class AutoEnhanceEngine:
                 "original": current_prompt,
                 "enhanced": enhanced,
                 "strategy": strategy.__name__,
-                "analysis": analysis.get("analysis", {})
+                "analysis": analysis.get("analysis", {}),
+                "entropy": entropy,
+                "epsilon": epsilon,
+                "spins": self.spin_system.get_state(),
+                "agents": agents
             })
 
             current_prompt = enhanced
             self.enhancement_history.append(enhanced)
+
+            # Judgment operator: score reflection/response
+            judge = JudgeAgent()
+            score = judge.score(current_prompt)
+            logger.info(f"[Judge] Scored current prompt: {score}")
+
+            # Early convergence detection
+            if self.spin_system.converged():
+                logger.info("[SpinSystem] Converged. Halting enhancement loop early.")
+                break
 
         # Generate final enhanced prompt with full context
         final_enhanced = await self._generate_final_enhanced_prompt(

@@ -15,6 +15,9 @@ from typing import Any, Dict, List, Optional
 
 @dataclass
 class MemoryEntry:
+    """
+    Single memory record for Ultra-Agent, including reasoning depth and quality.
+    """
     """Single memory record."""
     task: str
     solution_hash: str
@@ -31,6 +34,9 @@ class MemoryEntry:
 
 
 class AgentMemory:
+    """
+    Append-only JSONL memory with retrieval, stats, and compute throttling support.
+    """
     """Append-only JSONL memory with simple retrieval."""
 
     def __init__(self, path: str = "artifacts/ultra_agent_memory.jsonl"):

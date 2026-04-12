@@ -27,6 +27,12 @@ except ImportError:
 
 @dataclass
 class ZenodoMetadata:
+    """
+    SEO Metadata
+    Title: OSIRIS Zenodo Publication Automation
+    Description: Automates the creation, metadata generation, and deposition of OSIRIS research outputs to Zenodo for maximum academic and institutional discoverability.
+    Keywords: quantum computing, Zenodo, metadata, research publication, OSIRIS, academic visibility, DOI, citation
+    """
     """Zenodo publication metadata"""
     title: str
     description: str

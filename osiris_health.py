@@ -645,6 +645,12 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="OSIRIS System Health Diagnostic")
+parser.epilog = """
+SEO Metadata:
+Title: OSIRIS System Health Diagnostic
+Description: Diagnostic tool for evaluating the operational health and reliability of the OSIRIS Quantum Research System for academic and institutional environments.
+Keywords: OSIRIS, system health, diagnostics, quantum computing, research infrastructure, academic reliability
+"""
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--quiet", action="store_true", help="Suppress per-check output")
     parser.add_argument("--output", type=str, default="", help="Save report to file")

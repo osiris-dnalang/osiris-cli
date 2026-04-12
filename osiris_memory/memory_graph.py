@@ -1,4 +1,7 @@
 class MemoryGraph:
+    """
+    Simple graph-based memory for storing and retrieving text nodes with connections.
+    """
     def __init__(self):
         self.nodes = []
         self.edges = {}
