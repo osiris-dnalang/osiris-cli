@@ -1,0 +1,597 @@
+#!/usr/bin/env python3
+"""
+OSIRIS Automated Discovery - Command Line Interface
+====================================================
+
+Usage:
+  
+  # Run week-1 campaign
+  python osiris_cli.py run --campaign week1_foundation
+  
+  # List available experiments
+  python osiris_cli.py list --templates
+  
+  # Run single experiment
+  python osiris_cli.py run --experiment xeb_baseline_12q
+  
+  # Publish results
+  python osiris_cli.py publish --results-dir ./discoveries --dry-run
+"""
+
+import os
+import sys
+import json
+import argparse
+import logging
+from pathlib import Path
+from typing import Optional, List
+
+# --- DNA::}{::lang integration ---
+DNA_LANG_PATH = '/home/enki/workspace/dnalang'
+if DNA_LANG_PATH not in sys.path:
+    sys.path.insert(0, DNA_LANG_PATH)
+
+# Import DNA::}{::lang modules
+try:
+    from dnalang.organism import Organism, OrganismValidationError
+    import dnalang.mutation as mutation
+    import dnalang.phenotype as phenotype
+    import dnalang.compiler as compiler
+    import dnalang.ccce_feedback as ccce_feedback
+except Exception as e:
+    print(f"[DNA::}}{{::lang import error] {e}", file=sys.stderr)
+    Organism = None  # Will error if used
+    mutation = None
+    phenotype = None
+    compiler = None
+    ccce_feedback = None
+
+logger = logging.getLogger('OSIRIS_CLI')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s'
+)
+
+def setup_environment():
+    """Check and display environment setup"""
+    
+    ibm_token = bool(os.getenv('IBM_QUANTUM_TOKEN'))
+    zenodo_token = bool(os.getenv('ZENODO_TOKEN'))
+    
+    logger.info("\n" + "="*70)
+    logger.info("OSIRIS AUTOMATED DISCOVERY - ENVIRONMENT CHECK")
+    logger.info("="*70)
+    logger.info(f"IBM Quantum Token:  {'✓' if ibm_token else '✗'} {('SET' if ibm_token else 'NOT SET')}")
+    logger.info(f"Zenodo Token:       {'✓' if zenodo_token else '✗'} {('SET' if zenodo_token else 'NOT SET')}")
+    logger.info(f"Backend:            {os.getenv('IBM_BACKEND', 'ibm_torino (default)')}")
+    logger.info("="*70 + "\n")
+    
+    if not ibm_token:
+        logger.warning("⚠ IBM_QUANTUM_TOKEN not set - will use mock execution")
+    
+    return ibm_token, zenodo_token
+
+
+def cmd_run(args):
+    """Run experiment or campaign"""
+    
+    from osiris_auto_discovery import AutoDiscoveryPipeline, ExperimentConfig
+    from osiris_orchestrator import (
+        campaign_week1_foundation, 
+        campaign_week1_adaptive,
+        WorkflowScheduler
+    )
+    
+    api_token = os.getenv('IBM_QUANTUM_TOKEN', 'mock')
+    pipeline = AutoDiscoveryPipeline(api_token, output_dir=args.output_dir)
+    
+    if args.campaign:
+        # Run named campaign
+        logger.info(f"\n➜ Running campaign: {args.campaign}\n")
+        
+        scheduler = WorkflowScheduler(pipeline)
+        
+        if args.campaign == 'week1_foundation':
+            scheduler.add_campaign(campaign_week1_foundation())
+        elif args.campaign == 'week1_adaptive':
+            scheduler.add_campaign(campaign_week1_adaptive())
+        else:
+            logger.error(f"Unknown campaign: {args.campaign}")
+            return 1
+        
+        scheduler.run_all_campaigns()
+        
+    elif args.experiment:
+        # Run single experiment config
+        logger.info(f"\n➜ Running experiment: {args.experiment}\n")
+        
+        # Parse experiment config
+        if args.config:
+            with open(args.config) as f:
+                exp_dict = json.load(f)
+        else:
+            logger.error("--config required for single experiment")
+            return 1
+        
+        config = ExperimentConfig(**exp_dict)
+        result = pipeline.run_hypothesis_test(config)
+        pipeline.save_result(result)
+        
+        report = pipeline.generate_report(result)
+        logger.info(f"\n{report}")
+    
+    else:
+        logger.error("Specify --campaign or --experiment")
+        return 1
+    
+    return 0
+
+
+def cmd_list(args):
+    """List available templates and campaigns"""
+    
+    from osiris_orchestrator import ExperimentTemplates
+    
+    logger.info("\n" + "="*70)
+    logger.info("AVAILABLE TEMPLATES")
+    logger.info("="*70)
+    
+    templates = {
+        'xeb_vs_depth': ExperimentTemplates.xeb_vs_depth(),
+        'entropy_saturation': ExperimentTemplates.entropy_saturation(),
+        'noise_robustness': ExperimentTemplates.noise_robustness(),
+    }
+    
+    for name, config in templates.items():
+        logger.info(f"\n{name}:")
+        logger.info(f"  Hypothesis: {config.get('hypothesis')}")
+        logger.info(f"  Qubits: {config.get('n_qubits')}")
+        logger.info(f"  Depth: {config.get('circuit_depth')}")
+        logger.info(f"  Trials: {config.get('trials')}")
+    
+    logger.info("\n" + "="*70)
+    logger.info("AVAILABLE CAMPAIGNS")
+    logger.info("="*70)
+    logger.info("\nweek1_foundation - Baseline measurements (XEB, entropy, noise)")
+    logger.info("week1_adaptive   - Adaptive circuit hypothesis (RQC vs RCS)")
+    
+    logger.info("\n" + "="*70 + "\n")
+    return 0
+
+
+def cmd_publish(args):
+    """Publish results to Zenodo"""
+    
+    from osiris_zenodo_publisher import PublishingWorkflow, ResultPackager
+    
+    zenodo_token = os.getenv('ZENODO_TOKEN')
+    
+    if not zenodo_token and not args.dry_run:
+        logger.error("ZENODO_TOKEN not set")
+        return 1
+    
+    # Initialize workflow
+    workflow = PublishingWorkflow(zenodo_token or 'mock', use_sandbox=True)
+    
+    # Find results
+    results_dir = Path(args.results_dir)
+    result_files = list(results_dir.glob('*_*.json'))
+    
+    if not result_files:
+        logger.warning(f"No results found in {results_dir}")
+        return 1
+    
+    logger.info(f"\nFound {len(result_files)} results")
+    
+    # TODO: Load results and publish
+    logger.info("(Publishing workflow not yet fully implemented)")
+    
+    return 0
+
+
+def cmd_status(args):
+    """Check discovery status and recent results"""
+    
+    results_dir = Path(args.results_dir)
+    
+    logger.info("\n" + "="*70)
+    logger.info("DISCOVERY STATUS")
+    logger.info("="*70 + "\n")
+    
+    result_files = list(results_dir.glob('*_*.json'))
+    
+    if not result_files:
+        logger.info("No results yet. Run experiments with: osiris_cli.py run")
+        return 0
+    
+    logger.info(f"Total Results: {len(result_files)}\n")
+    
+    # Load and summarize
+    significant = 0
+    total_p_value = 0
+    
+    for f in sorted(result_files)[-10:]:  # Last 10
+        with open(f) as fp:
+            result = json.load(fp)
+        
+        sig = result.get('passes_significance', False)
+        p_val = result.get('p_value', 0)
+        
+        if sig:
+            significant += 1
+        
+        total_p_value += p_val
+        
+        status = "✓" if sig else "✗"
+        logger.info(f"{status} {result.get('name')}: p={p_val:.2e}")
+    
+    logger.info(f"\nSignificant Results: {significant}/{len(result_files)}")
+    logger.info("="*70 + "\n")
+    
+    return 0
+
+
+def main():
+    """CLI entry point"""
+    
+    # Setup
+    ibm_token, zenodo_token = setup_environment()
+    
+    # Parser
+    parser = argparse.ArgumentParser(
+        description="OSIRIS Automated Quantum Discovery",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python osiris_cli.py run --campaign week1_foundation
+  python osiris_cli.py list --templates
+  python osiris_cli.py status --results-dir ./discoveries
+  python osiris_cli.py publish --dry-run
+  python osiris_cli.py research-loop
+        """
+    )
+    
+    subparsers = parser.add_subparsers(dest='command', help='Command')
+    
+    # RUN command
+    run_parser = subparsers.add_parser('run', help='Run experiment or campaign')
+    run_parser.add_argument('--campaign', help='Campaign name (week1_foundation, week1_adaptive)')
+    run_parser.add_argument('--experiment', help='Single experiment name')
+    run_parser.add_argument('--config', help='Experiment config JSON file')
+    run_parser.add_argument('--output-dir', default='./discoveries', help='Output directory')
+
+    # RESEARCH LOOP command
+    research_parser = subparsers.add_parser('research-loop', help='Run autonomous research loop (shots+depth)')
+    research_parser.add_argument('--iterations', type=int, default=20, help='Number of iterations (default: 20)')
+
+    # RESEARCH GRAPH command
+    graph_parser = subparsers.add_parser('research-graph', help='Run evolutionary research graph (multi-candidate)')
+    graph_parser.add_argument('--generations', type=int, default=10, help='Number of generations (default: 10)')
+    graph_parser.add_argument('--pop-size', type=int, default=5, help='Population size per generation (default: 5)')
+
+    # RESEARCH LAB command
+    lab_parser = subparsers.add_parser('research-lab', help='Run multi-agent research lab (Experimentalist, Theorist, Critic, Archivist)')
+    lab_parser.add_argument('--generations', type=int, default=15, help='Number of generations (default: 15)')
+    lab_parser.add_argument('--pop-size', type=int, default=5, help='Population size per generation (default: 5)')
+
+    args = parser.parse_args()
+
+    if args.command == 'research-loop':
+        research_loop(iterations=args.iterations)
+        return
+    if args.command == 'research-graph':
+        research_graph(generations=args.generations, pop_size=args.pop_size)
+        return
+    if args.command == 'research-lab':
+        research_lab(generations=args.generations, pop_size=args.pop_size)
+        return
+    if args.command == 'tournament-labs':
+        from osiris_tournament_labs import run_tournament_labs
+        run_tournament_labs(generations=getattr(args, 'generations', 15), pop_size=getattr(args, 'pop_size', 4))
+        return
+    run_parser.set_defaults(func=cmd_run)
+    
+    # LIST command
+    list_parser = subparsers.add_parser('list', help='List templates and campaigns')
+    list_parser.add_argument('--templates', action='store_true', help='Show templates')
+    list_parser.set_defaults(func=cmd_list)
+    
+    # PUBLISH command
+    pub_parser = subparsers.add_parser('publish', help='Publish to Zenodo')
+    pub_parser.add_argument('--results-dir', default='./discoveries', help='Results directory')
+    pub_parser.add_argument('--dry-run', action='store_true', help='Dry run (no actual publish)')
+    pub_parser.set_defaults(func=cmd_publish)
+    
+    # STATUS command
+    status_parser = subparsers.add_parser('status', help='Check discovery status')
+    status_parser.add_argument('--results-dir', default='./discoveries', help='Results directory')
+    status_parser.set_defaults(func=cmd_status)
+    
+    # EXEC subcommand (safe shell execution)
+    exec_parser = subparsers.add_parser('exec', help='Execute a safe shell command (allowlist only)')
+    exec_parser.add_argument('cmd', nargs='+', help='Shell command to execute (allowlist enforced)')
+    exec_parser.set_defaults(func=cmd_exec)
+
+    # DNA::}{::lang subcommand
+    dna_parser = subparsers.add_parser('dna', help='DNA::}{::lang organism operations')
+    dna_parser.add_argument('--action', required=True, choices=['compile', 'mutate', 'phenotype', 'evolve_ccce'], help='Action to perform')
+    dna_parser.add_argument('--file', required=True, help='Path to .dna file (JSON for prototype)')
+    dna_parser.add_argument('--target', default='qasm', help='Target substrate (qasm, gcode, etc.)')
+    dna_parser.set_defaults(func=cmd_dna)
+
+    # TOURNAMENT LABS command
+    tournament_parser = subparsers.add_parser('tournament-labs', help='Run competing labs (tournament mode)')
+    tournament_parser.add_argument('--generations', type=int, default=15, help='Number of generations (default: 15)')
+    tournament_parser.add_argument('--pop-size', type=int, default=4, help='Population size per lab (default: 4)')
+
+    # Parse
+    args = parser.parse_args()
+    
+    if not args.command:
+        parser.print_help()
+        return 1
+    
+    try:
+        return args.func(args)
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        return 1
+
+def cmd_exec(args):
+    """Safely execute an allowlisted shell command and print output"""
+    import subprocess
+    ALLOWLIST = {'echo', 'ls', 'python3', 'pip', 'cat', 'head', 'tail'}
+    cmd = args.cmd
+    if not cmd or cmd[0] not in ALLOWLIST:
+        print(f"[SECURITY] Command '{' '.join(cmd)}' not allowed.")
+        return 1
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print(result.stdout.strip())
+        return 0
+    except subprocess.CalledProcessError as e:
+        print(f"[ERROR] Command failed: {e}")
+        print(e.stderr.strip())
+        return 1
+
+def cmd_dna(args):
+    """DNA::}{::lang organism operations"""
+    if Organism is None:
+        logger.error("DNA::}{::lang library not available.")
+        return 1
+    # Read .dna file
+    with open(args.file) as f:
+        source = f.read()
+    # Parse organism (mock parser: expects JSON dict for now)
+    try:
+        org_dict = json.loads(source)
+        org = Organism(org_dict['name'], org_dict['genome'], org_dict['behavior'])
+    except Exception as e:
+        logger.error(f"Failed to parse organism: {e}")
+        return 1
+    if args.action == 'compile':
+        out = compiler.compile_organism(org, args.target)
+        print(out)
+    elif args.action == 'mutate':
+        mutated = mutation.evolve_organism(org)
+        print(mutated.summary())
+    elif args.action == 'phenotype':
+        pheno = phenotype.simulate_phenotype(org)
+        print(pheno)
+    elif args.action == 'evolve_ccce':
+        def dummy_feedback(o):
+            return 0.9  # Replace with real CCCE metric
+        evolved = ccce_feedback.evolve_with_ccce_feedback(org, dummy_feedback)
+        print(evolved.summary())
+    else:
+        logger.error(f"Unknown action: {args.action}")
+        return 1
+    return 0
+
+def research_lab(generations=15, pop_size=5):
+    """Multi-agent research lab: Experimentalist, Theorist, Critic, Archivist."""
+    import random, json, os
+    MEMORY_FILE = "research_memory.json"
+
+    def load_memory():
+        if os.path.exists(MEMORY_FILE):
+            with open(MEMORY_FILE, "r") as f:
+                return json.load(f)
+        return []
+
+    def save_memory(memory):
+        with open(MEMORY_FILE, "w") as f:
+            json.dump(memory, f, indent=2)
+
+    def run_experiment(shots, depth):
+        base_error = (1 / (shots ** 0.5)) + (depth * 0.002)
+        noise = random.uniform(0.0, 0.015)
+        return base_error + noise
+
+    # --- Agents ---
+    def experimentalist(config):
+        error = run_experiment(config["shots"], config["depth"])
+        return {**config, "error": error}
+
+    def mutate(config):
+        return {
+            "shots": max(128, int(config["shots"] * random.uniform(0.8, 1.2))),
+            "depth": max(1, int(config["depth"] * random.uniform(0.8, 1.2)))
+        }
+
+    def crossover(a, b):
+        return {
+            "shots": a["shots"],
+            "depth": b["depth"]
+        }
+
+    def theorist(population, memory):
+        best = sorted(population, key=lambda x: x["error"])[:2]
+        candidates = []
+        for b in best:
+            candidates.append(mutate(b))
+        if len(best) > 1:
+            candidates.append(crossover(best[0], best[1]))
+        # Fill with randoms if needed
+        while len(candidates) < pop_size:
+            candidates.append({
+                "shots": random.choice([128, 256, 512, 1024, 2048, 4096]),
+                "depth": random.choice([5, 10, 20, 40])
+            })
+        return candidates
+
+    def critic(population):
+        errors = [p["error"] for p in population]
+        trend = "improving" if errors[-1] < errors[0] else "flat"
+        return {
+            "best": min(errors),
+            "avg": sum(errors)/len(errors),
+            "trend": trend
+        }
+
+    def archivist(memory, results):
+        memory.extend(results)
+        return memory
+
+    # --- Lab Loop ---
+    population = [
+        {"shots": random.choice([128, 256, 512, 1024, 2048, 4096]), "depth": random.choice([5, 10, 20, 40])}
+        for _ in range(pop_size)
+    ]
+    memory = load_memory()
+
+    for generation in range(generations):
+        print(f"\n⚛️ Generation {generation+1}")
+        # 🔬 Experimentalist runs
+        results = [experimentalist(c) for c in population]
+        # 🧬 Archivist stores
+        memory = archivist(memory, results)
+        # ⚖️ Critic evaluates
+        report = critic(results)
+        print(f"Best: {report['best']:.5f} | Avg: {report['avg']:.5f} | Trend: {report['trend']}")
+        # 🧠 Theorist proposes
+        population = theorist(results, memory)
+    save_memory(memory)
+    # Only consider valid experiment records for best
+    valid = [x for x in memory if 'error' in x]
+    if valid:
+        best = min(valid, key=lambda x: x["error"])
+        print("\n🚀 FINAL BEST")
+        print(best)
+        print(f"\n🧠 Generations: {generations} | Population per gen: {pop_size}")
+        print(f"Best error: {best['error']:.5f}")
+        print(f"Best config: shots={best['shots']}, depth={best['depth']}")
+    else:
+        print("\n⚠️ No valid experiment records found in memory.")
+
+def agent_core(goal: str, max_steps: int = 5):
+    """Minimal autonomous agent loop with persistent memory and critic."""
+    import subprocess, json, os
+
+    MEMORY_FILE = "osiris_memory.json"
+    def load_memory():
+        if os.path.exists(MEMORY_FILE):
+            with open(MEMORY_FILE, "r") as f:
+                return json.load(f)
+        return {"tasks": [], "failures": [], "success_patterns": []}
+    def save_memory(memory):
+        with open(MEMORY_FILE, "w") as f:
+            json.dump(memory, f, indent=2)
+
+    ALLOWED = ["echo", "ls", "python3"]
+    state = {"history": [], "last_result": None, "goal": goal}
+    memory = load_memory()
+
+    def simple_plan(state, memory):
+        # Use past success patterns if available
+        for pat in memory["success_patterns"]:
+            if pat["goal"] in state["goal"]:
+                return {
+                    "action": f"Use known working command for {state['goal']}",
+                    "tool": "shell",
+                    "input": pat["working_cmd"],
+                    "success_condition": ""
+                }
+        # Otherwise, hardcoded
+        if "list files" in state["goal"]:
+            return {
+                "action": "List files in current directory",
+                "tool": "shell",
+                "input": "ls",
+                "success_condition": ""
+            }
+        elif "print hello" in state["goal"]:
+            return {
+                "action": "Print hello",
+                "tool": "shell",
+                "input": "echo hello",
+                "success_condition": "hello"
+            }
+        else:
+            return {
+                "action": "Unknown",
+                "tool": "shell",
+                "input": "echo unknown goal",
+                "success_condition": "unknown goal"
+            }
+
+    def run_shell(cmd):
+        if not any(cmd.startswith(a) for a in ALLOWED):
+            return {"error": "command not allowed"}
+        try:
+            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            return {
+                "stdout": result.stdout.strip(),
+                "stderr": result.stderr.strip(),
+                "code": result.returncode
+            }
+        except Exception as e:
+            return {"error": str(e)}
+
+    def critic_evaluate(goal, plan, result):
+        # Minimal critic: success if code==0 and output exists
+        if result.get("code", 1) == 0 and (result.get("stdout") or plan["success_condition"] in result.get("stdout", "")):
+            return {"success": True, "reason": "Command succeeded", "improvement": ""}
+        else:
+            reason = result.get("stderr") or result.get("error") or "No output"
+            return {"success": False, "reason": reason, "improvement": f"Try a different command for: {goal}"}
+
+    for step in range(max_steps):
+        plan = simple_plan(state, memory)
+        if plan["tool"] == "shell":
+            result = run_shell(plan["input"])
+        else:
+            result = {"error": "unknown tool"}
+        state["history"].append({"plan": plan, "result": result})
+        state["last_result"] = result
+        print(f"[step {step+1}] action: {plan['input']}")
+        print(f"[step {step+1}] result: {result['stdout'] if 'stdout' in result else result}")
+        critique = critic_evaluate(state["goal"], plan, result)
+        if critique["success"]:
+            print("✅ Goal achieved\n", result)
+            # Persist memory
+            memory["tasks"].append({"goal": state["goal"], "actions": state["history"], "result": state["last_result"]})
+            memory["success_patterns"].append({"goal": state["goal"], "working_cmd": plan["input"]})
+            save_memory(memory)
+            return True
+        else:
+            print(f"[critic] {critique['reason']}")
+            state["feedback"] = critique["improvement"]
+            memory["failures"].append({"cmd": plan["input"], "error": result.get("stderr")})
+    print("❌ Failed after retries")
+    save_memory(memory)
+    return False
+
+def agent_core_cli():
+    import argparse
+    parser = argparse.ArgumentParser(description="Minimal agent core loop")
+    parser.add_argument('--goal', required=True, help='Goal for the agent loop')
+    args = parser.parse_args()
+    agent_core(args.goal)
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == 'agent-core':
+        sys.argv.pop(1)
+        agent_core_cli()
+    else:
+        sys.exit(main())

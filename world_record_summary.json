@@ -1,0 +1,38 @@
+{
+  "batch_info": {
+    "total_circuits": 2,
+    "total_qubits": 8
+  },
+  "circuits": [
+    {
+      "name": "rqc_iteration_0",
+      "qubits": 8,
+      "depth": 4,
+      "lines": 95,
+      "gates": 74,
+      "entanglement_ratio": 1.0,
+      "hardness_score": 40.0,
+      "metadata": {
+        "seed": 42,
+        "include_feedback": true,
+        "include_barriers": true,
+        "generated_at": "osiris-cli"
+      }
+    },
+    {
+      "name": "rqc_iteration_1",
+      "qubits": 8,
+      "depth": 6,
+      "lines": 134,
+      "gates": 106,
+      "entanglement_ratio": 1.0,
+      "hardness_score": 60.0,
+      "metadata": {
+        "seed": 142,
+        "include_feedback": true,
+        "include_barriers": true,
+        "generated_at": "osiris-cli"
+      }
+    }
+  ]
+}

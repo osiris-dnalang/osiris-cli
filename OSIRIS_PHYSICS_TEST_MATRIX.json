@@ -1,0 +1,10 @@
+{
+  "framework": "Falsifiable Physics Test Suite",
+  "purpose": "Distinguish classical adaptive sampling from exotic quantum effects",
+  "n_tests": 6,
+  "interpretation_guide": {
+    "all_classical_predictions_hold": "Confirm: Adaptive sampling hypothesis (null)",
+    "one_exotic_prediction_significant": "Investigate: Potential quantum nonlinearity",
+    "multiple_exotic_predictions": "Claim: Evidence for exotic physics (publish in Nature Physics)"
+  }
+}

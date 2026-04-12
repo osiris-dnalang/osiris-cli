@@ -1,0 +1,4 @@
+{
+  "refined_prompt": "generate living organisms and qbyte mine\n\n[Context: Implementation phase | Domains: general | Coherence: 0.49]\n\n[RECURSIVE REFINEMENT 1] Use prior context for deeper terms.\n\n[RECENT CONTEXT] Infer result for: generate living organisms and qbyte mine\n\nSuggested Actions:\n- zenodo_scan\n\nPhysics Model: MockIsingModel\n",
+  "iterations": 1
+}

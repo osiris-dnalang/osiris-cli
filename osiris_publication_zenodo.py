@@ -190,9 +190,20 @@ class ZenodoPublisher:
     def create_deposition(self, metadata: ZenodoMetadata) -> Dict:
         """Create new Zenodo deposition"""
         if not self.token:
-            print("⚠️  ZENODO_TOKEN not set - using mock publication mode")
-            return {
-                "id": 9999999,
+            print("⚠️  ZENODO_TOKEN not set.\n\n---\nOSIRIS wants to publish the following research to Zenodo:\n")
+            print(json.dumps(asdict(metadata), indent=2))
+            approval = input("\nApprove publication and provide Zenodo token? [y/N]: ").strip().lower()
+            if approval == 'y':
+                token = input("Paste your Zenodo API token: ").strip()
+                if token:
+                    self.token = token
+                else:
+                    print("❌ No token provided. Aborting publication.")
+                    return {"id": 0}
+            else:
+                print("❌ Publication not approved. Aborting.")
+                return {"id": 0}
+
                 "doi": "10.5281/zenodo.9999999",
                 "doi_url": "https://zenodo.org/record/9999999",
                 "links": {"html": "https://zenodo.org/record/9999999"}
@@ -228,6 +239,9 @@ class ZenodoPublisher:
         if not self.token:
             print(f"   📤 (Mock) Would upload: {os.path.basename(filepath)}")
             return True
+        if self.token == '':
+            print("❌ No Zenodo token provided. Aborting upload.")
+            return False
         
         if not REQUESTS_AVAILABLE:
             return False
@@ -254,13 +268,9 @@ class ZenodoPublisher:
     
     def publish(self, deposition_id: int) -> Optional[str]:
         """Publish the deposition and get DOI"""
-        if not self.token:
-            # Mock publication
-            doi = f"10.5281/zenodo.{9000000 + hash(str(datetime.now())) % 1000000}"
-            self.doi = doi
-            print(f"\n✅ (Mock) Publication successful!")
-            print(f"   DOI: {doi}")
-            return doi
+        if not self.token or self.token == '':
+            print("❌ No Zenodo token provided. Aborting publication.")
+            return None
         
         if not REQUESTS_AVAILABLE:
             return None

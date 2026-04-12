@@ -12,3 +12,11 @@ textual>=0.40.0
 trimesh>=4.0.0
 paho-mqtt>=1.6.0
 zeroconf>=0.80.0
+certifi==2026.2.25
+charset-normalizer==3.4.7
+idna==3.11
+numpy==2.4.4
+osiris-cli==0.1.0
+requests==2.33.1
+urllib3==2.6.3
+>>>>>>> a42d389e (Production enhancements, security audit, and documentation updates. No Apple or exfiltration code.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>)

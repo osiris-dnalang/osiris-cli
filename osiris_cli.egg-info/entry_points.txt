@@ -1,0 +1,2 @@
+[console_scripts]
+osiris = osiris_env.launcher:main

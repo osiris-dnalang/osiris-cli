@@ -288,13 +288,13 @@ class OsirisApp:
             )
             
             if self.pipeline:
-                # Execute (mock if no token)
+                # Execute (requires valid token)
                 result = self.pipeline.run_hypothesis_test(config)
                 response += f"✓ Experiment complete!\n"
                 response += f"p-value: {result.get('p_value', 'N/A')}\n"
                 response += f"Effect size: {result.get('effect_size', 'N/A')}\n"
             else:
-                response += "⚠ Pipeline not initialized"
+                response += "❌ Pipeline not initialized or missing credentials. Please configure all required tokens."
         
         except Exception as e:
             response = f"⚠ Experiment error: {e}"

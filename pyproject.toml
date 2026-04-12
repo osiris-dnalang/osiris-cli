@@ -141,3 +141,20 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osiris-cli"
+version = "0.1.0"
+dependencies = [
+    "numpy",
+    "requests",
+]
+
+[tool.setuptools.packages.find]
+include = ["nclm*", "osiris_env*", "quantum_discovery*"]
+
+[project.scripts]
+osiris = "osiris_env.launcher:main"
+>>>>>>> a42d389e (Production enhancements, security audit, and documentation updates. No Apple or exfiltration code.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>)

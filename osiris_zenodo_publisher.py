@@ -31,18 +31,15 @@ class ZenodoPubisher:
     """Publish experiment results to Zenodo"""
     
     # Zenodo endpoints
-    SANDBOX_URL = "https://sandbox.zenodo.org"
     PRODUCTION_URL = "https://zenodo.org"
     
-    def __init__(self, access_token: str, use_sandbox: bool = True):
-        """Initialize Zenodo client"""
+    def __init__(self, access_token: str):
+        """Initialize Zenodo client (production only)"""
         self.token = access_token
-        self.base_url = self.SANDBOX_URL if use_sandbox else self.PRODUCTION_URL
+        self.base_url = self.PRODUCTION_URL
         self.api_url = f"{self.base_url}/api/deposit/depositions"
         self.headers = {"Content-Type": "application/json"}
-        self.use_sandbox = use_sandbox
-        
-        logger.info(f"✓ Initialized Zenodo client ({'sandbox' if use_sandbox else 'production'})")
+        logger.info(f"✓ Initialized Zenodo client (production)")
     
     def _auth_headers(self) -> Dict[str, str]:
         """Get authenticated headers"""
@@ -283,14 +280,13 @@ class AutoPublishDecision:
 class PublishingWorkflow:
     """Complete publishing workflow"""
     
-    def __init__(self, zenodo_token: str, use_sandbox: bool = True):
-        self.zenodo = ZenodoPubisher(zenodo_token, use_sandbox=use_sandbox)
+    def __init__(self, zenodo_token: str):
+        self.zenodo = ZenodoPubisher(zenodo_token)
         self.packager = ResultPackager()
         self.decision = AutoPublishDecision()
     
     def publish_result(self, result, report_md: str, 
-                      campaign: str = "OSIRIS",
-                      dry_run: bool = False) -> Optional[Dict]:
+                      campaign: str = "OSIRIS") -> Optional[Dict]:
         """Publish a single result"""
         
         logger.info(f"\n{'='*70}")
@@ -309,9 +305,7 @@ class PublishingWorkflow:
             logger.info("⚠ Will NOT publish (criteria not met)")
             return None
         
-        if dry_run:
-            logger.info("(DRY RUN - not actually publishing)")
-            return None
+
         
         logger.info("\n→ Proceeding with publication...\n")
         
@@ -358,7 +352,7 @@ class PublishingWorkflow:
         
         return None
     
-    def publish_campaign(self, campaign, results: List, dry_run: bool = True):
+    def publish_campaign(self, campaign, results: List):
         """Publish all results from a campaign"""
         
         logger.info(f"\n{'='*70}")
@@ -374,8 +368,7 @@ class PublishingWorkflow:
             
             if should_publish:
                 logger.info(f"✓ {result.name}: ELIGIBLE")
-                if not dry_run:
-                    self.publish_result(result, "", campaign.campaign_name)
+                self.publish_result(result, "", campaign.campaign_name)
                 published += 1
             else:
                 logger.info(f"✗ {result.name}: {reason}")
@@ -394,14 +387,10 @@ def main():
     """Example: publish a result"""
     
     zenodo_token = os.getenv('ZENODO_TOKEN')
-    
     if not zenodo_token:
-        logger.warning("ZENODO_TOKEN not set - using sandbox")
-        zenodo_token = "test_token"
-    
-    # Initialize workflow
-    workflow = PublishingWorkflow(zenodo_token, use_sandbox=True)
-    
+        logger.error("ZENODO_TOKEN not set. Please set your production Zenodo access token.")
+        return
+    workflow = PublishingWorkflow(zenodo_token)
     logger.info("Zenodo Publishing Integration Ready")
     logger.info("Use: workflow.publish_result() to publish")
 

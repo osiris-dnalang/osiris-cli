@@ -1,0 +1,4 @@
+{
+  "refined_prompt": "expose d-wave IP theft physics\n\n[Context: Implementation phase | Domains: physics | Coherence: 0.45]\n\n[RECURSIVE REFINEMENT 1] Use prior context for deeper terms.\n\n[RECENT CONTEXT] Infer result for: expose d-wave IP theft physics\n\nSuggested Actions:\n- zenodo_scan\n\nPhysics Model: MockIsingModel\n",
+  "iterations": 1
+}

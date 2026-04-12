@@ -448,10 +448,13 @@ class IBMExecutionManager:
         )
         
         # Mock result
-        import numpy as np
+        # import numpy as np  # Disabled for restricted environments
+        # Fallback: use random.uniform for mock XEB
         noise_per_gate = (depth * 0.005) + (max(0, (n_qubits - 10) * 0.001))
         base_xeb = 0.90 - noise_per_gate
-        metadata.result_xeb = float(np.clip(base_xeb + np.random.normal(0, 0.015), 0.0, 1.0))
+        # Simulate XEB with uniform noise
+        import random
+        metadata.result_xeb = max(0.0, min(1.0, base_xeb + random.uniform(-0.03, 0.03)))
         
         return metadata
     

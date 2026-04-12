@@ -1,0 +1,16 @@
+
+def main():
+    tf = TetrahedralField()
+
+    for epoch in range(10):
+        tf.step(beta=0.5)
+
+        summary = tf.summary()
+
+        print(f"\n⚛ Epoch {epoch}")
+        for k, v in summary.items():
+            print(f"{k}: {v}")
+
+
+if __name__ == "__main__":
+    main()
