@@ -1,4 +1,20 @@
 import numpy as np
+import sys
+import time
+
+class StreamBus:
+    def __init__(self):
+        self.subscribers = []
+
+    def emit(self, agent, message, delay=0.01):
+        prefix = f"[{agent}] "
+        for char in prefix + message:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(delay)
+        print()
+
+stream = StreamBus()
 
 def softmax(x):
     e = np.exp(x - np.max(x))
