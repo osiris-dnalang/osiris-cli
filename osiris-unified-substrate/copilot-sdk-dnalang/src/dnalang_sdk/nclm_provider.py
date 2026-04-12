@@ -252,7 +252,7 @@ class NCLMModelProvider:
         from urllib.request import urlopen
         from .network_policy import ensure_allowed_url
 
-        template = "localhost/PURIFIED
+        template = "localhost/PURIFIED"
         params = {
             "q": query,
             "size": max_results,
@@ -286,14 +286,14 @@ class NCLMModelProvider:
                     "title": f"Mock Nature Physics discovery for: {query}",
                     "authors": ["Devin Phillip Davis"],
                     "doi": "10.1234/mockzenodo.1",
-                    "url": "localhost/PURIFIED
+                    "url": "localhost/PURIFIED"
                 },
                 {
                     "id": "mock-zenodo-2",
                     "title": f"Mock arXiv-style exposition for: {query}",
                     "authors": ["Agile Defense Systems"],
                     "doi": "10.1234/mockzenodo.2",
-                    "url": "localhost/PURIFIED
+                    "url": "localhost/PURIFIED"
                 },
             ]
 

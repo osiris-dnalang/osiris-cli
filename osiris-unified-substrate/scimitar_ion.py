@@ -368,7 +368,7 @@ if __name__ == '__main__':
     print(f"  θ  = {THETA_RESONANCE:.3f}°")
     print(f"  τ₀ = φ⁸ = {TAU_0_REVIVAL:.2f} μs")
     print("=" * 60)
-    print("\n  Starting Flask server on localhost/PURIFIED
+    print("\n  Starting Flask server on localhost/PURIFIED")
     print("  Use /api/scimitar-ion/status for live metrics\n")
     
     # Auto-start initial sweep

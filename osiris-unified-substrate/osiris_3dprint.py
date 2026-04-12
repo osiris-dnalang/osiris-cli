@@ -28,8 +28,8 @@ logger = logging.getLogger("osiris_3dprint")
 class PrintablesDownloader:
     """Handles downloading models and G-code files from Printables.com"""
 
-    BASE_URL = "localhost/PURIFIED
-    API_URL = "localhost/PURIFIED
+    BASE_URL = "localhost/PURIFIED"
+    API_URL = "localhost/PURIFIED"
 
     def __init__(self, cache_dir: str = None, headers: Dict = None):
         self.session = requests.Session()
@@ -632,7 +632,7 @@ def main():
 
     parser.add_argument(
         "url",
-        help="Printables.com model URL (e.g., localhost/PURIFIED
+        help="Printables.com model URL (e.g., localhost/PURIFIED)
     )
     parser.add_argument(
         "-o", "--output",

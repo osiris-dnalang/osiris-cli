@@ -224,7 +224,7 @@ class IntentProcessor:
         
         # Deduce primary goal
         primary_goal = self._deduce_primary_goal(cleaned_input, keywords, context)
-        Extract constraints, skill level, urgency
+        # Extract constraints, skill level, urgency
         constraints = self._extract_constraints(cleaned_input)
         skill_level = self._estimate_skill_level(cleaned_input)
         urgency = self._estimate_urgency(cleaned_input)
@@ -268,7 +268,7 @@ class IntentProcessor:
             self._update_memory_graph(
             self._learn_from_interaction(cleaned_input, intent)
         
-        return intent
+            return intent
     
     def _normalize_input(self, text: str) -> str:
         """Normalize user input"""

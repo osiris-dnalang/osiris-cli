@@ -291,7 +291,7 @@ def tool_github_repos(owner: str, limit: int = 20) -> Dict:
     return {
         "owner": owner,
         "repos": [
-            {"name": f"repo-{i}", "stars": 100+i*10, "url": f"localhost/PURIFIED
+            {"name": f"repo-{i}", "stars": 100+i*10, "url": f"localhost/PURIFIED"}
             for i in range(limit)
         ],
     }
