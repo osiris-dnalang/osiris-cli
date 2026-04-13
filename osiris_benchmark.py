@@ -11,6 +11,8 @@ Brutal Proof Benchmark for OSIRIS
 
 import time
 import random
+import human_eval.data
+import human_eval.evaluation
 
 # --- Role-separated streaming ---
 def stream(role, msg):
@@ -81,6 +83,16 @@ if __name__ == "__main__":
     print("=== OSIRIS BENCHMARK ===\n")
     # Example expected outputs for independent scoring
     expected = {'correctness': 0.9}
+
+    # --- HumanEval Benchmark ---
+    print("--- HumanEval Benchmark ---")
+    problems = dict(human_eval.data.read_problems())
+    print(f"Loaded {len(problems)} HumanEval problems.")
+    if problems:
+        first_id, first_problem = next(iter(problems.items()))
+        print(f"Sample problem ID: {first_id}")
+        print(f"Prompt: {first_problem['prompt'][:100]}...")
+    print("(Integrate model code generation and evaluation here)")
 
     # Hard Task
     print("--- Hard Task ---")
