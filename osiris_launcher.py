@@ -1438,6 +1438,9 @@ def main():
     intent_parser = subparsers.add_parser('intent', help='Route natural language into OSIRIS commands')
     intent_parser.add_argument('--text', required=True, help='Natural language instruction')
     intent_parser.add_argument('--no-llm', action='store_true', help='Disable LLM fallback for intent routing')
+    intent_parser.add_argument('--dry-run', action='store_true', help='Print intent graph without executing')
+    intent_parser.add_argument('--execute', action='store_true', help='Execute leaf actions in plan (requires --confirm)')
+    intent_parser.add_argument('--confirm', action='store_true', help='Confirm execution (required with --execute)')
 
     # Publish command
     publish_parser = subparsers.add_parser('publish', help='Publish results to Zenodo')
@@ -1804,7 +1807,24 @@ def main():
     elif args.command == 'status':
         cmd_status(args)
     elif args.command == 'intent':
-        cmd_intent(args)
+        # Extended intent handling: use decomposer if available
+        try:
+            from osiris_intent_recursive import decompose, execute_graph
+            graph = decompose(args.text, target='.')
+            if getattr(args, 'dry_run', False) or not getattr(args, 'execute', False):
+                import json
+                print(json.dumps(graph, indent=2))
+                if getattr(args, 'execute', False) and not getattr(args, 'confirm', False):
+                    print('\n✗ Execution requires --confirm. Aborting execution (dry-run).')
+                elif getattr(args, 'execute', False) and getattr(args, 'confirm', False):
+                    res = execute_graph(graph, confirm=True)
+                    print(json.dumps({'execution_results': res}, indent=2))
+            else:
+                # fallback to existing router if decomposer not present
+                cmd_intent(args)
+        except Exception:
+            # If critical modules are missing, fall back to original behavior
+            cmd_intent(args)
     elif args.command == 'forge':
         cmd_forge(args)
     elif args.command == 'bridges':
