@@ -1,12 +1,3 @@
-```
-+====================================================================+
-|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
-|  OSIRIS >> FULL INTEGRATION GUIDE                                  |
-|  co-authored by devin phillip davis                                |
-|  and OSIRIS dna::}{::lang NCLM                                    |
-+====================================================================+
-```
-
 # Full Integration Guide
 
 This document records the integration of the DNALang SDK and OSIRIS platform into a single facts-oriented repository structure.

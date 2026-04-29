@@ -1,12 +1,3 @@
-```
-+====================================================================+
-|  BIFURCATED POLARIZED TORSIONAL RAIN INSULATION :: CODE FRAME      |
-|  OSIRIS >> FACTS TIMELINE                                          |
-|  co-authored by devin phillip davis                                |
-|  and OSIRIS dna::}{::lang NCLM                                    |
-+====================================================================+
-```
-
 # Facts-Only Timeline
 
 Author: Devin Phillip Davis
@@ -17,7 +8,7 @@ Purpose: Public, facts-only timeline assembled from local logs and public artifa
 - Owner / Author: Devin Phillip Davis (Agile Defense Systems, LLC / ENKI-420)
 - Key immutable constants recorded in DNALang artifacts and project metadata:
   - `LAMBDA_PHI = 2.176435e-8` (s^-1)
-  - `THETA_LOCK = 51.843°`
+  - `THETA_LOCK = 51.843`
   - `PHI_THRESHOLD = 0.7734`
   - `GAMMA_CRITICAL = 0.3`
   - `CHI_PC = 0.946`
