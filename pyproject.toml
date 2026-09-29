@@ -73,10 +73,14 @@ dev = [
     "ruff>=0.4.0",
 ]
 
+[project.scripts]
+osiris = "osiris_cli.osiris_repl:main"
+
 [project.urls]
 Homepage = "https://github.com/osiris-dnalang/osiris-cli"
 Repository = "https://github.com/osiris-dnalang/osiris-cli"
 Issues = "https://github.com/osiris-dnalang/osiris-cli/issues"
+
 [tool.setuptools]
 py-modules = [
     "osiris_launcher",
@@ -121,7 +125,7 @@ py-modules = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["osiris*", "nclm*", "qbyte_system*", "quantum_discovery*", "scimitar_sse*"]
+include = ["osiris*", "osiris_cli*", "nclm*", "qbyte_system*", "quantum_discovery*", "scimitar_sse*"]
 
 [tool.ruff]
 target-version = "py39"
