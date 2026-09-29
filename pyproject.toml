@@ -45,6 +45,9 @@ dependencies = [
     "requests>=2.31.0",
     "PyYAML>=6.0",
     "rich>=13.0.0",
+    "dnalang @ file:///home/enki/dnalang-core",
+    "organism_sim @ file:///home/enki/organism_sim",
+    "bridge @ file:///home/enki/bridge",
 ]
 
 [project.optional-dependencies]
@@ -84,7 +87,6 @@ Issues = "https://github.com/osiris-dnalang/osiris-cli/issues"
 [tool.setuptools]
 py-modules = [
     "osiris_launcher",
-    "osiris_cli",
     "osiris_livlm",
     "osiris_ncllm_swarm",
     "osiris_ultra_coder",
@@ -122,6 +124,14 @@ py-modules = [
     "osiris_agents",
     "osiris_applications",
     "osiris_master_prompt",
+    "osiris_zerosum_microvm",
+    "osiris_quantum_bridge",
+    "osiris_hardware_mesh",
+    "osiris_swarm_governance",
+    "omega_recursive_engine",
+    "k8_preregistration",
+    "osiris_unified_livlm",
+    "osiris_comparative_benchmark",
 ]
 
 [tool.setuptools.packages.find]

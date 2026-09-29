@@ -597,4 +597,138 @@ def ghz_state(qb: Qbyte, qubits: Optional[List[int]] = None) -> Qbyte:
     return qb
 
 
-__all__ = ['Qbyte', 'QbyteRegister', 'CCCEMetrics', 'bell_state', 'ghz_state']
+# ═══════════════════════════════════════════════════════════════════════════════
+# LAYER 0 (L0) FORMAL PROVER & QBYTE RUNTIME
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class CoherenceFloorViolation(Exception):
+    """Raised when decoherence exceeds the 0.092 coherence floor."""
+    pass
+
+
+class L0FormalProver:
+    """
+    Layer 0 (L0) Formal Verification Gate.
+    Enforces that all quantum operations and .dna kernels remain strictly within
+    the 0.092 coherence floor.
+    """
+    COHERENCE_FLOOR: float = 0.092
+
+    @classmethod
+    def verify_kernel(cls, kernel_ops: List[Dict[str, Any]], initial_gamma: float = GAMMA_FIXED) -> bool:
+        """
+        Statically proves that the execution trajectory stays within the coherence floor.
+        Halts and raises CoherenceFloorViolation if projected decoherence exceeds 0.092.
+        """
+        gamma = initial_gamma
+        for op in kernel_ops:
+            op_name = op.get('name', '')
+            if op_name in ('heal', 'phase_conjugate'):
+                gamma = max(0.001, gamma * (1.0 - CHI_PC))
+            else:
+                gamma += op.get('decoherence_delta', 0.0005)
+
+            if gamma > cls.COHERENCE_FLOOR:
+                raise CoherenceFloorViolation(
+                    f"L0 Formal Verification Halt: Operation '{op_name}' projects "
+                    f"decoherence Γ={gamma:.5f} > floor {cls.COHERENCE_FLOOR}"
+                )
+        return True
+
+    @classmethod
+    def verify_state(cls, qbyte: Qbyte):
+        """
+        Verifies live Qbyte state against the coherence floor.
+        """
+        if qbyte.metrics.gamma > cls.COHERENCE_FLOOR:
+            raise CoherenceFloorViolation(
+                f"L0 Formal Verification Halt: Live decoherence Γ={qbyte.metrics.gamma:.5f} "
+                f"exceeds coherence floor {cls.COHERENCE_FLOOR}"
+            )
+        return True
+
+
+class QbyteRuntime:
+    """
+    Unified Python QbyteRuntime managing quantum byte execution with Layer 0 (L0)
+    formal verification and fail-closed coherence floor enforcement.
+    """
+    COHERENCE_FLOOR: float = 0.092
+
+    def __init__(self, n_qubits: int = 8, strict_l0: bool = True):
+        self.n_qubits = n_qubits
+        self.strict_l0 = strict_l0
+        self.qbyte = Qbyte()
+        self.prover = L0FormalProver()
+        self._execution_history: List[Dict[str, Any]] = []
+
+    def execute_kernel(self, kernel_ops: List[Dict[str, Any]], auto_rollback: bool = True) -> Dict[str, Any]:
+        """
+        Executes a sequence of .dna kernel operations subject to L0 formal verification.
+        If any operation violates the 0.092 coherence floor, halts execution immediately.
+        """
+        # Static formal verification pass
+        if self.strict_l0:
+            self.prover.verify_kernel(kernel_ops, initial_gamma=self.qbyte.metrics.gamma)
+
+        # Snapshot for rollback upon violation
+        saved_state = self.qbyte.state.copy()
+        saved_metrics = self.qbyte.metrics.to_dict()
+
+        try:
+            for op in kernel_ops:
+                name = op.get('name')
+                qubit = op.get('qubit', 0)
+                target = op.get('target', 1)
+                angle = op.get('angle', 0.0)
+
+                if name == 'helix':
+                    self.qbyte.helix(qubit)
+                elif name == 'bond':
+                    self.qbyte.bond(qubit, target)
+                elif name == 'twist':
+                    self.qbyte.twist(qubit, angle)
+                elif name == 'fold':
+                    self.qbyte.fold(qubit, angle)
+                elif name == 'cleave':
+                    self.qbyte.cleave(qubit)
+                elif name == 'phase_flip':
+                    self.qbyte.phase_flip(qubit)
+                elif name == 'heal':
+                    self.qbyte.heal()
+                elif name == 'measure':
+                    self.qbyte.measure()
+                else:
+                    raise ValueError(f"Unknown kernel operation: {name}")
+
+                # Dynamic formal verification check
+                if self.strict_l0:
+                    self.prover.verify_state(self.qbyte)
+
+            result = {
+                "status": "SUCCESS",
+                "metrics": self.qbyte.metrics.to_dict(),
+                "timestamp": time.time()
+            }
+            self._execution_history.append(result)
+            return result
+
+        except CoherenceFloorViolation as e:
+            if auto_rollback:
+                self.qbyte._state = saved_state
+                self.qbyte._metrics.gamma = saved_metrics.get('Γ', GAMMA_FIXED)
+                self.qbyte._metrics.lambda_c = saved_metrics.get('Λ', 1.0)
+                self.qbyte._metrics.phi = saved_metrics.get('Φ', 0.0)
+            self._execution_history.append({
+                "status": "HALTED_L0_VIOLATION",
+                "error": str(e),
+                "timestamp": time.time()
+            })
+            raise
+
+
+__all__ = [
+    'Qbyte', 'QbyteRegister', 'CCCEMetrics', 'bell_state', 'ghz_state',
+    'CoherenceFloorViolation', 'L0FormalProver', 'QbyteRuntime'
+]
+
