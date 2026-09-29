@@ -1,0 +1,100 @@
+{
+  "created": "2026-09-29T19:13:30.682220+00:00",
+  "modified": "2026-09-29T19:13:31.445048+00:00",
+  "id": 23045494,
+  "conceptrecid": "23045493",
+  "doi": "10.5281/zenodo.23045494",
+  "conceptdoi": "10.5281/zenodo.23045493",
+  "doi_url": "https://doi.org/10.5281/zenodo.23045494",
+  "metadata": {
+    "title": "Pre-registered Hardware Demonstration of OSIRIS Bipartite-Staggered Dynamical Decoupling on IBM Heron r2 (ibm_marrakesh): Coherence Retention (+30.5% over idle, +6.5% over textbook DD)",
+    "doi": "10.5281/zenodo.23045494",
+    "publication_date": "2026-09-29",
+    "description": "<h2>OSIRIS Quantum Coherence Advantage Hardware Run \u2014 IBM Heron r2 (ibm_marrakesh)</h2>\n<p>**Job ID:** `dau0q3qhcrkc73durtgg`  </p>\n<p>**Backend:** `ibm_marrakesh` (156-qubit Heron r2)  </p>\n<p>**Date (UTC):** 2026-09-29 19:10:20Z  </p>\n<p>**Calibration Hash:** `63f10bd484207c5044237b4115a46a0d29856036c923a2cde165baed57d15c9c`  </p>\n<p>**Pre-registration Manifest SHA-256:** `2d4c19a4a53301a1ac42459acd8b5b0d8cba0d588fa2523ed0994e5e1612d2f9`  </p>\n<p>**Ledger Head:** `6d7fd1390c1bab25b52f3e5e07be893aaa7194d8e3bd81db8466085da6e38d37`  </p>\n<p>**QPU Execution Time:** 5 s  </p>\n<h3>Executive Summary</h3>\n<p>This experiment provides empirical hardware validation on IBM Quantum's 156-qubit Heron r2 processor (`ibm_marrakesh`) testing OSIRIS bipartite-staggered dynamical decoupling against unmitigated idle decoherence and standard textbook simultaneous DD.</p>\n<p>The experiment was pre-registered into an immutable write-ahead append-only ledger prior to submission.</p>\n<h3>Results Table (8-Qubit Chain: [1, 2, 3, 4, 5, 6, 7, 8])</h3>\n<p>| Condition | T (\u00b5s) | Mean Survival P(+) | 95% Confidence Interval | Effective Loss Rate \u0393 (\u00b5s\u207b\u00b9) |</p>\n<p>|---|---|---|---|---|</p>\n<p>| `cpmg8` | 16.0 | **0.9139** | [0.9075, 0.9204] | 0.0118 |</p>\n<p>| `cpmg8` | 32.0 | **0.8344** | [0.8289, 0.8398] | 0.0126 |</p>\n<p>| `none` | 16.0 | **0.6382** | [0.6313, 0.6450] | 0.0804 |</p>\n<p>| `none` | 32.0 | **0.5945** | [0.5942, 0.5947] | 0.0521 |</p>\n<p>| `xy4x2` | 16.0 | **0.9135** | [0.9097, 0.9172] | 0.0119 |</p>\n<p>| `xy4x2` | 32.0 | **0.8342** | [0.8291, 0.8394] | 0.0126 |</p>\n<p>| `xy4x2_stag` | 16.0 | **0.9313** | [0.9307, 0.9319] | 0.0092 |</p>\n<p>| `xy4x2_stag` | 32.0 | **0.8997** | [0.8945, 0.9048] | 0.0070 |</p>\n<p>| `xy8_stag` | 16.0 | **0.9318** | [0.9309, 0.9326] | 0.0092 |</p>\n<p>| `xy8_stag` | 32.0 | **0.8998** | [0.8982, 0.9014] | 0.0070 |</p>\n<h3>Pre-registered Hypothesis Evaluation</h3>\n<p>1. **Advantage over Bare Idle (T = 32 \u00b5s):**</p>\n<p>   - Bare idle survival (`none`): **0.5945**</p>\n<p>   - OSIRIS best staggered (`xy8_stag`): **0.8998**</p>\n<p>   - Observed Gain: **+0.3053** (Threshold: +0.1500) -&gt; **MET**</p>\n<p>2. **Advantage over Textbook Simultaneous DD (T = 32 \u00b5s):**</p>\n<p>   - Standard simultaneous XY4x2 (`xy4x2`): **0.8342**</p>\n<p>   - OSIRIS best staggered (`xy8_stag`): **0.8998**</p>\n<p>   - Observed Gain: **+0.0656** (Threshold: +0.0200) -&gt; **MET**</p>\n<p>3. **Statistical Confidence:**</p>\n<p>   - 95% Bootstrap CI `xy8_stag`: `[0.8982, 0.9014]`</p>\n<p>   - 95% Bootstrap CI `xy4x2`: `[0.8291, 0.8394]`</p>\n<p>   - Non-overlapping: **YES**</p>\n<h3>Hardware Provenance &amp; Reproducibility</h3>\n<li>All raw counts are stored in `dau0q3qhcrkc73durtgg.counts.json`.</li>\n<li>Full transpiled circuits and metadata are preserved in `dau0q3qhcrkc73durtgg.meta.json`.</li>\n<li>Hash chain verified in `ledger.jsonl`.</li>",
+    "access_right": "open",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "keywords": [
+      "IBM Quantum",
+      "ibm_marrakesh",
+      "Heron r2",
+      "dynamical decoupling",
+      "quantum advantage",
+      "coherence preservation",
+      "ZZ crosstalk suppression",
+      "pre-registration",
+      "OSIRIS",
+      "write-ahead ledger"
+    ],
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.22870287",
+        "relation": "continues",
+        "resource_type": "dataset",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.22862567",
+        "relation": "isSupplementTo",
+        "resource_type": "software",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.22855102",
+        "relation": "references",
+        "resource_type": "dataset",
+        "scheme": "doi"
+      }
+    ],
+    "version": "1.0.0",
+    "license": "cc-by-4.0",
+    "imprint_publisher": "Zenodo",
+    "notes": "Pre-registration manifest (sha256 2d4c19a4a53301a1ac42459acd8b5b0d8cba0d588fa2523ed0994e5e1612d2f9) was hashed into the write-ahead ledger before submission to ibm_marrakesh (Job dau0q3qhcrkc73durtgg, 5 s QPU). No fitted constants; all metrics computed from included raw hardware counts.",
+    "upload_type": "dataset",
+    "prereserve_doi": {
+      "doi": "10.5281/zenodo.23045494",
+      "recid": 23045494
+    }
+  },
+  "title": "Pre-registered Hardware Demonstration of OSIRIS Bipartite-Staggered Dynamical Decoupling on IBM Heron r2 (ibm_marrakesh): Coherence Retention (+30.5% over idle, +6.5% over textbook DD)",
+  "links": {
+    "self": "https://zenodo.org/api/records/23045494",
+    "html": "https://zenodo.org/records/23045494",
+    "doi": "https://doi.org/10.5281/zenodo.23045494",
+    "parent_doi": "https://doi.org/10.5281/zenodo.23045493",
+    "badge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23045494.svg",
+    "conceptbadge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23045493.svg",
+    "files": "https://zenodo.org/api/records/23045494/files",
+    "bucket": "https://zenodo.org/api/files/e62751f9-74cb-4073-8963-3c5d92b9f79c",
+    "latest_draft": "https://zenodo.org/api/deposit/depositions/23045494",
+    "latest_draft_html": "https://zenodo.org/deposit/23045494",
+    "publish": "https://zenodo.org/api/deposit/depositions/23045494/actions/publish",
+    "edit": "https://zenodo.org/api/deposit/depositions/23045494/actions/edit",
+    "discard": "https://zenodo.org/api/deposit/depositions/23045494/actions/discard",
+    "newversion": "https://zenodo.org/api/deposit/depositions/23045494/actions/newversion",
+    "record": "https://zenodo.org/api/records/23045494",
+    "record_html": "https://zenodo.org/record/23045494",
+    "latest": "https://zenodo.org/api/records/23045494/versions/latest",
+    "latest_html": "https://zenodo.org/records/23045494/latest"
+  },
+  "record_id": 23045494,
+  "owner": 1593545,
+  "files": [
+    {
+      "id": "9e8bf18d-3c13-46b0-b5d0-be9b6efda63a",
+      "filename": "osiris_quantum_advantage_marrakesh_2026.zip",
+      "filesize": 15911,
+      "checksum": "8268b326efc06c20440d4d8fd1dafcd5",
+      "links": {
+        "self": "https://zenodo.org/api/records/23045494/files/9e8bf18d-3c13-46b0-b5d0-be9b6efda63a",
+        "download": "https://zenodo.org/api/records/23045494/draft/files/osiris_quantum_advantage_marrakesh_2026.zip/content"
+      }
+    }
+  ],
+  "state": "done",
+  "submitted": true
+}

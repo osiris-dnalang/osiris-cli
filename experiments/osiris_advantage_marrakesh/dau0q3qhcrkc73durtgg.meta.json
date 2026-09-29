@@ -1,0 +1,176 @@
+{
+  "experiment": "OSIRIS_QUANTUM_ADVANTAGE_MARRAKESH",
+  "manifest_sha256": "2d4c19a4a53301a1ac42459acd8b5b0d8cba0d588fa2523ed0994e5e1612d2f9",
+  "backend": "ibm_marrakesh",
+  "chain": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "calibration_hash": "63f10bd484207c5044237b4115a46a0d29856036c923a2cde165baed57d15c9c",
+  "shots": 512,
+  "reps": 2,
+  "T_list": [
+    16.0,
+    32.0
+  ],
+  "conditions": [
+    "none",
+    "cpmg8",
+    "xy4x2",
+    "xy4x2_stag",
+    "xy8_stag"
+  ],
+  "specs": [
+    {
+      "name": "cpmg8",
+      "T": 16.0,
+      "rep": 0
+    },
+    {
+      "name": "xy4x2_stag",
+      "T": 32.0,
+      "rep": 0
+    },
+    {
+      "name": "none",
+      "T": 16.0,
+      "rep": 0
+    },
+    {
+      "name": "xy8_stag",
+      "T": 32.0,
+      "rep": 0
+    },
+    {
+      "name": "none",
+      "T": 32.0,
+      "rep": 0
+    },
+    {
+      "name": "cpmg8",
+      "T": 32.0,
+      "rep": 0
+    },
+    {
+      "name": "xy4x2",
+      "T": 32.0,
+      "rep": 0
+    },
+    {
+      "name": "xy4x2",
+      "T": 16.0,
+      "rep": 0
+    },
+    {
+      "name": "xy8_stag",
+      "T": 16.0,
+      "rep": 0
+    },
+    {
+      "name": "xy4x2_stag",
+      "T": 16.0,
+      "rep": 0
+    },
+    {
+      "name": "xy8_stag",
+      "T": 32.0,
+      "rep": 1
+    },
+    {
+      "name": "xy4x2_stag",
+      "T": 16.0,
+      "rep": 1
+    },
+    {
+      "name": "xy8_stag",
+      "T": 16.0,
+      "rep": 1
+    },
+    {
+      "name": "cpmg8",
+      "T": 32.0,
+      "rep": 1
+    },
+    {
+      "name": "xy4x2",
+      "T": 32.0,
+      "rep": 1
+    },
+    {
+      "name": "xy4x2",
+      "T": 16.0,
+      "rep": 1
+    },
+    {
+      "name": "cpmg8",
+      "T": 16.0,
+      "rep": 1
+    },
+    {
+      "name": "none",
+      "T": 16.0,
+      "rep": 1
+    },
+    {
+      "name": "none",
+      "T": 32.0,
+      "rep": 1
+    },
+    {
+      "name": "xy4x2_stag",
+      "T": 32.0,
+      "rep": 1
+    }
+  ],
+  "circuit_hashes": [
+    "cdd08b563c897611",
+    "5731d36954b633a0",
+    "1cdaf7438f6e124f",
+    "9fc14312a9f9045a",
+    "8928f7a2bf28cd59",
+    "d589f7f0ac62585e",
+    "d09ae49a72c744e5",
+    "3647e6019931673c",
+    "52d3409e80ae9069",
+    "f099e9a6aede0445",
+    "9fc14312a9f9045a",
+    "f099e9a6aede0445",
+    "52d3409e80ae9069",
+    "d589f7f0ac62585e",
+    "d09ae49a72c744e5",
+    "3647e6019931673c",
+    "cdd08b563c897611",
+    "1cdaf7438f6e124f",
+    "8928f7a2bf28cd59",
+    "5731d36954b633a0"
+  ],
+  "two_qubit_counts": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "job_id": "dau0q3qhcrkc73durtgg"
+}

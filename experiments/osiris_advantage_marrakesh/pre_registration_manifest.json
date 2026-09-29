@@ -1,0 +1,58 @@
+{
+  "title": "OSIRIS Quantum Coherence Advantage Hardware Demonstration: Bipartite-Staggered DD on IBM Heron r2",
+  "author": "Devin Phillip Davis, Agile Defense Systems LLC",
+  "timestamp_utc": "2026-09-29T19:10:06Z",
+  "target_backend": "ibm_marrakesh",
+  "backend_calibration_hash": "63f10bd484207c5044237b4115a46a0d29856036c923a2cde165baed57d15c9c",
+  "physical_qubit_chain": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "n_qubits": 8,
+  "idle_durations_us": [
+    16.0,
+    32.0
+  ],
+  "replicates": 2,
+  "shots_per_circuit": 512,
+  "conditions": [
+    {
+      "name": "none",
+      "type": "bare_idle",
+      "description": "Free induction decay (no dynamical decoupling). Pure environmental dephasing & crosstalk."
+    },
+    {
+      "name": "cpmg8",
+      "type": "textbook_simultaneous",
+      "description": "Textbook CPMG-8 with simultaneous X pulses across all qubits."
+    },
+    {
+      "name": "xy4x2",
+      "type": "textbook_simultaneous",
+      "description": "Textbook XY4x2 with co-timed XYXYXYXY pulses across all qubits."
+    },
+    {
+      "name": "xy4x2_stag",
+      "type": "osiris_bipartite_staggered",
+      "offset": 0.5,
+      "description": "OSIRIS bipartite-staggered XY4x2. Odd sublattice offset by 0.5 slot, eliminating drive collisions and canceling ZZ crosstalk."
+    },
+    {
+      "name": "xy8_stag",
+      "type": "osiris_bipartite_staggered",
+      "offset": 0.5,
+      "description": "OSIRIS bipartite-staggered XY8. Higher pulse symmetry with 0.5 slot offset."
+    }
+  ],
+  "hypotheses": {
+    "H0_null": "OSIRIS bipartite-staggered DD yields no statistically significant improvement over textbook simultaneous DD (P_stag - P_simul <= 0) or trails unmitigated idle.",
+    "H1_advantage": "OSIRIS bipartite-staggered DD achieves: (1) Delta P(+) >= 0.15 over bare idle ('none') at T = 32 us; (2) Delta P(+) >= 0.02 over textbook simultaneous DD ('xy4x2') at T = 32 us with non-overlapping 95% bootstrap confidence intervals."
+  },
+  "non_substitution_invariant": "Science does not imply Deployment; Deployment does not imply Science. Zero fitted post-hoc parameters. All metrics derived from verified raw counts."
+}

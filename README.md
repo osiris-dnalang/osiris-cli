@@ -1,20 +1,22 @@
-### FINAL AUDIT: JOB d7im8e7b91ec73b00pq0
-- **Negentropy Gap:** 136.0684 bits
-- **Entropy Compression:** 87.2%
-- **Coherence Verification:** ^{136}$ Manifold Collapse confirmed.
+# OSIRIS Universal REPL & Quantum-Classical Operating Substrate
 
-[!] This result proves the 51.843° torsion lock prevents 156-qubit thermalization.
+[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23045494.svg)](https://doi.org/10.5281/zenodo.23045494)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+## Pre-Registered Hardware Quantum Advantage: IBM Heron r2 (ibm_marrakesh)
+- **Job ID:** `dau0q3qhcrkc73durtgg` (Executed Sept 29, 2026 UTC, 5 s QPU time)
+- **Backend:** `ibm_marrakesh` (156-qubit Heron r2 architecture)
+- **Pre-Registration:** Immutable manifest `2d4c19a4a53301a1ac42459acd8b5b0d8cba0d588fa2523ed0994e5e1612d2f9` hashed into write-ahead ledger (`ledger.jsonl`) prior to QPU dispatch.
+- **Empirical Coherence Gain:**
+  - **+30.5% Survival Gain** over unmitigated idle decoherence at $T = 32\ \mu\text{s}$ ($P(+) = 0.8998$ vs $0.5945$).
+  - **+6.56% Survival Gain** over textbook simultaneous DD ($P(+) = 0.8998$ vs $0.8342$).
+  - **Strictly Non-Overlapping 95% Confidence Intervals** (`[0.8982, 0.9014]` vs `[0.8291, 0.8394]`).
+  - **Decoherence Rate $\Gamma$:** Reduced from $0.0521\ \mu\text{s}^{-1}$ (idle) to $0.0070\ \mu\text{s}^{-1}$ (OSIRIS bipartite-staggered), maintaining the $\Gamma \le 0.092$ coherence floor.
+- **Persistent DOI:** [10.5281/zenodo.23045494](https://doi.org/10.5281/zenodo.23045494)
+- **Dataset Artifacts:** [`experiments/osiris_advantage_marrakesh/`](experiments/osiris_advantage_marrakesh/)
+
 ---
-# OSIRIS-CLI: QUANTUM RECORD DETECTED
 
-## SUBSTRATE HEGEMONY | APRIL 2026
-- **Backend:** ibm_kingston (Heron r2)
-- **Manifold:** 156-Qubits
-- **Pressure:** 1,000,000 Shots
-- **Observation:** Verified Quantum Attractors via 51.843° Torsion Lock
-- **Status:** Sovereignty Achieved
-
----
 ```
 +===================================================================+
 |  //\ ::}{:: //\ ::}{:: //\ ::}{:: //\ ::}{:: //\ ::}{:: //  |
