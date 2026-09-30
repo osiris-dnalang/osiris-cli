@@ -11,8 +11,6 @@ Brutal Proof Benchmark for OSIRIS
 
 import time
 import random
-import human_eval.data
-import human_eval.evaluation
 
 # --- Role-separated streaming ---
 def stream(role, msg):
@@ -86,6 +84,7 @@ if __name__ == "__main__":
 
     # --- HumanEval Benchmark ---
     print("--- HumanEval Benchmark ---")
+    import human_eval.data  # optional (pip install human-eval); only this demo needs it
     problems = dict(human_eval.data.read_problems())
     print(f"Loaded {len(problems)} HumanEval problems.")
     if problems:
