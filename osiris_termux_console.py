@@ -135,7 +135,8 @@ except Exception:
 # default so checkpoints stay shape-compatible with that harness.
 _here = os.path.dirname(os.path.abspath(__file__))
 ORGANISM_SRC = _here if os.path.exists(os.path.join(_here, "osiris")) else "/data/data/com.termux/files/home/crsm/osiris-cli"
-ORGANISM_HOME = os.path.join(os.path.expanduser("~"), ".osiris", "nclm_organism")
+# OSIRIS_ORGANISM_HOME isolates an experiment's checkpoint from the live core.
+ORGANISM_HOME = os.environ.get("OSIRIS_ORGANISM_HOME") or os.path.join(os.path.expanduser("~"), ".osiris", "nclm_organism")
 TELEMETRY_HOME = os.path.join(os.path.expanduser("~"), ".osiris", "telemetry")
 TELEMETRY_LOG = os.path.join(TELEMETRY_HOME, "nclm_loss.log")
 PROMPT_LIBRARY_PATH = os.path.join(os.path.expanduser("~"), ".osiris", "prompt_library.json")

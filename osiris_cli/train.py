@@ -342,6 +342,7 @@ class Stop(Exception):
 
 def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, distill_n: int = 0,
         seed: Optional[int] = None, mentor: Optional[OllamaMentor] = None, runs_home: str = RUNS_HOME,
+        mix: Optional[List[float]] = None, rescore: bool = True,
         living_home: str = LIVING_HOME, base: str = HOME, roots: Optional[List[str]] = None,
         eval_every: int = 200, save_every: int = 50, log_every: int = 10, patience: int = PATIENCE,
         log: Callable[[str], None] = print, power: Callable[[dict], bool] = battery_ok,
@@ -349,6 +350,8 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
     cfg = load_corpus_config(os.path.join(living_home, "corpus.json"))
     seed = seed if seed is not None else int(time.time())
     rng = random.Random(seed)
+    import numpy as np
+    np.random.seed(seed % 2 ** 32)   # weight init draws from numpy's global RNG: seeded, runs reproduce
     run_id = time.strftime("%Y%m%dT%H%M%S")
     run_dir = os.path.join(runs_home, run_id)
     os.makedirs(run_dir, exist_ok=True)
@@ -389,6 +392,10 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
         pools.append(arch_train)
         weights.append(arch_share)
     weights[0] = max(0.05, 1.0 - sum(weights[1:]))
+    if mix is not None:   # explicit docs / lessons / archive weights (an experiment arm)
+        if len(mix) != 3 or len(pools) != 3:
+            raise SystemExit(f"--mix needs docs,lessons,archive and all three pools present (have {len(pools)})")
+        weights = [float(w) for w in mix]
     ev_docs = eval_windows(doc_held, 48)
     ev_chat = eval_windows(chat_held, 48)
     train_all = to_bytes([d.text for d in docs if not d.heldout] + lessons)
@@ -496,7 +503,7 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
             if restored is not None:
                 log(f"restored the best held-out checkpoint (step {restored}, {best['bpb']:.3f} bpb); "
                     f"the final weights ({last['heldout_docs_bpb']:.3f} bpb) stay in the rotated backups")
-        rescored = rescore_chat(core, living_home)
+        rescored = rescore_chat(core, living_home) if rescore else 0
         summary = {"kind": "end", "reason": reason, "steps": steps, "core_step_end": core.step(),
                    "hours": round((time.time() - t0) / 3600, 3), "rescored_heldout_exchanges": rescored,
                    "start": first, "end": last, "best": best, "restored_best_step": restored}
@@ -625,6 +632,10 @@ def main(argv: Optional[List[str]] = None) -> None:
     ap.add_argument("--max-steps", type=int, default=None)
     ap.add_argument("--distill", type=int, default=40, help="grounded mentor lessons to create first (0 = none)")
     ap.add_argument("--seed", type=int, default=None)
+    ap.add_argument("--mix", default=None, help="docs,lessons,archive pool weights, e.g. 0.8,0.15,0.05")
+    ap.add_argument("--runs-home", default=RUNS_HOME, help="where run manifests and progress go")
+    ap.add_argument("--no-rescore", action="store_true",
+                    help="experiment runs: do not rescore the live chat's held-out exchanges")
     ap.add_argument("--all", action="store_true",
                     help="also learn from the rest of your home directory as a de-duplicated archive "
                          "(sampled at archive_share; third-party code, venvs and backups excluded)")
@@ -647,7 +658,9 @@ def main(argv: Optional[List[str]] = None) -> None:
         return
     run(core, hours=args.hours, batch=args.batch, max_steps=args.max_steps, distill_n=args.distill,
         seed=args.seed, mentor=OllamaMentor() if args.distill else None,
-        log=lambda s: print(s, flush=True), archive_roots=["."] if args.all else None)
+        log=lambda s: print(s, flush=True), archive_roots=["."] if args.all else None,
+        mix=[float(x) for x in args.mix.split(",")] if args.mix else None,
+        runs_home=args.runs_home, rescore=not args.no_rescore)
 
 
 if __name__ == "__main__":
