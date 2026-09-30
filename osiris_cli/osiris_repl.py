@@ -970,7 +970,13 @@ def get_living():
                 core = NclmCore(otc)
             except Exception as e:  # noqa: BLE001 - a missing core leaves the mentor voice
                 print(f"[OSIRIS] core unavailable ({type(e).__name__}); mentor voice only.")
-        _LIVING = Osiris(core=core)
+        knowledge = None
+        try:
+            from osiris_cli.knowledge import Knowledge
+            knowledge = Knowledge()
+        except Exception as e:  # noqa: BLE001 - OSIRIS still talks without its notes
+            print(f"[OSIRIS] notes unavailable ({type(e).__name__}); answering without them.")
+        _LIVING = Osiris(core=core, knowledge=knowledge)
     return _LIVING
 
 
@@ -1412,6 +1418,11 @@ def boot_repl() -> None:
     prompt = "osiris::}{> "
 
     while True:
+        if _LIVING is not None and _LIVING.held:
+            line = _LIVING.held.pop(0)
+            print(f"{prompt}{line}   \033[2m(typed while OSIRIS was answering)\033[0m")
+            dispatch_command(SESSION, line)
+            continue
         try:
             if otc is not None:
                 print(prompt, end="", flush=True)

@@ -161,3 +161,17 @@ def test_archive_tier_dedupes_and_skips_third_party(tmp_path):
     assert "copy/note1.md" not in paths and not any(p.startswith("docs/") for p in paths)
     assert not any("google-cloud-sdk" in p or ".venv" in p for p in paths)
     assert len(verified) == 40
+
+
+def test_distillation_waits_while_a_chat_is_active(tmp_path):
+    marker = tmp_path / "chat.active"
+    marker.write_text("1")
+    naps, logs = [], []
+
+    def sleep(t):
+        naps.append(t)
+        os.utime(marker, (0, 0))    # the chat goes quiet
+
+    train.wait_for_quiet_chat(str(tmp_path), logs.append, sleep=sleep)
+    assert naps and "paused" in logs[0] and logs[-1] == "distill: resumed"
+    train.wait_for_quiet_chat(str(tmp_path), logs.append, sleep=lambda t: 1 / 0)  # quiet: no wait

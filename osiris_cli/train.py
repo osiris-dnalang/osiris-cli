@@ -44,7 +44,8 @@ import time
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Optional
 
-from osiris_cli.living import LIVING_HOME, HELDOUT_EVERY, OllamaMentor, Osiris
+from osiris_cli.living import (CHAT_MARKER, CHAT_QUIET_SECONDS, HELDOUT_EVERY, LIVING_HOME,
+                               OllamaMentor, Osiris)
 
 HOME = os.path.expanduser("~")
 RUNS_HOME = os.path.join(LIVING_HOME, "train_runs")
@@ -209,6 +210,26 @@ def _excerpts(docs: List[Doc], rng: random.Random, n: int) -> List[tuple]:
     return out
 
 
+def chat_active(living_home: str, now: Optional[float] = None) -> bool:
+    try:
+        age = (now or time.time()) - os.path.getmtime(os.path.join(living_home, CHAT_MARKER))
+    except OSError:
+        return False
+    return age < CHAT_QUIET_SECONDS
+
+
+def wait_for_quiet_chat(living_home: str, log: Callable[[str], None], poll: float = 10.0,
+                        sleep: Callable[[float], None] = time.sleep) -> None:
+    """Distillation runs the same mentor model as the chat on the same CPU; a
+    chat queued behind it took 40-95 s a reply (2026-09-29). Wait it out."""
+    if not chat_active(living_home):
+        return
+    log(f"distill: paused while you chat (resumes {CHAT_QUIET_SECONDS} s after the last message)")
+    while chat_active(living_home):
+        sleep(poll)
+    log("distill: resumed")
+
+
 def distill(mentor: OllamaMentor, docs: List[Doc], n: int, rng: random.Random,
             log: Callable[[str], None], path: str = DISTILL_LOG) -> int:
     """Ask the mentor n grounded questions; append each Q/A lesson to distill.jsonl."""
@@ -216,6 +237,7 @@ def distill(mentor: OllamaMentor, docs: List[Doc], n: int, rng: random.Random,
         return 0
     made = 0
     for src, excerpt in _excerpts(docs, rng, n):
+        wait_for_quiet_chat(os.path.dirname(path), log)
         try:
             q = "".join(mentor.stream([{"role": "user", "content":
                 "Write one short question a researcher might ask about this passage. Output only "

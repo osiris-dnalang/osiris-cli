@@ -24,6 +24,7 @@ import hashlib
 import json
 import math
 import os
+import sys
 import threading
 import time
 import urllib.error
@@ -46,6 +47,11 @@ HELDOUT_EVERY = 5
 TRAIN_STEPS_PER_EXCHANGE = 3
 SCORE_WINDOWS = 2
 HISTORY_TURNS = 12
+NOTES_PER_MESSAGE = 3
+# While a chat is live the batch trainer's distillation (which runs the same
+# 7B mentor on the same CPU) waits; the marker is refreshed on every message.
+CHAT_MARKER = "chat.active"
+CHAT_QUIET_SECONDS = 300
 MENTOR_MAX_TOKENS = int(os.environ.get("OSIRIS_MENTOR_MAX_TOKENS", "700"))
 MENTOR_PREFERENCE = ("qwen2.5:7b", "qwen2.5:3b", "qwen2.5:1.5b", "llama3.2:3b", "llama3.2:1b", "smollm2:360m")
 
@@ -66,7 +72,18 @@ the 10^6 suppression and the CCCE "consciousness" metrics; do not present them a
 established. His measured work (staggered dynamical decoupling, GHZ witnesses, the \
 pre-registered organism_sim/bridge results, the write-ahead ledger) is real.
 - You cannot run code, touch files or submit jobs from this conversation. Say what \
-command would do it instead."""
+command would do it instead.
+- Facts about Devin's work come from the brief below and from the notes attached to a \
+message. When you use a note, name its file. If neither covers the question, say you \
+don't have it on record rather than guessing.
+
+How to talk:
+- Answer the question that was asked, first, in plain words. Default to a few short \
+paragraphs; go longer only when asked.
+- Greet once at most. Don't repeat Devin's name every turn, don't thank him for his work, \
+and don't end with offers like "How can I assist you today?" or a list of topics to explore.
+- "What do you know" or "tell me about yourself" means: say concretely what you are right \
+now (your core's step and gate, who is speaking) and what is on record (the results below)."""
 
 
 # ---------------------------------------------------------------------------
@@ -298,18 +315,73 @@ def printable_ratio(text: str) -> float:
     return ok / len(text)
 
 
+class TypeAhead:
+    """While a reply streams, keys typed are captured instead of echoed into the
+    reply (2026-09-29: questions typed during a slow reply appeared after
+    'OSIRIS ›' and each answer looked one turn late). Ctrl-C still works.
+    Not a terminal: does nothing."""
+
+    def __init__(self, active: bool):
+        self.active, self.text, self._saved = active, "", None
+
+    def __enter__(self):
+        if self.active:
+            try:
+                import termios
+                fd = sys.stdin.fileno()
+                self._saved = termios.tcgetattr(fd)
+                new = termios.tcgetattr(fd)
+                new[3] &= ~(termios.ECHO | termios.ICANON)
+                termios.tcsetattr(fd, termios.TCSANOW, new)
+            except (ImportError, OSError, ValueError, AttributeError):
+                self._saved = None
+        return self
+
+    def __exit__(self, *exc):
+        if self._saved is None:
+            return False
+        import select
+        import termios
+        fd = sys.stdin.fileno()
+        chunks = []
+        try:
+            while select.select([fd], [], [], 0)[0]:
+                data = os.read(fd, 4096)
+                if not data:
+                    break
+                chunks.append(data)
+        except OSError:
+            pass
+        finally:
+            termios.tcsetattr(fd, termios.TCSANOW, self._saved)
+        raw = b"".join(chunks).decode("utf-8", errors="replace")
+        kept: List[str] = []
+        for ch in raw:
+            if ch in "\x7f\x08":
+                if kept and kept[-1] not in "\n\r":
+                    kept.pop()
+            elif ch in "\n\r" or ch.isprintable():
+                kept.append(ch)
+        self.text = "".join(kept)
+        return False
+
+
 # ---------------------------------------------------------------------------
 # The organism you talk to
 # ---------------------------------------------------------------------------
 
 class Osiris:
     def __init__(self, core=None, mentor=None, home: str = LIVING_HOME,
-                 out: Callable[[str], None] = None, background: bool = True):
+                 out: Callable[[str], None] = None, background: bool = True,
+                 knowledge=None, tty: Optional[bool] = None):
         self.core = core
         self.mentor = mentor or OllamaMentor()
         self.home = home
         self.out = out or (lambda s: print(s, end="", flush=True))
         self.background = background
+        self.knowledge = knowledge
+        self.tty = sys.stdout.isatty() and sys.stdin.isatty() if tty is None else tty
+        self.held: List[str] = []   # lines typed while OSIRIS was answering, sent next
         self.history: List[Dict[str, str]] = []
         os.makedirs(home, exist_ok=True)
         self.stats_path = os.path.join(home, "stats.json")
@@ -413,22 +485,35 @@ class Osiris:
                 self.history.pop()
                 return ""
             voice = "mentor:" + model
+            self._mark_chat()
+            messages, sources = self.build_messages(gate, text)
             self.out("\nOSIRIS › ")
-            messages = [{"role": "system", "content": IDENTITY + self._state_note(gate)}] + self.history
-            try:
-                for piece in self.mentor.stream(messages):
-                    reply += piece
-                    self.out(piece)
-            except KeyboardInterrupt:
-                interrupted = True
-                self.out(" …(interrupted)")
-            except (OSError, ConnectionError, ValueError) as e:
-                self.out(f"\n[mentor {model} failed: {e}]")
-                interrupted = True
+            waiting = self.tty
+            if waiting:
+                busy = " -- the batch trainer is sharing the CPU" if self._trainer_running() else ""
+                self.out(f"\x1b[2m(thinking{busy})\x1b[0m")
+            started = time.time()
+            with TypeAhead(self.tty) as typed:
+                try:
+                    for piece in self.mentor.stream(messages):
+                        if waiting:
+                            self.out("\r\x1b[KOSIRIS › ")
+                            waiting = False
+                        reply += piece
+                        self.out(piece)
+                except KeyboardInterrupt:
+                    interrupted = True
+                    self.out(" …(interrupted)")
+                except (OSError, ConnectionError, ValueError) as e:
+                    self.out(f"\n[mentor {model} failed: {e}]")
+                    interrupted = True
             self.out("\n")
             note = "not learned: interrupted" if interrupted else (
                 "learning from this" if learnable else "not learned: pasted transcript")
-            self.out(f"  · voice: {model} speaking for OSIRIS · core step {self._core_step()} · {note}\n")
+            cited = f" · notes: {', '.join(sources)}" if sources else ""
+            self.out(f"  · voice: {model} speaking for OSIRIS · {time.time() - started:.0f} s · "
+                     f"core step {self._core_step()} · {note}{cited}\n")
+            self._hold(typed.text)
 
         if not reply:
             self.history.pop()
@@ -449,6 +534,51 @@ class Osiris:
             self._after(lesson, reply, heldout, key, idx)
         return reply
 
+    # -- what the mentor is told -------------------------------------------
+
+    def build_messages(self, gate: dict, text: str):
+        """System prompt (stable across turns, so Ollama reuses its cached prefix),
+        the history, and the new message with live state and looked-up notes
+        attached. The stored history keeps only what was actually said."""
+        system = IDENTITY
+        hits = []
+        if self.knowledge is not None:
+            system += "\n\nWhat is on record:\n" + self.knowledge.brief()
+            hits = self.knowledge.lookup(text, k=NOTES_PER_MESSAGE)
+        context = "[Live state, read from disk just now]\n" + self._state_note(gate).strip()
+        if self._trainer_running():
+            context += "\nA batch training run of your core is in progress (osiris train)."
+        if hits:
+            context += ("\n\n[Notes looked up for this message -- Devin's files; cite the file if "
+                        "you use one]\n" + self.knowledge.format_notes(hits))
+        last = {"role": "user", "content": context + "\n\n[Message]\n" + text}
+        messages = [{"role": "system", "content": system}] + self.history[:-1] + [last]
+        return messages, [h["source"] for h in hits]
+
+    def _trainer_running(self) -> bool:
+        try:
+            return bool(self.core is not None and self.core.training_locked())
+        except Exception:  # noqa: BLE001
+            return False
+
+    def _mark_chat(self) -> None:
+        try:
+            with open(os.path.join(self.home, CHAT_MARKER), "w", encoding="utf-8") as f:
+                f.write(str(os.getpid()))
+        except OSError:
+            pass
+
+    def _hold(self, typed: str) -> None:
+        """Lines typed during the reply become the next messages, visibly; an
+        unfinished line (no Enter) is shown, not sent."""
+        if not typed:
+            return
+        lines = typed.replace("\r", "\n").split("\n")
+        partial = lines.pop().strip()
+        self.held.extend(line.strip() for line in lines if line.strip())
+        if partial:
+            self.out(f"  · you were typing {partial!r} while I answered -- not sent; retype it to send\n")
+
     def _core_step(self) -> str:
         try:
             return str(self.core.step()) if self.core is not None else "n/a"
@@ -456,11 +586,14 @@ class Osiris:
             return "?"
 
     def _state_note(self, gate: dict) -> str:
+        who = (f"\nYour core ({getattr(self.core, 'name', 'none')}) is at training step "
+               f"{self._core_step()}; {self.stats['exchanges']} exchanges so far, "
+               f"{self.stats['core_spoke']} answered by the core itself.")
         if gate["n"]:
-            return (f"\n\nYour core's current state: {gate['n']} held-out exchanges scored, "
+            return who + (f"\nYour core's current state: {gate['n']} held-out exchanges scored, "
                     f"{gate['core_bpb']:.2f} bits/byte vs {gate['unigram_bpb']:.2f} for a unigram "
                     f"baseline; it speaks on its own at <= {SPEAK_BPB} bits/byte.")
-        return "\n\nYour core has not been scored on held-out conversation yet."
+        return who + "\nYour core has not been scored on held-out conversation yet."
 
     def _after(self, lesson: str, reply: str, heldout: bool, key: str, idx: int) -> None:
         def work():

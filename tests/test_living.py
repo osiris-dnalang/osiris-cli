@@ -53,7 +53,8 @@ def scores(o, n, core_bpb, uni=4.5):
 def make(tmp_path, **kw):
     out = []
     o = Osiris(core=kw.pop("core", FakeCore()), mentor=kw.pop("mentor", ScriptedMentor()),
-               home=str(tmp_path), out=out.append, background=False)
+               home=str(tmp_path), out=out.append, background=False,
+               knowledge=kw.pop("knowledge", None), tty=False)
     return o, out
 
 
@@ -142,3 +143,50 @@ def test_newer_rescoring_on_disk_wins_when_stats_are_saved(tmp_path):
     json.dump(disk, open(o.stats_path, "w"))
     o._save_stats()                                       # a stale in-memory copy must not win
     assert json.load(open(o.stats_path))["heldout_scores"]["a"][2] == 900
+
+
+def _knowledge(tmp_path):
+    from osiris_cli.knowledge import Knowledge
+    doc = tmp_path / "README.md"
+    doc.write_text("# Results\n\n<!-- scorecard:start -->\n| experiment | verdict | number |\n|---|---|---|\n"
+                   "| relay dead | PASS | median 100 |\n| concept drift | FAIL | ratio 0.8 |\n"
+                   "<!-- scorecard:end -->\n\n## Relay recovery\n\nThe organism reroutes around a "
+                   "dead relay in a median of 100 trials.\n\n## Drift\n\nConcept drift failed.\n")
+    return Knowledge(base=str(tmp_path), sources=[str(doc)])
+
+
+def test_mentor_is_told_what_is_on_record_and_notes_are_cited(tmp_path):
+    mentor = ScriptedMentor()
+    o, out = make(tmp_path / "home", mentor=mentor, knowledge=_knowledge(tmp_path))
+    o.converse("did the relay reroute work?")
+    system, last = mentor.calls[0][0]["content"], mentor.calls[0][-1]["content"]
+    assert "relay dead: PASS" in system and "concept drift: FAIL" in system
+    assert "reroutes around a dead relay" in last and last.endswith("did the relay reroute work?")
+    assert "notes: README.md" in "".join(out)
+    # history and the training lesson keep only what was said, not the attached notes
+    assert o.history[0]["content"] == "did the relay reroute work?"
+    assert json.loads(open(o.log_path).read().splitlines()[0])["user"] == "did the relay reroute work?"
+
+
+def test_system_prompt_is_stable_across_turns(tmp_path):
+    mentor = ScriptedMentor()
+    o, _ = make(tmp_path / "home", mentor=mentor, knowledge=_knowledge(tmp_path))
+    o.converse("hello")
+    o.converse("what drift results are there?")
+    assert mentor.calls[0][0] == mentor.calls[1][0]
+    assert [m["content"] for m in mentor.calls[1][1:3]] == ["hello", "Hello Devin. "]
+
+
+def test_chat_marks_itself_active_for_the_trainer(tmp_path):
+    from osiris_cli import train
+    o, _ = make(tmp_path)
+    assert not train.chat_active(str(tmp_path))
+    o.converse("hi")
+    assert train.chat_active(str(tmp_path))
+
+
+def test_lines_typed_during_a_reply_are_queued_and_partial_ones_reported(tmp_path):
+    o, out = make(tmp_path)
+    o._hold("tell me about yourself\nwhat do you know\nhalf a thou")
+    assert o.held == ["tell me about yourself", "what do you know"]
+    assert "'half a thou'" in "".join(out) and "not sent" in "".join(out)
