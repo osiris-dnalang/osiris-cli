@@ -2,6 +2,6 @@
 OSIRIS Sovereign Truth Architecture - Universal CLI Package
 """
 
-__version__ = "4.2.0"
+__version__ = "4.2.1"
 
 from .osiris_repl import main

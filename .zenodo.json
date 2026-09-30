@@ -1,7 +1,7 @@
 {
-  "title": "OSIRIS v4.2.0: a governed local console for a living language model",
+  "title": "OSIRIS v4.2.1: a governed local console for a living language model",
   "upload_type": "software",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "publication_date": "2026-09-30",
   "description": "<p>OSIRIS is a local-first console built around a small language model (osiris.nclm) that learns from every conversation and from the author's documents, and answers in its own voice only after passing a held-out test (30 held-out exchanges at &le; 2.0 bits/byte and below a unigram baseline). Until then a local Ollama model speaks for it, labelled as such, and the core trains on its replies. Deterministic code chooses and runs read-only checks (training status, git history, ledger integrity, system load, named files), retrieves grounding notes with file citations, and appends every exchange to a SHA-256 hash chain.</p><p>Measured state at release: the core has not passed its gate (7.60 bits/byte on held-out documents vs 5.03 for a unigram baseline after the first runs). The pre-registered learning test (NCLM-1) has not been run. Earlier CRSM-era constants and metrics kept in the repository (tau-phase anomaly, theta_lock = 51.843 deg, CCCE metrics) were refuted on hardware by the author and are not claimed.</p>",
   "creators": [
