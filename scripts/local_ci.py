@@ -54,7 +54,7 @@ def ci_env() -> dict:
 
 
 def export_tree(ref: str, dest: str) -> str:
-    commit = sh(["git", "-C", REPO, "rev-parse", ref]).stdout.strip()
+    commit = sh(["git", "-C", REPO, "rev-parse", f"{ref}^{{commit}}"]).stdout.strip()  # a tag names its commit
     if not commit:
         sys.exit(f"unknown commit {ref!r}")
     archive = subprocess.Popen(["git", "-C", REPO, "archive", commit], stdout=subprocess.PIPE)
