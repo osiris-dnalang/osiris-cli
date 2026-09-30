@@ -11,6 +11,7 @@ url: "https://github.com/osiris-dnalang/osiris-cli"
 repository-code: "https://github.com/osiris-dnalang/osiris-cli"
 license: LicenseRef-OSIRIS-Dual-v1.0
 type: software
+doi: 10.5281/zenodo.23063462  # concept DOI (all versions); v4.2.1 is 10.5281/zenodo.23063463
 keywords:
   - language model
   - continual learning

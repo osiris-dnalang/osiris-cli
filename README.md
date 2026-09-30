@@ -1,5 +1,7 @@
 # OSIRIS
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23063462.svg)](https://doi.org/10.5281/zenodo.23063462)
+
 A local-first console built around a **living language model**: OSIRIS's own small model
 (`osiris.nclm`) learns from every conversation and from your documents, and speaks in its own
 voice only after it passes a held-out test. Until then a local Ollama model speaks *for* it,
