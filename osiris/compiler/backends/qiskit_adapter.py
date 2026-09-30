@@ -80,7 +80,7 @@ class QiskitAdapter(BackendAdapter):
 
         gate_name = QISKIT_GATE_NAMES.get(ot)
         if gate_name is None:
-            return  # unknown gate — skip silently
+            raise ValueError(f"Unsupported IR operation for Qiskit: {ot.value}")
 
         if ot in SINGLE_QUBIT_GATES:
             getattr(qc, gate_name)(*op.qubits)
@@ -126,7 +126,8 @@ class QiskitAdapter(BackendAdapter):
                 ops.append(IROperation(_name_to_op[gate_name], qubits, params=[float(p) for p in params]))
             elif gate_name == "u":
                 ops.append(IROperation(IROpType.U3, qubits, params=[float(p) for p in params[:3]]))
-            # else: skip unknown gate
+            else:
+                raise ValueError(f"Unsupported Qiskit gate: {gate_name}")
 
         lineage = hashlib.sha256(f"qiskit_import:{nq}:{len(ops)}".encode()).hexdigest()[:16]
         circuit = QuantumCircuitIR(

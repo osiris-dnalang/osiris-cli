@@ -68,17 +68,17 @@ def demo_qbyte_operations():
 
     print("\n  Creating 8-qubit Qbyte...")
     qb = Qbyte()
-    print(f"  Initial state: |00000000⟩")
+    print("  Initial state: |00000000⟩")
     print(f"  {qb}")
 
     print("\n  Applying DNA-encoded gates:")
     print("    helix(0)  → Hadamard (superposition)")
     qb.helix(0)
-    print(f"    State after helix: |ψ⟩ = (|0⟩ + |1⟩)/√2 ⊗ |0000000⟩")
+    print("    State after helix: |ψ⟩ = (|0⟩ + |1⟩)/√2 ⊗ |0000000⟩")
 
     print("    bond(0,1) → CNOT (entanglement)")
     qb.bond(0, 1)
-    print(f"    State after bond: |ψ⟩ = (|00⟩ + |11⟩)/√2 ⊗ |000000⟩")
+    print("    State after bond: |ψ⟩ = (|00⟩ + |11⟩)/√2 ⊗ |000000⟩")
 
     print("    twist(2, π/4) → RZ rotation (phase)")
     qb.twist(2, np.pi/4)
@@ -120,7 +120,7 @@ def demo_phase_conjugate_healing():
     state[0] = 1.0 / np.sqrt(2)
     state[255] = 1.0 / np.sqrt(2)
 
-    print(f"  Initial state: (|00000000⟩ + |11111111⟩)/√2")
+    print("  Initial state: (|00000000⟩ + |11111111⟩)/√2")
     print(f"  Purity: {np.sum(np.abs(state)**4):.4f}")
 
     # Add random phase errors
@@ -142,7 +142,7 @@ def demo_phase_conjugate_healing():
         mode='automatic'
     )
 
-    print(f"\n  Results:")
+    print("\n  Results:")
     print(f"    Γ before: {gamma:.4f}")
     print(f"    Γ after:  {metrics['gamma']:.4f}")
     print(f"    Improvement: {(1 - metrics['gamma']/gamma)*100:.1f}%")
@@ -239,7 +239,7 @@ def demo_sovereign_executor():
     print(f"  Execution time: {result.execution_time*1000:.2f} ms")
 
     if result.metrics:
-        print(f"\n  CCCE Metrics:")
+        print("\n  CCCE Metrics:")
         print_metrics(
             result.metrics['Φ'],
             result.metrics['Λ'],
@@ -295,7 +295,7 @@ def demo_genetic_evolution():
     best = engine.best_individual
 
     print(f"\n  Evolution complete in {elapsed:.2f}s")
-    print(f"  Best individual:")
+    print("  Best individual:")
     print(f"    Genome: [{', '.join(f'{x:.4f}' for x in best.genome)}]")
     print_metrics(best.phi, best.lambda_c, best.gamma, best.fitness)
 

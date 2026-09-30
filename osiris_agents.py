@@ -50,8 +50,45 @@ class ReductionOperator:
         return 1.0
 
 # Role-based agents for mentor-protégé cognition
-from osiris_benchmark import stream
-from dnalang_sdk.nclm.personality import OsirisPersonality
+try:
+    from dnalang_sdk.nclm.personality import OsirisPersonality, PersonalityTrait
+except ImportError:
+    from enum import Enum
+    class PersonalityTrait(str, Enum):
+        CURIOSITY = "curiosity"
+        CAUTION = "caution"
+        CREATIVITY = "creativity"
+        LOGIC = "logic"
+        EMPATHY = "empathy"
+        ASSERTIVENESS = "assertiveness"
+        HUMOR = "humor"
+
+    class OsirisPersonality:
+        def __init__(self, traits: Optional[Dict[Any, float]] = None):
+            self.traits = traits or {
+                PersonalityTrait.CURIOSITY: 0.7,
+                PersonalityTrait.CAUTION: 0.5,
+                PersonalityTrait.CREATIVITY: 0.8,
+                PersonalityTrait.LOGIC: 0.9,
+                PersonalityTrait.EMPATHY: 0.6,
+                PersonalityTrait.ASSERTIVENESS: 0.5,
+                PersonalityTrait.HUMOR: 0.3,
+            }
+
+        def express(self, context: str) -> str:
+            if self.traits.get(PersonalityTrait.CURIOSITY, 0) > 0.8:
+                return f"I'm deeply curious about: {context}"
+            if self.traits.get(PersonalityTrait.CREATIVITY, 0) > 0.7:
+                return f"Let's imagine a novel approach to: {context}"
+            if self.traits.get(PersonalityTrait.LOGIC, 0) > 0.8:
+                return f"Analyzing logically: {context}"
+            return f"Considering: {context}"
+
+        def update_trait(self, trait: Any, value: float):
+            self.traits[trait] = max(0.0, min(1.0, value))
+
+        def summary(self) -> Dict[str, float]:
+            return {getattr(trait, "value", str(trait)): val for trait, val in self.traits.items()}
 
 import random
 
@@ -208,7 +245,6 @@ class AgentTask:
     completed_at: Optional[str] = None
     error_msg: Optional[str] = None
 
-from dnalang_sdk.nclm.personality import OsirisPersonality
 
 class BaseAgent(ABC):
     """Base agent class"""
@@ -429,7 +465,6 @@ class AgentManager:
         self.task_queue = asyncio.Queue()
         
         # Create agent pool
-        from dnalang_sdk.nclm.personality import OsirisPersonality
         personality = OsirisPersonality()
         self.agents = {
             'verifier_1': VerificationAgent('verifier_1', personality=personality),

@@ -645,7 +645,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="OSIRIS System Health Diagnostic")
-parser.epilog = """
+    parser.epilog = """
 SEO Metadata:
 Title: OSIRIS System Health Diagnostic
 Description: Diagnostic tool for evaluating the operational health and reliability of the OSIRIS Quantum Research System for academic and institutional environments.

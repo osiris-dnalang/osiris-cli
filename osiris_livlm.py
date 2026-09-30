@@ -1015,7 +1015,7 @@ def quick_demo(generations: int = 10, length: int = 48,
     if verbose:
         print(f"  Parameters: {model.gen_circuit.n_params}")
         print(f"  Population: {model.config.population_size}")
-        print(f"  Loading corpus...", end=" ", flush=True)
+        print("  Loading corpus...", end=" ", flush=True)
 
     model.load_corpus()
 
@@ -1026,7 +1026,7 @@ def quick_demo(generations: int = 10, length: int = 48,
     result = model.evolve(verbose=verbose)
 
     if verbose:
-        print(f"\n  Evolution complete.")
+        print("\n  Evolution complete.")
         print(f"  Best Ξ={result['best_fitness']:.4f}  "
               f"Φ={result['best_phi']:.4f}  "
               f"State: {result['consciousness_state']}")

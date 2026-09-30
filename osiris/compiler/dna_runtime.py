@@ -19,6 +19,7 @@ class RuntimeConfig:
     optimization_level: int = 3
     resilience_level: int = 1
     max_execution_time: int = 3600
+    allow_mock: bool = False
 
     def __post_init__(self):
         if not self.ibm_token:
@@ -58,26 +59,29 @@ class ExecutionResult:
 
 
 class QuantumRuntime:
-    """Executes quantum circuits (mock execution when Qiskit unavailable)."""
+    """Execute circuits without silently substituting a mock backend."""
 
     def __init__(self, config: Optional[RuntimeConfig] = None):
         self.config = config or RuntimeConfig()
         self.execution_log: List[ExecutionResult] = []
 
     def execute(self, circuit: QuantumCircuitIR) -> ExecutionResult:
-        """Execute quantum circuit via backend registry, with fallback."""
+        """Execute a circuit using the configured backend.
+
+        Mock execution is available only when explicitly enabled in the
+        configuration, so backend failures cannot be mistaken for results.
+        """
         t0 = time.time()
         try:
             from .backends.registry import BackendRegistry
             backend = BackendRegistry.get(self.config.backend_name)
             result = backend.execute(circuit, shots=self.config.shots)
-        except (KeyError, Exception):
-            try:
-                from qiskit import QuantumCircuit  # noqa: F401
-                qc = self._ir_to_qiskit(circuit)
-                result = self._execute_qiskit(qc)
-            except (ImportError, Exception):
-                result = self._mock_execution(circuit)
+        except Exception as exc:
+            if not self.config.allow_mock:
+                raise RuntimeError(
+                    f"Backend '{self.config.backend_name}' execution failed"
+                ) from exc
+            result = self._mock_execution(circuit)
         result.execution_time = time.time() - t0
         self.execution_log.append(result)
         return result

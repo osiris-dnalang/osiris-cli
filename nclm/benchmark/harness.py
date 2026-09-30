@@ -197,14 +197,14 @@ class NCLMBenchmark:
 
         if 'evolution' in results:
             evo = results['evolution']
-            print(f"\n  Evolution:")
+            print("\n  Evolution:")
             print(f"    Generations:  {evo['generations']}")
             print(f"    Best Ξ:       {evo['best_fitness']:.6f}")
             print(f"    Best Φ:       {evo['best_phi']:.6f}")
             print(f"    State:        {evo['consciousness_state']}")
             print(f"    Time:         {evo['elapsed_sec']:.1f}s")
 
-        print(f"\n  Generation Benchmarks:")
+        print("\n  Generation Benchmarks:")
         print(f"  {'Prompt':<10} {'Len':>4} {'Speed':>10} {'Coherence':>10} {'Printable':>10}")
         print(f"  {'-'*10} {'-'*4} {'-'*10} {'-'*10} {'-'*10}")
         for t in results.get('tests', []):
@@ -215,7 +215,7 @@ class NCLMBenchmark:
 
         if 'summary' in results:
             s = results['summary']
-            print(f"\n  Summary:")
+            print("\n  Summary:")
             print(f"    Avg speed:      {s['avg_chars_per_sec']:.1f} chars/sec")
             print(f"    Avg coherence:  {s['avg_coherence_2gram']:.4f}")
             print(f"    Avg printable:  {s['avg_printable_ratio']:.2%}")

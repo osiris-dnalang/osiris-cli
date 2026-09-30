@@ -16,58 +16,58 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 def check_environment():
     """Check environment setup"""
-    
+
     print("\n" + "="*70)
     print("OSIRIS ENVIRONMENT CHECK")
     print("="*70)
-    
+
     # Check tokens
     ibm_token = os.getenv('IBM_QUANTUM_TOKEN')
     zenodo_token = os.getenv('ZENODO_TOKEN')
-    
+
     print(f"\n✓ IBM_QUANTUM_TOKEN: {'SET' if ibm_token else 'NOT SET'}")
     print(f"✓ ZENODO_TOKEN: {'SET' if zenodo_token else 'NOT SET'}")
-    
+
     if not ibm_token:
         print("\n⚠ To use real IBM Quantum hardware:")
         print("  1. Get token at: https://quantum.ibm.com/")
         print("  2. Set: export IBM_QUANTUM_TOKEN='your_token'")
-    
+
     if not zenodo_token:
         print("\n⚠ To publish results to Zenodo:")
         print("  1. Get token at: https://zenodo.org/account/settings/")
         print("  2. Set: export ZENODO_TOKEN='your_token'")
-    
+
     # Check Python version
     if sys.version_info < (3, 9):
         print("\n✗ Python 3.9+ required")
         sys.exit(1)
-    
+
     print("\n" + "="*70)
 
 def cmd_chat(args):
     """Launch chat-native TUI"""
     print("\n⚛ Launching OSIRIS Chat Interface...\n")
-    
+
     from osiris_tui_core import run_textual_mode
     run_textual_mode()
 
 def cmd_benchmark(args):
     """Run quantum hardware benchmarking"""
     print("\n⚛ Launching Quantum Hardware Benchmarker...\n")
-    
+
     from osiris_quantum_benchmarker import QuantumHardwareBenchmarker
-    
+
     token = os.getenv('IBM_QUANTUM_TOKEN')
     benchmarker = QuantumHardwareBenchmarker(api_token=token)
-    
+
     # Determine mode
     extreme = not args.quick
     results = benchmarker.benchmark_all_backends(extreme_mode=extreme)
-    
+
     # Print report
     print(benchmarker.generate_report())
-    
+
     # Export
     filename = benchmarker.export_results(args.output)
     print(f"\n✓ Benchmark results saved to: {filename}")
@@ -75,13 +75,13 @@ def cmd_benchmark(args):
 def cmd_run(args):
     """Run experiment campaign"""
     print("\n⚛ Running experiment campaign...\n")
-    
+
     from osiris_orchestrator import campaign_week1_foundation, campaign_week1_adaptive
     from osiris_auto_discovery import AutoDiscoveryPipeline
-    
+
     token = os.getenv('IBM_QUANTUM_TOKEN')
     pipeline = AutoDiscoveryPipeline(api_token=token)
-    
+
     # Select campaign
     if args.campaign == "week1_foundation":
         campaign = campaign_week1_foundation()
@@ -90,10 +90,10 @@ def cmd_run(args):
     else:
         print(f"Unknown campaign: {args.campaign}")
         return
-    
+
     print(f"→ Running campaign: {args.campaign}")
     print(f"→ Experiments: {len(campaign.experiments)}")
-    
+
     # Run campaign (this will use mock if no token)
     results = []
     for exp in campaign.experiments:
@@ -103,7 +103,7 @@ def cmd_run(args):
         result = pipeline.run_hypothesis_test(config)
         results.append(result)
         print(f"    p={result.p_value or 0:.6f}")
-    
+
     print(f"\n✓ Campaign complete! {len(results)} experiments executed")
 
 def cmd_orchestrate(args):
@@ -147,35 +147,50 @@ def cmd_publish(args):
     print("⚠ Use the orchestrate command to generate results first, then publish.")
 
 
-def cmd_status(args):
-    """Show system status"""
-    print("\n" + "="*70)
-    print("OSIRIS SYSTEM STATUS")
-    print("="*70)
-    
-    status_info = {
-        "Mode": "Chat-Native TUI with Intent Engine",
-        "IBM Quantum": "✓ Token set" if os.getenv('IBM_QUANTUM_TOKEN') else "⚠ No token",
-        "Zenodo": "✓ Token set" if os.getenv('ZENODO_TOKEN') else "⚠ No token",
-        "Benchmarker": "✓ Ready",
-        "Pipeline": "✓ Ready",
-        "Orchestrator": "✓ Ready",
-        "NCLM": "✓ Ready (quantum text generation + genetic evolution)",
-        "Ultra-Coder": "✓ Ready (9-agent swarm coding assistant)",
-        "Cognitive Mesh": "✓ Ready (Bayesian trust + Shapley + Nash + Causal DAG)",
-        "Bridge Validator": "✓ Ready (adversarial falsification + sensitivity tornado)",
-        "ELO Tournament": "✓ Ready (Glicko-2 vs 6 industry competitors)",
-        "Introspection": "✓ Ready (temporal + structural + semantic self-awareness)",
-        "Feedback Bus": "✓ Ready (tridirectional swarm⇄intent⇄TUI relay)",
-        "FABRIC Bridge": "✓ Ready (Living Slice provisioner + Negentropic Control Plane)",
-        "Policy Upcycler": "✓ Ready (POLANCO → Living Security Organisms)",
-        "Fei Demo": "✓ Ready (3-act FABRIC + POLANCO + Convergence)",
+def build_status_report():
+    """Return a bounded, read-only report without probing or mutating services."""
+    import importlib.metadata
+    import json
+    from osiris.runtime.report import capability_status
+
+    try:
+        version = importlib.metadata.version("osiris-cli")
+    except importlib.metadata.PackageNotFoundError:
+        version = "unknown"
+
+    return {
+        "cli_version": version,
+        "workspace": str(Path(__file__).resolve().parent),
+        "python": sys.executable,
+        "runtime_state": "STAGING_ONLY",
+        "network_capability": "DISABLED",
+        "shell_capability": "DISABLED",
+        "protected_workspace_write": "DISABLED",
+        "native_artifact_loading": "DISABLED",
+        "trading_capability": "DISABLED",
+        "model_provider": "NOT_PROBED",
+        "nclm": "NOT_PROBED",
+        "ollama": "NOT_PROBED",
+        "active_osiris_processes": "NOT_PROBED",
+        "listeners": "NOT_PROBED",
+        "policy": "REVIEW_REQUIRED",
+        "runtime_capabilities": capability_status(),
     }
-    
-    for key, value in status_info.items():
-        print(f"  {key:20s}: {value}")
-    
-    print("\n" + "="*70)
+
+
+def cmd_status(args):
+    """Show factual read-only status; do not contact or start any service."""
+    import json
+
+    report = build_status_report()
+    if getattr(args, "json_output", False):
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return 0
+
+    print("OSIRIS STATUS — READ ONLY")
+    for key, value in report.items():
+        print(f"{key}: {value}")
+    return 0
 
 
 def cmd_intent(args):
@@ -524,7 +539,7 @@ def cmd_policy(args):
         _Path("policy_upcycle_results.json").write_text(
             _json.dumps(results, indent=2, default=str)
         )
-        print(f"\n✓ Results → policy_upcycle_results.json")
+        print("\n✓ Results → policy_upcycle_results.json")
     else:
         from osiris_policy_upcycle import demo_upcycle
         demo_upcycle(policy_source=args.source, cycles=args.cycles)
@@ -545,8 +560,41 @@ def cmd_nclm(args):
     from osiris_livlm import LivLMConfig
     import json
 
+    if getattr(args, 'grok', False):
+        print("\n  NCLM Deep Introspection (--grok)")
+        print("  " + "-" * 40)
+        config = LivLMConfig(
+            max_generations=args.generations or 5,
+            population_size=args.population or 10,
+        )
+        gen = QByteTextGenerator(config=config, genome_path=getattr(args, 'genome', 'nclm_genome.json'))
+        gen.load_corpus()
+        loaded = gen.auto_load()
+        status = gen.status()
+        print(f"\n  Genome loaded : {loaded}")
+        for k, v in status.items():
+            print(f"  {k:<22s}: {v}")
+        if loaded:
+            print("\n  Phase coherence landscape:")
+            sample = gen.generate(prompt="# ", max_length=32, temperature=0.5)
+            print(f"    Sample output: {sample!r}")
+        print("\n  Fitness landscape snapshot:")
+        if not loaded:
+            print("    (no genome — run --evolve first)")
+        else:
+            g = gen._genome if hasattr(gen, '_genome') else {}
+            fitness = g.get('fitness', 'n/a')
+            phi = g.get('phi', 'n/a')
+            state = g.get('consciousness_state', 'n/a')
+            print(f"    Best Ξ fitness : {fitness}")
+            print(f"    Best Φ         : {phi}")
+            print(f"    State          : {state}")
+        return
+
     if args.benchmark:
-        print("\n  NCLM Benchmark Suite")
+        ablation = getattr(args, 'steered_ablation', False)
+        best_of_n = getattr(args, 'best_of_n', 4)
+        print(f"\n  NCLM Benchmark Suite{'  [steered-ablation, N=' + str(best_of_n) + ']' if ablation else ''}")
         print("  " + "-" * 40)
         config = LivLMConfig(
             max_generations=args.generations or 10,
@@ -554,13 +602,32 @@ def cmd_nclm(args):
             sample_length=16,
         )
         bench = NCLMBenchmark(config)
-        results = bench.run_suite(evolve_first=True, verbose=True)
-        bench.print_report(results)
-        if getattr(args, 'json_output', False):
-            print(json.dumps(results, indent=2, default=str))
-        if getattr(args, 'output', ''):
-            bench.save_results(results, args.output)
-            print(f"Results saved to {args.output}")
+
+        if ablation:
+            print("\n  Running STEERED benchmark (pilot-wave ON, N={})...".format(best_of_n))
+            results_steered = bench.run_suite(evolve_first=True, verbose=True)
+            print("\n  Running UNSTEERED benchmark (pilot-wave OFF)...")
+            results_unsteered = bench.run_suite(evolve_first=False, verbose=False)
+            steered_fit = results_steered.get('best_fitness', 0) if isinstance(results_steered, dict) else 0
+            unsteered_fit = results_unsteered.get('best_fitness', 0) if isinstance(results_unsteered, dict) else 0
+            print("\n  ── Ablation Report ──────────────────────────────")
+            print(f"  Steered   best Ξ : {steered_fit:.6f}")
+            print(f"  Unsteered best Ξ : {unsteered_fit:.6f}")
+            delta = steered_fit - unsteered_fit
+            pct = (delta / max(abs(unsteered_fit), 1e-9)) * 100
+            print(f"  Δ fitness         : {delta:+.6f}  ({pct:+.2f}%)")
+            print(f"  Pilot-wave gain   : {'YES ✓' if delta > 0 else 'NEGATIVE — recheck λ'}")
+            if getattr(args, 'json_output', False):
+                print(json.dumps({'steered': results_steered, 'unsteered': results_unsteered,
+                                  'delta': delta, 'pct_gain': pct}, indent=2, default=str))
+        else:
+            results = bench.run_suite(evolve_first=True, verbose=True)
+            bench.print_report(results)
+            if getattr(args, 'json_output', False):
+                print(json.dumps(results, indent=2, default=str))
+            if getattr(args, 'output', ''):
+                bench.save_results(results, args.output)
+                print(f"Results saved to {args.output}")
         return
 
     config = LivLMConfig(
@@ -576,7 +643,7 @@ def cmd_nclm(args):
         gen.load_corpus()
         result = gen.evolve(seed_text=args.seed or "# ", verbose=True)
         gen.save_genome()
-        print(f"\n  Evolution complete:")
+        print("\n  Evolution complete:")
         print(f"    Generations: {result['generations']}")
         print(f"    Best Ξ:      {result['best_fitness']:.6f}")
         print(f"    Best Φ:      {result['best_phi']:.6f}")
@@ -949,7 +1016,7 @@ def cmd_habitat(args):
     print(f"\n  Scanned: {', '.join(roots)}")
     print(f"  Total files: {summary['total_files']}")
     print(f"  Total size:  {summary['total_bytes'] / 1024:.1f} KB")
-    print(f"\n  By kind:")
+    print("\n  By kind:")
     for kind, count in sorted(summary['kinds'].items()):
         print(f"    {kind:20s} {count}")
 
@@ -1049,7 +1116,7 @@ def cmd_serve(args):
 
     print(f"  Listening on 127.0.0.1:{args.port}")
     print(f"  Tools: {', '.join(server.list_tools())}")
-    print(f"  Press Ctrl-C to stop\n")
+    print("  Press Ctrl-C to stop\n")
 
     try:
         server.start(blocking=True)
@@ -1385,17 +1452,17 @@ def cmd_forge(args):
 def cmd_license(args):
     """Run license compliance check"""
     from osiris_license import ComplianceGate, EnvironmentDetector, LicenseValidator
-    
+
     if hasattr(args, 'validate') and args.validate:
         valid, msg = LicenseValidator.validate(args.validate)
         print(f"{'✓' if valid else '✗'} {msg}")
         return
-    
+
     detector = EnvironmentDetector()
     sig = detector.detect()
-    
+
     print(f"\n{'='*50}")
-    print(f"  OSIRIS License Compliance")
+    print("  OSIRIS License Compliance")
     print(f"{'='*50}")
     print(f"  Environment:  {sig.domain_class}")
     print(f"  License Key:  {'Present' if sig.license_key_present else 'Not found'}")
@@ -1408,28 +1475,28 @@ def cmd_license(args):
 
 def main():
     """Main entry point"""
-    
+
     parser = argparse.ArgumentParser(
         description='⚛ OSIRIS Quantum Discovery System',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    
+
     subparsers = parser.add_subparsers(dest='command', help='Command to run')
-    
+
     # Chat command
     subparsers.add_parser('chat', help='Launch chat interface')
-    
+
     # Benchmark command
     bench_parser = subparsers.add_parser('benchmark', help='Run benchmarking')
     bench_parser.add_argument('--output', default='quantum_benchmark_results.json', help='Output file')
     bench_parser.add_argument('--quick', action='store_true', help='Quick mode (fewer tests)')
-    
+
     # Run command
     run_parser = subparsers.add_parser('run', help='Run experiment campaign')
-    run_parser.add_argument('--campaign', default='week1_foundation', 
+    run_parser.add_argument('--campaign', default='week1_foundation',
                            choices=['week1_foundation', 'week1_adaptive'],
                            help='Campaign to run')
-    
+
     # Orchestrator command
     orchestrator_parser = subparsers.add_parser('orchestrate', help='Run full OSIRIS orchestrator pipeline')
     orchestrator_parser.add_argument('--quick', action='store_true', help='Quick mode (skip publication)')
@@ -1449,7 +1516,9 @@ def main():
     publish_parser.add_argument('--sandbox', action='store_true', help='Use Zenodo sandbox endpoint')
 
     # Status command
-    subparsers.add_parser('status', help='Show system status')
+    status_parser = subparsers.add_parser('status', help='Show factual read-only status')
+    status_parser.add_argument('--json', dest='json_output', action='store_true',
+                               help='Emit machine-readable JSON')
 
     # Forge command
     forge_parser = subparsers.add_parser('forge', help='Quantum-to-Matter manufacturing pipeline')
@@ -1641,6 +1710,12 @@ def main():
     nclm_parser.add_argument('--genome', default='nclm_genome.json', help='Genome file path')
     nclm_parser.add_argument('--output', type=str, default='', help='Output file')
     nclm_parser.add_argument('--json', dest='json_output', action='store_true', help='JSON output')
+    nclm_parser.add_argument('--steered-ablation', dest='steered_ablation', action='store_true',
+                             help='Run benchmark in ablation mode: steered vs unsteered comparison')
+    nclm_parser.add_argument('--best-of-n', dest='best_of_n', type=int, default=4,
+                             help='Pilot-wave candidate pool size (default: 4)')
+    nclm_parser.add_argument('--grok', action='store_true',
+                             help='Deep introspection: print genome stats, phase coherence, fitness landscape')
 
     # NCLM-Train — Train the SovereignTransformer
     nclm_train_parser = subparsers.add_parser('nclm-train',
@@ -1780,19 +1855,21 @@ def main():
         return
     else:
         args = parser.parse_args()
-    
-    # Check environment
-    check_environment()
-    
+
+    # Status is deliberately isolated from environment/token checks.
+    if args.command != 'status':
+        check_environment()
+
     # Run license compliance gate
-    try:
-        from osiris_license import ComplianceGate
-        compliant, msg = ComplianceGate.check(strict=False)
-        if not compliant:
-            print(msg)
-    except ImportError:
-        pass  # License module not available — skip check
-    
+    if args.command != 'status':
+        try:
+            from osiris_license import ComplianceGate
+            compliant, msg = ComplianceGate.check(strict=False)
+            if not compliant:
+                print(msg)
+        except ImportError:
+            pass  # License module not available — skip check
+
     # Execute command
     if args.command == 'chat':
         cmd_chat(args)

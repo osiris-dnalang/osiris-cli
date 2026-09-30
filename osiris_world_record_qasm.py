@@ -248,7 +248,11 @@ def main() -> None:
 
     # IBM Hardware Execution
     if args.ibm_backend:
-        token = args.ibm_token or os.getenv("IBM_QUANTUM_TOKEN") or "1DkOsJN8ik9nlvPCVVsr2A8XxC9QbyyJNJFDy69Gc1k3"
+        token = args.ibm_token or os.getenv("IBM_QUANTUM_TOKEN")
+        if not token:
+            raise RuntimeError(
+                "IBM hardware execution requires --ibm-token or IBM_QUANTUM_TOKEN"
+            )
         if len(results) == 1:
             print(f"\n=== IBM HARDWARE EXECUTION: {args.ibm_backend} ===")
             ibm_result = execute_on_ibm(results[0].qasm, args.ibm_backend, token, args.samples)
@@ -267,7 +271,7 @@ def main() -> None:
 
     # Zenodo Publishing
     if args.zenodo_token or os.getenv("ZENODO_TOKEN"):
-        token = args.zenodo_token or os.getenv("ZENODO_TOKEN") or "4MDB7r2vJXoFL2rHqgzvReu4yDdU1kfeI37i4doSUoxNT0IbwEr1Zm77vxPi"
+        token = args.zenodo_token or os.getenv("ZENODO_TOKEN")
         print("\n=== ZENODO PUBLISHING ===")
         zenodo_result = publish_to_zenodo({"title": "OSIRIS RQC Results"}, saved_paths, token)
         if zenodo_result:

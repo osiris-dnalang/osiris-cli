@@ -427,12 +427,12 @@ class PhoenixProtocol:
         lines = []
 
         # Header
-        lines.append(f"// ═══════════════════════════════════════════════════════════════════")
+        lines.append("// ═══════════════════════════════════════════════════════════════════")
         lines.append(f"// ORGANISM: {organism.name}")
-        lines.append(f"// Resurrected via PHOENIX PROTOCOL")
+        lines.append("// Resurrected via PHOENIX PROTOCOL")
         lines.append(f"// Source: {organism.source_file or 'unknown'}")
         lines.append(f"// Checksum: {organism.source_checksum or 'none'}")
-        lines.append(f"// ═══════════════════════════════════════════════════════════════════")
+        lines.append("// ═══════════════════════════════════════════════════════════════════")
         lines.append("")
 
         # ORGANISM block

@@ -97,8 +97,11 @@ class _MCPRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):  # noqa: N802
         if self.path == "/health":
-            self._reply(200, {"status": "ok", "server": self.server.name,
-                              "tools": len(self.server._tools), "uptime_s": self.server.uptime})
+            uptime = getattr(self.server, "uptime", None)
+            if uptime is None and hasattr(self.server, "_started_at") and self.server._started_at:
+                uptime = round(time.time() - self.server._started_at, 2)
+            self._reply(200, {"status": "ok", "server": getattr(self.server, "name", "osiris"),
+                              "tools": len(getattr(self.server, "_tools", {})), "uptime_s": uptime or 0.0})
         else:
             self._reply(404, {"error": "not found"})
 
@@ -182,6 +185,10 @@ class MCPClient:
     def __init__(self, server_url: str = "http://127.0.0.1:3000"):
         self.server_url = server_url.rstrip("/")
         self._req_id = 0
+        if "127.0.0.1" in self.server_url or "localhost" in self.server_url:
+            self._opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        else:
+            self._opener = urllib.request.build_opener()
 
     def _rpc(self, method: str, params: Optional[Dict] = None) -> Any:
         self._req_id += 1
@@ -197,7 +204,7 @@ class MCPClient:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with self._opener.open(req, timeout=30) as resp:
             return json.loads(resp.read())
 
     def initialize(self) -> Dict:
@@ -228,7 +235,7 @@ class MCPClient:
     def health(self) -> Dict:
         req = urllib.request.Request(f"{self.server_url}/health")
         try:
-            with urllib.request.urlopen(req, timeout=5) as resp:
+            with self._opener.open(req, timeout=5) as resp:
                 return json.loads(resp.read())
         except Exception as exc:
             return {"status": "unreachable", "error": str(exc)}

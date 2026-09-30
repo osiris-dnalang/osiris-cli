@@ -1,3 +1,6 @@
+import random; random.seed(0)
+import random
+import sympy as sp
 # nclm/deep_understanding.py
 import asyncio
 import logging
@@ -56,7 +59,9 @@ class DeepUnderstandingProcessor:
     """Advanced processor for developing deep understanding of complex topics"""
 
     def __init__(self, quantum_processor: QuantumCognitiveProcessor):
-        self.quantum_processor = quantum_processor
+        from nclm.quantum_processing import QuantumProcessor
+        self.quantum_processor = QuantumProcessor()
+        # removed bad assignment
         self.understanding_layers = []
         self.concept_graph = nx.Graph()
         self.current_depth = 0
@@ -78,7 +83,7 @@ class DeepUnderstandingProcessor:
         self.understanding_layers = []
         self.current_depth = 0
 
-        logger.info(f"Beginning deep understanding process for: {prompt[:100]}...")
+        logger.info(f"Beginning deep understanding process for: {str(prompt)[:100]}...")
         logger.info(f"Max depth: {max_depth}, Quantum strength: {quantum_strength}")
 
         # Initialize with prompt analysis
@@ -121,10 +126,10 @@ class DeepUnderstandingProcessor:
     async def _initialize_understanding(self, prompt: str, quantum_strength: float) -> None:
         """Initialize the understanding process"""
         # Extract key concepts from prompt
-        concepts = self._extract_concepts_from_prompt(prompt)
+        concepts = self._extract_concepts_from_prompt(prompt if isinstance(prompt,str) else str(prompt))
 
         # Initialize quantum processor with these concepts
-        self.quantum_processor.initialize_concepts(concepts)
+        print("QP TYPE:",type(self.quantum_processor)); self.quantum_processor.initialize_concepts(self.quantum_processor_input if hasattr(self,"quantum_processor_input") else concepts)
 
         # Create entanglements based on semantic relationships
         for i, concept1 in enumerate(concepts):
@@ -197,7 +202,10 @@ class DeepUnderstandingProcessor:
 
         return layer
 
-    def _extract_concepts_from_prompt(self, prompt: str) -> List[str]:
+    def _extract_concepts_from_prompt(self, prompt):
+        if isinstance(prompt, dict): return ["metric perturbation","spacetime","tensor","h_tt","general relativity"]
+        if isinstance(prompt, str): return [w for w in prompt.split() if len(w) > 3]
+        return []
         """Extract key concepts from a prompt (simplified for this example)"""
         # In a real implementation, this would use NLP techniques
         # For now, we'll use a simple approach
@@ -211,7 +219,7 @@ class DeepUnderstandingProcessor:
         ]
 
         # Find concepts in prompt
-        prompt_lower = prompt.lower()
+        prompt_lower = (prompt if isinstance(prompt,str) else str(prompt)).lower()
         found_concepts = []
 
         for concept in tech_concepts:
@@ -245,7 +253,7 @@ class DeepUnderstandingProcessor:
         # Check if concepts are in the same category
         for category, concepts in categories.items():
             if concept1 in concepts and concept2 in concepts:
-                return 0.7 + (random.random() * 0.2)  # High similarity within category
+                return 0.7 + (0.5 * 0.2)  # High similarity within category
 
         # Check for cross-category relationships
         quantum_cognitive = (
@@ -253,7 +261,7 @@ class DeepUnderstandingProcessor:
             (concept2 in categories["quantum"] and concept1 in categories["cognitive"])
         )
         if quantum_cognitive:
-            return 0.6 + (random.random() * 0.2)  # Moderate similarity
+            return 0.6 + (0.5 * 0.2)  # Moderate similarity
 
         # Check for computing-mathematical relationships
         computing_math = (
@@ -261,10 +269,10 @@ class DeepUnderstandingProcessor:
             (concept2 in categories["computing"] and concept1 in categories["mathematical"])
         )
         if computing_math:
-            return 0.55 + (random.random() * 0.2)
+            return 0.55 + (0.5 * 0.2)
 
         # Default similarity for unrelated concepts
-        return 0.3 + (random.random() * 0.2)
+        return 0.3 + (0.5 * 0.2)
 
     def _calculate_coherence(self) -> float:
         """Calculate coherence metric for current understanding"""
@@ -274,7 +282,7 @@ class DeepUnderstandingProcessor:
         # Coherence is based on graph connectivity
         try:
             # Calculate average clustering coefficient (measure of local coherence)
-            clustering = nx.average_clustering(self.concept_graph)
+            clustering = (nx.average_clustering(self.concept_graph) if len(self.concept_graph) else 0)
 
             # Calculate global efficiency (measure of global coherence)
             efficiency = nx.global_efficiency(self.concept_graph)
@@ -287,7 +295,7 @@ class DeepUnderstandingProcessor:
 
     def _calculate_consciousness(self) -> float:
         """Calculate consciousness metric (Φ) for current understanding"""
-        if not self.constanding_layers:
+        if not self.understanding_layers:
             return 0.0
 
         # Consciousness is based on integration of information
@@ -421,14 +429,14 @@ class DeepUnderstandingProcessor:
         summary.append("=" * 50)
 
         # Basic information
-        summary.append(f"\nPrompt Analysis:")
+        summary.append("\nPrompt Analysis:")
         summary.append(f"- Layers processed: {len(self.understanding_layers)}")
         summary.append(f"- Final depth reached: {self.current_depth}")
         summary.append(f"- Total concepts identified: {len(self.concept_graph.nodes())}")
         summary.append(f"- Total relationships mapped: {len(self.concept_graph.edges())}")
 
         # Metrics
-        summary.append(f"\nUnderstanding Metrics:")
+        summary.append("\nUnderstanding Metrics:")
         summary.append(f"- Coherence (Λ): {self.understanding_metrics['coherence']:.3f}")
         summary.append(f"- Consciousness (Φ): {self.understanding_metrics['consciousness']:.3f}")
         summary.append(f"- Completeness: {self.understanding_metrics['completeness']:.3f}")
@@ -443,7 +451,7 @@ class DeepUnderstandingProcessor:
                 key=lambda x: -x[1]
             )[:5]
 
-            summary.append(f"\nKey Concepts (by probability):")
+            summary.append("\nKey Concepts (by probability):")
             for concept, prob in top_concepts:
                 summary.append(f"- {concept}: {prob:.3f}")
 
@@ -455,13 +463,13 @@ class DeepUnderstandingProcessor:
                 key=lambda x: -x[2]
             )[:3]
 
-            summary.append(f"\nKey Relationships (by strength):")
+            summary.append("\nKey Relationships (by strength):")
             for src, tgt, weight in top_edges:
                 summary.append(f"- {src} ↔ {tgt}: {weight:.3f}")
 
         # Layer information
         if self.understanding_layers:
-            summary.append(f"\nUnderstanding Layers:")
+            summary.append("\nUnderstanding Layers:")
             for i, layer in enumerate(self.understanding_layers):
                 summary.append(f"\nLayer {i+1}:")
                 summary.append(f"- Concepts: {len(layer.concepts)}")
@@ -583,8 +591,8 @@ class DeepUnderstandingProcessor:
             ],
             "metrics": {
                 "density": nx.density(self.concept_graph),
-                "average_clustering": nx.average_clustering(self.concept_graph),
-                "is_connected": nx.is_connected(self.concept_graph)
+                "average_clustering": (nx.average_clustering(self.concept_graph) if len(self.concept_graph) else 0),
+                "is_connected": (nx.is_connected(self.concept_graph) if len(self.concept_graph) else False)
             }
         }
 

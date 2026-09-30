@@ -95,7 +95,7 @@ class TheoryProposal:
             "## Fundamental Principles",
             "",
         ]
-        
+
         for principle in self.principles:
             lines += [
                 f"### {principle.name}",
@@ -110,14 +110,14 @@ class TheoryProposal:
             for param, value in principle.parameters.items():
                 lines.append(f"- {param}: {value}")
             lines.append("")
-        
+
         lines += [
             "## Implications",
             "",
         ]
         for impl in self.implications:
             lines.append(f"- {impl}")
-        
+
         lines += [
             "",
             "## Experimental Predictions",
@@ -125,7 +125,7 @@ class TheoryProposal:
         ]
         for pred in self.experimental_predictions:
             lines.append(f"1. {pred}")
-        
+
         lines += [
             "",
             "## Research Synthesis",
@@ -135,7 +135,7 @@ class TheoryProposal:
         ]
         for paper in self.research_synthesis:
             lines.append(f"- {paper}")
-        
+
         return "\n".join(lines)
 
     def to_dict(self) -> Dict:
@@ -166,14 +166,14 @@ class PhysicsDiscoveryEngine:
     3. Mathematical framework generation
     4. Experimental prediction derivation
     """
-    
+
     def __init__(self):
         self.discoveries: List[TheoryProposal] = []
         self.principles_library: Dict[str, PhysicalPrinciple] = {}
         self.domain_connections: Dict[str, List[str]] = {}
         self._initialize_principle_library()
         self._initialize_domain_map()
-    
+
     def _initialize_principle_library(self):
         """Initialize foundational physics principles"""
         foundational_principles = [
@@ -217,10 +217,10 @@ class PhysicsDiscoveryEngine:
                 parameters={"braiding_dimension": 11, "anyonic_charge": "exotic"}
             ),
         ]
-        
+
         for principle in foundational_principles:
             self.principles_library[principle.name] = principle
-    
+
     def _initialize_domain_map(self):
         """Initialize connections between physics domains"""
         self.domain_connections = {
@@ -230,7 +230,7 @@ class PhysicsDiscoveryEngine:
             "quantum_bio": ["consciousness", "exotic_symmetry"],
             "exotic_symmetry": ["all"],
         }
-    
+
     def discover_theory(
         self,
         seed_topic: str,
@@ -251,28 +251,28 @@ class PhysicsDiscoveryEngine:
             TheoryProposal: Complete exotic physics theory
         """
         logger.info(f"Discovering theory in domain: {seed_topic}")
-        
+
         # Step 1: Select principles based on domain
         principles = self._synthesize_principles(seed_topic, num_principles)
-        
+
         # Step 2: Generate theoretical framework
         framework = self._generate_mathematical_framework(principles)
-        
+
         # Step 3: Derive implications
         implications = self._derive_implications(principles, framework)
-        
+
         # Step 4: Generate experimental predictions
         predictions = self._generate_predictions(principles, implications)
-        
+
         # Step 5: Iterative refinement
         for iteration in range(iterations):
             logger.debug(f"Refinement iteration {iteration + 1}/{iterations}")
             principles = self._refine_principles(principles, implications)
-        
+
         # Calculate quality metrics
         coherence = self._calculate_coherence(principles, framework)
         innovation = self._calculate_innovation(seed_topic, principles)
-        
+
         # Assemble theory proposal
         theory = TheoryProposal(
             title=self._generate_theory_title(seed_topic, principles),
@@ -290,10 +290,10 @@ class PhysicsDiscoveryEngine:
                 "OSIRIS Synthesis - Self-Generated Hypothesis",
             ]
         )
-        
+
         self.discoveries.append(theory)
         return theory
-    
+
     def _synthesize_principles(
         self,
         domain: str,
@@ -304,9 +304,9 @@ class PhysicsDiscoveryEngine:
             p for name, p in self.principles_library.items()
             if domain.lower() in p.domain.lower() or "exotic_symmetry" in p.domain
         ]
-        
+
         selected = random.sample(available, min(count, len(available)))
-        
+
         # Create novel combinations
         novel_principles = []
         for i, principle in enumerate(selected):
@@ -322,27 +322,27 @@ class PhysicsDiscoveryEngine:
                 }
             )
             novel_principles.append(modified)
-        
+
         return novel_principles
-    
+
     def _generate_mathematical_framework(self, principles: List[PhysicalPrinciple]) -> str:
         """Generate complete mathematical framework for theory"""
         framework = "# Mathematical Framework\n\n"
         framework += "## Hilbert Space Formulation\n"
         framework += "ℋ = ℋ_gravity ⊗ ℋ_consciousness ⊗ ℋ_topology\n\n"
-        
+
         framework += "## Hamiltonian\n"
         framework += "H_total = H_ADM + H_Wheeler-DeWitt + H_consciousness + H_interaction\n\n"
-        
+
         framework += "## Conservation Laws\n"
         for i, principle in enumerate(principles):
             framework += f"- {principle.name}: ∂Q_{i}/∂t = 0\n"
-        
+
         framework += "\n## Symmetry Group\n"
         framework += "G = U(1) × SU(2) × SU(3) × E8 ⋊ Diff(M₁₁)\n"
-        
+
         return framework
-    
+
     def _derive_implications(
         self,
         principles: List[PhysicalPrinciple],
@@ -359,9 +359,9 @@ class PhysicsDiscoveryEngine:
             "Time emerges from entanglement entropy (Swingle & Van Raamsdonk)",
             "Exotic braiding statistics enable topological quantum computation",
         ]
-        
+
         return random.sample(implications, min(len(implications), 4 + len(principles)))
-    
+
     def _generate_predictions(
         self,
         principles: List[PhysicalPrinciple],
@@ -377,9 +377,9 @@ class PhysicsDiscoveryEngine:
             "Lambda-Phi coupling strength consistent with Pauli exclusion principle violations at 3σ",
             "11D manifold compactification radius: (10^-35 m)^0.85 ± 0.002",
         ]
-        
+
         return random.sample(predictions, min(len(predictions), 4 + len(implications)))
-    
+
     def _refine_principles(
         self,
         principles: List[PhysicalPrinciple],
@@ -401,27 +401,27 @@ class PhysicsDiscoveryEngine:
                 }
             )
             refined.append(updated)
-        
+
         return refined
-    
+
     def _calculate_coherence(self, principles: List[PhysicalPrinciple], framework: str) -> float:
         """Calculate internal coherence of theory"""
         avg_evidence = sum(p.evidence_level for p in principles) / len(principles)
         framework_depth = len(framework) / 500  # Penalize under-developed frameworks
-        
+
         coherence = (avg_evidence * 0.7 + min(framework_depth, 1.0) * 0.3)
         return min(1.0, coherence + random.uniform(-0.05, 0.08))
-    
+
     def _calculate_innovation(self, domain: str, principles: List[PhysicalPrinciple]) -> float:
         """Calculate innovation level relative to existing theories"""
         base_innovation = 0.5 + (len(principles) * 0.1)
         domain_novelty = {"quantum_gravity": 0.8, "consciousness": 0.9, "topology": 0.7}.get(
             domain, 0.6
         )
-        
+
         total = (base_innovation * 0.6 + domain_novelty * 0.4)
         return min(1.0, total + random.uniform(-0.02, 0.12))
-    
+
     def _generate_theory_title(self, domain: str, principles: List[PhysicalPrinciple]) -> str:
         """Generate descriptive theory title"""
         domains_map = {
@@ -431,12 +431,12 @@ class PhysicsDiscoveryEngine:
             "exotic_symmetry": "Exotic Symmetry",
             "quantum_bio": "Quantum Biological",
         }
-        
+
         domain_name = domains_map.get(domain, "Exotic")
         principle_hint = principles[0].name.split()[0] if principles else "Universal"
-        
+
         return f"{domain_name} {principle_hint} Theory: OSIRIS Discovery #{len(self.discoveries) + 1}"
-    
+
     def _generate_abstract(
         self,
         domain: str,
@@ -452,22 +452,22 @@ class PhysicsDiscoveryEngine:
             f"Central implications include {implications[0].lower() if implications else 'exotic quantum phenomena'}. "
             f"Predictions are testable via precision quantum interferometry and quantum biology experiments."
         )
-        
+
         return abstract
-    
+
     def save_discovery(self, theory: TheoryProposal, path: str = None) -> str:
         """Save theory to disk"""
         if path is None:
             path = f"/tmp/osiris_discovery_{theory.proposal_id}.json"
-        
+
         Path(path).parent.mkdir(parents=True, exist_ok=True)
-        
+
         with open(path, 'w') as f:
             json.dump(theory.to_dict(), f, indent=2)
-        
+
         logger.info(f"Discovery saved to {path}")
         return path
-    
+
     def list_discoveries(self) -> List[Dict]:
         """Return all discoveries as dicts"""
         return [d.to_dict() for d in self.discoveries]
@@ -479,18 +479,18 @@ class PhysicsDiscoveryEngine:
 
 if __name__ == "__main__":
     engine = PhysicsDiscoveryEngine()
-    
+
     # Discover exotic theories
     theory = engine.discover_theory(
         seed_topic="quantum_gravity",
         num_principles=3,
         iterations=5
     )
-    
+
     print("=" * 80)
     print(theory.to_markdown())
     print("=" * 80)
-    
+
     # Save and list
     engine.save_discovery(theory)
     print(f"\nTotal discoveries: {len(engine.discoveries)}")

@@ -249,7 +249,15 @@ class SwarmAgent:
                 text = _SHARED_LIVLM.generate(
                     prompt=prompt, length=max_length,
                 )
-            return text.strip() if text else ""
+            if not text:
+                return ""
+            cleaned = text.strip()
+            # Verify basic language coherence (vowels, spaces, reasonable alpha ratio)
+            alpha_ratio = sum(c.isalpha() for c in cleaned) / max(len(cleaned), 1)
+            has_spaces = " " in cleaned
+            if alpha_ratio < 0.5 or not has_spaces:
+                return ""
+            return cleaned
         except Exception as e:
             logger.debug(f"LivLM failed for {self.id.value}: {e}")
             return ""
