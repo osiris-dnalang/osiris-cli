@@ -20,7 +20,10 @@ Subsystems Unified:
  11. 21 Sovereign Command Modules (Bridges, Validation, ELO Tournament, Forge, Policy, Fabric, Demo)
  12. Dynamic Terminal Fold-Aware UX (Automatic adaptation for mobile Termux and desktop displays)
 
-Physical Invariants:
+Historical constants (hypotheses from the CRSM framework, kept because older
+commands still compute with them; Devin's own hardware audits refuted theta_lock,
+the tau-phase anomaly and the CCCE "consciousness" metrics -- see
+~/docs/HONEST_ASSESSMENT.md -- so they are not shown as physical invariants):
   • Locking Resonance:  θ_lock = 51.843° (arctan(14/11) pyramid slope)
   • Coherence Floor:    Γ_floor = 0.0920 (Fail-closed decoherence ceiling)
   • Memory Invariant:   Λ_Φ = 2.176435e-8 kg (Universal Memory Constant)
@@ -92,10 +95,11 @@ CHI_PC = 0.869                                # Phase-conjugate coupling coeffic
 
 BANNER = r"""
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                   OSIRIS SOVEREIGN TRUTH ARCHITECTURE                        ║
+║                                  OSIRIS                                      ║
 ║                   ═══════════════════════════════════                        ║
-║     Non-Causal Living Language Model (NCLM) • 11D-CRSM Substrate • Cl(3,0)   ║
-║     Physical Invariants: θ_lock = 51.843° | Γ_floor = 0.092 | Λ_Φ = 2.1764e-8║
+║     a living language model: learns from every conversation, speaks in its   ║
+║     own voice only after passing a held-out gate · models propose, code      ║
+║     decides · every exchange hash-chained                                    ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 """
 
@@ -428,7 +432,7 @@ def print_banner():
     cols = get_terminal_width()
     print("\033[96m" + BANNER.strip() + "\033[0m\n")
     if cols >= 100:
-        print("\033[90m  Mode: DESKTOP WIDE-UNFOLDED (≥100 cols) | Native Cl(3,0) Vectorization Active\033[0m")
+        print("\033[90m  Mode: desktop wide (≥100 cols)\033[0m")
     else:
         print("\033[90m  Mode: MOBILE COMPACT / TERMUX (<100 cols) | Adaptive View Enabled\033[0m")
     
@@ -976,7 +980,13 @@ def get_living():
             knowledge = Knowledge()
         except Exception as e:  # noqa: BLE001 - OSIRIS still talks without its notes
             print(f"[OSIRIS] notes unavailable ({type(e).__name__}); answering without them.")
-        _LIVING = Osiris(core=core, knowledge=knowledge)
+        from osiris_cli.living import LIVING_HOME
+        from osiris_cli.probes import Probes
+
+        def trainer_status():
+            from osiris_cli import train as osiris_train
+            return osiris_train.status_lines(lock_path=core.lock_path() if core else None)
+        _LIVING = Osiris(core=core, knowledge=knowledge, probes=Probes(LIVING_HOME, trainer_status=trainer_status))
     return _LIVING
 
 
@@ -1084,7 +1094,8 @@ def execute_power_status(state: Optional[OsirisReplState] = None) -> None:
         state = SESSION
     dec = state.power_gov.check()
     print(f"\n\033[1;36m[POWER GOVERNOR]\033[0m")
-    print(f"  Clearance:   {'\033[1;32mALLOWED\033[0m' if dec.allowed else '\033[1;31mTHROTTLED\033[0m'}")
+    clearance = "\033[1;32mALLOWED\033[0m" if dec.allowed else "\033[1;31mTHROTTLED\033[0m"
+    print(f"  Clearance:   {clearance}")
     print(f"  Reason:      {dec.reason}")
     print(f"  Battery:     {dec.battery_pct:.1f}%")
     print(f"  Temperature: {dec.temp_c:.1f}°C")
@@ -1119,8 +1130,10 @@ def display_status(state: Optional[OsirisReplState] = None) -> None:
     print("\n\033[1;36m[OSIRIS::STATUS DASHBOARD]\033[0m")
     print(f"  Python Runtime : {sys.version.split()[0]} ({sys.platform})")
     print(f"  Process PID    : {os.getpid()}")
-    print(f"  Substrate State: {'\033[1;32mIGNITED (11D CRSM Active)\033[0m' if state.ignited else '\033[1;33mCOLD (Run /ignite)\033[0m'}")
-    print(f"  Cognitive Mesh : {'\033[1;32m9 AGENTS SYNCHRONIZED\033[0m' if state.mesh else '\033[1;33mSTANDBY\033[0m'}")
+    substrate = "\033[1;32mIGNITED (11D CRSM Active)\033[0m" if state.ignited else "\033[1;33mCOLD (Run /ignite)\033[0m"
+    mesh = "\033[1;32m9 AGENTS SYNCHRONIZED\033[0m" if state.mesh else "\033[1;33mSTANDBY\033[0m"
+    print(f"  Substrate State: {substrate}")
+    print(f"  Cognitive Mesh : {mesh}")
     print(f"  Power Governor : {p_dec.reason}")
     print(f"  Coherence Floor: {state.coherence_floor:.4f} (Invariant Γ <= 0.092)")
     print(f"  Resonance Angle: {THETA_LOCK_DEG}° (Pyramid face slope arctan(14/11))")
@@ -1159,6 +1172,8 @@ def display_help() -> None:
     print("    /osiris              OSIRIS's core: step, held-out score, speaking gate")
     print("    /self <text>         Hear the core's own raw voice, even before it has earned it")
     print("    /mentor [model]      Choose which local Ollama model speaks while the core learns")
+    print("    /remember <fact>     OSIRIS keeps this across sessions  (/forget <words> drops it)")
+    print("    /check [trainer|git|ledger|system] [path]   Run OSIRIS's read-only checks and show the output")
     print("    /train [start H|stop] Overnight batch training (status by default)")
     print()
     print("  \033[1;36mCore Substrate\033[0m")
@@ -1384,6 +1399,19 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
             print()
     elif cmd == "/self":
         get_living().speak_raw(line_clean[len(parts[0]):].strip() or "hello")
+    elif cmd == "/remember":
+        print("[OSIRIS] " + get_living().remember(line_clean[len(parts[0]):].strip()))
+    elif cmd == "/forget":
+        needle = line_clean[len(parts[0]):].strip()
+        print("[OSIRIS] " + (get_living().forget(needle) if needle else "use /forget <words in the fact>"))
+    elif cmd == "/check":
+        living = get_living()
+        names = [p for p in parts[1:] if p in ("trainer", "git", "ledger", "system")] or \
+            ["trainer", "git", "ledger", "system"]
+        rest = " ".join(p for p in parts[1:] if p not in names)
+        print()
+        print(living.probes.format(living.probes.run(rest, names)) if living.probes else "[OSIRIS] checks unavailable")
+        print()
     elif cmd == "/mentor":
         living = get_living()
         living.mentor.set_model(parts[1] if len(parts) > 1 else None)

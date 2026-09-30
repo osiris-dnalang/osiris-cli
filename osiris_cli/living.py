@@ -48,6 +48,8 @@ TRAIN_STEPS_PER_EXCHANGE = 3
 SCORE_WINDOWS = 2
 HISTORY_TURNS = 12
 NOTES_PER_MESSAGE = 3
+RECALL_EXCHANGES = 6      # earlier conversation carried into a new session
+FACTS_FILE = "facts.jsonl"
 # While a chat is live the batch trainer's distillation (which runs the same
 # 7B mentor on the same CPU) waits; the marker is refreshed on every message.
 CHAT_MARKER = "chat.active"
@@ -71,8 +73,11 @@ If you do not know, say so and say how it could be checked.
 the 10^6 suppression and the CCCE "consciousness" metrics; do not present them as \
 established. His measured work (staggered dynamical decoupling, GHZ witnesses, the \
 pre-registered organism_sim/bridge results, the write-ahead ledger) is real.
-- You cannot run code, touch files or submit jobs from this conversation. Say what \
-command would do it instead.
+- Before you answer, OSIRIS's own code may run read-only checks (training status, git \
+history, the exchange ledger, system load, a file Devin names) and attach the output under \
+[Checked just now]. That output is real: quote it and say which check it came from. You \
+cannot change files, run experiments or submit jobs yourself; for those, name the command \
+Devin would run.
 - Facts about Devin's work come from the brief below and from the notes attached to a \
 message. When you use a note, name its file. If neither covers the question, say you \
 don't have it on record rather than guessing.
@@ -373,13 +378,14 @@ class TypeAhead:
 class Osiris:
     def __init__(self, core=None, mentor=None, home: str = LIVING_HOME,
                  out: Callable[[str], None] = None, background: bool = True,
-                 knowledge=None, tty: Optional[bool] = None):
+                 knowledge=None, tty: Optional[bool] = None, probes=None):
         self.core = core
         self.mentor = mentor or OllamaMentor()
         self.home = home
         self.out = out or (lambda s: print(s, end="", flush=True))
         self.background = background
         self.knowledge = knowledge
+        self.probes = probes
         self.tty = sys.stdout.isatty() and sys.stdin.isatty() if tty is None else tty
         self.held: List[str] = []   # lines typed while OSIRIS was answering, sent next
         self.history: List[Dict[str, str]] = []
@@ -387,6 +393,7 @@ class Osiris:
         self.stats_path = os.path.join(home, "stats.json")
         self.log_path = os.path.join(home, "exchanges.jsonl")
         self.stats = self._load_stats()
+        self.recall = self._recall()   # fixed for the session: keeps the system prompt stable
         self._pending: Optional[threading.Thread] = None
         self._lock = threading.Lock()
 
@@ -510,7 +517,7 @@ class Osiris:
             self.out("\n")
             note = "not learned: interrupted" if interrupted else (
                 "learning from this" if learnable else "not learned: pasted transcript")
-            cited = f" · notes: {', '.join(sources)}" if sources else ""
+            cited = f" · used: {', '.join(sources)}" if sources else ""
             self.out(f"  · voice: {model} speaking for OSIRIS · {time.time() - started:.0f} s · "
                      f"core step {self._core_step()} · {note}{cited}\n")
             self._hold(typed.text)
@@ -541,19 +548,75 @@ class Osiris:
         the history, and the new message with live state and looked-up notes
         attached. The stored history keeps only what was actually said."""
         system = IDENTITY
-        hits = []
+        hits, checks = [], []
         if self.knowledge is not None:
             system += "\n\nWhat is on record:\n" + self.knowledge.brief()
             hits = self.knowledge.lookup(text, k=NOTES_PER_MESSAGE)
+        facts = self.facts()
+        if facts:
+            system += "\n\nThings Devin asked you to remember:\n" + "\n".join("- " + f for f in facts)
+        if self.recall:
+            system += "\n\n" + self.recall
         context = "[Live state, read from disk just now]\n" + self._state_note(gate).strip()
         if self._trainer_running():
             context += "\nA batch training run of your core is in progress (osiris train)."
+        if self.probes is not None:
+            checks = self.probes.run(text)
+            if checks:
+                context += ("\n\n[Checked just now -- read-only, run by OSIRIS's code]\n"
+                            + self.probes.format(checks))
         if hits:
             context += ("\n\n[Notes looked up for this message -- Devin's files; cite the file if "
                         "you use one]\n" + self.knowledge.format_notes(hits))
         last = {"role": "user", "content": context + "\n\n[Message]\n" + text}
         messages = [{"role": "system", "content": system}] + self.history[:-1] + [last]
-        return messages, [h["source"] for h in hits]
+        return messages, [c["cmd"].split(";")[0] if c["name"] != "file" else c["cmd"] for c in checks] \
+            + [h["source"] for h in hits]
+
+    # -- memory across sessions ---------------------------------------------
+
+    def _recall(self) -> str:
+        """The last few exchanges from earlier sessions, read from the ledger --
+        no model summarises them, so nothing is invented about the past."""
+        try:
+            with open(self.log_path, encoding="utf-8") as f:
+                rows = [json.loads(line) for line in f.readlines()[-RECALL_EXCHANGES:]]
+        except (OSError, ValueError):
+            return ""
+        if not rows:
+            return ""
+        lines = [f"- {r.get('t', '?')[:16]} Devin: {r.get('user', '')[:200]!r} -> you: "
+                 f"{r.get('reply', '')[:200]!r}" for r in rows]
+        return ("Your most recent earlier exchanges (from the exchange ledger; earlier sessions "
+                "included):\n" + "\n".join(lines))
+
+    def facts(self) -> List[str]:
+        try:
+            with open(os.path.join(self.home, FACTS_FILE), encoding="utf-8") as f:
+                return [json.loads(line)["fact"] for line in f if line.strip()][-40:]
+        except (OSError, ValueError, KeyError):
+            return []
+
+    def remember(self, fact: str) -> str:
+        fact = " ".join(fact.split())[:500]
+        if not fact:
+            return "Nothing to remember -- use /remember <fact>."
+        with open(os.path.join(self.home, FACTS_FILE), "a", encoding="utf-8") as f:
+            f.write(json.dumps({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "fact": fact},
+                               ensure_ascii=False) + "\n")
+        return f"Remembered (in {FACTS_FILE}; applies from the next message): {fact}"
+
+    def forget(self, needle: str) -> str:
+        path = os.path.join(self.home, FACTS_FILE)
+        try:
+            with open(path, encoding="utf-8") as f:
+                rows = [line for line in f if line.strip()]
+        except OSError:
+            rows = []
+        keep = [r for r in rows if needle.lower() not in json.loads(r).get("fact", "").lower()]
+        with open(path, "w", encoding="utf-8") as f:
+            f.writelines(keep)
+        return f"Forgot {len(rows) - len(keep)} fact(s) matching {needle!r}."
 
     def _trainer_running(self) -> bool:
         try:

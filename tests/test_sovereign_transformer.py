@@ -34,8 +34,13 @@ import pytest
 class TestAutograd:
     """Numerical gradient checking for autograd operations."""
 
-    def _check_grad(self, f, x_data, eps=1e-4, rtol=1e-3, atol=1e-5):
-        """Check autograd gradient against finite differences."""
+    def _check_grad(self, f, x_data, eps=1e-2, rtol=1e-2, atol=1e-3):
+        """Check autograd gradient against finite differences.
+
+        Tensor stores float32, so the finite differences are float32 too: with
+        eps=1e-4 their rounding error alone (~ulp(y)/eps ≈ 3e-3) exceeded the
+        old rtol=1e-3 while the analytic gradients were exact. eps=1e-2 keeps the
+        O(eps²) truncation error near 1e-4; tolerances are the usual float32 ones."""
         from osiris.nclm.autograd import Tensor
 
         x = Tensor(x_data.copy(), requires_grad=True)
@@ -420,11 +425,10 @@ class TestTrainer:
         # y should be x shifted by 1
         raw = np.frombuffer(data, dtype=np.uint8).copy()
         for i in range(2):
-            for j in range(8):
-                start = int(np.where(raw == x[i, 0])[0][0]) if x[i, 0] in raw else -1
-                if start >= 0:
-                    assert y[i, j] == raw[start + j + 1]
-                    break
+            # locate the whole window, not just its first byte (bytes repeat)
+            starts = [s for s in range(len(raw) - 8) if np.array_equal(raw[s:s + 8], x[i])]
+            assert starts, "batch window is not a slice of the corpus"
+            assert any(np.array_equal(y[i], raw[s + 1:s + 9]) for s in starts)
 
     def test_corpus_load(self):
         from osiris.nclm.trainer import Corpus

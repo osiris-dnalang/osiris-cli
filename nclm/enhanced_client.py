@@ -60,6 +60,7 @@ class EnhancedDNALangCopilotClient:
             }
 import asyncio
 import logging
+import math
 from typing import Dict, Optional, Any
 from pathlib import Path
 from .enhanced_config import NCLMEnhancedConfig, NCLMMode
@@ -260,10 +261,10 @@ class EnhancedDNALangCopilotClient:
             # Add quantum processing instructions
             quantum_context.append("\n[QUANTUM PROCESSING INSTRUCTIONS]")
             quantum_context.append(
-                f"- Consider concepts in superposition with probabilities as weights"
+                "- Consider concepts in superposition with probabilities as weights"
             )
             quantum_context.append(
-                f"- Explore entangled relationships between concepts"
+                "- Explore entangled relationships between concepts"
             )
             quantum_context.append(
                 f"- Apply quantum-inspired reasoning with entanglement strength {self.config.cognitive_params.quantum_entanglement:.2f}"
@@ -712,7 +713,7 @@ class EnhancedDNALangCopilotClient:
                     concepts = self._nclm_core.domain_knowledge[domain].get("concepts", [])[:3]
                     interpretation.append(f"     Key Concepts: {', '.join(concepts)}")
                 else:
-                    interpretation.append(f"     General domain analysis recommended")
+                    interpretation.append("     General domain analysis recommended")
         else:
             interpretation.append("   - General Knowledge Domain:")
             interpretation.append("     Apply broad cognitive processing without domain specialization")

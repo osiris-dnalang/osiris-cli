@@ -162,7 +162,7 @@ def test_mentor_is_told_what_is_on_record_and_notes_are_cited(tmp_path):
     system, last = mentor.calls[0][0]["content"], mentor.calls[0][-1]["content"]
     assert "relay dead: PASS" in system and "concept drift: FAIL" in system
     assert "reroutes around a dead relay" in last and last.endswith("did the relay reroute work?")
-    assert "notes: README.md" in "".join(out)
+    assert "used: README.md" in "".join(out)
     # history and the training lesson keep only what was said, not the attached notes
     assert o.history[0]["content"] == "did the relay reroute work?"
     assert json.loads(open(o.log_path).read().splitlines()[0])["user"] == "did the relay reroute work?"
@@ -190,3 +190,27 @@ def test_lines_typed_during_a_reply_are_queued_and_partial_ones_reported(tmp_pat
     o._hold("tell me about yourself\nwhat do you know\nhalf a thou")
     assert o.held == ["tell me about yourself", "what do you know"]
     assert "'half a thou'" in "".join(out) and "not sent" in "".join(out)
+
+
+def test_checks_are_attached_to_the_message_and_listed(tmp_path):
+    from osiris_cli.probes import Probes
+    mentor = ScriptedMentor()
+    o, out = make(tmp_path)
+    o.mentor = mentor
+    o.probes = Probes(str(tmp_path), base=str(tmp_path), trainer_status=lambda: ["run 7 · step 120"])
+    o.converse("how is training going?")
+    last = mentor.calls[0][-1]["content"]
+    assert "[Checked just now" in last and "$ osiris train --status\nrun 7 · step 120" in last
+    assert "used: osiris train --status" in "".join(out)
+
+
+def test_new_session_recalls_earlier_exchanges_and_remembered_facts(tmp_path):
+    o, _ = make(tmp_path)
+    o.converse("my cat is called Qubit")
+    print(o.remember("Devin prefers short answers"))
+    mentor = ScriptedMentor()
+    o2, _ = make(tmp_path, mentor=mentor)          # a new session, same home
+    o2.converse("hi again")
+    system = mentor.calls[0][0]["content"]
+    assert "my cat is called Qubit" in system and "- Devin prefers short answers" in system
+    assert "Forgot 1" in o2.forget("short answers") and o2.facts() == []

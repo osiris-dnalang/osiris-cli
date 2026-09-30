@@ -53,6 +53,39 @@ def test_converter_compile_default_source():
     assert circuit.qubit_count >= 1
 
 
+def test_converter_rejects_malformed_dna_source():
+    converter = OrganismConverter()
+
+    try:
+        converter.compile("organism {")
+    except (SyntaxError, ValueError) as exc:
+        assert "Expected" in str(exc) or "organism" in str(exc)
+    else:
+        assert False, "malformed DNA-Lang source must not become a default circuit"
+
+
+def test_runtime_does_not_silently_fallback_to_mock():
+    runtime = QuantumRuntime(RuntimeConfig(backend_name="missing-backend", shots=8))
+
+    try:
+        runtime.execute(_simple_ir())
+    except RuntimeError as exc:
+        assert "missing-backend" in str(exc)
+    else:
+        assert False, "missing backend must fail instead of returning mock results"
+
+
+def test_runtime_mock_requires_explicit_opt_in():
+    runtime = QuantumRuntime(RuntimeConfig(
+        backend_name="missing-backend",
+        shots=8,
+        allow_mock=True,
+    ))
+    result = runtime.execute(_simple_ir())
+    assert result.backend == "local_mock"
+    assert sum(result.counts.values()) == 8
+
+
 def test_converter_translate_sovereign_round_trip():
     converter = OrganismConverter()
     circuit = _simple_ir()

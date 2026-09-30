@@ -1,46 +1,20 @@
 cff-version: 1.2.0
-message: "If you use this software or research, please cite it as below."
+message: "If you use this software, please cite it as below."
 authors:
-  - family-names: "davis"
-    given-names: "devin phillip"
-    affiliation: "agile defense systems llc"
-  - name: "OSIRIS dna::}{::lang NCLM"
-    affiliation: "autonomous quantum discovery system"
-title: "OSIRIS: Autonomous Quantum Discovery System"
-version: 4.0.0
-date-released: 2026-04-10
+  - family-names: "Davis"
+    given-names: "Devin Phillip"
+    affiliation: "Agile Defense Systems LLC"
+title: "OSIRIS: a governed local console for a living language model"
+version: 4.2.0
+date-released: 2026-09-30
 url: "https://github.com/osiris-dnalang/osiris-cli"
 repository-code: "https://github.com/osiris-dnalang/osiris-cli"
 license: LicenseRef-OSIRIS-Dual-v1.0
 type: software
 keywords:
-  - quantum computing
-  - phase conjugation
-  - qByte mining
-  - tetrahedral quaternion lattice
-  - consciousness
-  - autopoiesis
-  - CRSM manifold
-  - sovereign compute
+  - language model
+  - continual learning
+  - local-first AI
+  - held-out evaluation
+  - provenance
   - dna::}{::lang
-  - negentropic efficiency
-  - Scimitar-SSE
-  - cross-device synchronization
-  - bifurcated polarization
-  - AURA AIDEN duality
-  - nclm
-  - neurips
-  - ultra-coder
-  - self-improving
-  - autonomous discovery
-  - iterative refinement
-abstract: >-
-  OSIRIS: Sovereign quantum computing framework with 8-qubit DNA-encoded
-  registers (qByte system), genetically evolved Living Language Model (LivLM),
-  Non-Causal Living Model (NCLM) for quantum text generation, 9-agent NCLLM
-  deliberation swarm, Bayesian cognitive mesh governance, tridirectional
-  introspection engine, adversarial bridge validator, CRSM 7D torsion physics,
-  FABRIC NSF testbed integration, Quantum-to-Matter 3D manufacturing pipeline,
-  and automated Zenodo publishing. 25+ CLI commands, zero external LLM
-  dependencies, pure NumPy quantum execution. Co-authored by devin phillip
-  davis and OSIRIS dna::}{::lang NCLM.

@@ -1,3 +1,0 @@
-nclm
-osiris_env
-quantum_discovery

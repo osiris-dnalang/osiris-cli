@@ -12,7 +12,7 @@ import hashlib
 import time
 from collections import Counter
 from dataclasses import dataclass, asdict
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from .dna_ir import (
     IRCompiler, IROptimizer, QuantumCircuitIR, IROperation, IROpType,
@@ -71,37 +71,35 @@ class OrganismConverter:
         optimize : bool
             Run IR optimizer after compilation.
         """
-        # Try parsing as DNA-Lang source
-        try:
-            tokens = Lexer(source).tokenize()
-            ast_nodes = Parser(tokens).parse()
-            if ast_nodes:
-                organism = ast_nodes[0]
-                name = getattr(organism, "name", "organism")
-                # Count qubits from quantum_state operations
-                qubits = 2
-                ops: List[IROperation] = []
-                if hasattr(organism, "quantum_state") and organism.quantum_state:
-                    used = set()
-                    for qop in organism.quantum_state.operations:
-                        for q in qop.qubits:
-                            used.add(q)
-                        op_type = _resolve_op_type(qop.operation)
-                        if op_type:
-                            ops.append(IROperation(op_type, qop.qubits,
-                                                   params=qop.params))
-                    if used:
-                        qubits = max(used) + 1
-                    # Add measurements
-                    ops.append(IROperation(IROpType.MEASURE, list(range(qubits)),
-                                           classical_bits=list(range(qubits))))
-                circuit = self._ir_compiler.compile(name, qubits=qubits,
-                                                    operations=ops if ops else None)
-                circuit.source_organism = name
-            else:
-                circuit = self._ir_compiler.compile(source)
-        except Exception:
-            # Treat as organism name for default Bell-state circuit
+        tokens = Lexer(source).tokenize()
+        ast_nodes = Parser(tokens).parse()
+        if ast_nodes:
+            organism = ast_nodes[0]
+            name = getattr(organism, "name", "organism")
+            # Count qubits from quantum_state operations
+            qubits = 2
+            ops: List[IROperation] = []
+            if hasattr(organism, "quantum_state") and organism.quantum_state:
+                used = set()
+                for qop in organism.quantum_state.operations:
+                    for q in qop.qubits:
+                        used.add(q)
+                    op_type = _resolve_op_type(qop.operation)
+                    if op_type is None:
+                        raise ValueError(f"Unsupported DNA-Lang operation: {qop.operation}")
+                    ops.append(IROperation(op_type, qop.qubits, params=qop.params))
+                if used:
+                    qubits = max(used) + 1
+                # Add measurements
+                ops.append(IROperation(IROpType.MEASURE, list(range(qubits)),
+                                       classical_bits=list(range(qubits))))
+            circuit = self._ir_compiler.compile(name, qubits=qubits,
+                                                operations=ops if ops else None)
+            circuit.source_organism = name
+        elif _looks_like_dna_source(source):
+            raise ValueError("DNA-Lang source does not contain an organism declaration")
+        else:
+            # Preserve the documented convenience API for organism names.
             circuit = self._ir_compiler.compile(source)
 
         if optimize:
@@ -118,7 +116,7 @@ class OrganismConverter:
         target_backend: str,
         strict: bool = False,
         return_report: bool = False,
-    ) -> QuantumCircuitIR | tuple[QuantumCircuitIR, Dict[str, Any]]:
+    ) -> Union[QuantumCircuitIR, Tuple[QuantumCircuitIR, Dict[str, Any]]]:
         """Translate a circuit from one backend to another.
 
         1. IR → source backend native circuit
@@ -131,8 +129,12 @@ class OrganismConverter:
         src_adapter = BackendRegistry.get(source_backend)
         tgt_adapter = BackendRegistry.get(target_backend)
 
-        # If both are sovereign, just return a copy
+        # If both are sovereign, the circuit passes through unchanged
         if source_backend == target_backend == "sovereign":
+            if return_report:
+                return circuit, self.translation_report(
+                    circuit, circuit, source_backend=source_backend, target_backend=target_backend,
+                ).to_dict()
             return circuit
 
         # Step 1-2: normalise through source backend
@@ -313,3 +315,9 @@ def _resolve_op_type(op_name: str) -> Optional[IROpType]:
         "reset": IROpType.RESET,
     }
     return _map.get(op_name.lower())
+
+
+def _looks_like_dna_source(source: str) -> bool:
+    """Distinguish source text from the plain organism-name convenience API."""
+    markers = ("organism", "genome", "gene", "{", "}", "\n", ";")
+    return any(marker in source.lower() for marker in markers)

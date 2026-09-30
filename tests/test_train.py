@@ -175,3 +175,11 @@ def test_distillation_waits_while_a_chat_is_active(tmp_path):
     train.wait_for_quiet_chat(str(tmp_path), logs.append, sleep=sleep)
     assert naps and "paused" in logs[0] and logs[-1] == "distill: resumed"
     train.wait_for_quiet_chat(str(tmp_path), logs.append, sleep=lambda t: 1 / 0)  # quiet: no wait
+
+
+def test_corpus_skips_packaging_metadata(tmp_path):
+    (tmp_path / "pkg" / "dnalang.egg-info").mkdir(parents=True)
+    (tmp_path / "pkg" / "dnalang.egg-info" / "SOURCES.txt").write_text("a.py\nb.py\n" * 50)
+    (tmp_path / "pkg" / "README.md").write_text("A real document about the project. " * 20)
+    c = train.build_corpus(["pkg"], train.DEFAULT_EXTENSIONS, str(tmp_path))
+    assert {d.path for d in c["docs"]} == {"pkg/README.md"}

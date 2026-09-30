@@ -203,11 +203,6 @@ class ZenodoPublisher:
             else:
                 print("❌ Publication not approved. Aborting.")
                 return {"id": 0}
-
-                "doi": "10.5281/zenodo.9999999",
-                "doi_url": "https://zenodo.org/record/9999999",
-                "links": {"html": "https://zenodo.org/record/9999999"}
-            }
         
         if not REQUESTS_AVAILABLE:
             print("⚠️  requests library not available")

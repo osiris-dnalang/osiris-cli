@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "osiris-cli"
-version = "4.0.0"
-description = "OSIRIS Autonomous Quantum Discovery System — Phase-Conjugate qByte Substrate Engine + DNA::}{::lang NCLM + Full Agent Constellation + 11D-CRSM"
+version = "4.2.0"
+description = "OSIRIS: a governed local console for a living language model that learns from every conversation and speaks only after passing a held-out gate"
 readme = "README.md"
 license = {text = "LicenseRef-OSIRIS-Dual-v1.0"}
 requires-python = ">=3.9"
@@ -13,19 +13,12 @@ authors = [
     {name = "Devin Phillip Davis", email = "devin@agiledefensesystems.com"},
 ]
 keywords = [
-    "quantum-computing",
-    "phase-conjugation",
-    "qbyte",
-    "autonomous-discovery",
-    "sovereign-compute",
+    "language-model",
+    "continual-learning",
+    "local-first",
+    "provenance",
     "dna-lang",
     "nclm",
-    "consciousness",
-    "genetic-evolution",
-    "swarm-intelligence",
-    "crsm-manifold",
-    "agent-constellation",
-    "tesseract-decoder",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -45,9 +38,6 @@ dependencies = [
     "requests>=2.31.0",
     "PyYAML>=6.0",
     "rich>=13.0.0",
-    "dnalang @ file:///home/enki/dnalang-core",
-    "organism_sim @ file:///home/enki/organism_sim",
-    "bridge @ file:///home/enki/bridge",
 ]
 
 [project.optional-dependencies]
@@ -69,6 +59,12 @@ forge = [
 ]
 all = [
     "osiris-cli[quantum,tui,plot,forge]",
+]
+# The sibling research repos (optional; the console guards every import of them).
+research = [
+    "dnalang @ git+https://github.com/osiris-dnalang/dnalang-core.git",
+    "organism_sim @ git+https://github.com/osiris-dnalang/organism_sim.git",
+    "aegis-bridge @ git+https://github.com/osiris-dnalang/bridge.git",
 ]
 dev = [
     "pytest>=7.0",
@@ -132,6 +128,24 @@ py-modules = [
     "k8_preregistration",
     "osiris_unified_livlm",
     "osiris_comparative_benchmark",
+    "osiris_termux_console",
+    "osiris_ui",
+    "intent_router",
+    "db_ledger",
+    "experiments",
+    "gaps",
+    "gemini_bridge",
+    "genome",
+    "genome_ledger",
+    "osiris_ast_bridge",
+    "payload_gate",
+    "research",
+    "run_record",
+    "session_state",
+    "sprint_manager",
+    "structured_proposal",
+    "verify_loop",
+    "vision_indexer",
 ]
 
 [tool.setuptools.packages.find]

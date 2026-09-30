@@ -12,6 +12,8 @@ from pathlib import Path
 import random
 from collections import defaultdict
 
+NL = "\n"  # f-strings may not contain backslashes before Python 3.12
+
 # Define the classes here to avoid circular import
 class NCLMMode(Enum):
     GROK = "grok"
@@ -32,16 +34,16 @@ class DummyMemory:
     def __init__(self, config):
         self.episodic_memory = []
         self.semantic_memory = []
-    
+
     def retrieve_memories(self, prompt, limit=10):
         return []
-    
+
     def get_context_window(self, prompt):
         return []
-    
+
     def add_memory(self, *args, **kwargs):
         pass
-    
+
     def get_memory_stats(self):
         return {}
 
@@ -549,7 +551,7 @@ Key Insights:
 Your prompt inspired these creative explorations: "{prompt}"
 
 Creative Directions:
-{'\n'.join([f'- {i+1}. {elem}' for i, elem in enumerate(selected_elements)])}
+{NL.join([f'- {i+1}. {elem}' for i, elem in enumerate(selected_elements)])}
 
 [EXPANDED IDEAS]
 {self._generate_creative_response(prompt, metadata)}
@@ -596,7 +598,7 @@ Creative Directions:
 Structured analysis of: "{prompt}"
 
 Analysis Framework:
-{'\n'.join([f'{i+1}. {step}' for i, step in enumerate(analysis_steps)])}
+{NL.join([f'{i+1}. {step}' for i, step in enumerate(analysis_steps)])}
 
 [DETAILED ANALYSIS]
 {self._generate_analytical_response(prompt, metadata)}
@@ -766,7 +768,7 @@ This multi-layered analysis provides deep insights into the prompt's meaning and
 
 The cognitive system generated these innovative approaches:
 
-{'\\n'.join([f'{i+1}. {approach}' for i, approach in enumerate(selected)])}
+{NL.join([f'{i+1}. {approach}' for i, approach in enumerate(selected)])}
 
 [CREATIVE OUTPUT]
 Building on these directions, here's a synthesis of creative ideas:
@@ -797,7 +799,7 @@ This creative exploration demonstrates how {'different' if len(domains) > 1 else
             f"4. Logical Framework: Construct a {'mathematical' if 'physics' in domain else 'conceptual'} framework for analysis",
             f"5. Hypothesis Formation: Develop {'three' if complexity > 0.5 else 'two'} testable hypotheses",
             f"6. Structured Reasoning: Apply {'deductive' if 'physics' in domain else 'logical'} reasoning to evaluate hypotheses",
-            f"7. Conclusion Synthesis: Integrate findings into a comprehensive conclusion",
+            "7. Conclusion Synthesis: Integrate findings into a comprehensive conclusion",
             f"8. Verification: Cross-check results against established {domain} principles"
         ]
 
@@ -805,7 +807,7 @@ This creative exploration demonstrates how {'different' if len(domains) > 1 else
 
 The cognitive system performed this analytical process:
 
-{'\\n'.join(analytical_steps)}
+{NL.join(analytical_steps)}
 
 [ANALYTICAL RESULTS]
 
@@ -815,7 +817,7 @@ The cognitive system performed this analytical process:
    - Constraints: {'Multiple' if complexity > 0.6 else 'Several'} constraints detected
 
 2. **Structural Breakdown**:
-   {'\\n'.join([f'   - Component {i+1}: {self._generate_component_description(domain, i)}' for i in range(3 + int(complexity*2))])}
+   {NL.join([f'   - Component {i+1}: {self._generate_component_description(domain, i)}' for i in range(3 + int(complexity*2))])}
 
 3. **Logical Evaluation**:
    - Applied {'formal logic' if 'physics' in domain else 'structured reasoning'} to evaluate relationships
@@ -854,14 +856,14 @@ This structured analysis provides a rigorous foundation for understanding and ad
             f"Probabilistic exploration of {domain} possibilities",
             f"Quantum state analysis revealing {quantum_result.get('state_collapse', 0) + 1} dominant pathways",
             f"Wave-function-like consideration of {domain} solutions",
-            f"Quantum interference patterns in conceptual space",
+            "Quantum interference patterns in conceptual space",
             f"Decoherence management for stable {domain} insights"
         ]
 
         return f"""Quantum-cognitive analysis of: "{prompt}"
 
 Quantum Processing Insights:
-{'\\n'.join(quantum_aspects[:4])}
+{NL.join(quantum_aspects[:4])}
 
 [QUANTUM-ENHANCED ANALYSIS]
 
@@ -904,7 +906,7 @@ This quantum-enhanced analysis provides a unique perspective that complements cl
 
 This response integrates multiple cognitive processing modes:
 
-{'\\n'.join(hybrid_components)}
+{NL.join(hybrid_components)}
 
 [INTEGRATED ANALYSIS]
 

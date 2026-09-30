@@ -128,7 +128,8 @@ def build_corpus(roots: List[str], extensions: List[str], base: str = HOME,
         for dirpath, dirnames, filenames in os.walk(top):
             at_home = os.path.abspath(dirpath) == os.path.abspath(base)
             dirnames[:] = sorted(d for d in dirnames if d not in EXCLUDE_DIRS and not d.startswith(".")
-                                 and "venv" not in d and not (at_home and d in ARCHIVE_EXCLUDE_TOP))
+                                 and "venv" not in d and not d.endswith((".egg-info", ".dist-info"))
+                                 and not (at_home and d in ARCHIVE_EXCLUDE_TOP))
             for name in sorted(filenames):
                 full = os.path.join(dirpath, name)
                 rel = os.path.relpath(full, base)

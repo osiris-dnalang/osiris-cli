@@ -295,12 +295,12 @@ class Tensor:
                     # (..., M, K) @ (..., K, N) -> (..., M, N)
                     # dL/dA = dL/dC @ B^T
                     g = out.grad @ _swap_last_two(other.data)
-                    self.grad = self.grad + g
+                    self.grad = self.grad + _unbroadcast(g, self.shape)
                 if other.requires_grad:
                     other._ensure_grad()
                     # dL/dB = A^T @ dL/dC
                     g = _swap_last_two(self.data) @ out.grad
-                    other.grad = other.grad + g
+                    other.grad = other.grad + _unbroadcast(g, other.shape)
             out._backward_fn = _backward
         return out
 

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -36,12 +35,13 @@ execution_logs.json
 # Cython build artifacts
 osiris_torsion_core.c
 osiris_torsion_core.cpython-*.so
-=======
 # Ignore Python bytecode and editor files
-__pycache__/
 *.pyc
 *.pyo
 *.pyd
-.DS_Store
-.vscode/
->>>>>>> a42d389e (Production enhancements, security audit, and documentation updates. No Apple or exfiltration code.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>)
+
+# Local environments and packaging metadata (were tracked by mistake; untracked 2026-09-29)
+venv312/
+*.egg-info/
+.env*
+*.env
