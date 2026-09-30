@@ -1153,6 +1153,7 @@ def display_help() -> None:
     print("    /osiris              OSIRIS's core: step, held-out score, speaking gate")
     print("    /self <text>         Hear the core's own raw voice, even before it has earned it")
     print("    /mentor [model]      Choose which local Ollama model speaks while the core learns")
+    print("    /train [start H|stop] Overnight batch training (status by default)")
     print()
     print("  \033[1;36mCore Substrate\033[0m")
     print("    /ignite              Boot 11D CRSM Substrate, Cl(3,0) rotor & 9-Agent Cognitive Mesh")
@@ -1361,6 +1362,20 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
             handle_livlm_prompt(state, msg)
     elif cmd == "/osiris":
         execute_osiris_status()
+    elif cmd == "/train":
+        from osiris_cli import train as osiris_train
+        sub = parts[1].lower() if len(parts) > 1 else "status"
+        lock = get_living().core.lock_path() if get_living().core else None
+        if sub == "start":
+            hours = parts[2] if len(parts) > 2 else "8"
+            print("[OSIRIS] " + osiris_train.detach(["--hours", hours]))
+        elif sub == "stop":
+            print("[OSIRIS] " + osiris_train.stop(lock) if lock else "[OSIRIS] core unavailable")
+        else:
+            print("\n OSIRIS · batch training")
+            for ln in osiris_train.status_lines(lock_path=lock):
+                print("  " + ln)
+            print()
     elif cmd == "/self":
         get_living().speak_raw(line_clean[len(parts[0]):].strip() or "hello")
     elif cmd == "/mentor":
@@ -1429,6 +1444,10 @@ def main(argv: Optional[List[str]] = None) -> None:
     """Main entry point for 'osiris' universal command line."""
     if argv is None:
         argv = sys.argv[1:]
+    if argv and argv[0] == "train":
+        from osiris_cli import train as osiris_train
+        osiris_train.main(argv[1:])
+        return
 
     parser = argparse.ArgumentParser(
         prog="osiris",

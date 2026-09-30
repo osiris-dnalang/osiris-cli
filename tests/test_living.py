@@ -40,9 +40,14 @@ class FakeCore:
     def learn(self, text, steps):
         self.learned.append(text)
         self._step += steps
+        return 1.0
 
     def draft(self, prompt, max_bytes=160):
         return self._draft
+
+
+def scores(o, n, core_bpb, uni=4.5):
+    o.stats["heldout_scores"] = {f"h{i}": [core_bpb, uni, 0, i] for i in range(n)}
 
 
 def make(tmp_path, **kw):
@@ -67,18 +72,18 @@ def test_every_fifth_exchange_is_heldout_and_never_trained(tmp_path):
     o, _ = make(tmp_path, core=core)
     for i in range(10):
         o.converse(f"message {i}")
-    assert len(o.stats["heldout"]) == 2                  # exchanges 0 and 5
+    assert len(o.stats["heldout_scores"]) == 2           # exchanges 0 and 5
     assert len(core.learned) == 8
     assert not any("message 0\n" in t or "message 5\n" in t for t in core.learned)
 
 
 def test_gate_opens_only_after_enough_good_heldout_scores(tmp_path):
     o, _ = make(tmp_path)
-    o.stats["heldout"] = [[1.5, 4.5]] * (living.GATE_WINDOW - 1)
+    scores(o, living.GATE_WINDOW - 1, 1.5)
     assert not o.gate()["open"]
-    o.stats["heldout"].append([1.5, 4.5])
+    scores(o, living.GATE_WINDOW, 1.5)
     assert o.gate()["open"]
-    o.stats["heldout"] = [[3.0, 4.5]] * living.GATE_WINDOW
+    scores(o, living.GATE_WINDOW, 3.0)
     assert not o.gate()["open"]
 
 
@@ -86,7 +91,7 @@ def test_open_gate_lets_the_core_speak_and_it_is_not_trained_on_itself(tmp_path)
     core = FakeCore(draft="I remember you.")
     mentor = ScriptedMentor()
     o, out = make(tmp_path, core=core, mentor=mentor)
-    o.stats["heldout"] = [[1.2, 4.5]] * living.GATE_WINDOW
+    scores(o, living.GATE_WINDOW, 1.2)
     assert o.converse("do you remember me?") == "I remember you."
     assert mentor.calls == [] and core.learned == []
     assert o.stats["core_spoke"] == 1 and "own weights" in "".join(out)
@@ -94,7 +99,7 @@ def test_open_gate_lets_the_core_speak_and_it_is_not_trained_on_itself(tmp_path)
 
 def test_garbled_core_draft_falls_back_to_mentor(tmp_path):
     o, _ = make(tmp_path, core=FakeCore(draft="\x00\x01\x02\x7f\x03"))
-    o.stats["heldout"] = [[1.2, 4.5]] * living.GATE_WINDOW
+    scores(o, living.GATE_WINDOW, 1.2)
     assert o.converse("hi").strip() == "Hello Devin."
 
 
@@ -126,3 +131,14 @@ def test_exchange_log_is_hash_chained(tmp_path):
     o.converse("two")
     rows = [json.loads(line) for line in open(o.log_path)]
     assert rows[1]["prev"] == rows[0]["hash"] and rows[0]["prev"] == "0" * 64
+
+
+def test_newer_rescoring_on_disk_wins_when_stats_are_saved(tmp_path):
+    o, _ = make(tmp_path)
+    o.stats["heldout_scores"] = {"a": [9.0, 8.0, 3, 0]}
+    o._save_stats()
+    disk = json.load(open(o.stats_path))
+    disk["heldout_scores"]["a"] = [2.5, 4.4, 900, 0]      # a trainer rescored with newer weights
+    json.dump(disk, open(o.stats_path, "w"))
+    o._save_stats()                                       # a stale in-memory copy must not win
+    assert json.load(open(o.stats_path))["heldout_scores"]["a"][2] == 900

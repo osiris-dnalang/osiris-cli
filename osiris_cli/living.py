@@ -103,6 +103,19 @@ class OllamaMentor:
     def set_model(self, name: Optional[str]) -> None:
         self._model = name
 
+    def unload(self) -> None:
+        """Ask Ollama to free the model's memory now (used before batch training)."""
+        model = self.model()
+        if model is None:
+            return
+        req = urllib.request.Request(self.base + "/api/generate",
+                                     data=json.dumps({"model": model, "keep_alive": 0}).encode(),
+                                     headers={"Content-Type": "application/json"})
+        try:
+            urllib.request.urlopen(req, timeout=30).read()
+        except OSError:
+            pass
+
     def stream(self, messages: List[Dict[str, str]]) -> Iterator[str]:
         model = self.model()
         if model is None:
@@ -141,13 +154,37 @@ class NclmCore:
     def __init__(self, console):
         self._otc = console
 
+    def _paths(self):
+        return self._otc._organism_checkpoint_paths()
+
+    def _disk_step(self) -> int:
+        try:
+            with open(self._paths()[1], encoding="utf-8") as f:
+                return int(json.load(f).get("step", 0))
+        except (OSError, ValueError):
+            return 0
+
     def _model(self):
+        """The in-memory organism, reloaded if a trainer has saved a newer one."""
         st = self._otc._organism_state
-        if st["model"] is None:
+        if st["model"] is None or self._disk_step() > st["step"]:
             model, optimizer = self._otc._organism_build()
             step, history = self._otc._organism_load(model, optimizer)
             st.update(model=model, optimizer=optimizer, step=step, history=history)
         return st
+
+    def lock_path(self) -> str:
+        return os.path.join(os.path.dirname(self._paths()[0]), "train.lock")
+
+    def training_locked(self) -> bool:
+        """True while a batch trainer owns the checkpoint (a live pid in train.lock)."""
+        try:
+            with open(self.lock_path(), encoding="utf-8") as f:
+                pid = int(json.load(f)["pid"])
+            os.kill(pid, 0)
+            return pid != os.getpid()
+        except (OSError, ValueError, KeyError):
+            return False
 
     def step(self) -> int:
         with self._otc._organism_lock:
@@ -183,8 +220,8 @@ class NclmCore:
         from osiris.nclm import cross_entropy_loss
         from osiris.nclm.autograd import clip_grad_norm
         windows = self._windows(text, 64)
-        if not windows:
-            return None
+        if not windows or self.training_locked():
+            return None  # the lesson stays in the exchange log; the batch trainer replays it
         with self._otc._organism_lock:
             st = self._model()
             model, opt = st["model"], st["optimizer"]
@@ -201,6 +238,50 @@ class NclmCore:
                 st["history"].append(loss)
             self._otc._organism_save(model, opt, st["step"], st["history"], rotate=(st["step"] % 25 == 0))
         return loss
+
+    # -- batch training (osiris_cli.train) --------------------------------
+
+    def restart_schedule(self, total_steps: int, warmup_steps: int = 50) -> None:
+        """Warm restart of the cosine schedule for one batch run."""
+        from osiris.nclm import LRSchedule
+        with self._otc._organism_lock:
+            opt = self._model()["optimizer"]
+            opt.schedule = LRSchedule(warmup_steps=opt.step_count + warmup_steps,
+                                      total_steps=opt.step_count + max(total_steps, warmup_steps + 1))
+
+    def train_batch(self, x, y) -> float:
+        from osiris.nclm import cross_entropy_loss
+        from osiris.nclm.autograd import clip_grad_norm
+        with self._otc._organism_lock:
+            st = self._model()
+            model, opt = st["model"], st["optimizer"]
+            opt.zero_grad()
+            out = cross_entropy_loss(model.forward(x), y)
+            out.backward()
+            clip_grad_norm(model.parameters(), 1.0)
+            opt.step()
+            st["step"] += 1
+            st["history"].append(float(out.data))
+            return float(out.data)
+
+    def eval_batch(self, x, y) -> float:
+        """Mean loss in nats per byte, no training."""
+        from osiris.nclm import cross_entropy_loss
+        from osiris.nclm.autograd import no_grad
+        with self._otc._organism_lock:
+            model = self._model()["model"]
+            with no_grad():
+                return float(cross_entropy_loss(model.forward(x), y).data)
+
+    def save(self, rotate: bool = False) -> None:
+        with self._otc._organism_lock:
+            st = self._model()
+            self._otc._organism_save(st["model"], st["optimizer"], st["step"], st["history"], rotate=rotate)
+
+    def current_lr(self) -> float:
+        opt = self._model()["optimizer"]
+        sched = getattr(opt, "schedule", None)
+        return sched.get_lr(opt.step_count, opt.base_lr) if sched else opt.base_lr
 
     def draft(self, prompt: str, max_bytes: int = 160) -> str:
         with self._otc._organism_lock:
@@ -247,25 +328,38 @@ class Osiris:
             s = {}
         s.setdefault("exchanges", 0)
         s.setdefault("core_spoke", 0)
-        s.setdefault("heldout", [])       # [[core_bpb, unigram_bpb], ...]
+        # exchange hash -> [core_bpb, unigram_bpb, core_step, exchange_index]; a
+        # batch trainer rescoring with newer weights replaces an entry (higher step).
+        s.setdefault("heldout_scores", {})
+        s.pop("heldout", None)
         s.setdefault("unigram", {})       # byte -> count, train text only
         s.setdefault("last_head", "0" * 64)
         return s
 
     def _save_stats(self) -> None:
         with self._lock:
+            try:  # merge scores another process (the batch trainer) wrote meanwhile
+                with open(self.stats_path, encoding="utf-8") as f:
+                    disk = json.load(f).get("heldout_scores", {})
+            except (OSError, ValueError):
+                disk = {}
+            mine = self.stats["heldout_scores"]
+            for key, val in disk.items():
+                if key not in mine or val[2] > mine[key][2]:
+                    mine[key] = val
             tmp = self.stats_path + ".tmp"
             with open(tmp, "w", encoding="utf-8") as f:
                 json.dump(self.stats, f)
             os.replace(tmp, self.stats_path)
 
-    def _record(self, entry: dict) -> None:
+    def _record(self, entry: dict) -> str:
         entry["prev"] = self.stats["last_head"]
         body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
         entry["hash"] = hashlib.sha256(body.encode()).hexdigest()
         with open(self.log_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
         self.stats["last_head"] = entry["hash"]
+        return entry["hash"]
 
     # -- the gate ----------------------------------------------------------
 
@@ -279,7 +373,7 @@ class Osiris:
         return nats / len(data) / math.log(2)
 
     def gate(self) -> dict:
-        recent = self.stats["heldout"][-GATE_WINDOW:]
+        recent = sorted(self.stats["heldout_scores"].values(), key=lambda r: r[3])[-GATE_WINDOW:]
         n = len(recent)
         core = sum(r[0] for r in recent) / n if n else None
         uni = sum(r[1] for r in recent) / n if n else None
@@ -347,11 +441,12 @@ class Osiris:
             self.stats["core_spoke"] += 1
         heldout = idx % HELDOUT_EVERY == 0
         lesson = f"User: {text}\nOSIRIS: {reply}\n"
-        self._record({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "voice": voice, "heldout": heldout,
-                      "learnable": learnable and not interrupted, "user": text, "reply": reply})
+        key = self._record({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "voice": voice, "heldout": heldout,
+                            "learnable": learnable and not interrupted, "user": text, "reply": reply,
+                            "index": idx})
         self._save_stats()
         if learnable and not interrupted and voice != "core" and self.core is not None:
-            self._after(lesson, reply, heldout)
+            self._after(lesson, reply, heldout, key, idx)
         return reply
 
     def _core_step(self) -> str:
@@ -367,17 +462,19 @@ class Osiris:
                     f"baseline; it speaks on its own at <= {SPEAK_BPB} bits/byte.")
         return "\n\nYour core has not been scored on held-out conversation yet."
 
-    def _after(self, lesson: str, reply: str, heldout: bool) -> None:
+    def _after(self, lesson: str, reply: str, heldout: bool, key: str, idx: int) -> None:
         def work():
             try:
                 core_bpb = self.core.bits_per_byte(reply)
                 uni_bpb = self.unigram_bpb(reply)
+                trained = False
                 if not heldout:
-                    self.core.learn(lesson, TRAIN_STEPS_PER_EXCHANGE)
+                    trained = self.core.learn(lesson, TRAIN_STEPS_PER_EXCHANGE) is not None
                 with self._lock:
                     if heldout and core_bpb is not None:
-                        self.stats["heldout"].append([round(core_bpb, 4), round(uni_bpb, 4)])
-                    if not heldout:
+                        self.stats["heldout_scores"][key] = [round(core_bpb, 4), round(uni_bpb, 4),
+                                                             int(self.core.step()), idx]
+                    if trained:
                         for b, c in Counter(lesson.encode("utf-8", errors="ignore")).items():
                             self.stats["unigram"][str(b)] = self.stats["unigram"].get(str(b), 0) + c
                 self._save_stats()
