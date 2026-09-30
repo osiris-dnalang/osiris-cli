@@ -1,7 +1,0 @@
-networkx
-numpy
-matplotlib
-requests
-beautifulsoup4
-textual
-rich
