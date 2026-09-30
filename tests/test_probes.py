@@ -48,3 +48,21 @@ def test_failed_probe_is_reported_not_invented(tmp_path):
         raise RuntimeError("x")
     r = Probes(str(tmp_path), base=str(tmp_path), trainer_status=boom).run("training?")
     assert r == [{"name": "trainer", "cmd": "trainer", "out": "(probe failed: RuntimeError)"}]
+
+
+def test_evidence_quotes_the_results_file_and_its_hash(tmp_path):
+    import hashlib
+    d = tmp_path / "organism_sim" / "results"
+    d.mkdir(parents=True)
+    body = json.dumps({"rows": [1, 2], "verdict": {"outcome": "A and B", "A": True}})
+    (d / "m3c_eval_seeds70-74.json").write_text(body)
+    (d / "m3b_eval_seeds60-64.json").write_text(json.dumps({"verdict": True}))
+    (d / "m3_eval_seeds20-24.json").write_text(json.dumps({"verdict": False}))
+    p = Probes(str(tmp_path), base=str(tmp_path))
+    assert p.select("what is the m3c ablation?") == ["evidence"]
+    out = p.evidence("what is the m3c ablation?")["out"]
+    assert hashlib.sha256(body.encode()).hexdigest()[:16] in out
+    assert '"outcome":"A and B"' in out and "m3b" not in out and "rows" not in out
+    listing = p.evidence("show me the scorecard evidence")["out"].splitlines()
+    assert listing[0].endswith("verdict: FAIL") and listing[1].endswith("verdict: PASS")
+    assert "not run, or not recorded" in p.evidence("and M6?")["out"]

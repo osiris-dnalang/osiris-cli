@@ -1173,7 +1173,7 @@ def display_help() -> None:
     print("    /self <text>         Hear the core's own raw voice, even before it has earned it")
     print("    /mentor [model]      Choose which local Ollama model speaks while the core learns")
     print("    /remember <fact>     OSIRIS keeps this across sessions  (/forget <words> drops it)")
-    print("    /check [trainer|git|ledger|system] [path]   Run OSIRIS's read-only checks and show the output")
+    print("    /check [trainer|git|ledger|system|evidence] [path|m3c]   Run OSIRIS's read-only checks")
     print("    /train [start H|stop] Overnight batch training (status by default)")
     print()
     print("  \033[1;36mCore Substrate\033[0m")
@@ -1406,8 +1406,8 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
         print("[OSIRIS] " + (get_living().forget(needle) if needle else "use /forget <words in the fact>"))
     elif cmd == "/check":
         living = get_living()
-        names = [p for p in parts[1:] if p in ("trainer", "git", "ledger", "system")] or \
-            ["trainer", "git", "ledger", "system"]
+        names = [p for p in parts[1:] if p in ("trainer", "git", "ledger", "system", "evidence")] or \
+            ["trainer", "git", "ledger", "system", "evidence"]
         rest = " ".join(p for p in parts[1:] if p not in names)
         print()
         print(living.probes.format(living.probes.run(rest, names)) if living.probes else "[OSIRIS] checks unavailable")

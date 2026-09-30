@@ -19,6 +19,17 @@ from typing import Callable, Dict, List, Optional
 HOME = os.path.expanduser("~")
 REPOS = ("osiris-cli", "organism_sim", "dnalang-core", "bridge")
 MAX_FILE_CHARS = 2500
+RESULTS_DIR = os.path.join("organism_sim", "results")
+MAX_VERDICT_CHARS = 1500
+
+# How people name the pre-registered experiments -> the results-file prefix.
+EXPERIMENT_ALIASES = (
+    (re.compile(r"\bexperiment[\s_-]*zero\b", re.I), "expzero"),
+    (re.compile(r"\bexperiment[\s_-]*one\b", re.I), "expone"),
+    (re.compile(r"\bsubstrate[\s_-]*opt[\s_-]*([12])\b", re.I), r"substrate_opt\1"),
+)
+EXPERIMENT_RE = re.compile(r"\b(m[1-7][a-c]?|expzero|expone|substrate_opt[12]|relay(?:_cusum)?|drift|signalling)\b",
+                           re.I)
 
 # Never read, whatever is asked: credentials and private keys.
 SECRET_RE = re.compile(r"(^|/)(\.env[^/]*|[^/]*\.env|\.ssh|\.gnupg|\.aws|\.config/gcloud|\.netrc|"
@@ -110,6 +121,49 @@ class Probes:
             out.append("ollama: not reachable")
         return {"name": "system", "cmd": "uptime; free -h; ollama ps", "out": "\n".join(x for x in out if x)}
 
+    def evidence(self, msg: str) -> Dict[str, str]:
+        """The pre-registered results behind the scorecard: each named experiment's
+        results file, its sha256, and the verdict block exactly as the run wrote it.
+        With no experiment named, one line per evaluation file."""
+        d = os.path.join(self.base, RESULTS_DIR)
+        try:
+            names = sorted(n for n in os.listdir(d) if n.endswith(".json"))
+        except OSError:
+            return {"name": "evidence", "cmd": f"ls {RESULTS_DIR}", "out": "(no results directory)"}
+        text = msg
+        for rx, repl in EXPERIMENT_ALIASES:
+            text = rx.sub(repl, text)
+        wanted = {m.lower() for m in EXPERIMENT_RE.findall(text)}
+        picked = [n for n in names if n.split("_eval")[0].split("_sweep")[0].split("_tuning")[0] in wanted]
+        if not wanted:
+            picked = [n for n in names if "_eval" in n]
+        elif not picked:
+            return {"name": "evidence", "cmd": f"ls {RESULTS_DIR}",
+                    "out": f"(no results file for {', '.join(sorted(wanted))}: not run, or not recorded)"}
+        import hashlib
+        parts = []
+        for n in picked:
+            with open(os.path.join(d, n), "rb") as f:
+                raw = f.read()
+            head = f"{RESULTS_DIR}/{n} sha256:{hashlib.sha256(raw).hexdigest()[:16]}"
+            try:
+                verdict = json.loads(raw).get("verdict") if raw.lstrip()[:1] == b"{" else None
+            except ValueError:
+                verdict = None
+            if not wanted:
+                if isinstance(verdict, dict):
+                    verdict = next((verdict[k] for k in ("outcome", "verdict", "pass", "PASS") if k in verdict),
+                                   None)
+                if isinstance(verdict, bool):
+                    verdict = "PASS" if verdict else "FAIL"
+                parts.append(head + (f"  verdict: {str(verdict)[:100]}" if verdict is not None else ""))
+                continue
+            body = json.dumps(verdict, separators=(",", ":")) if verdict is not None else "(no verdict block)"
+            more = "…(truncated)" if len(body) > MAX_VERDICT_CHARS else ""
+            parts.append(f"{head}\nverdict: {body[:MAX_VERDICT_CHARS]}{more}")
+        cmd = f"sha256sum + verdict of {RESULTS_DIR}/" + ("{" + ",".join(picked) + "}" if wanted else "*_eval*.json")
+        return {"name": "evidence", "cmd": cmd, "out": ("\n\n" if wanted else "\n").join(parts)}
+
     def files(self, msg: str) -> List[Dict[str, str]]:
         found = []
         for raw in re.findall(r"(?:~/|/)?[\w.\-]+(?:/[\w.\-]+)+\.\w+|[\w\-]+\.(?:md|txt|json|py|dna|toml|yaml|yml)\b", msg):
@@ -135,6 +189,8 @@ class Probes:
         ("trainer", re.compile(r"\b(train(ing|er)?|distill\w*|checkpoint|step|bpb|bits.per.byte|gate|learn(ing|ed)?)\b", re.I)),
         ("git", re.compile(r"\b(git|commits?|committed|branch|diff|changes?|changed|repo(sitory|s)?|pushed)\b", re.I)),
         ("ledger", re.compile(r"\b(ledger|hash.?chain|exchanges?|log intact|tamper\w*|audit)\b", re.I)),
+        ("evidence", re.compile(r"\b(m[1-7][a-c]?|ablation|pre-?regist\w*|scorecard|evidence|results?|"
+                                r"experiment\w*|substrate[\s_-]*opt\w*|relay|drift|signalling|annecs)\b", re.I)),
         ("system", re.compile(r"\b(cpu|ram|memory usage|load|slow|ollama|system|machine|resources?)\b", re.I)),
     )
     SELF_RE = re.compile(r"\b(about yourself|who are you|what are you|status|how are you doing|what do you know)\b", re.I)
