@@ -68,6 +68,13 @@ for _p in _SEARCH_PATHS:
     if os.path.exists(_p) and _p not in sys.path:
         sys.path.insert(0, _p)
 
+try:
+    import osiris_termux_console as otc
+    import osiris_ui
+except ImportError:
+    otc = None
+    osiris_ui = None
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHYSICAL & MATHEMATICAL INVARIANTS
@@ -378,6 +385,8 @@ class OsirisReplState:
         self.firewall = SourceFirewall()
         self.classifier = IntentClassifier()
         self.coherence_floor: float = GAMMA_COHERENCE_FLOOR
+        self.theta_lock: float = THETA_LOCK_DEG
+        self.lambda_phi: float = LAMBDA_PHI
         self.active_qubits: int = 8
         self.genesis_time: float = time.time()
         self.last_benchmark: Optional[Dict[str, Any]] = None
@@ -422,7 +431,19 @@ def print_banner():
         print("\033[90m  Mode: DESKTOP WIDE-UNFOLDED (≥100 cols) | Native Cl(3,0) Vectorization Active\033[0m")
     else:
         print("\033[90m  Mode: MOBILE COMPACT / TERMUX (<100 cols) | Adaptive View Enabled\033[0m")
-    print("  Type \033[93m/help\033[0m for commands, \033[92m/ignite\033[0m to boot substrate & mesh, or type natural language.\n")
+    
+    if otc is not None and osiris_ui is not None:
+        try:
+            canvas = osiris_ui.Canvas()
+            ollama_ok, _ = otc._check_ollama_reachable(timeout=0.5)
+            engines = otc._council_engines(ollama_ok)
+            print(osiris_ui.council(canvas, engines))
+            otc._home()
+        except Exception as e:
+            print(f"  [Console Status: {e}]")
+            print("  Type \033[93m/help\033[0m for commands, \033[92m/ignite\033[0m to boot substrate & mesh, or type natural language.\n")
+    else:
+        print("  Type \033[93m/help\033[0m for commands, \033[92m/ignite\033[0m to boot substrate & mesh, or type natural language.\n")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -480,6 +501,12 @@ def execute_ignite(state: Optional[OsirisReplState] = None) -> Dict[str, Any]:
     except Exception as e:
         print(f"  └─ Cognitive Mesh Warning: {e} (operating with local lightweight swarm)\n")
 
+    if otc is not None:
+        try:
+            otc._ignite()
+        except Exception as e:
+            print(f"  └─ Living Language Console Ignition: {e}\n")
+
     # Log ignition to ledger
     h = state.log_event("IGNITION", {
         "theta_lock": THETA_LOCK_DEG,
@@ -527,33 +554,47 @@ def execute_dna(state: Optional[OsirisReplState] = None, intent: str = "Synthesi
 
     print(f"\n\033[1;35m[SYNTHESIS] Vectorizing intent to Hilbert Space ℋ₈ via Z3bra Intent Lock...\033[0m")
     print(f"  Intent: \"{intent}\"")
-    print("  ├─ Angular Drift: 0.001 rad (Resonance Lock θ = 51.843°)")
-    print("  └─ Vector Coordinates: [0.7071 + 0.0000j, 0.0000 + 0.7071j, 0.0000, 0.0000]")
+    print(f"  ├─ Angular Drift: 0.001 rad (Resonance Lock θ = {state.theta_lock:.3f}°)")
+    intent_hash = hashlib.sha256(intent.encode("utf-8")).hexdigest()
+    h_int = int(intent_hash[:8], 16)
+    c0 = (h_int % 1000) / 1000.0
+    c1 = math.sqrt(max(0.0, 1.0 - c0**2))
+    print(f"  └─ Vector Coordinates: [{c0:.4f} + 0.0000j, 0.0000 + {c1:.4f}j, 0.0000, 0.0000]")
 
     print("\n\033[1;36m[AST FIREWALL] Parsing generated dna::}{lang genome...\033[0m")
     print("  ├─ System Call Leak Check:         \033[1;32mPASS\033[0m")
     print("  ├─ Substitution Invariant Check:    \033[1;32mPASS\033[0m")
     print(f"  ├─ Coherence Bound Check (Γ ≤ {state.coherence_floor:.3f}): \033[1;32mPASS\033[0m")
 
+    gene_slug = re.sub(r'[^a-zA-Z0-9_]+', '_', intent.lower().strip())[:32].strip('_') or 'sovereign_intent'
+    gene_id = f"gene_{gene_slug}"
+    tau_us = (1.618033988749895 ** 8)
+    loci = [
+        f"locus 0x01: phase_twist(angle={state.theta_lock:.3f}°, resonance=OMEGA_11);",
+        f"locus 0x02: dynamical_decoupling(axis='X_PHASE', tau={tau_us:.4f}us);",
+        f"locus 0x03: suppress_entropy(threshold={state.coherence_floor:.4f}, lambda_phi={state.lambda_phi:.4e});",
+        f"locus 0x04: bind_intent(intent_hash=\"{intent_hash[:16]}\");"
+    ]
+    loci_str = "\n    ".join(loci)
+
     dna_code = f"""```dna
-// OSIRIS NCLM Synthesized Genome: K8 Tau-Sweep Repair
-gene tau_sweep_repair {{
-    locus 0x01: phase_twist(pi/2, lock=51.843);
-    locus 0x02: apply_pulse(X, duration=14.007GHz);
-    locus 0x03: decouple_zz_crosstalk(threshold=0.092);
+// OSIRIS NCLM Synthesized Genome: {intent}
+gene {gene_id} {{
+    {loci_str}
     
     express {{
-        enforce_floor(Γ_floor);
+        enforce_floor(Γ_floor >= {state.coherence_floor:.4f});
+        lock_phase(θ_lock == {state.theta_lock:.3f}°);
         yield coherence_gain;
     }}
 }}
 ```"""
     print("\n\033[1;37m[GENOME EMITTED]\033[0m")
     print(dna_code)
-    print("\033[1;32m[SYNTHESIS] Gene accepted into live GRN.\033[0m\n")
+    print(f"\033[1;32m[SYNTHESIS] Gene '{gene_id}' accepted into live GRN.\033[0m\n")
 
-    h = state.log_event("GENE_SYNTHESIS", {"intent": intent, "locus_count": 3, "gene": "tau_sweep_repair"})
-    return {"status": "SUCCESS", "event_hash": h, "gene": "tau_sweep_repair"}
+    h = state.log_event("GENE_SYNTHESIS", {"intent": intent, "locus_count": len(loci), "gene": gene_id})
+    return {"status": "SUCCESS", "event_hash": h, "gene": gene_id}
 
 
 def execute_ledger(state: Optional[OsirisReplState] = None) -> Dict[str, Any]:
@@ -589,6 +630,15 @@ def execute_ledger(state: Optional[OsirisReplState] = None) -> Dict[str, Any]:
 
     print(f"\033[1;32m[AUDIT] Merkle Root: {merkle_root}\033[0m")
     print("  └─ State: \033[1;32mUNTAMPERED. Non-substitution invariant ENFORCED.\033[0m\n")
+
+    if otc is not None:
+        try:
+            print("  \033[1;37m── Persistent Console & Genome Ledger Integrity ──\033[0m")
+            kind, summary = otc._integrity()
+            print(f"  [{kind.upper()}] {summary}\n")
+        except Exception as e:
+            print(f"  └─ Persistent Ledger Error: {e}\n")
+
     return {"status": "SUCCESS", "merkle_root": merkle_root, "events": len(state.evidence_ledger)}
 
 
@@ -871,44 +921,71 @@ def execute_benchmark_llm() -> None:
 # LIVING LANGUAGE MODEL INTERACTION & OLLAMA CONNECTIONS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def handle_livlm_prompt(state: OsirisReplState, prompt: str) -> None:
-    """Interactively passes user prompts through the Non-Causal Living Language Model."""
-    # 1. Screen input through Source Firewall
-    tier, reason = state.firewall.classify(prompt)
-    if tier == SourceTier.QUARANTINED_LOOP:
-        print(f"\033[1;31m[FIREWALL::QUARANTINE] {reason}\033[0m")
+def execute_digest(state: Optional[OsirisReplState], filepath: str) -> None:
+    """Ingest a file or document directly into the living context without line-by-line REPL triggering."""
+    if not filepath:
+        print("\033[1;33m[DIGEST] Usage: /digest <filepath>\033[0m")
         return
-
-    # 2. Check for intent classification
-    intent_res = state.classifier.classify(prompt)
-    if intent_res.route != Route.LIVLM and intent_res.confidence >= 0.75:
-        print(f"\033[90m[INTENT::ROUTER] Deduced route '{intent_res.route.value}' ({intent_res.confidence*100:.0f}% confidence, mode={intent_res.mode})\033[0m")
-        dispatch_command(state, f"/{intent_res.route.value}")
+    resolved_path = os.path.expanduser(filepath)
+    if not os.path.isabs(resolved_path):
+        candidates = [
+            os.path.abspath(os.path.join(os.getcwd(), resolved_path)),
+            os.path.join(os.path.expanduser("~"), "docs", filepath),
+            os.path.join(os.path.expanduser("~"), filepath),
+            os.path.join("/home/enki/flywheel-2026/docs", filepath),
+        ]
+        for c in candidates:
+            if os.path.exists(c):
+                resolved_path = c
+                break
+        else:
+            resolved_path = candidates[0]
+    if not os.path.exists(resolved_path):
+        print(f"\033[1;31m[DIGEST] File not found: {resolved_path}\033[0m")
         return
-
-    # 3. Process via LivLM
-    if state.livlm_engine is None:
-        try:
-            from osiris_unified_livlm import UnifiedLivLMEngine, EngineMode
-            state.livlm_engine = UnifiedLivLMEngine(default_mode=EngineMode.QUANTUM)
-            state.livlm_engine.initialize()
-        except ImportError:
-            try:
-                from osiris_livlm import get_livlm
-                state.livlm_engine = get_livlm()
-            except ImportError:
-                print(f"[OSIRIS::AST] Ingested input: '{prompt}'. (LivLM quantum engine not loaded)")
-                return
-
     try:
-        res = state.livlm_engine.generate(prompt, length=80)
-        output_text = getattr(res, "output", str(res))
-        elapsed_ms = getattr(res, "elapsed_ms", 0.0)
-        mode_val = getattr(res, "mode", "NCLM")
-        print(f"\n\033[1;32m[NCLM::LIVLM] Mode: {mode_val} ({elapsed_ms:.1f} ms) | Coherence Γ <= {state.coherence_floor:.4f}\033[0m")
-        print(f"{output_text}\n")
+        with open(resolved_path, "r", encoding="utf-8", errors="replace") as f:
+            content = f.read()
+        byte_len = len(content.encode("utf-8"))
+        line_count = len(content.splitlines())
+        print(f"\n\033[1;36m[DIGEST] Ingesting '{os.path.basename(resolved_path)}' ({byte_len} bytes, {line_count} lines)...\033[0m")
+        handle_livlm_prompt(state or SESSION, content)
+        if state is not None:
+            state.log_event("DOCUMENT_DIGEST", {"file": resolved_path, "bytes": byte_len, "lines": line_count})
     except Exception as e:
-        print(f"[OSIRIS::ERROR] LivLM generation error: {e}")
+        print(f"\033[1;31m[DIGEST] Failed to read file: {e}\033[0m")
+
+
+_LIVING = None
+
+
+def get_living():
+    """The one OSIRIS you talk to (osiris_cli.living), created on first use."""
+    global _LIVING
+    if _LIVING is None:
+        from osiris_cli.living import NclmCore, Osiris
+        core = None
+        if otc is not None:
+            try:
+                core = NclmCore(otc)
+            except Exception as e:  # noqa: BLE001 - a missing core leaves the mentor voice
+                print(f"[OSIRIS] core unavailable ({type(e).__name__}); mentor voice only.")
+        _LIVING = Osiris(core=core)
+    return _LIVING
+
+
+def handle_livlm_prompt(state: OsirisReplState, prompt: str) -> None:
+    """Plain text is conversation with OSIRIS. Pasted UI transcripts are still
+    answered, but never become training data (source firewall)."""
+    tier, _reason = state.firewall.classify(prompt)
+    get_living().converse(prompt, learnable=(tier != SourceTier.QUARANTINED_LOOP))
+
+
+def execute_osiris_status() -> None:
+    print("\n OSIRIS · living language model")
+    for line in get_living().status_lines():
+        print("  " + line)
+    print()
 
 
 def execute_ollama(state: Optional[OsirisReplState] = None, prompt: Optional[str] = None) -> None:
@@ -1071,6 +1148,12 @@ def execute_update() -> None:
 def display_help() -> None:
     """Displays comprehensive REPL command manifest."""
     print("\n\033[1;37mAvailable OSIRIS Apex Commands:\033[0m")
+    print("  \033[1;36mConversation\033[0m")
+    print("    <any text>           Talk to OSIRIS (commands need a leading /)")
+    print("    /osiris              OSIRIS's core: step, held-out score, speaking gate")
+    print("    /self <text>         Hear the core's own raw voice, even before it has earned it")
+    print("    /mentor [model]      Choose which local Ollama model speaks while the core learns")
+    print()
     print("  \033[1;36mCore Substrate\033[0m")
     print("    /ignite              Boot 11D CRSM Substrate, Cl(3,0) rotor & 9-Agent Cognitive Mesh")
     print("    /learn [N]           Initiate autopoietic ALife evolution (zero backprop)")
@@ -1097,6 +1180,25 @@ def display_help() -> None:
     print("    /validate            Run adversarial bridge sensitivity validation")
     print("    /forge [geometry]    Generate 3D lattice manifold mesh")
     print()
+    print("  \033[1;36mConsole & Living Language Interaction\033[0m")
+    print("    /home                Display Living Language Council & Next Best Action card")
+    print("    /why                 Show diagnosis/logs of the last failed sandbox execution")
+    print("    /bench               Run or list benchmarks against installed mentors")
+    print("    /mentors             Display mentor models and scorecard comparison")
+    print("    /runs, /run show     Show hash-chained sprint runs and proposed candidates")
+    print("    /apply               Apply proposed candidate from the last sprint run")
+    print("    /discard             Discard current pending candidate")
+    print("    /gap, /gaps          Capture or list capability gaps in the genome")
+    print("    /experiment          Draft quantum/CRSM research experiment brief")
+    print("    /lab                 Access Research Lab: papers, hypotheses, concept map")
+    print("    /sources             List indexed research papers and citations")
+    print("    /hypotheses          List and evaluate current research hypotheses")
+    print("    /sprint              Manage and execute sprint backlog stories")
+    print("    /focus [text]        Inspect or update current active session focus")
+    print("    /suggest             Show next best actions and hotkey mapping")
+    print("    /ui [mode]           Set console interface mode (rich, plain, access)")
+    print("    /check               Verify ledger, runs, and bench suite integrity")
+    print()
     print("  \033[1;36mSession\033[0m")
     print("    /update              Upgrade osiris-cli from GitHub and restart REPL")
     print("    /help                Display this command manifest")
@@ -1109,18 +1211,125 @@ def display_help() -> None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def dispatch_command(state: OsirisReplState, line: str) -> None:
-    parts = line.strip().split()
-    if not parts:
+    line_clean = line.strip()
+    if not line_clean:
         return
+
+    # 1. Hotkey dispatch from Living Language Console suggestions
+    if otc is not None:
+        upper_k = line_clean.upper()
+        if upper_k in otc._pending_suggestions:
+            target_cmd = otc._pending_suggestions[upper_k]
+            return dispatch_command(state, target_cmd)
+        elif line_clean in otc._pending_suggestions:
+            target_cmd = otc._pending_suggestions[line_clean]
+            return dispatch_command(state, target_cmd)
+
+    parts = line_clean.split()
     cmd = parts[0].lower()
 
+    # 2. Living Language Console & Termux Routing
+    if otc is not None:
+        if cmd == "/home":
+            otc._home()
+            return
+        elif cmd == "/why":
+            otc._why()
+            return
+        elif cmd in ("/bench", "/mentors") or (cmd == "/benchmark" and len(parts) > 1 and parts[1].lower() in ("run", "runs", "tasks", "compare", "leaderboard")):
+            if cmd.startswith("/mentor"):
+                otc._mentors(line_clean)
+            else:
+                otc._bench(line_clean)
+            return
+        elif cmd == "/run" and len(parts) > 1 and parts[1].lower() == "show":
+            otc._run_show(line_clean)
+            return
+        elif cmd in ("/runs", "/run"):
+            otc._runs(line_clean)
+            return
+        elif cmd == "/apply":
+            otc._apply(line_clean)
+            return
+        elif cmd == "/discard":
+            otc._discard(line_clean)
+            return
+        elif cmd in ("/gap", "/gaps"):
+            otc._gap(line_clean)
+            return
+        elif cmd in ("/experiment", "/experiments"):
+            otc._experiment(line_clean)
+            return
+        elif cmd == "/lab":
+            otc._lab(line_clean)
+            return
+        elif cmd == "/sources":
+            otc._sources(line_clean)
+            return
+        elif cmd == "/hypotheses":
+            otc._hypotheses(line_clean)
+            return
+        elif cmd == "/organism":
+            otc._organism(line_clean)
+            return
+        elif cmd == "/ui":
+            otc._ui(line_clean)
+            return
+        elif cmd == "/sprint":
+            otc._sprint(line_clean)
+            return
+        elif cmd == "/reroute":
+            otc._reroute(line_clean)
+            return
+        elif cmd == "/focus":
+            otc._focus(line_clean)
+            return
+        elif cmd == "/suggest":
+            otc._suggest(line_clean)
+            return
+        elif cmd == "/digest":
+            parts = line_clean.split(maxsplit=1)
+            if len(parts) > 1 and parts[1].strip():
+                execute_digest(state, parts[1].strip())
+            else:
+                otc._digest()
+            return
+        elif cmd == "/ingest":
+            parts = line_clean.split(maxsplit=1)
+            filepath = parts[1].strip() if len(parts) > 1 else ""
+            execute_digest(state, filepath)
+            return
+        elif cmd == "/facts":
+            otc._facts(line_clean)
+            return
+        elif cmd == "/plan":
+            otc._plan(line_clean)
+            return
+        elif cmd == "/consensus":
+            otc._consensus(line_clean)
+            return
+        elif cmd == "/check":
+            otc._check()
+            return
+        elif cmd == "/nclm":
+            otc._nclm(line_clean)
+            return
+        elif cmd == "/intent":
+            otc._intent(line_clean)
+            return
+
+    # 3. Commands need a leading "/". Anything else is conversation with OSIRIS,
+    # so a sentence that starts with "learn", "status" or "dna" is never hijacked.
+    if not cmd.startswith("/") and cmd not in ("?",):
+        handle_livlm_prompt(state, line_clean)
+        return
     if cmd in ("/ignite", "ignite"):
         execute_ignite(state)
     elif cmd in ("/learn", "learn"):
         steps = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 5
         execute_learn(state, generations=steps)
     elif cmd in ("/dna", "dna"):
-        intent = line[len(parts[0]):].strip().strip('\'"')
+        intent = line_clean[len(parts[0]):].strip().strip('\'"')
         execute_dna(state, intent=intent or "Synthesize error repair gene for K8 tau-sweep")
     elif cmd in ("/ledger", "ledger"):
         execute_ledger(state)
@@ -1146,9 +1355,18 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     elif cmd in ("/ollama", "ollama"):
         sub_prompt = " ".join(parts[1:]) if len(parts) > 1 else None
         execute_ollama(state, sub_prompt)
-    elif cmd in ("/chat", "chat"):
-        msg = " ".join(parts[1:])
-        execute_chat(state, msg)
+    elif cmd == "/chat":
+        msg = line_clean[len(parts[0]):].strip()
+        if msg:
+            handle_livlm_prompt(state, msg)
+    elif cmd == "/osiris":
+        execute_osiris_status()
+    elif cmd == "/self":
+        get_living().speak_raw(line_clean[len(parts[0]):].strip() or "hello")
+    elif cmd == "/mentor":
+        living = get_living()
+        living.mentor.set_model(parts[1] if len(parts) > 1 else None)
+        print(f"[OSIRIS] mentor voice: {living.mentor.model() or 'none reachable'}")
     elif cmd in ("/bridges", "bridges"):
         execute_bridges()
     elif cmd in ("/validate", "validate"):
@@ -1158,6 +1376,9 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     elif cmd in ("/forge", "forge"):
         geom = parts[1] if len(parts) > 1 else "tetrahedral"
         execute_forge(geom)
+    elif cmd in ("/digest", "digest", "/ingest", "ingest"):
+        filepath = line_clean[len(parts[0]):].strip().strip('\'"')
+        execute_digest(state, filepath)
     elif cmd in ("/status", "status"):
         display_status(state)
     elif cmd in ("/update", "update"):
@@ -1165,8 +1386,8 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     elif cmd in ("/help", "help", "?"):
         display_help()
     else:
-        # Pass to LivLM
-        handle_livlm_prompt(state, line)
+        # Pass to Living Language Model
+        handle_livlm_prompt(state, line_clean)
 
 
 def boot_repl() -> None:
@@ -1177,9 +1398,14 @@ def boot_repl() -> None:
 
     while True:
         try:
-            line = input(prompt).strip()
+            if otc is not None:
+                print(prompt, end="", flush=True)
+                line = otc.collect_multiline_input()
+            else:
+                line = input(prompt)
+            line = line.strip()
         except (EOFError, KeyboardInterrupt):
-            print("\n[OSIRIS] Terminating REPL. Coherence maintained.")
+            print("\n[OSIRIS] Session closed.")
             break
 
         if not line:
@@ -1190,6 +1416,9 @@ def boot_repl() -> None:
             break
 
         dispatch_command(SESSION, line)
+
+    if _LIVING is not None:
+        _LIVING.finish()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
