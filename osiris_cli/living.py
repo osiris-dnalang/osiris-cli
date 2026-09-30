@@ -300,6 +300,39 @@ class NclmCore:
             st = self._model()
             self._otc._organism_save(st["model"], st["optimizer"], st["step"], st["history"], rotate=rotate)
 
+    def _best_paths(self):
+        ckpt, meta = self._paths()
+        return ckpt[:-4] + ".best.npz", meta[:-5] + ".best.json"
+
+    def save_best(self) -> None:
+        """Keep a copy of the current weights as the best held-out checkpoint."""
+        import shutil
+        self.save()
+        with self._otc._organism_lock:
+            for src, dst in zip(self._paths(), self._best_paths()):
+                shutil.copy2(src, dst)
+
+    def restore_best(self) -> Optional[int]:
+        """Make the best held-out checkpoint the live one again. It is written as a
+        newer step so any process holding the worse weights in memory reloads it
+        instead of saving over it. Returns the step the weights came from."""
+        import shutil
+        best_ckpt, best_meta = self._best_paths()
+        if not (os.path.exists(best_ckpt) and os.path.exists(best_meta)):
+            return None
+        newer = max(self._disk_step(), self.step()) + 1   # before the lock: step() takes it
+        with self._otc._organism_lock:
+            ckpt, meta = self._paths()
+            with open(best_meta, encoding="utf-8") as f:
+                info = json.load(f)
+            best_step = int(info.get("step", 0))
+            shutil.copy2(best_ckpt, ckpt)
+            info.update(step=newer, restored_from_step=best_step)
+            with open(meta, "w", encoding="utf-8") as f:
+                json.dump(info, f)
+            self._otc._organism_state["model"] = None
+        return best_step
+
     def current_lr(self) -> float:
         opt = self._model()["optimizer"]
         sched = getattr(opt, "schedule", None)

@@ -24,6 +24,11 @@ pre-registered learning test (NCLM-1) has not been run.
 - **Batch training** (`osiris train`): corpus + chat lessons + grounded distillation;
   distillation pauses while a chat is active; packaging metadata (`*.egg-info`) is excluded
   from the corpus.
+- **Early stopping** (`osiris train`): the best held-out checkpoint is kept
+  (`organism.best.*`) and restored at the end; a run stops after 5 evals without a gain.
+  Found on the first 8 h run: training loss fell 3.9 → 1.7 nats/byte while held-out rose
+  7.2 → 9.9 bits/byte (worse than uniform), and checkpoint rotation had discarded the good
+  weights.
 - **Console UX**: keys typed while a reply streams are captured instead of echoed into it and
   sent next, labelled (fixes answers appearing one turn late); a thinking indicator names CPU
   contention; replies show their latency.

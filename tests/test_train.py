@@ -183,3 +183,36 @@ def test_corpus_skips_packaging_metadata(tmp_path):
     (tmp_path / "pkg" / "README.md").write_text("A real document about the project. " * 20)
     c = train.build_corpus(["pkg"], train.DEFAULT_EXTENSIONS, str(tmp_path))
     assert {d.path for d in c["docs"]} == {"pkg/README.md"}
+
+
+class OverfittingCore(FakeCore):
+    """Held-out loss improves until step 20, then worsens (training loss keeps falling)."""
+
+    def __init__(self, lock):
+        super().__init__(lock)
+        self.best_saved_at, self.restored = [], False
+
+    def eval_batch(self, x, y):
+        return 3.0 - 0.02 * min(self._step, 20) + 0.05 * max(self._step - 20, 0)
+
+    def save_best(self):
+        self.best_saved_at.append(self._step)
+
+    def restore_best(self):
+        self.restored = True
+        return self.best_saved_at[-1]
+
+
+def test_run_stops_when_heldout_worsens_and_restores_the_best_weights(tmp_path):
+    base, living_home = str(tmp_path / "home"), str(tmp_path / "living")
+    corpus_tree(base)
+    held = sorted(f"docs/note{i}.md" for i in range(40) if train.is_heldout_path(f"docs/note{i}.md"))
+    write(base, held[0], "# held\n\n" + "held-out text " * 200)
+    os.makedirs(living_home, exist_ok=True)
+    core = OverfittingCore(str(tmp_path / "train.lock"))
+    summary = train.run(core, hours=1, max_steps=500, batch=2, roots=["docs"], base=base,
+                        living_home=living_home, runs_home=str(tmp_path / "runs"),
+                        log=lambda s: None, power=lambda st: True, eval_every=5, save_every=5, patience=3)
+    assert summary["reason"].startswith("held-out stopped improving")
+    assert summary["steps"] == 35                      # evals at 25, 30, 35 fail to beat step 20
+    assert core.best_saved_at[-1] == 20 and core.restored and summary["restored_best_step"] == 20

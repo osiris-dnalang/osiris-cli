@@ -68,7 +68,9 @@ ARCHIVE_EXCLUDE_TOP = {"google-cloud-sdk", "snap", "dwave-cloud-client", "dwave-
 ARCHIVE_SHARE = 0.2
 MAX_FILE_BYTES = 1_000_000
 SEQ = 128                     # model context; windows are SEQ bytes (SEQ-1 predictions)
-CHAT_SHARE = 0.3              # fraction of each batch drawn from chat + distill lessons
+CHAT_SHARE = 0.3
+PATIENCE = 5                  # periodic evals without a held-out gain before stopping
+MIN_GAIN_BPB = 0.01              # fraction of each batch drawn from chat + distill lessons
 
 SECRET_RE = re.compile(r"(AIza[0-9A-Za-z_\-]{30,}|ghp_[0-9A-Za-z]{30,}|github_pat_[0-9A-Za-z_]{30,}|"
                        r"sk-[0-9A-Za-z]{32,}|sbp_[0-9a-f]{30,}|postgres(ql)?://[^\s:]+:[^\s@]+@|"
@@ -341,7 +343,7 @@ class Stop(Exception):
 def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, distill_n: int = 0,
         seed: Optional[int] = None, mentor: Optional[OllamaMentor] = None, runs_home: str = RUNS_HOME,
         living_home: str = LIVING_HOME, base: str = HOME, roots: Optional[List[str]] = None,
-        eval_every: int = 200, save_every: int = 50, log_every: int = 10,
+        eval_every: int = 200, save_every: int = 50, log_every: int = 10, patience: int = PATIENCE,
         log: Callable[[str], None] = print, power: Callable[[dict], bool] = battery_ok,
         archive_roots: Optional[List[str]] = None) -> dict:
     cfg = load_corpus_config(os.path.join(living_home, "corpus.json"))
@@ -440,6 +442,14 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
         json.dump({"pid": os.getpid(), "run_id": run_id}, f)
     deadline = time.time() + hours * 3600
     first = evaluate("start")
+    # Early stopping on held-out documents (2026-09-30: an 8 h run drove held-out
+    # from 7.2 to 9.9 bits/byte -- worse than uniform -- while training loss fell;
+    # rotation had already discarded the good weights). The best checkpoint is kept
+    # and restored at the end; the run stops after `patience` evals without a gain.
+    best = {"bpb": first["heldout_docs_bpb"], "step": first["step"], "since": 0}
+    can_keep = hasattr(core, "save_best") and best["bpb"] is not None
+    if can_keep:
+        core.save_best()
     core.restart_schedule(planned)
     reason, steps, t0, power_state, loss_acc = "deadline", 0, time.time(), {}, []
     try:
@@ -467,14 +477,29 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
             if steps % save_every == 0:
                 core.save(rotate=(steps % (save_every * 20) == 0))
             if steps % eval_every == 0:
-                evaluate("periodic")
+                d = evaluate("periodic")["heldout_docs_bpb"]
+                if d is not None and best["bpb"] is not None and d < best["bpb"] - MIN_GAIN_BPB:
+                    best.update(bpb=d, step=core.step(), since=0)
+                    if can_keep:
+                        core.save_best()
+                elif d is not None:
+                    best["since"] += 1
+                    if patience and best["since"] >= patience:
+                        reason = f"held-out stopped improving (best {best['bpb']:.3f} bpb at step {best['step']})"
+                        break
     finally:
         core.save(rotate=True)
         last = evaluate("end")
+        restored = None
+        if can_keep and last["heldout_docs_bpb"] is not None and last["heldout_docs_bpb"] > best["bpb"]:
+            restored = core.restore_best()
+            if restored is not None:
+                log(f"restored the best held-out checkpoint (step {restored}, {best['bpb']:.3f} bpb); "
+                    f"the final weights ({last['heldout_docs_bpb']:.3f} bpb) stay in the rotated backups")
         rescored = rescore_chat(core, living_home)
         summary = {"kind": "end", "reason": reason, "steps": steps, "core_step_end": core.step(),
                    "hours": round((time.time() - t0) / 3600, 3), "rescored_heldout_exchanges": rescored,
-                   "start": first, "end": last}
+                   "start": first, "end": last, "best": best, "restored_best_step": restored}
         progress(summary)
         try:
             os.remove(lock)

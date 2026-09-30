@@ -214,3 +214,34 @@ def test_new_session_recalls_earlier_exchanges_and_remembered_facts(tmp_path):
     system = mentor.calls[0][0]["content"]
     assert "my cat is called Qubit" in system and "- Devin prefers short answers" in system
     assert "Forgot 1" in o2.forget("short answers") and o2.facts() == []
+
+
+def test_restore_best_makes_best_weights_live_as_a_newer_step(tmp_path):
+    import threading
+
+    from osiris_cli.living import NclmCore
+
+    class Console:
+        _organism_lock = threading.Lock()
+
+        def __init__(self):
+            self._organism_state = {"model": object(), "optimizer": None, "step": 0, "history": []}
+
+        def _organism_checkpoint_paths(self):
+            return str(tmp_path / "organism.npz"), str(tmp_path / "organism.json")
+
+        def _organism_save(self, model, optimizer, step, history, rotate=False):
+            (tmp_path / "organism.npz").write_text(f"weights@{step}")
+            (tmp_path / "organism.json").write_text(json.dumps({"step": step}))
+
+    con = Console()
+    core = NclmCore(con)
+    con._organism_state["step"] = 20
+    core.save_best()
+    con._organism_state["step"] = 90                       # training went on and got worse
+    core.save()
+    assert core.restore_best() == 20
+    assert (tmp_path / "organism.npz").read_text() == "weights@20"
+    meta = json.loads((tmp_path / "organism.json").read_text())
+    assert meta == {"step": 91, "restored_from_step": 20}
+    assert con._organism_state["model"] is None             # reloads from disk next use
