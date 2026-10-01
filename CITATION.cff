@@ -5,13 +5,13 @@ authors:
     given-names: "Devin Phillip"
     affiliation: "Agile Defense Systems LLC"
 title: "OSIRIS: a governed local console for a living language model"
-version: 4.2.1
-date-released: 2026-09-30
+version: 4.3.0
+date-released: 2026-10-01
 url: "https://github.com/osiris-dnalang/osiris-cli"
 repository-code: "https://github.com/osiris-dnalang/osiris-cli"
 license: LicenseRef-OSIRIS-Dual-v1.0
 type: software
-doi: 10.5281/zenodo.23063462  # concept DOI (all versions); v4.2.1 is 10.5281/zenodo.23063463
+doi: 10.5281/zenodo.23063462  # concept DOI (all versions)
 keywords:
   - language model
   - continual learning
