@@ -17,7 +17,7 @@ REPO = os.path.dirname(os.path.dirname(HERE))
 WORK = os.path.join(os.path.expanduser("~"), ".osiris", "experiments", "nclm_mix1")
 ARMS = {"control": "0.5,0.3,0.2", "docs-heavy": "0.8,0.15,0.05"}
 SEEDS = [0, 1, 2]
-PARALLEL = 3
+PARALLEL = int(os.environ.get("NCLM_MIX1_PARALLEL", "1"))  # see EXECUTION.md
 HOURS = 3.0
 UNIGRAM = 5.026
 # pre-registered criterion
