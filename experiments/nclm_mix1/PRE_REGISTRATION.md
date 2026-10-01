@@ -61,3 +61,15 @@ its own checkpoint folder (`OSIRIS_ORGANISM_HOME`) and runs folder, `--no-rescor
 chat's scores are never touched. The live core in `~/.osiris/nclm_organism` is not modified.
 `python experiments/nclm_mix1/run.py --analyse` computes the verdict from the run folders and
 writes `results.json` and `RESULT.md`.
+
+## Amendment 1 (2026-10-01, before any result was examined)
+
+The 3-hour per-run cap is replaced by a **12,000-step cap** (about twice the 6,600 steps the
+reference run needed), with no wall-clock limit. Reason: on this shared machine, other work held
+the load at 7–18 for hours; the first valid-procedure run (control s0) reached only 854 steps in
+3 hours (~12.6 s/step vs ~0.6 s/step on 2026-09-30), so a time cap would have stopped each run at
+an arbitrary, contention-dependent point and confounded the comparison. A step cap makes every
+run independent of machine load (runs are seeded and deterministic). That run's score was not
+looked at; it and the docs-heavy s0 run in progress were set aside unread
+(`aborted_20261001c/`). Arms, seeds, mix, early-stopping rule, inputs and the PASS criterion are
+unchanged. Runs that end on the step cap rather than early stopping are flagged in `RESULT.md`.

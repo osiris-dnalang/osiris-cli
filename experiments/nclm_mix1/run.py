@@ -18,7 +18,8 @@ WORK = os.path.join(os.path.expanduser("~"), ".osiris", "experiments", "nclm_mix
 ARMS = {"control": "0.5,0.3,0.2", "docs-heavy": "0.8,0.15,0.05"}
 SEEDS = [0, 1, 2]
 PARALLEL = int(os.environ.get("NCLM_MIX1_PARALLEL", "1"))  # see EXECUTION.md
-HOURS = 3.0
+HOURS = 72.0        # wall clock is not a stopping rule (Amendment 1); MAX_STEPS is
+MAX_STEPS = 12000
 UNIGRAM = 5.026
 QUIET_LOAD = 3.0
 # pre-registered criterion
@@ -71,7 +72,7 @@ def launch():
             # osiris.nclm on the third launch (EXECUTION.md). No thread caps: runs are sequential.
             env = {k: v for k, v in os.environ.items() if k not in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS")}
             env.update(OSIRIS_ORGANISM_HOME=ckpt, PYTHONPATH=REPO)
-            cmd = [sys.executable, "-m", "osiris_cli.train", "--hours", str(HOURS), "--all", "--distill", "0",
+            cmd = [sys.executable, "-m", "osiris_cli.train", "--hours", str(HOURS), "--max-steps", str(MAX_STEPS), "--all", "--distill", "0",
                    "--seed", str(seed), "--mix", ARMS[arm], "--runs-home", runs, "--no-rescore", "--living-home", snap,
                    "--frozen-corpus", os.path.join(snap, "frozen_corpus.json")]
             f = open(log, "a")
@@ -99,7 +100,7 @@ def summarise(arm, seed):
             "chat_bpb_at_best": best.get("heldout_chat_bpb"), "best_step": best["step"],
             "stop_reason": end.get("reason"), "steps": end.get("steps"), "pool_weights": manifest.get("pool_weights"),
             "manifest_sha256": manifest.get("manifest_sha256"), "below_unigram": best["heldout_docs_bpb"] < UNIGRAM,
-            "hit_time_cap": end.get("reason") == "deadline", "code": manifest.get("code")}
+            "hit_time_cap": end.get("reason") in ("deadline", "max steps"), "code": manifest.get("code")}
 
 
 def analyse():
@@ -131,7 +132,7 @@ def analyse():
                      f"{d['best_step']} | {p['gain']:+.3f} | {p['chat_change']:+.3f} | {c['steps']} | {d['steps']} |")
     capped = [f"{r['arm']} s{r['seed']}" for r in rows.values() if r["hit_time_cap"]]
     if capped:
-        lines += ["", "**Caveat:** these runs hit the 3-hour cap before early stopping, so their best may be "
+        lines += ["", "**Caveat:** these runs hit the 12,000-step cap before early stopping, so their best may be "
                   "understated: " + ", ".join(capped) + "."]
     lines += ["", f"Unigram baseline {UNIGRAM} bpb; runs below it: "
               + (", ".join(f"{r['arm']} s{r['seed']}" for r in rows.values() if r["below_unigram"]) or "none") + ".",
