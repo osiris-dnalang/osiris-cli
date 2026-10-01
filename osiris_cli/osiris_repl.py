@@ -1174,6 +1174,8 @@ def display_help() -> None:
     print("    /mentor [model]      Choose which local Ollama model speaks while the core learns")
     print("    /remember <fact>     OSIRIS keeps this across sessions  (/forget <words> drops it)")
     print("    /check [trainer|git|ledger|system|evidence] [path|m3c]   Run OSIRIS's read-only checks")
+    print("    /legit <text|ID|list> Is a claim legit? Verdicts from the claims register, with evidence")
+    print("    /physics <check> k=v  Physics bounds: thrust, rim, metric, chsh, efficiency, entropy, dd")
     print("    /train [start H|stop] Overnight batch training (status by default)")
     print()
     print("  \033[1;36mCore Substrate\033[0m")
@@ -1404,6 +1406,12 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     elif cmd == "/forget":
         needle = line_clean[len(parts[0]):].strip()
         print("[OSIRIS] " + (get_living().forget(needle) if needle else "use /forget <words in the fact>"))
+    elif cmd == "/legit":
+        from osiris_cli import claims
+        print("\n" + claims.command(line_clean[len(parts[0]):]) + "\n")
+    elif cmd == "/physics":
+        from osiris_cli import physics_checks
+        print("\n" + physics_checks.run_command(line_clean[len(parts[0]):].strip()) + "\n")
     elif cmd == "/check":
         living = get_living()
         names = [p for p in parts[1:] if p in ("trainer", "git", "ledger", "system", "evidence")] or \

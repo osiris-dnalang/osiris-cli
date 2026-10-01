@@ -56,6 +56,7 @@ CHAT_MARKER = "chat.active"
 CHAT_QUIET_SECONDS = 300
 MENTOR_MAX_TOKENS = int(os.environ.get("OSIRIS_MENTOR_MAX_TOKENS", "700"))
 MENTOR_TIMEOUT = float(os.environ.get("OSIRIS_MENTOR_TIMEOUT", "180"))
+CLAIMS_PER_MESSAGE = 3          # registered claims shown before a reply
 MENTOR_NUM_CTX = int(os.environ.get("OSIRIS_MENTOR_NUM_CTX", "4096"))
 # A local 7B model on a CPU reads a few thousand tokens per minute and Ollama keeps only
 # num_ctx tokens: a 100k-character paste timed out twice (601 s, 406 s) on 2026-10-01.
@@ -419,8 +420,10 @@ class TypeAhead:
 class Osiris:
     def __init__(self, core=None, mentor=None, home: str = LIVING_HOME,
                  out: Callable[[str], None] = None, background: bool = True,
-                 knowledge=None, tty: Optional[bool] = None, probes=None):
+                 knowledge=None, tty: Optional[bool] = None, probes=None, claims_register: bool = True):
         self.core = core
+        self.claims_register = claims_register
+        self._claims_hit: list = []
         self.mentor = mentor or OllamaMentor()
         self.home = home
         self.out = out or (lambda s: print(s, end="", flush=True))
@@ -521,6 +524,14 @@ class Osiris:
         self.history = self.history[-2 * HISTORY_TURNS:]
         gate = self.gate()
         voice, reply, interrupted = None, "", False
+        self._claims_hit = []
+        if self.claims_register:
+            # Code answers first: a registered claim's verdict needs no model, so it is shown at
+            # once, and the model (if one speaks) is held to it.
+            from osiris_cli import claims as claims_mod
+            self._claims_hit = claims_mod.match(text, limit=CLAIMS_PER_MESSAGE)
+            if self._claims_hit:
+                self.out("\n" + claims_mod.console_block(self._claims_hit))
 
         if gate["open"] and self.core is not None:
             self.out("\nOSIRIS › ")
@@ -618,6 +629,9 @@ class Osiris:
             if checks:
                 context += ("\n\n[Checked just now -- read-only, run by OSIRIS's code]\n"
                             + self.probes.format(checks))
+        if self._claims_hit:
+            from osiris_cli import claims as claims_mod
+            context += "\n\n" + claims_mod.context_block(self._claims_hit)
         if hits:
             context += ("\n\n[Notes looked up for this message -- Devin's files; cite the file if "
                         "you use one]\n" + self.knowledge.format_notes(hits))
