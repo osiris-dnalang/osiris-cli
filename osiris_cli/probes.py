@@ -19,6 +19,7 @@ from typing import Callable, Dict, List, Optional
 HOME = os.path.expanduser("~")
 REPOS = ("osiris-cli", "organism_sim", "dnalang-core", "bridge")
 MAX_FILE_CHARS = 2500
+MAX_FILE_CHECKS = 2
 RESULTS_DIR = os.path.join("organism_sim", "results")
 MAX_VERDICT_CHARS = 1500
 
@@ -165,8 +166,13 @@ class Probes:
         return {"name": "evidence", "cmd": cmd, "out": ("\n\n" if wanted else "\n").join(parts)}
 
     def files(self, msg: str) -> List[Dict[str, str]]:
-        found = []
+        found, seen = [], set()
         for raw in re.findall(r"(?:~/|/)?[\w.\-]+(?:/[\w.\-]+)+\.\w+|[\w\-]+\.(?:md|txt|json|py|dna|toml|yaml|yml)\b", msg):
+            if raw in seen:
+                continue
+            seen.add(raw)
+            if len(found) >= MAX_FILE_CHECKS:   # read or not: a pasted log names dozens of paths
+                break
             p = safe_path(raw, self.base)
             if not p and "/" not in raw:
                 continue
@@ -179,8 +185,6 @@ class Probes:
             more = "\n…(truncated)" if len(text) > MAX_FILE_CHARS else ""
             found.append({"name": "file", "cmd": f"read {os.path.relpath(p, self.base)}",
                           "out": text[:MAX_FILE_CHARS] + more})
-            if len(found) >= 2:
-                break
         return found
 
     # -- routing -----------------------------------------------------------

@@ -66,3 +66,8 @@ def test_evidence_quotes_the_results_file_and_its_hash(tmp_path):
     listing = p.evidence("show me the scorecard evidence")["out"].splitlines()
     assert listing[0].endswith("verdict: FAIL") and listing[1].endswith("verdict: PASS")
     assert "not run, or not recorded" in p.evidence("and M6?")["out"]
+
+
+def test_file_checks_are_capped_even_when_paths_are_missing(tmp_path):
+    msg = " ".join(f"research/kit/f{i}.py" for i in range(30))
+    assert len(Probes(str(tmp_path), base=str(tmp_path)).files(msg)) == 2

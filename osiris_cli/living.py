@@ -55,6 +55,13 @@ FACTS_FILE = "facts.jsonl"
 CHAT_MARKER = "chat.active"
 CHAT_QUIET_SECONDS = 300
 MENTOR_MAX_TOKENS = int(os.environ.get("OSIRIS_MENTOR_MAX_TOKENS", "700"))
+MENTOR_TIMEOUT = float(os.environ.get("OSIRIS_MENTOR_TIMEOUT", "180"))
+MENTOR_NUM_CTX = int(os.environ.get("OSIRIS_MENTOR_NUM_CTX", "4096"))
+# A local 7B model on a CPU reads a few thousand tokens per minute and Ollama keeps only
+# num_ctx tokens: a 100k-character paste timed out twice (601 s, 406 s) on 2026-10-01.
+# Long messages go to the mentor as a bounded excerpt; the ledger keeps the full text.
+LONG_MESSAGE = 3000
+MESSAGE_BUDGET = 6000
 MENTOR_PREFERENCE = ("qwen2.5:7b", "qwen2.5:3b", "qwen2.5:1.5b", "llama3.2:3b", "llama3.2:1b", "smollm2:360m")
 
 IDENTITY = """You are OSIRIS, the living language model being built by Devin Phillip Davis \
@@ -99,7 +106,7 @@ now (your core's step and gate, who is speaking) and what is on record (the resu
 class OllamaMentor:
     """Streams chat replies from a local Ollama model."""
 
-    def __init__(self, base: str = OLLAMA_BASE, model: Optional[str] = None, timeout: float = 600.0):
+    def __init__(self, base: str = OLLAMA_BASE, model: Optional[str] = None, timeout: float = MENTOR_TIMEOUT):
         self.base = base
         self.timeout = timeout
         self._model = model
@@ -144,7 +151,7 @@ class OllamaMentor:
         if model is None:
             raise ConnectionError(f"no Ollama model reachable at {self.base}")
         payload = json.dumps({"model": model, "messages": messages, "stream": True,
-                              "options": {"num_predict": MENTOR_MAX_TOKENS}}).encode()
+                              "options": {"num_predict": MENTOR_MAX_TOKENS, "num_ctx": MENTOR_NUM_CTX}}).encode()
         req = urllib.request.Request(self.base + "/api/chat", data=payload,
                                      headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
@@ -500,8 +507,17 @@ class Osiris:
         return "".join(f"{'User' if m['role'] == 'user' else 'OSIRIS'}: {m['content']}\n"
                        for m in history)
 
+    @staticmethod
+    def excerpt(text: str, budget: int = MESSAGE_BUDGET) -> str:
+        """Head and tail of a long message, with what was left out stated in it."""
+        if len(text) <= budget:
+            return text
+        head, tail = text[: budget * 2 // 3], text[-budget // 3:]
+        return (f"{head}\n\n[... {len(text) - len(head) - len(tail):,} characters of this {len(text):,}-character "
+                f"message omitted: too long for the local model ...]\n\n{tail}")
+
     def converse(self, text: str, learnable: bool = True) -> str:
-        self.history.append({"role": "user", "content": text})
+        self.history.append({"role": "user", "content": self.excerpt(text)})
         self.history = self.history[-2 * HISTORY_TURNS:]
         gate = self.gate()
         voice, reply, interrupted = None, "", False
@@ -552,6 +568,8 @@ class Osiris:
             note = "not learned: interrupted" if interrupted else (
                 "learning from this" if learnable else "not learned: pasted transcript")
             cited = f" · used: {', '.join(sources)}" if sources else ""
+            if len(text) > MESSAGE_BUDGET:
+                cited += f" · long message: an excerpt of {len(text):,} characters was sent"
             self.out(f"  · voice: {model} speaking for OSIRIS · {time.time() - started:.0f} s · "
                      f"core step {self._core_step()} · {note}{cited}\n")
             self._hold(typed.text)
@@ -583,9 +601,10 @@ class Osiris:
         attached. The stored history keeps only what was actually said."""
         system = IDENTITY
         hits, checks = [], []
+        long_message = len(text) > LONG_MESSAGE   # a paste: no per-path checks, one note at most
         if self.knowledge is not None:
             system += "\n\nWhat is on record:\n" + self.knowledge.brief()
-            hits = self.knowledge.lookup(text, k=NOTES_PER_MESSAGE)
+            hits = self.knowledge.lookup(text[:LONG_MESSAGE], k=1 if long_message else NOTES_PER_MESSAGE)
         facts = self.facts()
         if facts:
             system += "\n\nThings Devin asked you to remember:\n" + "\n".join("- " + f for f in facts)
@@ -594,7 +613,7 @@ class Osiris:
         context = "[Live state, read from disk just now]\n" + self._state_note(gate).strip()
         if self._trainer_running():
             context += "\nA batch training run of your core is in progress (osiris train)."
-        if self.probes is not None:
+        if self.probes is not None and not long_message:
             checks = self.probes.run(text)
             if checks:
                 context += ("\n\n[Checked just now -- read-only, run by OSIRIS's code]\n"
@@ -602,7 +621,10 @@ class Osiris:
         if hits:
             context += ("\n\n[Notes looked up for this message -- Devin's files; cite the file if "
                         "you use one]\n" + self.knowledge.format_notes(hits))
-        last = {"role": "user", "content": context + "\n\n[Message]\n" + text}
+        if long_message:
+            context += (f"\n\n[This message is {len(text):,} characters; you are given an excerpt. Say what "
+                        "you can from it, and that you saw only part of it.]")
+        last = {"role": "user", "content": context + "\n\n[Message]\n" + self.excerpt(text)}
         messages = [{"role": "system", "content": system}] + self.history[:-1] + [last]
         return messages, [c["cmd"].split(";")[0] if c["name"] != "file" else c["cmd"] for c in checks] \
             + [h["source"] for h in hits]

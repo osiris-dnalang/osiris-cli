@@ -245,3 +245,19 @@ def test_restore_best_makes_best_weights_live_as_a_newer_step(tmp_path):
     meta = json.loads((tmp_path / "organism.json").read_text())
     assert meta == {"step": 91, "restored_from_step": 20}
     assert con._organism_state["model"] is None             # reloads from disk next use
+
+
+def test_a_long_paste_is_sent_as_a_bounded_excerpt_without_checks(tmp_path):
+    from osiris_cli.probes import Probes
+    mentor = ScriptedMentor()
+    o, out = make(tmp_path)
+    o.mentor = mentor
+    calls = []
+    o.probes = Probes(str(tmp_path), base=str(tmp_path), trainer_status=lambda: calls.append(1) or ["x"])
+    paste = "how is training going? read research/a.py and verify/b.py\n" + "log line\n" * 20000
+    o.converse(paste)
+    sent = mentor.calls[0][-1]["content"]
+    assert len(sent) < 9000 and "characters of this" in sent and calls == []
+    assert len(o.history[0]["content"]) < 7000
+    assert json.loads(open(o.log_path).read().splitlines()[0])["user"] == paste   # ledger keeps it all
+    assert "long message: an excerpt" in "".join(out)
