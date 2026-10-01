@@ -216,3 +216,16 @@ def test_run_stops_when_heldout_worsens_and_restores_the_best_weights(tmp_path):
     assert summary["reason"].startswith("held-out stopped improving")
     assert summary["steps"] == 35                      # evals at 25, 30, 35 fail to beat step 20
     assert core.best_saved_at[-1] == 20 and core.restored and summary["restored_best_step"] == 20
+
+
+def test_frozen_corpus_gives_identical_documents_after_files_change(tmp_path):
+    base, living_home = str(tmp_path / "home"), str(tmp_path / "living")
+    corpus_tree(base)
+    os.makedirs(living_home, exist_ok=True)
+    json.dump({"roots": ["docs"], "extensions": train.DEFAULT_EXTENSIONS}, open(os.path.join(living_home, "corpus.json"), "w"))
+    snap = str(tmp_path / "frozen.json")
+    info = train.freeze_corpus(snap, living_home=living_home, base=base)
+    write(base, "docs/new_file.md", "# added after the freeze\n\n" + "new text " * 100)
+    corpus, archive, roots = train.load_frozen_corpus(snap)
+    assert len(corpus["docs"]) == info["docs"] and "docs/new_file.md" not in {d.path for d in corpus["docs"]}
+    assert archive["docs"] == [] and roots == []

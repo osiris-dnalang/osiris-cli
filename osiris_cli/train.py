@@ -162,6 +162,30 @@ def build_corpus(roots: List[str], extensions: List[str], base: str = HOME,
     return {"docs": docs, "skipped": skipped}
 
 
+def freeze_corpus(path: str, living_home: str = LIVING_HOME, base: str = HOME,
+                  archive_roots: Optional[List[str]] = None) -> dict:
+    """Build the corpus once and save it, so every run of an experiment reads the same
+    documents even while files under $HOME keep changing."""
+    cfg = load_corpus_config(os.path.join(living_home, "corpus.json"))
+    exts = cfg.get("extensions", DEFAULT_EXTENSIONS)
+    seen: set = set()
+    corpus = build_corpus(cfg["roots"], exts, base, seen)
+    archive = build_corpus(archive_roots, exts, base, seen) if archive_roots else {"docs": [], "skipped": []}
+    out = {"archive_roots": archive_roots or [],
+           "docs": [d.__dict__ for d in corpus["docs"]], "skipped": corpus["skipped"],
+           "archive": [d.__dict__ for d in archive["docs"]], "archive_skipped": archive["skipped"]}
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(out, f)
+    return {"docs": len(out["docs"]), "heldout": sum(d["heldout"] for d in out["docs"]), "archive": len(out["archive"])}
+
+
+def load_frozen_corpus(path: str):
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    return ({"docs": [Doc(**x) for x in d["docs"]], "skipped": d["skipped"]},
+            {"docs": [Doc(**x) for x in d["archive"]], "skipped": d["archive_skipped"]}, d["archive_roots"])
+
+
 def chat_lessons(log_path: str) -> Dict[str, List[str]]:
     """Train and held-out lesson texts from the conversation log."""
     train, held = [], []
@@ -346,7 +370,7 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
         living_home: str = LIVING_HOME, base: str = HOME, roots: Optional[List[str]] = None,
         eval_every: int = 200, save_every: int = 50, log_every: int = 10, patience: int = PATIENCE,
         log: Callable[[str], None] = print, power: Callable[[dict], bool] = battery_ok,
-        archive_roots: Optional[List[str]] = None) -> dict:
+        archive_roots: Optional[List[str]] = None, frozen_corpus: Optional[str] = None) -> dict:
     cfg = load_corpus_config(os.path.join(living_home, "corpus.json"))
     seed = seed if seed is not None else int(time.time())
     rng = random.Random(seed)
@@ -363,11 +387,14 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
             f.write(json.dumps(rec) + "\n")
 
     exts = cfg.get("extensions", DEFAULT_EXTENSIONS)
-    seen: set = set()
-    corpus = build_corpus(roots or cfg["roots"], exts, base, seen)
+    if frozen_corpus:   # an experiment's snapshot: identical documents for every run
+        corpus, archive, archive_roots = load_frozen_corpus(frozen_corpus)
+    else:
+        seen: set = set()
+        corpus = build_corpus(roots or cfg["roots"], exts, base, seen)
+        archive_roots = archive_roots if archive_roots is not None else cfg.get("archive_roots", [])
+        archive = build_corpus(archive_roots, exts, base, seen) if archive_roots else {"docs": [], "skipped": []}
     docs = corpus["docs"]
-    archive_roots = archive_roots if archive_roots is not None else cfg.get("archive_roots", [])
-    archive = build_corpus(archive_roots, exts, base, seen) if archive_roots else {"docs": [], "skipped": []}
     arch_docs = archive["docs"]
     if distill_n and mentor is not None:
         distill(mentor, docs, distill_n, rng, log, os.path.join(living_home, "distill.jsonl"))
@@ -634,6 +661,9 @@ def main(argv: Optional[List[str]] = None) -> None:
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--mix", default=None, help="docs,lessons,archive pool weights, e.g. 0.8,0.15,0.05")
     ap.add_argument("--runs-home", default=RUNS_HOME, help="where run manifests and progress go")
+    ap.add_argument("--frozen-corpus", default=None, help="read documents from this freeze_corpus() snapshot")
+    ap.add_argument("--living-home", default=LIVING_HOME,
+                    help="corpus.json, exchanges and distilled lessons to read (an experiment's frozen snapshot)")
     ap.add_argument("--no-rescore", action="store_true",
                     help="experiment runs: do not rescore the live chat's held-out exchanges")
     ap.add_argument("--all", action="store_true",
@@ -660,7 +690,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         seed=args.seed, mentor=OllamaMentor() if args.distill else None,
         log=lambda s: print(s, flush=True), archive_roots=["."] if args.all else None,
         mix=[float(x) for x in args.mix.split(",")] if args.mix else None,
-        runs_home=args.runs_home, rescore=not args.no_rescore)
+        runs_home=args.runs_home, rescore=not args.no_rescore, living_home=args.living_home,
+        frozen_corpus=args.frozen_corpus)
 
 
 if __name__ == "__main__":

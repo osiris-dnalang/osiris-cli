@@ -13,3 +13,14 @@ Procedural record, kept separate from the pre-registration (which is unchanged).
   before the first launch (seed 999 twice gave identical evals), so run order and concurrency
   do not change any measured number. Arms, seeds, mix, stopping rule and criterion are as
   pre-registered.
+- **2026-10-01 00:38 — second launch stopped by me after 29 steps, no results used.** Another
+  session's job (`nclm_gate_pilot0` replay, ~470 % CPU) started alongside it, cutting throughput
+  ~20×; with a fixed 3-hour cap, contention would decide how far each arm trains. The run also
+  saw 4 chat lessons where earlier runs saw 3: inputs were being read live.
+- **Fix before the third launch:** (a) inputs frozen once — `corpus.json`, `exchanges.jsonl`,
+  `distill.jsonl` and the built corpus (`frozen_corpus.json`, via `train.freeze_corpus`) under
+  `~/.osiris/experiments/nclm_mix1/inputs/`, hashes printed in `driver.log`; every run reads that
+  snapshot (`--living-home`, `--frozen-corpus`), so the documents, held-out split and lessons are
+  identical across arms even while `$HOME` changes; (b) each run starts only when the 1-minute
+  load average is ≤ 3; (c) any run that ends on the time cap instead of early stopping is flagged
+  in `RESULT.md`. Arms, seeds, mix, stopping rule and criterion unchanged.

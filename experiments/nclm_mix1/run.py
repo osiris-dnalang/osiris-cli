@@ -20,6 +20,7 @@ SEEDS = [0, 1, 2]
 PARALLEL = int(os.environ.get("NCLM_MIX1_PARALLEL", "1"))  # see EXECUTION.md
 HOURS = 3.0
 UNIGRAM = 5.026
+QUIET_LOAD = 3.0
 # pre-registered criterion
 WINS_NEEDED, MIN_GAIN, GUARD = 2, 0.10, 0.10
 
@@ -29,18 +30,47 @@ def run_dirs(arm, seed):
     return os.path.join(WORK, "ckpt", tag), os.path.join(WORK, "runs", tag), os.path.join(WORK, "logs", tag + ".log")
 
 
+def freeze_inputs():
+    """One snapshot of the lessons and corpus config for every run (EXECUTION.md, 2026-10-01)."""
+    import hashlib
+    import shutil
+    snap = os.path.join(WORK, "inputs")
+    if not os.path.isdir(snap):
+        os.makedirs(snap)
+        live = os.path.join(os.path.expanduser("~"), ".osiris", "living")
+        for name in ("corpus.json", "exchanges.jsonl", "distill.jsonl"):
+            shutil.copy2(os.path.join(live, name), os.path.join(snap, name))
+        sys.path.insert(0, REPO)
+        from osiris_cli import train
+        info = train.freeze_corpus(os.path.join(snap, "frozen_corpus.json"), living_home=snap,
+                                   archive_roots=["."])
+        print("frozen corpus", json.dumps(info), flush=True)
+    digest = {n: hashlib.sha256(open(os.path.join(snap, n), "rb").read()).hexdigest()
+              for n in sorted(os.listdir(snap))}
+    print("inputs", json.dumps(digest), flush=True)
+    return snap
+
+
 def launch():
+    snap = freeze_inputs()
     jobs = [(a, s) for s in SEEDS for a in ARMS]
     running = []
     while jobs or running:
         while jobs and len(running) < PARALLEL:
+            waited = 0
+            while os.getloadavg()[0] > QUIET_LOAD:   # start only on a quiet machine (EXECUTION.md)
+                if waited % 600 == 0:
+                    print(time.strftime("%H:%M:%S"), f"waiting: load {os.getloadavg()[0]:.1f} > {QUIET_LOAD}", flush=True)
+                time.sleep(30)
+                waited += 30
             arm, seed = jobs.pop(0)
             ckpt, runs, log = run_dirs(arm, seed)
             for d in (ckpt, runs, os.path.dirname(log)):
                 os.makedirs(d, exist_ok=True)
             env = dict(os.environ, OSIRIS_ORGANISM_HOME=ckpt, OMP_NUM_THREADS="2", OPENBLAS_NUM_THREADS="2")
             cmd = [sys.executable, "-m", "osiris_cli.train", "--hours", str(HOURS), "--all", "--distill", "0",
-                   "--seed", str(seed), "--mix", ARMS[arm], "--runs-home", runs, "--no-rescore"]
+                   "--seed", str(seed), "--mix", ARMS[arm], "--runs-home", runs, "--no-rescore", "--living-home", snap,
+                   "--frozen-corpus", os.path.join(snap, "frozen_corpus.json")]
             f = open(log, "a")
             p = subprocess.Popen(cmd, cwd=REPO, env=env, stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
             running.append((arm, seed, p, f))
@@ -65,7 +95,8 @@ def summarise(arm, seed):
     return {"arm": arm, "seed": seed, "run_id": run_id, "best_docs_bpb": best["heldout_docs_bpb"],
             "chat_bpb_at_best": best.get("heldout_chat_bpb"), "best_step": best["step"],
             "stop_reason": end.get("reason"), "steps": end.get("steps"), "pool_weights": manifest.get("pool_weights"),
-            "manifest_sha256": manifest.get("manifest_sha256"), "below_unigram": best["heldout_docs_bpb"] < UNIGRAM}
+            "manifest_sha256": manifest.get("manifest_sha256"), "below_unigram": best["heldout_docs_bpb"] < UNIGRAM,
+            "hit_time_cap": end.get("reason") == "deadline"}
 
 
 def analyse():
@@ -95,6 +126,10 @@ def analyse():
         c, d = rows[("control", p["seed"])], rows[("docs-heavy", p["seed"])]
         lines.append(f"| {p['seed']} | {c['best_docs_bpb']:.3f} @ {c['best_step']} | {d['best_docs_bpb']:.3f} @ "
                      f"{d['best_step']} | {p['gain']:+.3f} | {p['chat_change']:+.3f} | {c['steps']} | {d['steps']} |")
+    capped = [f"{r['arm']} s{r['seed']}" for r in rows.values() if r["hit_time_cap"]]
+    if capped:
+        lines += ["", "**Caveat:** these runs hit the 3-hour cap before early stopping, so their best may be "
+                  "understated: " + ", ".join(capped) + "."]
     lines += ["", f"Unigram baseline {UNIGRAM} bpb; runs below it: "
               + (", ".join(f"{r['arm']} s{r['seed']}" for r in rows.values() if r["below_unigram"]) or "none") + ".",
               "", "Per-run detail, manifests and stop reasons: `results.json`."]
