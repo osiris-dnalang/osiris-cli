@@ -24,3 +24,14 @@ Procedural record, kept separate from the pre-registration (which is unchanged).
   identical across arms even while `$HOME` changes; (b) each run starts only when the 1-minute
   load average is ≤ 3; (c) any run that ends on the time cap instead of early stopping is flagged
   in `RESULT.md`. Arms, seeds, mix, stopping rule and criterion unchanged.
+- **2026-10-01 00:46 — third launch stopped by me at step 737 of control s0, no results used.**
+  The driver inherited `PYTHONPATH=/home/enki:…` from the launching shell, so the runs imported a
+  stale copy of the model code (`/home/enki/osiris/nclm`, dated 05-01, without the matmul
+  gradient fix) instead of this repository's. That copy's gradients accumulate (tracemalloc:
+  +313 MB in 40 steps; the run's RSS rose ~40 MB/min to 4.8 GB). The repository's copy holds
+  steady (~1.9–2.6 GB). The 2-thread BLAS cap from the parallel design was also still set,
+  slowing the run ~5×.
+- **Fix before the fourth launch:** runs get `PYTHONPATH` = this repository only and no thread
+  caps; every run's manifest now records the imported `osiris.nclm` path and git commit
+  (`code`), and the analysis carries it into `results.json`. Arms, seeds, mix, stopping rule,
+  criterion and frozen inputs unchanged.

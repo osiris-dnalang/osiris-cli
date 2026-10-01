@@ -67,7 +67,10 @@ def launch():
             ckpt, runs, log = run_dirs(arm, seed)
             for d in (ckpt, runs, os.path.dirname(log)):
                 os.makedirs(d, exist_ok=True)
-            env = dict(os.environ, OSIRIS_ORGANISM_HOME=ckpt, OMP_NUM_THREADS="2", OPENBLAS_NUM_THREADS="2")
+            # PYTHONPATH = this repo only: an inherited /home/enki entry imported a stale copy of
+            # osiris.nclm on the third launch (EXECUTION.md). No thread caps: runs are sequential.
+            env = {k: v for k, v in os.environ.items() if k not in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS")}
+            env.update(OSIRIS_ORGANISM_HOME=ckpt, PYTHONPATH=REPO)
             cmd = [sys.executable, "-m", "osiris_cli.train", "--hours", str(HOURS), "--all", "--distill", "0",
                    "--seed", str(seed), "--mix", ARMS[arm], "--runs-home", runs, "--no-rescore", "--living-home", snap,
                    "--frozen-corpus", os.path.join(snap, "frozen_corpus.json")]
@@ -96,7 +99,7 @@ def summarise(arm, seed):
             "chat_bpb_at_best": best.get("heldout_chat_bpb"), "best_step": best["step"],
             "stop_reason": end.get("reason"), "steps": end.get("steps"), "pool_weights": manifest.get("pool_weights"),
             "manifest_sha256": manifest.get("manifest_sha256"), "below_unigram": best["heldout_docs_bpb"] < UNIGRAM,
-            "hit_time_cap": end.get("reason") == "deadline"}
+            "hit_time_cap": end.get("reason") == "deadline", "code": manifest.get("code")}
 
 
 def analyse():

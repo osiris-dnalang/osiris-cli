@@ -162,6 +162,21 @@ def build_corpus(roots: List[str], extensions: List[str], base: str = HOME,
     return {"docs": docs, "skipped": skipped}
 
 
+def code_provenance() -> dict:
+    """Which model code this run actually imported, and from which commit."""
+    import subprocess
+    out = {}
+    try:
+        import osiris.nclm.autograd as ag
+        out["osiris.nclm"] = os.path.dirname(os.path.abspath(ag.__file__))
+        repo = os.path.dirname(os.path.dirname(out["osiris.nclm"]))
+        r = subprocess.run(["git", "-C", repo, "rev-parse", "HEAD"], capture_output=True, text=True, timeout=10)
+        out["git_head"] = r.stdout.strip() or None
+    except Exception as e:  # noqa: BLE001 - provenance is recorded, never fatal
+        out["error"] = type(e).__name__
+    return out
+
+
 def freeze_corpus(path: str, living_home: str = LIVING_HOME, base: str = HOME,
                   archive_roots: Optional[List[str]] = None) -> dict:
     """Build the corpus once and save it, so every run of an experiment reads the same
@@ -432,6 +447,7 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
     start_step = core.step()
     manifest = {
         "run_id": run_id, "started": time.strftime("%Y-%m-%dT%H:%M:%S"), "seed": seed,
+        "code": code_provenance(),
         "hours": hours, "batch": batch, "seq": SEQ, "max_steps": max_steps, "core_step_start": start_step,
         "chat_share": CHAT_SHARE, "heldout_rule": "sha256(relative path) % 10 == 0; chat: every "
         f"{HELDOUT_EVERY}th exchange", "roots": roots or cfg["roots"],
