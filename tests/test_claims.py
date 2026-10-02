@@ -122,6 +122,7 @@ def test_matching_on_real_texts():
     assert [c.id for c in claims.match("is the 51.843 theta lock real?")] == ["THETA_LOCK"]
     assert [c.id for c in claims.match("tell me about the tau-phase anomaly at 46 µs")][0] == "TAU_PHASE"
     assert claims.match("the 136-bit negentropy gap")[0].id == "NEGENTROPY_136"
+    assert claims.match("RQC beats RCS with p < 0.05, ready for peer review")[0].id == "RQC_ADVANTAGE"
 
 
 @pytest.mark.parametrize("text", ["hello osiris", "what's the weather like", "write a unit test for the parser",

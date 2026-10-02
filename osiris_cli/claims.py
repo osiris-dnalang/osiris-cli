@@ -262,11 +262,30 @@ REGISTER: Tuple[Claim, ...] = (
            ("file", "organism_sim/results/m1_eval_seeds0-4.json", "M1")),
           (r"organism layer", r"regulatory genes?|\bgrns?\b")),
     Claim("NCLM_CORE", "OSIRIS's own core learns from conversation", "PILOT",
-          "NCLM-GATE-PILOT-0: training on the exchanges improved the core on held-out replies by 0.043 "
-          "bits/byte (15/15 replays positive), but at 5.3-5.6 bits/byte it is still worse than a unigram "
-          "model of the same replies (4.45-4.58). A pilot: the effect is small, not established.",
-          (("doi", "10.5281/zenodo.23075229", "NCLM-GATE-PILOT-0"),),
-          (r"\bnclm\b", r"(core|osiris)[^.\n]{0,30}\blearn\w*", r"living (language )?model")),
+          "Two pilots. GATE-PILOT-0 (3 items): +0.043 bits/byte on held-out replies. PILOT-1 (20 items, "
+          "5 replay seeds, 79 lessons): +0.067 bits/byte, positive on 20/20 items -- but about 86 % of the "
+          "variance is the training run (seed means 0.030-0.101), and the trained core (5.56 bits/byte) is "
+          "still worse than a unigram model of the same replies (4.68) on every item. Learning is "
+          "measurable and small; the core is far from its speaking gate.",
+          (("doi", "10.5281/zenodo.23075229", "NCLM-GATE-PILOT-0"),
+           ("file", "experiments/nclm_gate_pilot1/analysis/REPORT.md", "NCLM-GATE-PILOT-1 report")),
+          (r"\bnclm\b", r"(core|osiris)[^.\n]{0,30}\blearn\w*", r"living (language )?model"),
+          testable="A confirmatory run that replicates the training run (about 4 runs for a 0.05 "
+                   "bits/byte minimum effect), not only held-out items."),
+    Claim("RQC_ADVANTAGE", "Recursive Quantum Circuits with adaptive feedback outperform random circuit sampling "
+          "(p < 0.05); research-grade and ready for peer review", "UNTESTED",
+          "RQC_RESEARCH_METHODOLOGY.md is a proposal: its p-values (0.024, 0.018, 0.009) are listed under "
+          "'Expected results / Success scenario' and no RQC hardware results are on record. As written, the "
+          "comparison is not fair -- the 'recursive' arm is a classical closed-loop update of rotation angles "
+          "whose depth grows '+1 per iteration' while the baseline's is static (the same document says depth "
+          "is matched), with 5 trials per stage, an independent t-test and no held-out circuits -- and its "
+          "citation is a placeholder (doi zenodo.XXXXXXX) for a paper never submitted. The portfolio, drug-"
+          "discovery and materials claims do not follow from an XEB comparison.",
+          (("file", "osiris-cli/RQC_RESEARCH_METHODOLOGY.md", "the brief"),),
+          (r"\brqc\b", r"recursive quantum circuits?", r"random circuit sampling"),
+          testable="Pre-registered: adaptive policy vs static and shuffled-feedback controls on held-out "
+                   "circuits, matched depth and two-qubit-gate count, jobs interleaved across calibration "
+                   "epochs, the circuit (not the shot) as the unit of analysis."),
     Claim("M7A", "LLM-guided code evolution (AlphaEvolve-style) improves the 16-bit learner", "UNTESTED",
           "Pre-registered 2026-10-01 (organism_sim 7f00f37): 60 proposals from qwen2.5:7b against PARAMS16, "
           "judged on fresh seeds 80-84. Not run.",

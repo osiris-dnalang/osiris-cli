@@ -24,6 +24,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import sys
 import threading
 import time
@@ -64,6 +65,26 @@ MENTOR_NUM_CTX = int(os.environ.get("OSIRIS_MENTOR_NUM_CTX", "4096"))
 LONG_MESSAGE = 3000
 MESSAGE_BUDGET = 6000
 MENTOR_PREFERENCE = ("qwen2.5:7b", "qwen2.5:3b", "qwen2.5:1.5b", "llama3.2:3b", "llama3.2:1b", "smollm2:360m")
+# Measured 2026-10-02 on the 8-core WSL desktop: qwen2.5:7b reads a prompt at ~26 tokens/s
+# after a 17 s cold load; qwen2.5:1.5b at ~146 tokens/s. With the system prompt a long
+# message is ~14k characters (~4k tokens): ~170 s before the 7B says anything, so both
+# pastes on 2026-10-01 hit the 180 s timeout. Long messages go to the fast voice, and a
+# mentor that fails before its first word hands the message to it. A voice pinned with
+# /mentor NAME is never swapped (OSIRIS_CHAT_MODEL only picks the default voice, and the
+# console's Architect); OSIRIS_FAST_MENTOR= (empty) turns the fast voice off.
+FAST_MENTOR = os.environ.get("OSIRIS_FAST_MENTOR", "qwen2.5:1.5b")
+# Ollama keeps what it last read and re-reads only what changed, but each new token is
+# slow: measured 2026-10-02, 150 words after a cached 1,400-token system prompt took 4.5 s
+# on qwen2.5:1.5b and ~5x that on the 7B. So the conversation is re-sent exactly as it
+# was sent (each turn adds only its own message) and the system prompt is read once at
+# start-up (prewarm). PROMPT_BUDGET is what one prompt may hold, at ~3.5 characters per
+# token (the 5,356-character system prompt is ~1,420 tokens), leaving room for the reply.
+PROMPT_BUDGET = int((MENTOR_NUM_CTX - MENTOR_MAX_TOKENS) * 3.5)
+FIRST_WORD_SAMPLES = 10
+# Greetings and thanks are answered by code at once. "ok", "cool" and "great" are not:
+# after a question from OSIRIS they are answers, and a canned "Okay." would drop them.
+SMALL_TALK = re.compile(r"^\s*(?:(?P<hello>hi|hello|hey|yo|gm|good (?:morning|afternoon|evening))|"
+                        r"(?P<thanks>thanks|thank you))\b", re.IGNORECASE)
 
 IDENTITY = """You are OSIRIS, the living language model being built by Devin Phillip Davis \
 (Agile Defense Systems). You are talking with Devin or someone working with him.
@@ -77,6 +98,10 @@ Honesty rules, which matter more than sounding impressive:
 - Never invent results, measurements, job IDs, DOIs, file contents or test outcomes. \
 If you do not know, say so and say how it could be checked.
 - Keep hypotheses and measured results clearly separate.
+- Don't say you have learned, remembered or kept up with Devin's work unless a note, a recall \
+line or a check in this message shows it. What is measured about your learning (pilot, \
+2026-10-01): training on conversations lowers the core's error on held-out replies by about \
+0.07 bits/byte, and the core is still worse than a simple letter-frequency model.
 - Devin's own hardware audits refuted the tau-phase anomaly, theta_lock = 51.843 deg, \
 the 10^6 suppression and the CCCE "consciousness" metrics; do not present them as \
 established. His measured work (staggered dynamical decoupling, GHZ witnesses, the \
@@ -134,9 +159,15 @@ class OllamaMentor:
     def set_model(self, name: Optional[str]) -> None:
         self._model = name
 
-    def unload(self) -> None:
+    def fast_model(self) -> Optional[str]:
+        """The quicker voice (FAST_MENTOR) if installed and no voice is pinned."""
+        if self._model or not FAST_MENTOR:
+            return None
+        return FAST_MENTOR if FAST_MENTOR in self.installed() else None
+
+    def unload(self, model: Optional[str] = None) -> None:
         """Ask Ollama to free the model's memory now (used before batch training)."""
-        model = self.model()
+        model = model or self.model()
         if model is None:
             return
         req = urllib.request.Request(self.base + "/api/generate",
@@ -147,8 +178,20 @@ class OllamaMentor:
         except OSError:
             pass
 
-    def stream(self, messages: List[Dict[str, str]]) -> Iterator[str]:
-        model = self.model()
+    def warm(self, messages: List[Dict[str, str]], model: Optional[str] = None) -> None:
+        """Loads the model and reads `messages` into its cache, generating one token.
+        Same num_ctx as stream(): a different one makes Ollama reload the model."""
+        model = model or self.model()
+        if model is None:
+            return
+        payload = json.dumps({"model": model, "messages": messages, "stream": False,
+                              "options": {"num_predict": 1, "num_ctx": MENTOR_NUM_CTX}}).encode()
+        req = urllib.request.Request(self.base + "/api/chat", data=payload,
+                                     headers={"Content-Type": "application/json"})
+        urllib.request.urlopen(req, timeout=max(self.timeout, 300)).read()
+
+    def stream(self, messages: List[Dict[str, str]], model: Optional[str] = None) -> Iterator[str]:
+        model = model or self.model()
         if model is None:
             raise ConnectionError(f"no Ollama model reachable at {self.base}")
         payload = json.dumps({"model": model, "messages": messages, "stream": True,
@@ -413,6 +456,41 @@ class TypeAhead:
         return False
 
 
+class Waiting:
+    """'(thinking · qwen2.5:7b · usually ~20 s · 12 s)', redrawn each second until
+    the first word arrives, so a slow reply is visibly one. Not a terminal: does nothing."""
+
+    def __init__(self, out: Callable[[str], None], label: Callable[[], str], active: bool):
+        self.out, self.label, self.active = out, label, active
+        self.started = time.time()
+        self._stop = threading.Event()
+        self._thread: Optional[threading.Thread] = None
+
+    def start(self) -> "Waiting":
+        self.started = time.time()
+        if self.active:
+            self._stop.clear()
+            self._draw()
+            self._thread = threading.Thread(target=self._run, daemon=True)
+            self._thread.start()
+        return self
+
+    def _draw(self) -> None:
+        self.out(f"\r\x1b[KOSIRIS › \x1b[2m({self.label()} · {time.time() - self.started:.0f} s)\x1b[0m")
+
+    def _run(self) -> None:
+        while not self._stop.wait(1.0):
+            self._draw()
+
+    def stop(self) -> None:
+        """Back to a bare 'OSIRIS › ' for the reply."""
+        if self._thread is not None:
+            self._stop.set()
+            self._thread.join()
+            self._thread = None
+            self.out("\r\x1b[KOSIRIS › ")
+
+
 # ---------------------------------------------------------------------------
 # The organism you talk to
 # ---------------------------------------------------------------------------
@@ -420,8 +498,10 @@ class TypeAhead:
 class Osiris:
     def __init__(self, core=None, mentor=None, home: str = LIVING_HOME,
                  out: Callable[[str], None] = None, background: bool = True,
-                 knowledge=None, tty: Optional[bool] = None, probes=None, claims_register: bool = True):
+                 knowledge=None, tty: Optional[bool] = None, probes=None, claims_register: bool = True,
+                 small_talk: Optional[Callable[[str], bool]] = None):
         self.core = core
+        self.small_talk = small_talk   # True for a message that is only a greeting or thanks
         self.claims_register = claims_register
         self._claims_hit: list = []
         self.mentor = mentor or OllamaMentor()
@@ -440,6 +520,9 @@ class Osiris:
         self.recall = self._recall()   # fixed for the session: keeps the system prompt stable
         self._pending: Optional[threading.Thread] = None
         self._lock = threading.Lock()
+        self._voices: set = set()   # mentor models this session used; finish() unloads them
+        self._sent: List[Dict[str, str]] = []   # earlier turns exactly as the mentor was sent them
+        self._warm: Optional[threading.Thread] = None
 
     # -- persistence -------------------------------------------------------
 
@@ -457,6 +540,7 @@ class Osiris:
         s.pop("heldout", None)
         s.setdefault("unigram", {})       # byte -> count, train text only
         s.setdefault("last_head", "0" * 64)
+        s.setdefault("first_word", {})    # model -> seconds to its first word, latest last
         return s
 
     def _save_stats(self) -> None:
@@ -503,6 +587,60 @@ class Osiris:
         open_ = n >= GATE_WINDOW and core is not None and core <= SPEAK_BPB and core < uni
         return {"open": open_, "n": n, "core_bpb": core, "unigram_bpb": uni}
 
+    @staticmethod
+    def gate_note(gate: dict) -> str:
+        """Why the core is or is not speaking, in one clause."""
+        if gate["open"]:
+            return "gate open"
+        if not gate["n"]:
+            return "gate closed: not scored on held-out text yet"
+        return (f"gate closed: {gate['core_bpb']:.2f} bits/byte on {gate['n']}/{GATE_WINDOW} held-out "
+                f"(unigram {gate['unigram_bpb']:.2f}; speaks at <= {SPEAK_BPB})")
+
+    @staticmethod
+    def gate_brief(gate: dict) -> str:
+        if gate["open"]:
+            return "gate open"
+        if not gate["n"]:
+            return "gate closed, not scored yet"
+        return f"gate closed ({gate['core_bpb']:.2f} bits/byte held-out; speaks at <= {SPEAK_BPB})"
+
+    # -- how long replies take ---------------------------------------------
+
+    def typical_first_word(self, model: str) -> Optional[float]:
+        """Median seconds to this model's first word over its recent replies here."""
+        times = sorted(self.stats["first_word"].get(model, []))
+        return times[len(times) // 2] if len(times) >= 3 else None
+
+    def _typical(self, model: str) -> str:
+        t = self.typical_first_word(model)
+        return f" · usually ~{t:.0f} s" if t is not None else ""
+
+    def _note_first_word(self, model: str, seconds: float) -> None:
+        times = self.stats["first_word"].get(model, []) + [round(seconds, 1)]
+        self.stats["first_word"][model] = times[-FIRST_WORD_SAMPLES:]
+
+    def prewarm(self) -> Optional[str]:
+        """Loads the mentor and reads the system prompt into its cache in the
+        background, so the first reply re-reads only its own message (~1,400 tokens
+        fewer: ~50 s on this machine's 7B). Not while a batch trainer runs. Returns
+        the model being warmed, or None."""
+        warm = getattr(self.mentor, "warm", None)
+        model = self.mentor.model() if warm is not None and not self._trainer_running() else None
+        if model is None:
+            return None
+        messages = [{"role": "system", "content": self.system_prompt()}, {"role": "user", "content": "hello"}]
+
+        def work():
+            try:
+                warm(messages, model)
+            except (OSError, ValueError):
+                pass   # the first reply just reads everything itself
+        self._voices.add(model)
+        self._warm = threading.Thread(target=work, daemon=True)
+        self._warm.start()
+        return model
+
     # -- conversation ------------------------------------------------------
 
     @staticmethod
@@ -533,6 +671,11 @@ class Osiris:
             if self._claims_hit:
                 self.out("\n" + claims_mod.console_block(self._claims_hit))
 
+        if not self._claims_hit and self.small_talk is not None and SMALL_TALK.match(text) \
+                and self.small_talk(text):
+            return self._small_talk_reply(text, gate)
+
+        sent_user = None
         if gate["open"] and self.core is not None:
             self.out("\nOSIRIS › ")
             try:
@@ -552,43 +695,63 @@ class Osiris:
                          f"mentor model is reachable at {self.mentor.base}. Start one with `ollama serve`.\n")
                 self.history.pop()
                 return ""
-            voice = "mentor:" + model
+            fast = getattr(self.mentor, "fast_model", lambda: None)()
+            fast = fast if fast != model else None
+            why = ""
+            if fast and len(text) > LONG_MESSAGE:
+                model, fast, why = fast, None, "fast voice: long message"
             self._mark_chat()
             messages, sources = self.build_messages(gate, text)
+            sent_user = messages[-1]
+            busy = " · the batch trainer is sharing the CPU" if self._trainer_running() else ""
             self.out("\nOSIRIS › ")
-            waiting = self.tty
-            if waiting:
-                busy = " -- the batch trainer is sharing the CPU" if self._trainer_running() else ""
-                self.out(f"\x1b[2m(thinking{busy})\x1b[0m")
-            started = time.time()
+            started, first_word = time.time(), None
+            waiting = Waiting(self.out, lambda: f"thinking · {model}{busy}{self._typical(model)}", self.tty)
             with TypeAhead(self.tty) as typed:
-                try:
-                    for piece in self.mentor.stream(messages):
-                        if waiting:
-                            self.out("\r\x1b[KOSIRIS › ")
-                            waiting = False
-                        reply += piece
-                        self.out(piece)
-                except KeyboardInterrupt:
-                    interrupted = True
-                    self.out(" …(interrupted)")
-                except (OSError, ConnectionError, ValueError) as e:
-                    self.out(f"\n[mentor {model} failed: {e}]")
-                    interrupted = True
+                while True:
+                    self._voices.add(model)
+                    waiting.start()
+                    try:
+                        for piece in self.mentor.stream(messages, model=model):
+                            if first_word is None:
+                                waiting.stop()
+                                first_word = time.time() - waiting.started
+                            reply += piece
+                            self.out(piece)
+                    except KeyboardInterrupt:
+                        waiting.stop()
+                        interrupted = True
+                        self.out(" …(interrupted)")
+                    except (OSError, ConnectionError, ValueError) as e:
+                        waiting.stop()
+                        if fast and not reply:
+                            self.out(f"[{model} failed after {time.time() - started:.0f} s: {e} -- "
+                                     f"asking {fast}]\nOSIRIS › ")
+                            model, fast, why = fast, None, "fast voice: the main voice failed"
+                            continue
+                        self.out(f"\n[mentor {model} failed: {e}]")
+                        interrupted = True
+                    break
+            voice = "mentor:" + model
+            if first_word is not None:
+                self._note_first_word(model, first_word)
             self.out("\n")
             note = "not learned: interrupted" if interrupted else (
                 "learning from this" if learnable else "not learned: pasted transcript")
             cited = f" · used: {', '.join(sources)}" if sources else ""
             if len(text) > MESSAGE_BUDGET:
                 cited += f" · long message: an excerpt of {len(text):,} characters was sent"
-            self.out(f"  · voice: {model} speaking for OSIRIS · {time.time() - started:.0f} s · "
-                     f"core step {self._core_step()} · {note}{cited}\n")
+            timing = (f"first word {first_word:.0f} s, done {time.time() - started:.0f} s"
+                      if first_word is not None else f"{time.time() - started:.0f} s")
+            self.out(f"  · voice: {model} speaking for OSIRIS{f' ({why})' if why else ''} · {timing} · "
+                     f"core step {self._core_step()}, {self.gate_brief(gate)} · {note}{cited}\n")
             self._hold(typed.text)
 
         if not reply:
             self.history.pop()
             return ""
         self.history.append({"role": "assistant", "content": reply})
+        self._sent += [sent_user or self.history[-2], {"role": "assistant", "content": reply}]
 
         idx = self.stats["exchanges"]
         self.stats["exchanges"] += 1
@@ -604,23 +767,58 @@ class Osiris:
             self._after(lesson, reply, heldout, key, idx)
         return reply
 
+    def _small_talk_reply(self, text: str, gate: dict) -> str:
+        """A greeting or thanks, answered by code at once with what is true right now.
+        Recorded in the ledger but never learned: the core should not train on templates."""
+        if SMALL_TALK.match(text).group("thanks"):
+            reply = "You're welcome."
+        else:
+            voice = self.mentor.model()
+            if gate["open"]:
+                who = "My own core answers in its own voice now."
+            elif voice:
+                typical = self.typical_first_word(voice)
+                who = (f"My own core (step {self._core_step()}) hasn't earned its voice yet, so {voice} "
+                       f"speaks for me" + (f"; its replies start after about {typical:.0f} s on this "
+                                           f"machine." if typical is not None else "."))
+            else:
+                who = ("My own core hasn't earned its voice yet and no mentor model is reachable, so only "
+                       "code can answer for now -- start one with `ollama serve`.")
+            reply = f"Hello, I'm here. {who} Ask me anything, or type /architecture to see how I'm put together."
+        self.out(f"\nOSIRIS › {reply}\n  · voice: code, no model · instant · core step {self._core_step()}, "
+                 f"{self.gate_brief(gate)}\n")
+        self.history.append({"role": "assistant", "content": reply})
+        self._sent += [self.history[-2], {"role": "assistant", "content": reply}]
+        self._record({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "voice": "code", "heldout": False,
+                      "learnable": False, "user": text, "reply": reply, "index": None})
+        self._save_stats()
+        return reply
+
     # -- what the mentor is told -------------------------------------------
 
-    def build_messages(self, gate: dict, text: str):
-        """System prompt (stable across turns, so Ollama reuses its cached prefix),
-        the history, and the new message with live state and looked-up notes
-        attached. The stored history keeps only what was actually said."""
+    def system_prompt(self) -> str:
+        """Stable across turns, so Ollama keeps it read; it changes only when a fact is
+        remembered (/remember applies from the next message)."""
         system = IDENTITY
-        hits, checks = [], []
-        long_message = len(text) > LONG_MESSAGE   # a paste: no per-path checks, one note at most
         if self.knowledge is not None:
             system += "\n\nWhat is on record:\n" + self.knowledge.brief()
-            hits = self.knowledge.lookup(text[:LONG_MESSAGE], k=1 if long_message else NOTES_PER_MESSAGE)
         facts = self.facts()
         if facts:
             system += "\n\nThings Devin asked you to remember:\n" + "\n".join("- " + f for f in facts)
         if self.recall:
             system += "\n\n" + self.recall
+        return system
+
+    def build_messages(self, gate: dict, text: str):
+        """The system prompt, the earlier turns exactly as they were sent (so a turn
+        adds only its own message and Ollama re-reads nothing else), and the new
+        message with live state and looked-up notes attached. The history kept for
+        the core and the ledger holds only what was actually said."""
+        system = self.system_prompt()
+        hits, checks = [], []
+        long_message = len(text) > LONG_MESSAGE   # a paste: no per-path checks, one note at most
+        if self.knowledge is not None:
+            hits = self.knowledge.lookup(text[:LONG_MESSAGE], k=1 if long_message else NOTES_PER_MESSAGE)
         context = "[Live state, read from disk just now]\n" + self._state_note(gate).strip()
         if self._trainer_running():
             context += "\nA batch training run of your core is in progress (osiris train)."
@@ -639,9 +837,22 @@ class Osiris:
             context += (f"\n\n[This message is {len(text):,} characters; you are given an excerpt. Say what "
                         "you can from it, and that you saw only part of it.]")
         last = {"role": "user", "content": context + "\n\n[Message]\n" + self.excerpt(text)}
-        messages = [{"role": "system", "content": system}] + self.history[:-1] + [last]
+        self._fit(len(system) + len(last["content"]))
+        messages = [{"role": "system", "content": system}] + self._sent + [last]
         return messages, [c["cmd"].split(";")[0] if c["name"] != "file" else c["cmd"] for c in checks] \
             + [h["source"] for h in hits]
+
+    def _fit(self, fixed: int) -> None:
+        """Keeps the prompt inside the model's context. When it would overflow, the
+        earlier turns are re-sent as plainly said (their notes and live state dropped),
+        oldest out first: one full re-read, instead of Ollama truncating every turn."""
+        def size():
+            return fixed + sum(len(m["content"]) for m in self._sent)
+        if size() <= PROMPT_BUDGET:
+            return
+        self._sent = [dict(m) for m in self.history[:-1]]
+        while self._sent and (size() > PROMPT_BUDGET or self._sent[0]["role"] != "user"):
+            del self._sent[0]
 
     # -- memory across sessions ---------------------------------------------
 
@@ -650,9 +861,10 @@ class Osiris:
         no model summarises them, so nothing is invented about the past."""
         try:
             with open(self.log_path, encoding="utf-8") as f:
-                rows = [json.loads(line) for line in f.readlines()[-RECALL_EXCHANGES:]]
+                rows = [json.loads(line) for line in f.readlines()[-4 * RECALL_EXCHANGES:]]
         except (OSError, ValueError):
             return ""
+        rows = [r for r in rows if r.get("voice") != "code"][-RECALL_EXCHANGES:]   # not greetings
         if not rows:
             return ""
         lines = [f"- {r.get('t', '?')[:16]} Devin: {r.get('user', '')[:200]!r} -> you: "
@@ -755,10 +967,15 @@ class Osiris:
             work()
 
     def finish(self) -> None:
-        """Let the last lesson finish before the process exits."""
+        """Let the last lesson finish before the process exits, and free the
+        mentor models this session used: a resident 7B slows batch training ~25x."""
         if self._pending is not None and self._pending.is_alive():
             self.out("[OSIRIS] finishing the last lesson…\n")
             self._pending.join()
+        unload = getattr(self.mentor, "unload", None)
+        for model in sorted(self._voices) if unload else ():
+            unload(model)
+        self._voices.clear()
 
     # -- other voices ------------------------------------------------------
 
