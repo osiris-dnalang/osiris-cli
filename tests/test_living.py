@@ -17,7 +17,7 @@ class ScriptedMentor:
     def set_model(self, name):
         self._model = name
 
-    def stream(self, messages):
+    def stream(self, messages, model=None):
         self.calls.append(messages)
         if self.fail:
             raise self.fail
@@ -174,7 +174,10 @@ def test_system_prompt_is_stable_across_turns(tmp_path):
     o.converse("hello")
     o.converse("what drift results are there?")
     assert mentor.calls[0][0] == mentor.calls[1][0]
-    assert [m["content"] for m in mentor.calls[1][1:3]] == ["hello", "Hello Devin. "]
+    # Each prompt starts with the previous one plus the reply, so Ollama re-reads only
+    # the new message; the history kept for the core holds only what was said.
+    assert mentor.calls[1][:2] == mentor.calls[0] and mentor.calls[1][2]["content"] == "Hello Devin. "
+    assert [m["content"] for m in o.history[:2]] == ["hello", "Hello Devin. "]
 
 
 def test_chat_marks_itself_active_for_the_trainer(tmp_path):
