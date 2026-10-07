@@ -167,6 +167,7 @@ py-modules = [
 
 [tool.setuptools.packages.find]
 include = ["osiris*", "osiris_cli*", "nclm*", "qbyte_system*", "quantum_discovery*", "scimitar_sse*", "bench_tasks"]
+namespaces = true   # bench_tasks has no __init__.py: a .py there would change osiris_bench.suite_sha256
 
 [tool.setuptools.package-data]
 # the benchmark task definitions are data the console and osiris_bench read from <site-packages>/bench_tasks

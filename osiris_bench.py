@@ -78,11 +78,7 @@ def _load_osiris():
 
 
 def load_tasks(ids=None):
-    if not os.path.isdir(TASKS_DIR):
-        raise FileNotFoundError(f"benchmark tasks not found at {TASKS_DIR}; reinstall osiris-cli >= 4.3.2 "
-                                "(the wheel ships bench_tasks) or run from a source checkout")
-    names = sorted(d for d in os.listdir(TASKS_DIR)
-                   if not d.startswith((".", "_")) and os.path.isdir(os.path.join(TASKS_DIR, d)))
+    names = sorted(d for d in os.listdir(TASKS_DIR) if os.path.isdir(os.path.join(TASKS_DIR, d)))
     if ids:
         unknown = set(ids) - set(names)
         if unknown:

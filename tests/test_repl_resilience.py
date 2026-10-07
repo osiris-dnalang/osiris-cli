@@ -32,7 +32,9 @@ def test_repl_loop_uses_the_guard():
 def test_bench_tasks_ship_in_the_wheel():
     text = open(os.path.join(ROOT, "pyproject.toml"), encoding="utf-8").read()
     assert '"bench_tasks"' in text and "[tool.setuptools.package-data]" in text
-    assert os.path.isfile(os.path.join(ROOT, "bench_tasks", "__init__.py"))
+    # no __init__.py: every .py under bench_tasks is hashed into suite_sha256, and adding one
+    # would make all earlier bench evidence non-comparable
+    assert not os.path.exists(os.path.join(ROOT, "bench_tasks", "__init__.py"))
 
 
 def test_bench_task_listing_skips_package_files():
@@ -41,11 +43,12 @@ def test_bench_task_listing_skips_package_files():
     assert names and not any(str(n).startswith(("_", ".")) for n in names)
 
 
-def test_missing_bench_tasks_is_a_clear_error(monkeypatch, tmp_path):
-    import osiris_bench
-    monkeypatch.setattr(osiris_bench, "TASKS_DIR", str(tmp_path / "absent"))
-    with pytest.raises(FileNotFoundError, match="bench_tasks"):
-        osiris_bench.load_tasks()
+def test_console_bench_argv_survives_missing_tasks(monkeypatch, tmp_path):
+    otc = osiris_repl.otc
+    if otc is None:
+        pytest.skip("console not importable")
+    monkeypatch.setattr(otc.os.path, "abspath", lambda p: str(tmp_path / "x.py") if p == otc.__file__ else os.path.abspath(p))
+    otc._bench_argv("/bench")                     # no FileNotFoundError when bench_tasks is absent
 
 
 def test_status_does_not_call_crsm_constants_invariants():
