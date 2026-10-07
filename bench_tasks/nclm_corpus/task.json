@@ -1,0 +1,6 @@
+{
+  "id": "nclm_corpus",
+  "module": "nclm_corpus",
+  "title": "seeded, order-independent corpus split",
+  "spec": "Module nclm_corpus. split_corpus(files: dict[str, bytes], test_ratio: float, seed: int) -> tuple[list[str], list[str]]: returns (train_names, test_names), each sorted. The split is deterministic for the same file names and seed regardless of dict insertion order; train and test are disjoint and together contain every name; the test list has round(len(files) * test_ratio) names, but at least 1 and at most len(files) - 1 when there are 2 or more files. Different seeds should generally give different splits. corpus_bytes(files: dict[str, bytes], names: list[str]) -> bytes joins the contents of names in sorted name order, separated by b'\\n'."
+}

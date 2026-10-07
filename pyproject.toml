@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "osiris-cli"
-version = "4.3.0"
+version = "4.3.1"
 description = "OSIRIS: a governed local console for a living language model that learns from every conversation and speaks only after passing a held-out gate"
 readme = "README.md"
 license = {text = "LicenseRef-OSIRIS-Dual-v1.0"}
@@ -146,6 +146,23 @@ py-modules = [
     "structured_proposal",
     "verify_loop",
     "vision_indexer",
+    # Console modules and scripts that were imported or run but never packaged before 4.3.1
+    "algorithmic_dd_generator",
+    "bench_trial",
+    "capabilities",
+    "dd_sim",
+    "discover",
+    "dna_lang",
+    "evolve",
+    "nclm_aer_evaluator",
+    "osiris_bench",
+    "osiris_local_qvm",
+    "paste_digest",
+    "pretrain_nclm",
+    "prompt_strategies",
+    "protege",
+    "trials",
+    "verify_ledger",
 ]
 
 [tool.setuptools.packages.find]

@@ -1,0 +1,7 @@
+{
+  "id": "gaps",
+  "module": "gaps",
+  "title": "vague story: gaps chopped off or run on (modify existing)",
+  "spec": "The gaps we pull out of prompts keep getting chopped off partway through, or run on into whatever comes next. Fix it so each gap comes out whole.",
+  "kind": "modify"
+}

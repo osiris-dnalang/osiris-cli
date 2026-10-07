@@ -4,9 +4,9 @@ authors:
   - family-names: "Davis"
     given-names: "Devin Phillip"
     affiliation: "Agile Defense Systems LLC"
-title: "OSIRIS: a governed local console for a living language model"
-version: 4.3.0
-date-released: 2026-10-01
+title: "OSIRIS: a governed, local-first console for testing whether a small language model learns from conversation"
+version: 4.3.1
+date-released: 2026-10-07
 url: "https://github.com/osiris-dnalang/osiris-cli"
 repository-code: "https://github.com/osiris-dnalang/osiris-cli"
 license: LicenseRef-OSIRIS-Dual-v1.0

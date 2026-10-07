@@ -27,29 +27,16 @@ from __future__ import annotations
 import dataclasses
 import hashlib
 import json
-import os
-import sys
 import time
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-_SEARCH_PATHS = [
-    Path("/home/enki/osiris-governance/src"),
-    Path("/home/enki/dnalang-core"),
-    Path("/home/enki/organism_sim"),
-    Path("/home/enki/bridge"),
-    Path("/home/enki/flywheel-2026"),
-    Path("/home/enki/osiris-cli"),
-    Path("/home/enki/qbyte_system"),
-    Path("/home/enki"),
-]
+from osiris_cli.paths import add_optional_paths  # noqa: E402
 
-for p in _SEARCH_PATHS:
-    p_str = str(p)
-    if os.path.exists(p_str) and p_str not in sys.path:
-        sys.path.insert(0, p_str)
+# Appends the source checkout, OSIRIS_EXTRA_PATHS and existing sibling checkouts;
+# installed packages keep precedence.
+add_optional_paths()
 
 from osiris_unified_livlm import EngineMode, UnifiedLivLMEngine
 

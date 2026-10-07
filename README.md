@@ -2,16 +2,16 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23063462.svg)](https://doi.org/10.5281/zenodo.23063462)
 
-A local-first console built around a **living language model**: OSIRIS's own small model
-(`osiris.nclm`) learns from every conversation and from your documents, and speaks in its own
-voice only after it passes a held-out test. Until then a local Ollama model speaks *for* it,
-labelled as such, and the core trains on what it says. Models propose; deterministic code
-decides, measures and records.
+A local-first console for testing whether a small language model can learn from
+conversation. OSIRIS's own model (`osiris.nclm`, the *core*) trains on every exchange and on your
+documents, and may answer in its own voice only after it passes a held-out test; it has not
+passed yet. Until then a local Ollama model speaks *for* it, labelled as such, and the core
+trains on what it says. Models propose; deterministic code decides, measures and records.
 
 Author: Devin Phillip Davis (Agile Defense Systems LLC). License: OSIRIS Source-Available
 Dual License v1.0 (see `LICENSE`) — source-available, not open source.
 
-## What works today (v4.2.0)
+## What works today (v4.3.1)
 
 | Part | What it does | Where |
 |---|---|---|
@@ -42,6 +42,10 @@ osiris                           # start talking
 In the console: `/osiris` (core status and gate) · `/check [trainer|git|ledger|system]` ·
 `/remember <fact>` · `/forget <words>` · `/train [start H|stop]` · `/mentor [model]` ·
 `/self <text>` (the core's raw voice, ungated) · `/help` for everything else.
+
+Optional sibling checkouts (`~/dnalang-core`, `~/bridge`, `~/organism_sim`, …) are found
+automatically; other locations can be added with `OSIRIS_EXTRA_PATHS` (path-separated), and
+dnalang-core's ledger with `OSIRIS_DNALANG_LEDGER`. Installed packages always take precedence.
 
 ## Related, separately published work
 

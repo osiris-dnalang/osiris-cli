@@ -1,0 +1,6 @@
+{
+  "id": "backend_breaker",
+  "module": "backend_breaker",
+  "title": "per-session backend circuit breaker",
+  "spec": "Module backend_breaker with class Breaker. record(backend: str, status) where status is an HTTP status int or None for a network error. available(backend: str) -> bool; unknown backends are available. Status 401, 402 or 403 makes that backend unavailable for the rest of the session. Status 429, any 5xx, or None is a transient failure; 3 consecutive transient failures make the backend unavailable. A 2xx status resets the consecutive-failure count and re-enables a backend disabled by transient failures, but never one disabled by 401/402/403. Backends are independent of each other."
+}

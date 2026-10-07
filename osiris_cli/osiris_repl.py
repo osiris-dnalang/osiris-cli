@@ -47,29 +47,17 @@ import sys
 import time
 from datetime import datetime, timezone
 from enum import Enum
-from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ECOSYSTEM ENVIRONMENT & SYS.PATH INITIALIZATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-_SEARCH_PATHS = [
-    "/home/enki/osiris-cli",
-    "/home/enki/dnalang-core",
-    "/home/enki/organism_sim",
-    "/home/enki/bridge",
-    "/home/enki/flywheel-2026",
-    "/home/enki/qbyte_system",
-    "/home/enki/fold",
-    "/home/enki/osiris-mobile-termux",
-    "/home/enki/osiris-governance/src",
-    "/home/enki",
-]
+from osiris_cli.paths import add_optional_paths, results_dir
 
-for _p in _SEARCH_PATHS:
-    if os.path.exists(_p) and _p not in sys.path:
-        sys.path.insert(0, _p)
+# Appends the source checkout, OSIRIS_EXTRA_PATHS and existing sibling checkouts
+# (~/bridge, ~/dnalang-core, ...); installed packages keep precedence.
+add_optional_paths()
 
 try:
     import osiris_termux_console as otc
@@ -661,7 +649,7 @@ def execute_swarm(state: Optional[OsirisReplState] = None, steps: int = 10) -> D
     print(f"\n\033[1;35m[OSIRIS::SWARM] Booting NCLM Organismic Swarm (steps={steps})...\033[0m")
     try:
         from bridge.quantum_fitness import DDController, QuantumFitness
-        ledger_dir = Path("/home/enki/osiris-cli/results/swarm_runs")
+        ledger_dir = results_dir("swarm_runs")
         ledger_dir.mkdir(parents=True, exist_ok=True)
         ledger_path = ledger_dir / f"swarm_telemetry_{int(time.time())}.jsonl"
 
@@ -811,7 +799,7 @@ def execute_benchmark_flywheel(state: Optional[OsirisReplState] = None, output_p
     print("  Sweeping τ targets across NCLM Organism vs Static Baseline...\n")
 
     sample_taus = [0.0, 10.0, 20.0, 30.0, 46.9787, 60.0, 80.0]
-    bench_dir = Path("/home/enki/osiris-cli/results/flywheel_benchmarks")
+    bench_dir = results_dir("flywheel_benchmarks")
     bench_dir.mkdir(parents=True, exist_ok=True)
 
     results_table = []
@@ -936,7 +924,7 @@ def execute_digest(state: Optional[OsirisReplState], filepath: str) -> None:
             os.path.abspath(os.path.join(os.getcwd(), resolved_path)),
             os.path.join(os.path.expanduser("~"), "docs", filepath),
             os.path.join(os.path.expanduser("~"), filepath),
-            os.path.join("/home/enki/flywheel-2026/docs", filepath),
+            os.path.join(os.path.expanduser("~"), "flywheel-2026", "docs", filepath),
         ]
         for c in candidates:
             if os.path.exists(c):

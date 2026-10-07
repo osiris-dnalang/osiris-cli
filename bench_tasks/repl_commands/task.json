@@ -1,0 +1,6 @@
+{
+  "id": "repl_commands",
+  "module": "repl_commands",
+  "title": "typo-tolerant command normalization",
+  "spec": "Module repl_commands. COMMANDS = ('/apply', '/why', '/ignite', '/sprint plan', '/sprint execute', '/sprint review'). normalize_command(text: str) -> str | None: the canonical command when text equals one of COMMANDS ignoring case, surrounding whitespace, missing or repeated leading slashes, trailing '.' or '!', and repeated inner spaces; otherwise None. suggest(text: str) -> str | None: normalize_command(text) if that is not None; otherwise the command (without its slash) with the highest difflib SequenceMatcher ratio against the normalized text, returned with its slash, if that ratio is at least 0.75; otherwise None."
+}

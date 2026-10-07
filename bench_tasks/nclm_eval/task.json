@@ -1,0 +1,6 @@
+{
+  "id": "nclm_eval",
+  "module": "nclm_eval",
+  "title": "held-out NCLM vs unigram byte baseline, in nats",
+  "spec": "Module nclm_eval. compute_unigram_loss(train: bytes, test: bytes, smoothing=1.0) -> float: mean negative log-likelihood per test byte, in NATS (natural log), under a byte unigram model fit on train with add-`smoothing` (Laplace) smoothing over all 256 byte values; raise ValueError if test is empty. evaluate_held_out(exchanges: list[bytes], nclm_eval_fn, split_ratio=0.8) -> dict: the first split_ratio of exchanges (order preserved) is train, the rest held out; nclm_eval_fn(train_bytes, test_bytes) returns the model's loss in nats; raise ValueError if nclm_eval_fn is None. The dict has keys unigram_loss, nclm_loss and nclm_advantage = unigram_loss - nclm_loss (positive means the model beat the baseline)."
+}

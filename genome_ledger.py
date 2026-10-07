@@ -35,12 +35,27 @@ HOME_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Same convention as genome.json and the backlog (~/.osiris); the dnalang
 # source below is located from this file instead.
 DEFAULT_PATH = os.path.join(os.path.expanduser("~"), ".osiris", "genome_ledger.jsonl")
-_LEDGER_CANDIDATES = [
-    os.path.join(HOME_DIR, ".osiris", "src", "dnalang-core", "dnalang", "ledger.py"),
-    os.path.join(os.path.expanduser("~"), "dnalang-core", "dnalang", "ledger.py"),
-    "/home/enki/dnalang-core/dnalang/ledger.py",
-]
-LEDGER_SRC = next((c for c in _LEDGER_CANDIDATES if os.path.exists(c)), _LEDGER_CANDIDATES[0])
+
+
+def _find_ledger_src():
+    """dnalang-core's ledger.py: $OSIRIS_DNALANG_LEDGER if set, then the source
+    checkouts OSIRIS has always looked in, then an installed `dnalang` package
+    (located without importing it)."""
+    candidates = [os.environ["OSIRIS_DNALANG_LEDGER"]] if os.environ.get("OSIRIS_DNALANG_LEDGER") else []
+    candidates += [
+        os.path.join(HOME_DIR, ".osiris", "src", "dnalang-core", "dnalang", "ledger.py"),
+        os.path.join(os.path.expanduser("~"), "dnalang-core", "dnalang", "ledger.py"),
+    ]
+    try:
+        spec = importlib.util.find_spec("dnalang")
+    except (ImportError, ValueError):
+        spec = None
+    if spec is not None and spec.submodule_search_locations:
+        candidates += [os.path.join(p, "ledger.py") for p in spec.submodule_search_locations]
+    return next((c for c in candidates if os.path.exists(c)), candidates[0])
+
+
+LEDGER_SRC = _find_ledger_src()
 GENESIS = "0" * 64
 
 _ledger_mod = None

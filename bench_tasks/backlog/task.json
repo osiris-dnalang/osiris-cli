@@ -1,0 +1,7 @@
+{
+  "id": "backlog",
+  "module": "backlog",
+  "title": "vague story: stop duplicate stories (modify existing)",
+  "spec": "Adding the same story twice clutters the backlog. Make the backlog stop doing that.",
+  "kind": "modify"
+}

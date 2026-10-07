@@ -1,9 +1,9 @@
 {
-  "title": "OSIRIS v4.3.0: a governed local console for a living language model",
+  "title": "OSIRIS v4.3.1: a governed, local-first console for testing whether a small language model learns from conversation",
   "upload_type": "software",
-  "version": "4.3.0",
-  "publication_date": "2026-10-01",
-  "description": "<p>OSIRIS is a local-first console built around a small language model (osiris.nclm) that learns from every conversation and from the author's documents, and answers in its own voice only after passing a held-out test (30 held-out exchanges at &le; 2.0 bits/byte and below a unigram baseline). Until then a local Ollama model speaks for it, labelled as such, and the core trains on its replies. Deterministic code chooses and runs read-only checks (training status, git history, ledger integrity, system load, named files), retrieves grounding notes with file citations, and appends every exchange to a SHA-256 hash chain.</p><p>New in v4.3.0: a claims register and physics checks. OSIRIS holds 32 claims from the author's own work, each with a verdict (supported, reported, null, refuted, artifact, not measured, ruled out by a computed bound, overclaim, no evidence, untested, pilot), the finding, and the evidence: Zenodo DOIs, and files whose SHA-256 is computed when the entry is shown. Deterministic checks compute the bounds a claim must respect: radiated thrust at most P/c, rim speed against c, the mass-energy implied by a static metric perturbation, the CHSH local and Tsirelson bounds, efficiency at most 100 %, the log2(shots) ceiling on measured entropy, and whether a dynamical-decoupling sequence fits its idle window. A message that mentions a registered claim gets its verdict from code before any model answers, and the model is held to it (/legit, /physics). Also new: an evidence probe for pre-registered results, paired pre/post scoring of the core (used by NCLM-GATE-PILOT-0, 10.5281/zenodo.23075229), and the NCLM-Mix-1 pre-registration (not yet run).</p><p>Measured state at release: the core has not passed its gate. In NCLM-GATE-PILOT-0, training on the exchanges improved the core on held-out replies by 0.043 bits/byte, but at 5.3-5.6 bits/byte it was still worse than a unigram model of the same replies (4.45-4.58). The pre-registered learning test (NCLM-1) has not been run. Earlier CRSM-era constants and metrics kept in the repository (tau-phase anomaly, theta_lock = 51.843 deg, CCCE metrics) were refuted on hardware by the author and are not claimed.</p>",
+  "version": "4.3.1",
+  "publication_date": "2026-10-07",
+  "description": "<p>OSIRIS is a local-first console in which deterministic code mediates every interaction with language models: models propose; code decides, measures and records. Its subject is a small transformer, the <em>core</em> (osiris.nclm), trained online on conversations with a locally hosted mentor model. The core may answer in its own voice only after it passes a held-out speaking gate: 30 held-out exchanges at &le; 2.0 bits/byte and below a unigram baseline. Until then the mentor answers, labelled as speaking for OSIRIS.</p><p>Evidence to date: in two pilots, training on conversation lowered the core's loss on held-out replies (mean +0.043 bits/byte on 3 items, 10.5281/zenodo.23075229; +0.067 bits/byte on 20 items, positive on every item, 10.5281/zenodo.23102693). The core nonetheless remained worse than a unigram model of the same replies (5.56 vs 4.68 bits/byte) and has not passed its gate. About 86 % of the variance in the learning signal came from the training run, so a confirmatory test must replicate training runs. The pre-registered confirmatory test (NCLM-1) has not been run. This release claims no successful learning.</p><p>v4.3.1 is a packaging and repository-hygiene release: modules and scripts the console needs are now packaged (a clean install previously reported 'bench evidence unreadable (ModuleNotFoundError)'), hard-coded home-directory paths are gone, and private conversation transcripts and third-party contact details were removed from the repository. The files of the two previous versions are restricted for that reason. The attached note describes the software, its measurement design and its limitations.</p>",
   "creators": [
     {
       "name": "Davis, Devin Phillip",
@@ -19,23 +19,26 @@
     "held-out evaluation",
     "provenance",
     "hash chain",
-    "retrieval grounding",
-    "Ollama",
-    "dna::}{::lang"
+    "pre-registration"
   ],
   "related_identifiers": [
     {
-      "identifier": "https://github.com/osiris-dnalang/osiris-cli",
+      "identifier": "https://github.com/osiris-dnalang/osiris-cli/tree/v4.3.1",
       "relation": "isSupplementTo",
       "scheme": "url"
     },
     {
-      "identifier": "10.5281/zenodo.22862567",
+      "identifier": "10.5281/zenodo.23075229",
       "relation": "references",
       "scheme": "doi"
     },
     {
-      "identifier": "10.5281/zenodo.23045494",
+      "identifier": "10.5281/zenodo.23102693",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.22862567",
       "relation": "references",
       "scheme": "doi"
     }

@@ -1,0 +1,7 @@
+{
+  "id": "claims",
+  "module": "claims",
+  "title": "vague story: catch made-up numbers (modify existing)",
+  "spec": "Proposals keep showing up with numbers nobody can find anywhere. Catch those.",
+  "kind": "modify"
+}

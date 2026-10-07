@@ -1,0 +1,6 @@
+{
+  "id": "genome_ledger",
+  "module": "genome_ledger",
+  "title": "append-only hash-chained JSONL ledger",
+  "spec": "Module genome_ledger with class GenomeLedger(path: str). Storage is JSON Lines at path, one JSON object per line. append(kind: str, payload: dict) -> dict appends exactly one line and returns the entry, which has at least the keys kind, payload, prev and hash: prev is the previous entry's hash ('0' * 64 for the first entry) and hash is the SHA-256 hex digest of prev concatenated with the canonical JSON (sorted keys) of the entry without its hash key. Existing lines are never rewritten. verify() -> bool re-reads the file and returns False if any line was altered, removed or reordered, True otherwise. A new GenomeLedger on an existing file continues the same chain."
+}

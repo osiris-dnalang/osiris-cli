@@ -8,8 +8,16 @@ import pytest
 
 import genome_ledger as gl
 
-if not os.path.exists(gl.LEDGER_SRC):
-    pytest.skip("dnalang-core ledger.py not available", allow_module_level=True)
+# dnalang-core is a separate package; without it, use the pinned copy of its ledger.py
+# (v0.2.0) so these cases run everywhere instead of being skipped.
+FIXTURE_LEDGER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "dnalang_ledger_v0_2_0.py")
+
+
+@pytest.fixture(autouse=True)
+def _dnalang_ledger_source(monkeypatch):
+    if not os.path.exists(gl.LEDGER_SRC):
+        monkeypatch.setattr(gl, "LEDGER_SRC", FIXTURE_LEDGER)
+        monkeypatch.setattr(gl, "_ledger_mod", None)
 
 
 def _foreign_append(path, payload):

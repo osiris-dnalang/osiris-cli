@@ -1,0 +1,6 @@
+{
+  "id": "stub_detector",
+  "module": "stub_detector",
+  "title": "find stub functions via the AST",
+  "spec": "Module stub_detector. find_stubs(source: str) -> list[str]: the names, in source order, of every function or method (including async) whose body, ignoring a leading docstring, consists only of pass, ..., raise NotImplementedError (with or without parentheses), or a bare return / return None. A function whose body is only a docstring is a stub. Raise SyntaxError for invalid source."
+}
