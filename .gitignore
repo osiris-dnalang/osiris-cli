@@ -45,3 +45,6 @@ venv312/
 *.egg-info/
 .env*
 *.env
+
+# Local REPL interaction history (private)
+.osiris_history.jsonl

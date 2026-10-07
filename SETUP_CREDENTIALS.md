@@ -109,7 +109,7 @@ Either:
 # OSIRIS Quantum Discovery Configuration
 
 # IBM Quantum
-export IBM_QUANTUM_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+export IBM_QUANTUM_TOKEN="<your-ibm-quantum-token>"
 export IBM_BACKEND="ibm_torino"
 
 # Zenodo (for publishing)
