@@ -138,28 +138,14 @@ class LedgerAnalyzer:
             except Exception:
                 pass
         heldout_scores = stats.get("heldout_scores", {})
-        hash_to_bpb = {h: score[0] for h, score in heldout_scores.items() if isinstance(score, list) and len(score) > 0}
-        idx_to_bpb = {score[3]: score[0] for score in heldout_scores.values() if isinstance(score, list) and len(score) > 3}
+        # stats.json keys are full 64-hex exchange hashes; ledger rows carry a 40-hex prefix.
+        by_hash = {h: score for h, score in heldout_scores.items() if isinstance(score, list) and score}
 
         for i, exch in enumerate(exchanges):
-            # Extract BPB from metadata if available
-            metadata = exch.get('metadata', {})
-            if isinstance(metadata, str):
-                try:
-                    metadata = json.loads(metadata)
-                except:
-                    pass
-
-            bpb = metadata.get('bpb') if isinstance(metadata, dict) else None
-            if bpb is None:
-                h = exch.get('hash')
-                if h in hash_to_bpb:
-                    bpb = hash_to_bpb[h]
-                elif i in idx_to_bpb:
-                    bpb = idx_to_bpb[i]
-
-            if bpb is not None:
-                bpb_values.append((i + 1, float(bpb)))
+            h = exch.get('hash') or ''
+            score = next((v for k, v in by_hash.items() if h and k.startswith(h)), None)
+            if score is not None:
+                bpb_values.append((int(exch.get('index', i)), float(score[0]), exch.get('t', '')))
 
         return bpb_values
 
@@ -169,32 +155,22 @@ class LedgerAnalyzer:
         if not bpb_values:
             return {}
 
-        exchange_ids = [v[0] for v in bpb_values]
         bpbs = [v[1] for v in bpb_values]
-
-        # Compute stats
-        mean_bpb = sum(bpbs) / len(bpbs)
-        min_bpb = min(bpbs)
-        max_bpb = max(bpbs)
-
-        # Last 5 exchanges
-        last_5 = bpbs[-5:] if len(bpbs) >= 5 else bpbs
-        last_5_mean = sum(last_5) / len(last_5)
-
-        # Improvement from baseline (7.60)
-        baseline = 7.60
-        improvement = baseline - mean_bpb
+        last_5 = bpbs[-5:]
+        try:
+            with open(cls.STATS_PATH.parent / 'unigram_baseline.json') as f:
+                baseline = float(json.load(f)['bits_per_byte'])
+        except (OSError, ValueError, KeyError):
+            baseline = float('nan')
 
         return {
-            'total_exchanges': len(bpbs),
-            'mean_bpb': mean_bpb,
-            'min_bpb': min_bpb,
-            'max_bpb': max_bpb,
-            'last_5_mean': last_5_mean,
+            'heldout_scored': len(bpbs),
+            'mean_bpb': sum(bpbs) / len(bpbs),
+            'min_bpb': min(bpbs),
+            'max_bpb': max(bpbs),
+            'last_5_mean': sum(last_5) / len(last_5),
             'baseline': baseline,
-            'improvement': improvement,
-            'improvement_pct': (improvement / baseline) * 100,
-            'gate_status': 'PASS' if mean_bpb <= 2.0 else 'FAIL' if mean_bpb > 5.0 else 'IN_PROGRESS',
+            'gate_status': 'decided only by NCLM-1_v1_evaluate.py (registered, Amendment 4); run it for the verdict',
         }
 
 
@@ -206,10 +182,9 @@ class ReportGenerator:
         """Save results to CSV."""
         with open(output_path, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['exchange_id', 'bpb', 'timestamp'])
-            for exch_id, bpb in bpb_values:
-                timestamp = exchanges[exch_id - 1].get('timestamp', '')
-                writer.writerow([exch_id, bpb, timestamp])
+            writer.writerow(['exchange_index', 'core_bpb', 't'])
+            for index, bpb, t in bpb_values:
+                writer.writerow([index, bpb, t])
         logger.info(f"Saved CSV: {output_path}")
 
     @staticmethod
@@ -224,27 +199,22 @@ class ReportGenerator:
 ║              NCLM-1 EVALUATION PROGRESS REPORT                     ║
 ╚════════════════════════════════════════════════════════════════════╝
 
-📊 EXCHANGES COLLECTED
-  • Total: {stats['total_exchanges']} exchanges
+📊 HELD-OUT ROWS
+  • Scored: {stats['heldout_scored']} of 30 required
   • Neon stored: {neon_count} (with embeddings)
-  • Status: {"✅ On track" if stats['total_exchanges'] >= 30 else "⏳ Collecting..."}
 
-📈 BPB METRICS
-  • Mean: {stats['mean_bpb']:.3f} bits/byte
+📈 CORE BITS/BYTE (held-out rows)
+  • Mean: {stats['mean_bpb']:.3f}
   • Range: {stats['min_bpb']:.3f} - {stats['max_bpb']:.3f}
-  • Baseline: {stats['baseline']:.3f}
-  • Improvement: {stats['improvement']:.3f} ({stats['improvement_pct']:.1f}%)
   • Last 5 mean: {stats['last_5_mean']:.3f}
+  • Frozen corpus unigram (pre-registered): {stats['baseline']:.4f}
 
-🎯 GATE STATUS
-  • Current: {stats['gate_status']}
-  • Target: ≤ 2.0 bits/byte
-  • Progress: {min(100, (stats['baseline'] - stats['mean_bpb']) / (stats['baseline'] - 2.0) * 100):.1f}%
+🎯 GATE
+  • Verdict: {stats['gate_status']}
+  • Target: 30-row mean ≤ 2.0, below both unigrams, last-5 mean ≤ 2.5
 
-📅 TIMELINE
-  • Deadline: Oct 7, 2026 (today)
-  • Phase: Exploratory (collect 150+ exchanges)
-  • Next: Measure learning curves, optimize, publish
+📅 WINDOW
+  • NCLM-1 v1b closes 2026-10-08 23:59:59 UTC
 
 ╚════════════════════════════════════════════════════════════════════╝
 """)
