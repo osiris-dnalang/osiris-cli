@@ -1149,10 +1149,16 @@ def display_status(state: Optional[OsirisReplState] = None) -> None:
     print(f"  Substrate State: {substrate}")
     print(f"  Cognitive Mesh : {mesh}")
     print(f"  Power Governor : {p_dec.reason}")
-    print(f"  Coherence Floor: {state.coherence_floor:.4f} (Invariant Γ <= 0.092)")
-    print(f"  Resonance Angle: {THETA_LOCK_DEG}° (Pyramid face slope arctan(14/11))")
-    print(f"  Memory Invariant: Λ_Φ = {LAMBDA_PHI:.6e} kg")
-    print(f"  Peak Fidelity  : F_max = {F_MAX_PREDICTED:.5f}")
+    print(f"  Coherence Floor: {state.coherence_floor:.4f} (configured threshold, not a measured invariant)")
+    try:
+        from osiris_cli import claims as _claims
+        def _verdict(cid):
+            c = _claims.by_id(cid)
+            return c.verdict if c else "unregistered"
+        print(f"  CRSM constants : historical, not established -- θ_lock {THETA_LOCK_DEG}° {_verdict('THETA_LOCK')}, "
+              f"Λ_Φ {LAMBDA_PHI:.6e} {_verdict('LAMBDA_PHI')}, F_max {F_MAX_PREDICTED:.5f} {_verdict('K8_REVIVAL')} (/legit list)")
+    except Exception:  # noqa: BLE001 - status must render even without the register
+        print("  CRSM constants : historical, not established (/legit list)")
     print(f"  Uptime         : {uptime:.1f} s")
     print(f"  Evidence Events: {len(state.evidence_ledger)} items in Merkle ledger")
     if state.last_benchmark:
@@ -1264,6 +1270,25 @@ CONSOLE_COMMANDS = {
     "/organism", "/ui", "/sprint", "/reroute", "/focus", "/suggest", "/digest", "/ingest", "/facts",
     "/plan", "/consensus", "/check", "/nclm", "/intent", "/ask", "/cancel", "/engage", "/tap",
 }
+
+
+def safe_dispatch(state: OsirisReplState, line: str) -> None:
+    """Run one command; if it raises, say which command failed, keep the traceback in
+    ~/.osiris/logs/repl_errors.log and return to the prompt instead of ending the session."""
+    try:
+        dispatch_command(state, line)
+    except Exception as exc:  # noqa: BLE001 - one broken command must not close the REPL
+        import traceback
+        log = os.path.join(os.path.expanduser("~"), ".osiris", "logs", "repl_errors.log")
+        try:
+            os.makedirs(os.path.dirname(log), exist_ok=True)
+            with open(log, "a", encoding="utf-8") as f:
+                f.write(f"--- {time.strftime('%Y-%m-%dT%H:%M:%S')} {line[:200]!r}\n{traceback.format_exc()}\n")
+            where = f"traceback in {log}"
+        except OSError:
+            where = "traceback could not be written"
+        print(f"\n[!] '{line[:60]}' failed: {type(exc).__name__}: {str(exc)[:200]}")
+        print(f"    The session continues; {where}.\n")
 
 
 def dispatch_command(state: OsirisReplState, line: str) -> None:
@@ -1508,7 +1533,7 @@ def boot_repl() -> None:
         if _LIVING is not None and _LIVING.held:
             line = _LIVING.held.pop(0)
             print(f"{prompt}{line}   \033[2m(typed while OSIRIS was answering)\033[0m")
-            dispatch_command(SESSION, line)
+            safe_dispatch(SESSION, line)
             continue
         try:
             if otc is not None:
@@ -1528,7 +1553,7 @@ def boot_repl() -> None:
             print("[OSIRIS] Session closed.")
             break
 
-        dispatch_command(SESSION, line)
+        safe_dispatch(SESSION, line)
 
     if _LIVING is not None:
         _LIVING.finish()

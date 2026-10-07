@@ -2945,8 +2945,9 @@ def _bench_argv(command: str):
     """'/bench [MODEL|gemini] [all|TASK,TASK] [k=N]' -> (argv, label) or (None, error).
     Defaults: the local qwen2.5-coder:7b mentor, 3 quick tasks, one attempt each."""
     backend, model, tasks, k = "ollama", BENCH_DEFAULT_MODEL, list(BENCH_QUICK_TASKS), 1
-    known = sorted(d for d in os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bench_tasks"))
-                   if not d.startswith((".", "_")))
+    tasks_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bench_tasks")
+    known = sorted(d for d in os.listdir(tasks_dir) if not d.startswith((".", "_"))
+                   and os.path.isdir(os.path.join(tasks_dir, d))) if os.path.isdir(tasks_dir) else []
     for w in command.split()[1:]:
         lw = w.lower()
         if lw == "gateway":

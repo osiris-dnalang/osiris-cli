@@ -46,10 +46,16 @@ class Console:
         return "verified", "genome ledger valid (1 entries) · bench evidence 9 files verified"
 
 
+FIXTURE_LEDGER = str(__import__("pathlib").Path(__file__).parent / "fixtures" / "dnalang_ledger_v0_2_0.py")
+
+
 @pytest.fixture
 def ledger(tmp_path, monkeypatch):
     path = tmp_path / "genome_ledger.jsonl"
     monkeypatch.setattr(genome_ledger, "DEFAULT_PATH", str(path))
+    if not __import__("os").path.exists(genome_ledger.LEDGER_SRC):   # no dnalang-core: use the pinned copy
+        monkeypatch.setattr(genome_ledger, "LEDGER_SRC", FIXTURE_LEDGER)
+        monkeypatch.setattr(genome_ledger, "_ledger_mod", None)
     return path
 
 
