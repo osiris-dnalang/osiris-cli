@@ -45,3 +45,22 @@ venv312/
 *.egg-info/
 .env*
 *.env
+
+# Credentials and local configuration
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+*.pem
+*.key
+.zenodo_token
+
+# Private workspace and generated files
+workspace/
+unzipped/
+repos/
+osiris-env/
+.osiris_history.jsonl
+__pycache__/
+*.pyc
