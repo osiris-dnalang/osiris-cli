@@ -164,11 +164,14 @@ def verified_first_passing(
             else:
                 ok, reason, receipt = False, "[INVALID_VERIFIER_OUTPUT] Verifier must return a tuple", {}
 
-            # 4. Receipt Binding Check
-            if ok and isinstance(receipt, dict) and "candidate_digest" in receipt:
+            # 4. Receipt Binding Check: a pass counts only with a receipt naming this candidate
+            if ok:
                 cand_digest = candidate.compute_digest()
-                if receipt["candidate_digest"] != cand_digest:
-                    ok, reason = False, f"[RECEIPT_BINDING_MISMATCH] Receipt digest '{receipt['candidate_digest']}' != candidate '{cand_digest}'"
+                bound = receipt.get("candidate_digest") if isinstance(receipt, dict) else None
+                if not bound:
+                    ok, reason = False, "[RECEIPT_MISSING] Verifier reported a pass without a receipt naming the candidate digest"
+                elif bound != cand_digest:
+                    ok, reason = False, f"[RECEIPT_BINDING_MISMATCH] Receipt digest '{bound}' != candidate '{cand_digest}'"
 
         attempt = {"n": n, "ok": ok, "reason": reason, "candidate": candidate}
         attempts.append(attempt)

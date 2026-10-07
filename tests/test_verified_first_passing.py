@@ -142,3 +142,12 @@ def test_verified_first_passing_success_with_receipt():
     assert attempts[0]["ok"] is True
     assert winner.candidate_id == "c_ok"
     assert winner.compute_digest() == candidate.compute_digest()
+
+
+def test_pass_without_receipt_rejected():
+    guard = EvaluatorConfinementGuard()
+    cand = CandidateArtifact("c-nr", "source", "def f():\n    return 1\n")
+    for out in [(True, "ok"), (True, "ok", {}), (True, "ok", {"evaluator": "x"}), (True, "ok", "not-a-dict")]:
+        winner, attempts = verified_first_passing(lambda fb: (cand, ""), lambda c, out=out: out, k=1, confinement_guard=guard)
+        assert winner is None
+        assert attempts[-1]["reason"].startswith("[RECEIPT_MISSING]")

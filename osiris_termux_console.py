@@ -2121,6 +2121,14 @@ def _hypothesis(command: str = "/hypothesis", question: str = None):
             print("\n[!] No such draft -- /hypotheses draft makes them.\n")
             return
         prefill = _hyp_drafts[n - 1]["hypothesis"]
+    elif len(parts) == 4 and parts[2] == "tests":
+        try:
+            h = research.set_evidence_kind(parts[1], parts[3])
+        except ValueError as e:
+            print(f"\n[!] {e}\n")
+            return
+        print(f"\n[*] {h['id']} is decided only by a {research.EVIDENCE_KINDS[h['evidence_kind']]}.\n")
+        return
     elif len(parts) > 1:
         return _hypothesis_card(parts[1])
     ui = osiris_ui.Canvas()
@@ -2611,9 +2619,10 @@ def _evolve_result(run_id, ui):
     print("\n" + ui.panel(f"ORGANISM RUN · RESULT · {end['run_id']}", inner.facts(rows).split("\n")))
     import trials
     allowed = trials.allowed_outcomes(end["verdict"])
-    open_h = [h for h in research.hypotheses() if not h.get("outcome")]
+    open_h = research.open_hypotheses_for(end["run_id"])
     hint = (f"/outcome {open_h[-1]['id']} {allowed[0]} {end['run_id']}" if open_h else
-            f"/outcome hyp-N {allowed[0]} {end['run_id']} (draft a hypothesis first)")
+            f"No open hypothesis is decided by an organism run: /hypothesis hyp-N tests evo, then "
+            f"/outcome hyp-N {allowed[0]} {end['run_id']}")
     _pending_suggestions.clear()
     _pending_suggestions.update({"1": f"/evolve {start['noise']}", "2": "/hypotheses", "0": "/home"})
     print(ui.actions("NEXT", [("1", "Run again (another seed of evidence)"), ("2", "Hypotheses"),
@@ -3207,9 +3216,10 @@ def _trial_result(run_id, ui):
     allowed = trials.allowed_outcomes(c["verdict"])
     print("\n" + ui.panel("PROMPT-STRATEGY TRIAL · RESULT", inner.facts(rows).split("\n") + [
         "", f"Backs a hypothesis outcome of: {' or '.join(allowed)}. Nothing changed which prompt OSIRIS uses."]))
-    open_h = [h for h in research.hypotheses() if not h.get("outcome")]
+    open_h = research.open_hypotheses_for("trial-" + c["treatment"])
     hint = (f"/outcome {open_h[-1]['id']} {allowed[0]} trial-{c['treatment']}" if open_h else
-            "No open hypothesis: /hypothesis drafts one, then /outcome hyp-N ... trial-" + c["treatment"])
+            "No open hypothesis is decided by a trial: /hypothesis hyp-N tests trial-bench, then "
+            "/outcome hyp-N ... trial-" + c["treatment"])
     _pending_suggestions.clear()
     _pending_suggestions.update({"1": f"/trial {c['strategy']} {c['model']}", "2": "/hypotheses", "0": "/home"})
     print(ui.actions("NEXT", [("1", "Repeat the trial (more evidence)"), ("2", "Hypotheses"), ("0", "Home menu")],
