@@ -34,4 +34,31 @@ Q+ = delivered by Q and not G. Exact one-sided sign test on the discordant tasks
 Gemini tokens used (gateway ledger), per-task outcomes.
 
 ## Results
-(not yet run)
+
+### Protocol deviation (recorded before any valid result was read)
+Run `bench-20261007T160505Z-dbefc4` (backend gemini, k=3, 2026-10-07T16:05:05Z) was launched by
+mistake from v4.3.2 code, which predates the gateway: every Gemini request was refused (HTTP 401,
+AQ-type key sent to the Developer API) and all 9 tasks recorded as not delivered. It is invalid for
+this comparison (wrong code; the bench ledger records `commit: null`, so it is identified by run id
+and its 401 errors). It used no Gemini tokens. It stays in the append-only bench ledger.
+
+### Arm G — `bench-20261007T160545Z-6656f3` (v4.4.0, Vertex gemini-2.5-flash, k=3), complete
+suite 09037df6…, runner f70c781f… (as registered).
+
+| task | delivered | pass@1 | oracle@k | false confidence | seconds |
+|---|---|---|---|---|---|
+| backend_breaker | yes | yes | yes | 0 | 34 |
+| backlog | no | no | no | 0 | 33 |
+| claims | no | yes | yes | 0 | 213 |
+| gaps | no | no | no | 0 | 314 |
+| genome_ledger | no | no | no | 1 | 320 |
+| nclm_corpus | no | yes | yes | 0 | 270 |
+| nclm_eval | yes | yes | yes | 0 | 130 |
+| repl_commands | no | yes | yes | 0 | 350 |
+| stub_detector | no | yes | yes | 0 | 261 |
+| **total** | **2 / 9** | **6 / 9** | **6 / 9** | **1** | **1,924** |
+
+Gemini tokens used by arm G: 103,415 (gateway budget file, 13,023 → 116,438).
+
+### Arm Q
+(not yet run: Ollama is in use by another benchmark process)
