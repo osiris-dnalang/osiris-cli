@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "osiris-cli"
-version = "4.3.2"
+version = "4.4.0"
 description = "OSIRIS: a governed local console for a living language model that learns from every conversation and speaks only after passing a held-out gate"
 readme = "README.md"
 license = {text = "LicenseRef-OSIRIS-Dual-v1.0"}
