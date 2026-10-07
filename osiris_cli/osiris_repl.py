@@ -1394,6 +1394,9 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     elif cmd == "/forget":
         needle = line_clean[len(parts[0]):].strip()
         print("[OSIRIS] " + (get_living().forget(needle) if needle else "use /forget <words in the fact>"))
+    elif cmd == "/gemini":
+        from osiris_cli import gemini_gateway
+        print("\n" + gemini_gateway.run_command(line_clean[len(parts[0]):].strip()) + "\n")
     elif cmd == "/legit":
         from osiris_cli import claims
         print("\n" + claims.command(line_clean[len(parts[0]):]) + "\n")
