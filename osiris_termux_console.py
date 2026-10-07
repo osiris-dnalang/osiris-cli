@@ -2127,7 +2127,7 @@ def _hypothesis(command: str = "/hypothesis", question: str = None):
         except ValueError as e:
             print(f"\n[!] {e}\n")
             return
-        print(f"\n[*] {h['id']} is decided only by a {research.EVIDENCE_KINDS[h['evidence_kind']]}.\n")
+        print(f"\n[*] {h['id']} is decided only by {research._with_article(research.EVIDENCE_KINDS[h['evidence_kind']])}.\n")
         return
     elif len(parts) > 1:
         return _hypothesis_card(parts[1])

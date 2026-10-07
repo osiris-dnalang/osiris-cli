@@ -49,6 +49,10 @@ EVIDENCE_KINDS = {"run": "sprint run", "bench": "bench round", "trial-bench": "p
                   "evo": "organism evolution run"}
 
 
+def _with_article(noun):
+    return ("an " if noun[0] in "aeiou" else "a ") + noun
+
+
 def evidence_kind(evidence_id):
     """The experiment kind an evidence id names (its prefix), or None."""
     if evidence_id.startswith("trial-bench-"):
@@ -473,8 +477,8 @@ def record_outcome(hid, outcome, evidence_id, verify):
                          f"/hypothesis {hid} tests <{'|'.join(EVIDENCE_KINDS)}>")
     actual = evidence_kind(evidence_id)
     if actual != required:
-        raise ValueError(f"HYPOTHESIS_EXPERIMENT_MISMATCH: {hid} is decided by a {EVIDENCE_KINDS[required]}, "
-                         f"but {evidence_id} is {('a ' + EVIDENCE_KINDS[actual]) if actual else 'not a known experiment'}")
+        raise ValueError(f"HYPOTHESIS_EXPERIMENT_MISMATCH: {hid} is decided by {_with_article(EVIDENCE_KINDS[required])}, "
+                         f"but {evidence_id} is {_with_article(EVIDENCE_KINDS[actual]) if actual else 'not a known experiment'}")
     ok, description, sha = verify(evidence_id)
     if not ok:
         raise ValueError(f"evidence {evidence_id} does not verify: {description}")
