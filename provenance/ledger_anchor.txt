@@ -1,0 +1,247 @@
+# OSIRIS τ–Φ Confirmatory Preregistration Packet
+# Ledger Anchor File
+# Author: Devin Phillip Davis
+# Affiliation: Agile Defense Systems LLC (CAGE: 9HUP5)
+# Date: 2026-10-07
+# Location: Lexington, KY, USA
+
+---
+
+## Purpose
+
+This file serves as the **cryptographic anchor** for the OSIRIS τ–Φ Confirmatory Preregistration Packet. It contains the SHA-256 hashes of all critical components, allowing independent verification of packet integrity.
+
+---
+
+## Manifest Hash
+
+The canonical manifest (`theoretical/APPENDIX_PSI_MANIFEST.json`) is the primary anchor for the entire packet.
+
+**SHA-256 Hash:** `TO_BE_COMPUTED_BY_PREREGISTERING_LAB`
+
+**Computation Command:**
+```bash
+sha256sum theoretical/APPENDIX_PSI_MANIFEST.json
+```
+
+**Verification Command:**
+```bash
+sha256sum -c manifests/tauPhi_manifest.sha256
+```
+
+---
+
+## Component Hashes
+
+### Appendix Files
+
+| File | SHA-256 Hash | Status |
+|------|--------------|--------|
+| `theoretical/APPENDIX_OMEGA_PACKET.md` | TO_BE_COMPUTED | Pending |
+| `theoretical/APPENDIX_DELTA_SAP.md` | TO_BE_COMPUTED | Pending |
+| `theoretical/APPENDIX_PHI_OPERATIONAL_DEFINITION.md` | TO_BE_COMPUTED | Pending |
+| `theoretical/APPENDIX_R_RAW_SHOT_SPECIFICATION.md` | TO_BE_COMPUTED | Pending |
+| `theoretical/APPENDIX_SIGMA_REPLICATION_PROTOCOL.md` | TO_BE_COMPUTED | Pending |
+| `theoretical/APPENDIX_THETA_IDENTITY_GUARANTEES.md` | TO_BE_COMPUTED | Pending |
+| `theoretical/APPENDIX_PSI_MANIFEST.json` | TO_BE_COMPUTED | Pending |
+| `theoretical/APPENDIX_PHI_OMEGA_PROVENANCE.md` | TO_BE_COMPUTED | Pending |
+
+### Implementation Files
+
+| File | SHA-256 Hash | Status |
+|------|--------------|--------|
+| `theoretical/osiris_sap_implementation.py` | TO_BE_COMPUTED | Pending |
+| `theoretical/verify_phi_predictions.py` | TO_BE_COMPUTED | Pending |
+| `theoretical/VERIFICATION_RESULTS.md` | TO_BE_COMPUTED | Pending |
+
+### Metadata Files
+
+| File | SHA-256 Hash | Status |
+|------|--------------|--------|
+| `metadata/README_DOI.md` | TO_BE_COMPUTED | Pending |
+| `metadata/zenodo_metadata.json` | TO_BE_COMPUTED | Pending |
+| `metadata/LICENSE.txt` | TO_BE_COMPUTED | Pending |
+
+---
+
+## Ledger Entry
+
+### Write-Ahead Ledger Entry
+
+```json
+{
+  "entry_type": "preregistration",
+  "experiment_family": "OSIRIS_tauPhi_confirmatory",
+  "manifest_version": "tauPhi_v5.0",
+  "timestamp_utc": "2026-10-07T10:46:00Z",
+  "previous_head": "6d7fd1390c1bab25b52f3e5e07be893aaa7194d8e3bd81db8466085da6e38d37",
+  "manifest_hash": "TO_BE_COMPUTED_BY_PREREGISTERING_LAB",
+  "hash": "TO_BE_COMPUTED_AFTER_MANIFEST_HASH",
+  "metadata": {
+    "author": "Devin Phillip Davis",
+    "affiliation": "Agile Defense Systems LLC (CAGE: 9HUP5)",
+    "location": "Lexington, KY, USA",
+    "packet_version": "v5.0-confirmatory",
+    "components": [
+      "Appendix_Omega",
+      "Appendix_Delta",
+      "Appendix_Phi",
+      "Appendix_R",
+      "Appendix_Sigma",
+      "Appendix_Theta",
+      "Appendix_Psi",
+      "Appendix_PhiOmega"
+    ],
+    "frozen": true,
+    "modification_allowed": false
+  }
+}
+```
+
+### Ledger Verification
+
+To verify the ledger entry:
+
+1. **Compute manifest hash:**
+   ```bash
+   MANIFEST_HASH=$(sha256sum theoretical/APPENDIX_PSI_MANIFEST.json | awk '{print $1}')
+   ```
+
+2. **Compute entry hash:**
+   ```bash
+   # Create temporary entry file
+   cat > /tmp/ledger_entry.json << EOF
+   {
+     "entry_type": "preregistration",
+     "experiment_family": "OSIRIS_tauPhi_confirmatory",
+     "manifest_version": "tauPhi_v5.0",
+     "timestamp_utc": "2026-10-07T10:46:00Z",
+     "previous_head": "6d7fd1390c1bab25b52f3e5e07be893aaa7194d8e3bd81db8466085da6e38d37",
+     "manifest_hash": "$MANIFEST_HASH",
+     "metadata": {
+       "author": "Devin Phillip Davis",
+       "affiliation": "Agile Defense Systems LLC (CAGE: 9HUP5)",
+       "location": "Lexington, KY, USA",
+       "packet_version": "v5.0-confirmatory"
+     }
+   }
+   EOF
+   
+   ENTRY_HASH=$(sha256sum /tmp/ledger_entry.json | awk '{print $1}')
+   ```
+
+3. **Append to ledger:**
+   ```bash
+   echo "$(cat /tmp/ledger_entry.json)" | jq --compact-output \
+     --arg hash "$ENTRY_HASH" \
+     '. + {hash: $hash}' >> ledger.jsonl
+   ```
+
+---
+
+## Verification Commands
+
+### Complete Packet Verification
+
+```bash
+# Navigate to packet root
+cd OSIRIS_tauPhi_confirmatory_packet_v5.0
+
+# Compute hash of entire packet
+find . -type f -exec sha256sum {} \; | sort > complete_packet.sha256
+
+# Verify all files
+sha256sum -c complete_packet.sha256
+```
+
+### Individual File Verification
+
+```bash
+# Verify canonical manifest
+sha256sum theoretical/APPENDIX_PSI_MANIFEST.json
+
+# Verify all appendices
+for f in theoretical/APPENDIX_*.md theoretical/APPENDIX_*.json; do
+  echo "Verifying $f:"
+  sha256sum "$f"
+done
+
+# Verify implementation files
+for f in theoretical/*.py; do
+  echo "Verifying $f:"
+  sha256sum "$f"
+done
+
+# Verify metadata files
+for f in metadata/*; do
+  echo "Verifying $f:"
+  sha256sum "$f"
+done
+```
+
+### Cross-Plane Verification
+
+```bash
+# Verify no cross-plane references in Q-Plane files
+grep -r "L-Plane\|A-Plane\|linguistic\|evolution" theoretical/APPENDIX_*.md theoretical/*.py
+
+# Verify non-substitution flags in manifest
+jq '.identity_plane.non_substitution' theoretical/APPENDIX_PSI_MANIFEST.json
+```
+
+---
+
+## Independent Lab Instructions
+
+### For Replication Laboratories
+
+1. **Before data acquisition:**
+   - Download this packet
+   - Verify all hashes
+   - Anchor the manifest hash in your ledger
+   - Record your anchor in `provenance/ledger_anchor.txt`
+
+2. **After data acquisition:**
+   - Compute SHA-256 of your raw data
+   - Append to your ledger with reference to this packet
+   - Publish your ledger entry
+
+3. **For verification:**
+   - Recompute all hashes
+   - Verify against published values
+   - Confirm ledger chain continuity
+
+### Ledger Entry Template for Independent Labs
+
+```json
+{
+  "entry_type": "replication",
+  "experiment_family": "OSIRIS_tauPhi_confirmatory",
+  "parent_manifest_hash": "TO_BE_COMPUTED_BY_PREREGISTERING_LAB",
+  "timestamp_utc": "<ISO8601_TIMESTAMP>",
+  "previous_head": "<YOUR_PREVIOUS_LEDGER_HEAD>",
+  "manifest_hash": "<YOUR_REPLICATION_MANIFEST_HASH>",
+  "metadata": {
+    "lab_id": "<YOUR_LAB_ID>",
+    "backend": "<BACKEND_NAME>",
+    "replication_of": "OSIRIS_tauPhi_v5.0",
+    "packet_version": "v5.0-confirmatory"
+  }
+}
+```
+
+---
+
+## Final Statement
+
+**This ledger anchor file is part of the OSIRIS τ–Φ Confirmatory Preregistration Packet v5.0.**
+
+**All hashes are to be computed by the preregistering laboratory before confirmatory execution begins.**
+
+**No modifications may be made to this packet after data acquisition begins.**
+
+**All replication attempts must verify packet integrity using these hashes.**
+
+---
+
+*For complete details, see `theoretical/APPENDIX_OMEGA_PACKET.md` and `theoretical/APPENDIX_PSI_MANIFEST.json`.*

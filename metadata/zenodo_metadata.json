@@ -1,0 +1,245 @@
+{
+  "title": "OSIRIS τ–Φ Confirmatory Preregistration Packet (v5.0)",
+  "authors": [
+    {
+      "name": "Davis, Devin Phillip",
+      "affiliation": "Agile Defense Systems LLC (CAGE: 9HUP5)",
+      "orcid": null,
+      "email": null
+    }
+  ],
+  "description": "Complete preregistration packet for the OSIRIS τ–Φ Dynamical Theory Confirmatory Experiment. This packet includes all frozen definitions, statistical plans, replication protocols, provenance guarantees, and the canonical manifest for cryptographic anchoring. All components are pre-registered and frozen before confirmatory data acquisition.",
+  "keywords": [
+    "quantum computing",
+    "quantum coherence",
+    "dynamical theory",
+    "preregistration",
+    "zero-trust",
+    "cryptographic",
+    "reproducibility",
+    "OSIRIS",
+    "tau-Phi",
+    "phi-network",
+    "golden ratio",
+    "statistical analysis plan",
+    "independent replication",
+    "write-ahead ledger",
+    "non-substitution"
+  ],
+  "version": "v5.0-confirmatory",
+  "date": "2026-10-07",
+  "publication_date": "2026-10-07",
+  "language": "en-US",
+  "license": {
+    "id": "CC-BY-4.0",
+    "name": "Creative Commons Attribution 4.0 International",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.23045494",
+      "relation": "cites",
+      "scheme": "doi",
+      "resource_type": "preprint"
+    },
+    {
+      "identifier": "10.5281/zenodo.22863245",
+      "relation": "cites",
+      "scheme": "doi",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.5281/zenodo.17858962",
+      "relation": "cites",
+      "scheme": "doi",
+      "resource_type": "dataset"
+    },
+    {
+      "identifier": "https://github.com/osiris-dnalang/osiris-cli",
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "resource_type": "software"
+    }
+  ],
+  "funding": [
+    {
+      "funder": "Agile Defense Systems LLC",
+      "award_number": null,
+      "award_title": null
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Davis, Devin Phillip",
+      "role": ["author", "maintainer", "data_curator"],
+      "affiliation": "Agile Defense Systems LLC (CAGE: 9HUP5)"
+    }
+  ],
+  "components": [
+    {
+      "name": "Appendix Ω — Preregistration",
+      "path": "theoretical/APPENDIX_OMEGA_PACKET.md",
+      "description": "Complete packet assembly and overview",
+      "format": "markdown",
+      "size": "~22 KB"
+    },
+    {
+      "name": "Appendix Δ — Statistical Analysis Plan",
+      "path": "theoretical/APPENDIX_DELTA_SAP.md",
+      "description": "Statistical models, effect sizes, confidence intervals",
+      "format": "markdown",
+      "size": "~17 KB"
+    },
+    {
+      "name": "Appendix Φ — Operational Definition of Φ",
+      "path": "theoretical/APPENDIX_PHI_OPERATIONAL_DEFINITION.md",
+      "description": "Independent Φ measurement protocol",
+      "format": "markdown",
+      "size": "~18 KB"
+    },
+    {
+      "name": "Appendix R — Raw-Shot Archival Specification",
+      "path": "theoretical/APPENDIX_R_RAW_SHOT_SPECIFICATION.md",
+      "description": "Data format and integrity requirements",
+      "format": "markdown",
+      "size": "~26 KB"
+    },
+    {
+      "name": "Appendix Σ — Independent-Lab Replication Protocol",
+      "path": "theoretical/APPENDIX_SIGMA_REPLICATION_PROTOCOL.md",
+      "description": "Complete replication workflow",
+      "format": "markdown",
+      "size": "~27 KB"
+    },
+    {
+      "name": "Appendix Θ — Cross-Plane Identity Guarantees",
+      "path": "theoretical/APPENDIX_THETA_IDENTITY_GUARANTEES.md",
+      "description": "Architectural safeguards against contamination",
+      "format": "markdown",
+      "size": "~32 KB"
+    },
+    {
+      "name": "Appendix Ψ — Ledger-Anchored τ–Φ Manifest",
+      "path": "theoretical/APPENDIX_PSI_MANIFEST.json",
+      "description": "Canonical JSON for cryptographic anchoring",
+      "format": "json",
+      "size": "~21 KB"
+    },
+    {
+      "name": "Appendix ΦΩ — Integrated Provenance",
+      "path": "theoretical/APPENDIX_PHI_OMEGA_PROVENANCE.md",
+      "description": "Cross-system alignment and history",
+      "format": "markdown",
+      "size": "~18 KB"
+    },
+    {
+      "name": "osiris_sap_implementation.py",
+      "path": "theoretical/osiris_sap_implementation.py",
+      "description": "Full Python implementation of SAP",
+      "format": "python",
+      "size": "~53 KB"
+    },
+    {
+      "name": "verify_phi_predictions.py",
+      "path": "theoretical/verify_phi_predictions.py",
+      "description": "φ-network verification scripts",
+      "format": "python",
+      "size": "~12 KB"
+    },
+    {
+      "name": "VERIFICATION_RESULTS.md",
+      "path": "theoretical/VERIFICATION_RESULTS.md",
+      "description": "Verification outcomes",
+      "format": "markdown",
+      "size": "~5 KB"
+    }
+  ],
+  "provenance": {
+    "repository": "https://github.com/osiris-dnalang/osiris-cli",
+    "branch": "vibe/appendix-delta-sap-fd6757",
+    "commit": "1de0847",
+    "ledger": "OSIRIS Write-Ahead Ledger",
+    "hash_function": "SHA-256",
+    "canonical_serialization": "UTF-8 with sorted keys"
+  },
+  "notes": "All components are frozen prior to confirmatory execution. This packet is ready for Zenodo deposition, peer review, and independent replication.",
+  "access_rights": "open",
+  "resource_type": {
+    "type": "software",
+    "subtype": ["preregistration", "protocol", "documentation"]
+  },
+  "related_platforms": [
+    "IBM Quantum",
+    "Rigetti",
+    "Quantinuum",
+    "IonQ"
+  ],
+  "subjects": [
+    {
+      "subject": "Quantum Physics",
+      "subject_scheme": "other",
+      "subject_uri": null
+    },
+    {
+      "subject": "Quantum Computing",
+      "subject_scheme": "other",
+      "subject_uri": null
+    },
+    {
+      "subject": "Statistical Methods",
+      "subject_scheme": "other",
+      "subject_uri": null
+    },
+    {
+      "subject": "Reproducibility",
+      "subject_scheme": "other",
+      "subject_uri": null
+    }
+  ],
+  "languages": ["English"],
+  "formats": ["markdown", "json", "python"],
+  "size": "~250 KB (compressed)",
+  "upload_type": "zip",
+  "publication_type": "other",
+  "embargo_date": null,
+  "withdrawn": false,
+  "prereserve_doi": {
+    "doi": "10.5281/zenodo.<TO_BE_ASSIGNED>",
+    "recid": null
+  },
+  "communities": [
+    {
+      "identifier": "quantum",
+      "name": "Quantum"
+    },
+    {
+      "identifier": "physics",
+      "name": "Physics"
+    },
+    {
+      "identifier": "reproducibility",
+      "name": "Reproducibility"
+    }
+  ],
+  "grants": [],
+  "conference": null,
+  "journal": null,
+  "publisher": "Zenodo",
+  "year": "2026",
+  "copyright_holders": [
+    {
+      "name": "Davis, Devin Phillip",
+      "affiliation": "Agile Defense Systems LLC (CAGE: 9HUP5)"
+    }
+  ],
+  "contributor_type": "person",
+  "date_type": "published",
+  "publication_status": "published",
+  "imprint_publisher": "Zenodo",
+  "imprint_pubdate": "2026-10-07",
+  "imprint_place": "Geneva, Switzerland",
+  "imprint_isbn": null,
+  "imprint_issn": null,
+  "imprint_doi": null,
+  "imprint_url": null
+}
