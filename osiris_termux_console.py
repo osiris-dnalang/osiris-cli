@@ -46,22 +46,25 @@ def _load_dotenv():
     always wins over the file). Silent no-op if .env doesn't exist -- it's
     optional. Never logs or prints any value it loads."""
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    env_path = os.path.join(project_root, ".env")
-    try:
-        with open(env_path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#") or "=" not in line:
-                    continue
-                key, _, value = line.partition("=")
-                key = key.strip()
-                value = value.strip().strip('"').strip("'")
-                if key and key not in os.environ:
-                    os.environ[key] = value
-    except FileNotFoundError:
-        pass
-    except OSError:
-        pass
+    # the checkout's parent (a source checkout in ~/osiris-cli reads ~/.env), then ~/.env
+    # itself: an installed wheel lives in site-packages, whose parent holds no .env
+    paths = [os.path.join(project_root, ".env"), os.path.join(os.path.expanduser("~"), ".env")]
+    for env_path in dict.fromkeys(paths):
+        try:
+            with open(env_path, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("export "):
+                        line = line[len("export "):].strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    key, _, value = line.partition("=")
+                    key = key.strip()
+                    value = value.strip().strip('"').strip("'")
+                    if key and key not in os.environ:
+                        os.environ[key] = value
+        except OSError:
+            pass
 
 
 _load_dotenv()

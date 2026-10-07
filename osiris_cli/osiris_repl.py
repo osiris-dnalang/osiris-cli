@@ -1159,6 +1159,11 @@ def display_status(state: Optional[OsirisReplState] = None) -> None:
               f"Λ_Φ {LAMBDA_PHI:.6e} {_verdict('LAMBDA_PHI')}, F_max {F_MAX_PREDICTED:.5f} {_verdict('K8_REVIVAL')} (/legit list)")
     except Exception:  # noqa: BLE001 - status must render even without the register
         print("  CRSM constants : historical, not established (/legit list)")
+    try:
+        from osiris_cli import gemini_gateway
+        print("  " + gemini_gateway.status_line())
+    except Exception:  # noqa: BLE001 - status must render without the gateway
+        pass
     print(f"  Uptime         : {uptime:.1f} s")
     print(f"  Evidence Events: {len(state.evidence_ledger)} items in Merkle ledger")
     if state.last_benchmark:
@@ -1196,6 +1201,7 @@ def display_help() -> None:
     print("    /remember <fact>     OSIRIS keeps this across sessions  (/forget <words> drops it)")
     print("    /check [trainer|git|ledger|system|evidence] [path|m3c]   Run OSIRIS's read-only checks")
     print("    /legit <text|ID|list> Is a claim legit? Verdicts from the claims register, with evidence")
+    print("    /gemini [--dry] <q>  Ask Gemini directly (advisory; redacted, budgeted, ledgered)")
     print("    /physics <check> k=v  Physics bounds: thrust, rim, metric, chsh, efficiency, entropy, dd")
     print("    /train [start H|stop] Overnight batch training (status by default)")
     print()
@@ -1460,6 +1466,9 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     elif cmd == "/forget":
         needle = line_clean[len(parts[0]):].strip()
         print("[OSIRIS] " + (get_living().forget(needle) if needle else "use /forget <words in the fact>"))
+    elif cmd == "/gemini":
+        from osiris_cli import gemini_gateway
+        print("\n" + gemini_gateway.run_command(line_clean[len(parts[0]):].strip()) + "\n")
     elif cmd == "/legit":
         from osiris_cli import claims
         print("\n" + claims.command(line_clean[len(parts[0]):]) + "\n")

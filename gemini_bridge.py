@@ -2,22 +2,21 @@
 """
 gemini_bridge.py -- optional cloud-burst synthesis backend for OSIRIS Engine 2.
 
-Talks to Google's Gemini REST API (stdlib urllib only, no SDK dependency) as a
+Talks to Google's Gemini REST API (stdlib only, no SDK dependency) as a
 fast alternative to local deepseek-coder on slow ARM64/Termux hardware. Used
 only when GEMINI_API_KEY is set in the environment; every caller must fall
 back to the local Ollama path on any failure (missing key, network error,
 non-200 response, malformed JSON).
 
-Security: the key is read ONLY from os.environ at call time, is sent via the
-x-goog-api-key header (never a URL query param, so it can never leak into a
-logged/printed URL), and is never included in any exception message, log
-line, or return value this module produces.
+Every request goes through osiris_cli.gemini_gateway, which picks the backend
+(Gemini Developer API with GEMINI_API_KEY, else Vertex AI with GOOGLE_API_KEY),
+redacts secrets from the outbound text, enforces the token budget and writes a
+hash-chained ledger row before and after the call. Keys are sent only in the
+x-goog-api-key header and never appear in an exception, log line or return value.
 """
 import json
 import os
 import time
-import urllib.error
-import urllib.request
 
 # GEMINI_MODEL lets the user point this at whatever model their key/plan
 # actually has access to. gemini-1.5-flash and gemini-2.5-flash were both
@@ -25,7 +24,6 @@ import urllib.request
 # gemini-2.5-flash explicitly named gemini-3.6-flash as its replacement,
 # confirmed working via a real authenticated call on that date.
 DEFAULT_MODEL = "gemini-3.6-flash"
-GEMINI_URL_TMPL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 DEFAULT_TIMEOUT = 45  # seconds -- this is meant to be the FAST path
 NETWORK_RETRY_ATTEMPTS = 2  # only for transient network errors, never for auth failures
 NETWORK_RETRY_BACKOFF = 1.5  # seconds, applied before each retry
@@ -37,13 +35,22 @@ class GeminiUnavailable(Exception):
     this and fall back to the local model. Never carries the API key."""
 
 
+def _gateway():
+    from osiris_cli import gemini_gateway
+    return gemini_gateway
+
+
 def model_name() -> str:
-    """The model query() will request: $GEMINI_MODEL, else DEFAULT_MODEL."""
-    return os.environ.get("GEMINI_MODEL", "").strip() or DEFAULT_MODEL
+    """The model the next request will use: the backend's model variable
+    ($GEMINI_MODEL for the Developer API, $GEMINI_VERTEX_MODEL for Vertex) or its default."""
+    gw = _gateway()
+    backend = gw.choose_backend()
+    return gw.model_for(backend) if backend else (os.environ.get("GEMINI_MODEL", "").strip() or DEFAULT_MODEL)
 
 
 def is_configured() -> bool:
-    return bool(os.environ.get("GEMINI_API_KEY", "").strip())
+    """True when either Gemini key is available (environment or ~/.env)."""
+    return _gateway().choose_backend() is not None
 
 
 _MIME_BY_EXT = {
@@ -225,56 +232,30 @@ def ingest_vision(
 
 
 def _send(payload: dict, timeout: int) -> str:
-    """Shared request/response handling for query() and query_with_image()."""
-    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if not api_key:
-        raise GeminiUnavailable("GEMINI_API_KEY not set")
-
-    model = model_name()
-    url = GEMINI_URL_TMPL.format(model=model)
-
-    def _make_request():
-        return urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Content-Type": "application/json",
-                "x-goog-api-key": api_key,  # header, never a URL query param
-            },
-            method="POST",
-        )
-
-    status = None
-    body = None
+    """Shared request/response handling for query() and query_with_image(); the
+    request itself goes through the gateway (redaction, budget, ledger)."""
+    import inspect
+    gw = _gateway()
+    caller = next((f.function for f in inspect.stack()[1:4] if f.function not in ("_send",)), "query")
+    status, data = None, None
     for attempt in range(1 + NETWORK_RETRY_ATTEMPTS):
         try:
-            with urllib.request.urlopen(_make_request(), timeout=timeout) as resp:
-                status = resp.getcode()
-                body = resp.read().decode("utf-8", errors="ignore")
+            data, _meta = gw.send(payload, purpose=f"gemini_bridge.{caller}", timeout=timeout)
+            status = 200
             break
-        except urllib.error.HTTPError as e:
-            # Auth/4xx failures will never succeed on retry -- fail fast so the
-            # caller falls back to local Ollama immediately instead of stalling.
-            try:
-                detail = e.read().decode("utf-8", errors="ignore")[:300]
-            except Exception:
-                detail = ""
-            raise GeminiUnavailable(f"Gemini HTTP {e.code}: {detail}") from None
-        except urllib.error.URLError as e:
-            if attempt < NETWORK_RETRY_ATTEMPTS:
+        except gw.BudgetExceeded as e:
+            raise GeminiUnavailable(str(e)) from None
+        except gw.GatewayError as e:
+            msg = str(e)
+            # only transport failures are retried; HTTP errors and missing keys fail fast
+            if msg.startswith("Gemini request failed") and attempt < NETWORK_RETRY_ATTEMPTS:
                 time.sleep(NETWORK_RETRY_BACKOFF)
                 continue
-            raise GeminiUnavailable(f"Gemini network error: {e.reason}") from None
-        except Exception as e:
-            raise GeminiUnavailable(f"Gemini request failed: {type(e).__name__}: {e}") from None
+            raise GeminiUnavailable(msg) from None
 
-    if status != 200:
+    if status != 200 or not isinstance(data, dict):
         raise GeminiUnavailable(f"Gemini returned HTTP {status}")
 
-    try:
-        data = json.loads(body)
-    except json.JSONDecodeError:
-        raise GeminiUnavailable("Gemini response malformed: not JSON") from None
     # A 200 can still carry no text: the prompt or output was blocked
     # (promptFeedback.blockReason, e.g. OTHER -- reproduced 2026-09-23 on
     # ignite story prompts), or generation stopped early (finishReason

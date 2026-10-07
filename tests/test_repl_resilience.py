@@ -56,3 +56,22 @@ def test_status_does_not_call_crsm_constants_invariants():
     block = src[src.index("STATUS DASHBOARD"):src.index("Evidence Events")]
     assert "Invariant" not in block and " kg" not in block
     assert "not established" in block
+
+
+def test_console_reads_home_env_when_installed_outside_a_checkout(monkeypatch, tmp_path):
+    """A wheel install lives in site-packages, whose parent has no .env: the console must
+    still pick up ~/.env (without overriding variables already set)."""
+    otc = osiris_repl.otc
+    if otc is None:
+        pytest.skip("console not importable")
+    (tmp_path / ".env").write_text("OSIRIS_TEST_DOTENV_A=from-file\nexport OSIRIS_TEST_DOTENV_B=b\nOSIRIS_TEST_DOTENV_C=file\n")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr(otc, "__file__", str(tmp_path / "site-packages" / "lib" / "osiris_termux_console.py"))
+    monkeypatch.delenv("OSIRIS_TEST_DOTENV_A", raising=False)
+    monkeypatch.delenv("OSIRIS_TEST_DOTENV_B", raising=False)
+    monkeypatch.setenv("OSIRIS_TEST_DOTENV_C", "shell")
+    otc._load_dotenv()
+    assert os.environ["OSIRIS_TEST_DOTENV_A"] == "from-file" and os.environ["OSIRIS_TEST_DOTENV_B"] == "b"
+    assert os.environ["OSIRIS_TEST_DOTENV_C"] == "shell"
+    for k in ("OSIRIS_TEST_DOTENV_A", "OSIRIS_TEST_DOTENV_B"):
+        monkeypatch.delenv(k, raising=False)
