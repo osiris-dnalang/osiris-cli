@@ -50,7 +50,7 @@ import time
 BIN = os.path.dirname(os.path.abspath(__file__))
 HOME_DIR = os.path.dirname(BIN)
 TASKS_DIR = os.path.join(BIN, "bench_tasks")
-DEFAULT_OUT = os.path.join(HOME_DIR, ".osiris", "bench")
+DEFAULT_OUT = os.path.join(os.path.expanduser("~"), ".osiris", "bench")  # protege.BENCH_DIR reads it here
 from genome_ledger import LEDGER_SRC  # noqa: E402  one resolver for dnalang-core's ledger.py
 BACKENDS = ("auto", "gateway", "gemini", "ollama")
 

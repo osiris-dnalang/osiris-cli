@@ -79,3 +79,9 @@ def test_scripts_the_console_runs_by_path_are_packaged():
     assert scripts, "expected the console to run at least one script by path"
     missing = sorted(scripts - _py_modules())
     assert not missing, f"run by path from the console but not in py-modules: {missing}"
+
+
+def test_bench_results_land_where_the_console_reads():
+    import osiris_bench
+    import protege
+    assert osiris_bench.DEFAULT_OUT == protege.BENCH_DIR
