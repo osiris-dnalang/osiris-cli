@@ -1421,7 +1421,10 @@ def _integrity():
         if os.path.exists(genome_ledger.DEFAULT_PATH):  # constructing a Ledger would create the file
             led = genome_ledger.GenomeLedger()
             ok = led.verify()
-            parts.append(f"genome ledger {'valid' if ok else 'BROKEN'} ({len(led.chain)})")
+            # The count is entries, not failures: "BROKEN (3)" was read as three
+            # broken records when one entry of three was (2026-10-02).
+            parts.append(f"genome ledger valid ({len(led.chain)} entries)" if ok else
+                         f"genome ledger BROKEN ({len(led.chain)} entries): {led.problem()}")
             kind = kind if ok else "blocked"
     except Exception as e:
         parts.append(f"genome ledger unreadable ({type(e).__name__})")
@@ -5382,6 +5385,140 @@ def _council_engines(ollama_ok: bool):
             ("current", "Verifier", "sandbox · placeholder gate · genome ledger", "deterministic, no model")]
 
 
+def run_command(user_input: str) -> bool:
+    """Runs one console command and returns True, or returns False when the
+    input is not one. The one router for both front ends: main() below and
+    the `osiris` REPL (osiris_cli/osiris_repl.py), whose own copy of this
+    table drifted (2026-10-02: F crashed calling _mentors(line) and J opened
+    the brief with "/experiment" as its question)."""
+    if user_input.strip().lower() in ("/organism", "/organism status"):
+        _organism_status()
+        return True
+    if user_input.strip().lower() == "/organism alerts":
+        _organism_alerts()
+        return True
+    if user_input.strip().lower().startswith("/ledger verify"):
+        _ledger_verify(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/dd search"):
+        _dd_search(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/dd pretrain"):
+        _dd_pretrain(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/dd programmatic"):
+        _dd_programmatic(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/auto-enhance"):
+        _auto_enhance(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/research"):
+        _research(user_input.strip())
+        return True
+    if user_input.strip().lower() in ("/intent", "/intent status"):
+        _intent_status()
+        return True
+    if user_input.strip().lower() == "/consensus":
+        _consensus()
+        return True
+    first = user_input.strip().split()[0].lower() if user_input.strip() else ""
+    if first == "/ask":
+        _answer(user_input.strip()[4:].strip() or "What can you do?")
+        return True
+    if first == "/plan":
+        _plan(user_input.strip()[5:])
+        return True
+    if first == "/experiment":
+        _experiment(user_input.strip()[len("/experiment"):])
+        return True
+    if first == "/experiments":
+        _experiments()
+        return True
+    if first == "/reroute":
+        _reroute(user_input.strip())
+        return True
+    if first == "/focus":
+        _focus(user_input.strip())
+        return True
+    if first == "/cancel":
+        print("[*] Cancelled.")
+        _home()
+        return True
+    if first == "/facts":
+        _facts()
+        return True
+    if user_input.strip().lower().split()[:1] == ["/gaps"]:
+        _gaps(user_input.strip())
+        return True
+    if user_input.strip().lower().split()[:1] == ["/gap"]:
+        _gap(user_input.strip()[4:])
+        return True
+    if user_input.strip().lower() == "/status":
+        _status()
+        return True
+    if user_input.strip().lower().split()[:2] == ["/run", "show"]:
+        _run_show(user_input.strip())
+        return True
+    if user_input.strip().lower() in ("/runs", "/runs stats"):
+        _runs_stats()
+        return True
+    if user_input.strip().lower() == "/check":
+        _check()
+        return True
+    if user_input.strip().lower() in ("/home", "/home stories"):
+        _home(user_input.strip())
+        return True
+    if user_input.strip().lower() == "/why":
+        _why()
+        return True
+    if user_input.strip().lower() == "/engage":
+        _engage()
+        return True
+    if user_input.strip().lower().split()[:1] == ["/ui"]:
+        _ui(user_input.strip())
+        return True
+    if user_input.strip().lower().split()[:1] == ["/bench"]:
+        _bench(user_input.strip())
+        return True
+    if user_input.strip().lower() == "/mentors":
+        _mentors()
+        return True
+    if user_input.strip().lower() == "/digest":
+        _digest()
+        return True
+    _word = user_input.strip().split()[0].lower() if user_input.strip() else ""
+    if _word in LAB_COMMANDS:
+        LAB_COMMANDS[_word](user_input.strip())
+        return True
+    if user_input.strip().lower() == "/help":
+        _help()
+        return True
+    if user_input.strip().lower() == "/suggest":
+        _suggest()
+        return True
+    if user_input.strip().lower() == "/vision latest":
+        _vision_latest()
+        return True
+    if user_input.strip().lower() == "/vision sync-sprint":
+        _vision_sync_sprint()
+        return True
+    if user_input.strip().lower().startswith("/sprint plan"):
+        _sprint_plan(user_input.strip())
+        return True
+    # Word match, not ==: "/sprint execute --k 1" and "--allow-self-modify"
+    # used to fall through to run_synergy_pipeline as a chat prompt.
+    if user_input.strip().lower().split()[:2] == ["/sprint", "execute"]:
+        _sprint_execute(user_input.strip())
+        return True
+    if user_input.strip().lower() == "/sprint review":
+        _sprint_review()
+        return True
+    if user_input.strip().lower() in ("/ignite", "/metamorphosis"):
+        _ignite(user_input.strip())
+        return True
+    return False
+
+
 def main():
     _terminal_setup(True)
     import atexit
@@ -5510,130 +5647,7 @@ def main():
                     continue
                 _discard_pending_write()
                 # fall through -- process user_input normally below
-            if user_input.strip().lower() in ("/organism", "/organism status"):
-                _organism_status()
-                continue
-            if user_input.strip().lower() == "/organism alerts":
-                _organism_alerts()
-                continue
-            if user_input.strip().lower().startswith("/ledger verify"):
-                _ledger_verify(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/dd search"):
-                _dd_search(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/dd pretrain"):
-                _dd_pretrain(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/dd programmatic"):
-                _dd_programmatic(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/auto-enhance"):
-                _auto_enhance(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/research"):
-                _research(user_input.strip())
-                continue
-            if user_input.strip().lower() in ("/intent", "/intent status"):
-                _intent_status()
-                continue
-            if user_input.strip().lower() == "/consensus":
-                _consensus()
-                continue
-            first = user_input.strip().split()[0].lower() if user_input.strip() else ""
-            if first == "/ask":
-                _answer(user_input.strip()[4:].strip() or "What can you do?")
-                continue
-            if first == "/plan":
-                _plan(user_input.strip()[5:])
-                continue
-            if first == "/experiment":
-                _experiment(user_input.strip()[len("/experiment"):])
-                continue
-            if first == "/experiments":
-                _experiments()
-                continue
-            if first == "/reroute":
-                _reroute(user_input.strip())
-                continue
-            if first == "/focus":
-                _focus(user_input.strip())
-                continue
-            if first == "/cancel":
-                print("[*] Cancelled.")
-                _home()
-                continue
-            if first == "/facts":
-                _facts()
-                continue
-            if user_input.strip().lower().split()[:1] == ["/gaps"]:
-                _gaps(user_input.strip())
-                continue
-            if user_input.strip().lower().split()[:1] == ["/gap"]:
-                _gap(user_input.strip()[4:])
-                continue
-            if user_input.strip().lower() == "/status":
-                _status()
-                continue
-            if user_input.strip().lower().split()[:2] == ["/run", "show"]:
-                _run_show(user_input.strip())
-                continue
-            if user_input.strip().lower() in ("/runs", "/runs stats"):
-                _runs_stats()
-                continue
-            if user_input.strip().lower() == "/check":
-                _check()
-                continue
-            if user_input.strip().lower() in ("/home", "/home stories"):
-                _home(user_input.strip())
-                continue
-            if user_input.strip().lower() == "/why":
-                _why()
-                continue
-            if user_input.strip().lower() == "/engage":
-                _engage()
-                continue
-            if user_input.strip().lower().split()[:1] == ["/ui"]:
-                _ui(user_input.strip())
-                continue
-            if user_input.strip().lower().split()[:1] == ["/bench"]:
-                _bench(user_input.strip())
-                continue
-            if user_input.strip().lower() == "/mentors":
-                _mentors()
-                continue
-            if user_input.strip().lower() == "/digest":
-                _digest()
-                continue
-            _word = user_input.strip().split()[0].lower() if user_input.strip() else ""
-            if _word in LAB_COMMANDS:
-                LAB_COMMANDS[_word](user_input.strip())
-                continue
-            if user_input.strip().lower() == "/help":
-                _help()
-                continue
-            if user_input.strip().lower() == "/suggest":
-                _suggest()
-                continue
-            if user_input.strip().lower() == "/vision latest":
-                _vision_latest()
-                continue
-            if user_input.strip().lower() == "/vision sync-sprint":
-                _vision_sync_sprint()
-                continue
-            if user_input.strip().lower().startswith("/sprint plan"):
-                _sprint_plan(user_input.strip())
-                continue
-            # Word match, not ==: "/sprint execute --k 1" and "--allow-self-modify"
-            # used to fall through to run_synergy_pipeline as a chat prompt.
-            if user_input.strip().lower().split()[:2] == ["/sprint", "execute"]:
-                _sprint_execute(user_input.strip())
-                continue
-            if user_input.strip().lower() == "/sprint review":
-                _sprint_review()
-                continue
-            if user_input.strip().lower() in ("/ignite", "/metamorphosis"):
-                _ignite(user_input.strip())
+            if run_command(user_input):
                 continue
             if user_input.strip().startswith("/") and "\n" not in user_input.strip():
                 # A known first word with an unknown rest, e.g. "/sprint exectue".

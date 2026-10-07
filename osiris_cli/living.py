@@ -48,7 +48,10 @@ HELDOUT_EVERY = 5
 TRAIN_STEPS_PER_EXCHANGE = 3
 SCORE_WINDOWS = 2
 HISTORY_TURNS = 12
-NOTES_PER_MESSAGE = 3
+# One note per message: each costs ~230 tokens, and the 7B reads new tokens at ~14/s here
+# (measured 2026-10-02), so three notes alone held a reply back ~50 s. The pre-registered
+# results are already in the system prompt (knowledge.brief). OSIRIS_NOTES raises it.
+NOTES_PER_MESSAGE = int(os.environ.get("OSIRIS_NOTES", "1"))
 RECALL_EXCHANGES = 6      # earlier conversation carried into a new session
 FACTS_FILE = "facts.jsonl"
 # While a chat is live the batch trainer's distillation (which runs the same
@@ -64,14 +67,21 @@ MENTOR_NUM_CTX = int(os.environ.get("OSIRIS_MENTOR_NUM_CTX", "4096"))
 # Long messages go to the mentor as a bounded excerpt; the ledger keeps the full text.
 LONG_MESSAGE = 3000
 MESSAGE_BUDGET = 6000
-MENTOR_PREFERENCE = ("qwen2.5:7b", "qwen2.5:3b", "qwen2.5:1.5b", "llama3.2:3b", "llama3.2:1b", "smollm2:360m")
+# The voice: /mentor NAME, else OSIRIS_VOICE, else the first of these that is installed.
+# OSIRIS_CHAT_MODEL is the console's Architect (intent -> spec), not the voice: it is
+# exported in the shell for the Architect, so reading it here pinned the voice too.
+# qwen2.5:3b first, measured 2026-10-03 on this desktop with notes and probes attached as
+# in the REPL: first words at 47, 26 and 47 s over a three-question conversation, where
+# qwen2.5:7b timed out (180 s) on two of the three and took 140 s on the third. The 3B adds
+# new prompt tokens at ~30/s against the 7B's ~14/s. Both misstate recorded results at
+# times, which is why named verdicts and the claims register are printed by code first.
+MENTOR_PREFERENCE = ("qwen2.5:3b", "qwen2.5:7b", "qwen2.5:1.5b", "llama3.2:3b", "llama3.2:1b", "smollm2:360m")
 # Measured 2026-10-02 on the 8-core WSL desktop: qwen2.5:7b reads a prompt at ~26 tokens/s
 # after a 17 s cold load; qwen2.5:1.5b at ~146 tokens/s. With the system prompt a long
 # message is ~14k characters (~4k tokens): ~170 s before the 7B says anything, so both
 # pastes on 2026-10-01 hit the 180 s timeout. Long messages go to the fast voice, and a
 # mentor that fails before its first word hands the message to it. A voice pinned with
-# /mentor NAME is never swapped (OSIRIS_CHAT_MODEL only picks the default voice, and the
-# console's Architect); OSIRIS_FAST_MENTOR= (empty) turns the fast voice off.
+# /mentor NAME is never swapped; OSIRIS_FAST_MENTOR= (empty) turns the fast voice off.
 FAST_MENTOR = os.environ.get("OSIRIS_FAST_MENTOR", "qwen2.5:1.5b")
 # Ollama keeps what it last read and re-reads only what changed, but each new token is
 # slow: measured 2026-10-02, 150 words after a cached 1,400-token system prompt took 4.5 s
@@ -83,16 +93,19 @@ PROMPT_BUDGET = int((MENTOR_NUM_CTX - MENTOR_MAX_TOKENS) * 3.5)
 FIRST_WORD_SAMPLES = 10
 # Greetings and thanks are answered by code at once. "ok", "cool" and "great" are not:
 # after a question from OSIRIS they are answers, and a canned "Okay." would drop them.
+# Bracketed paste (DECSET 2004, turned on by the REPL): a paste arrives between these.
+PASTE_START, PASTE_END = "\x1b[200~", "\x1b[201~"
 SMALL_TALK = re.compile(r"^\s*(?:(?P<hello>hi|hello|hey|yo|gm|good (?:morning|afternoon|evening))|"
                         r"(?P<thanks>thanks|thank you))\b", re.IGNORECASE)
 
 IDENTITY = """You are OSIRIS, the living language model being built by Devin Phillip Davis \
 (Agile Defense Systems). You are talking with Devin or someone working with him.
 
-How you exist right now: OSIRIS has its own small core model that learns from every \
-conversation. Until that core has earned the right to answer on its own, you (a local \
-mentor model) speak for OSIRIS, and the core trains on what you say. Speak as OSIRIS, \
-in first person, warmly and directly, like a thoughtful research partner.
+How you exist right now: OSIRIS has its own small core model that records every \
+exchange; learns only from eligible material you explicitly approve. Until that \
+core has earned the right to answer on its own, you (a local mentor model) speak \
+for OSIRIS, and the core trains on what you say. Speak as OSIRIS, in first \
+person, warmly and directly, like a thoughtful research partner.
 
 Honesty rules, which matter more than sounding impressive:
 - Never invent results, measurements, job IDs, DOIs, file contents or test outcomes. \
@@ -148,7 +161,7 @@ class OllamaMentor:
         installed = self.installed()
         if not installed:
             return None
-        wanted = self._model or os.environ.get("OSIRIS_CHAT_MODEL")
+        wanted = self._model or os.environ.get("OSIRIS_VOICE")
         if wanted and wanted in installed:
             return wanted
         for name in MENTOR_PREFERENCE:
@@ -444,16 +457,29 @@ class TypeAhead:
             pass
         finally:
             termios.tcsetattr(fd, termios.TCSANOW, self._saved)
-        raw = b"".join(chunks).decode("utf-8", errors="replace")
-        kept: List[str] = []
-        for ch in raw:
-            if ch in "\x7f\x08":
-                if kept and kept[-1] not in "\n\r":
-                    kept.pop()
-            elif ch in "\n\r" or ch.isprintable():
-                kept.append(ch)
-        self.text = "".join(kept)
+        self.text = keys_typed(b"".join(chunks).decode("utf-8", errors="replace"))
         return False
+
+
+def keys_typed(raw: str) -> str:
+    """What raw terminal input says was typed: backspaces applied, control bytes
+    dropped, bracketed-paste markers kept so a paste can be told from typing."""
+    kept: List[str] = []
+    i = 0
+    while i < len(raw):
+        marker = next((m for m in (PASTE_START, PASTE_END) if raw.startswith(m, i)), None)
+        if marker:
+            kept.append(marker)
+            i += len(marker)
+            continue
+        ch = raw[i]
+        i += 1
+        if ch in "\x7f\x08":
+            if kept and kept[-1] not in ("\n", "\r", PASTE_START, PASTE_END):
+                kept.pop()
+        elif ch in "\n\r" or ch.isprintable():
+            kept.append(ch)
+    return "".join(kept)
 
 
 class Waiting:
@@ -504,6 +530,7 @@ class Osiris:
         self.small_talk = small_talk   # True for a message that is only a greeting or thanks
         self.claims_register = claims_register
         self._claims_hit: list = []
+        self._on_record: List[str] = []
         self.mentor = mentor or OllamaMentor()
         self.home = home
         self.out = out or (lambda s: print(s, end="", flush=True))
@@ -523,6 +550,7 @@ class Osiris:
         self._voices: set = set()   # mentor models this session used; finish() unloads them
         self._sent: List[Dict[str, str]] = []   # earlier turns exactly as the mentor was sent them
         self._warm: Optional[threading.Thread] = None
+        self.last_paste: Optional[Dict[str, Any]] = None
 
     # -- persistence -------------------------------------------------------
 
@@ -657,7 +685,9 @@ class Osiris:
         return (f"{head}\n\n[... {len(text) - len(head) - len(tail):,} characters of this {len(text):,}-character "
                 f"message omitted: too long for the local model ...]\n\n{tail}")
 
-    def converse(self, text: str, learnable: bool = True) -> str:
+    def converse(self, text: str, learnable: bool = True,
+                 source_type: Optional[str] = None,
+                 input_transport: Optional[str] = None) -> str:
         self.history.append({"role": "user", "content": self.excerpt(text)})
         self.history = self.history[-2 * HISTORY_TURNS:]
         gate = self.gate()
@@ -671,9 +701,34 @@ class Osiris:
             if self._claims_hit:
                 self.out("\n" + claims_mod.console_block(self._claims_hit))
 
+        self._on_record = self.knowledge.on_record(text[:LONG_MESSAGE]) \
+            if self.knowledge is not None and hasattr(self.knowledge, "on_record") else []
+        if self._on_record:
+            # Code states a named experiment's recorded verdict at once; the model is held to it.
+            self.out("\nOn record (pre-registered scorecard, generated from results/ and test-guarded):\n"
+                     + "\n".join("  " + r for r in self._on_record) + "\n")
+
         if not self._claims_hit and self.small_talk is not None and SMALL_TALK.match(text) \
                 and self.small_talk(text):
             return self._small_talk_reply(text, gate)
+
+        resolved_transport = input_transport or (
+            source_type if source_type in ("bracketed_paste", "typed", "unknown") else (
+                "bracketed_paste" if source_type == "paste" else (
+                    "typed" if source_type is None else "unknown"
+                )
+            )
+        )
+        is_multiline = "\n" in text.strip()
+        char_count = len(text)
+        line_count = len(text.splitlines()) if text else 0
+
+        # If true transport metadata is unavailable ('unknown') or bracketed paste,
+        # conservatively require review before any training promotion.
+        if resolved_transport in ("bracketed_paste", "unknown"):
+            effective_learnable = False
+        else:
+            effective_learnable = bool(learnable)
 
         sent_user = None
         if gate["open"] and self.core is not None:
@@ -704,6 +759,8 @@ class Osiris:
             messages, sources = self.build_messages(gate, text)
             sent_user = messages[-1]
             busy = " · the batch trainer is sharing the CPU" if self._trainer_running() else ""
+            if self._warm is not None and self._warm.is_alive():
+                busy += " · still reading my notes from start-up"
             self.out("\nOSIRIS › ")
             started, first_word = time.time(), None
             waiting = Waiting(self.out, lambda: f"thinking · {model}{busy}{self._typical(model)}", self.tty)
@@ -736,8 +793,17 @@ class Osiris:
             if first_word is not None:
                 self._note_first_word(model, first_word)
             self.out("\n")
-            note = "not learned: interrupted" if interrupted else (
-                "learning from this" if learnable else "not learned: pasted transcript")
+            if interrupted:
+                note = "not learned: interrupted"
+            elif effective_learnable:
+                note = "learning from this"
+            elif resolved_transport == "bracketed_paste" or not learnable:
+                note = "not learned: pasted transcript (ledger-only; use /learn last to propose)"
+            elif resolved_transport == "unknown":
+                note = "not learned: unverified transport (ledger-only; use /learn last to propose)"
+            else:
+                note = "not learned: review required (ledger-only; use /learn last to propose)"
+
             cited = f" · used: {', '.join(sources)}" if sources else ""
             if len(text) > MESSAGE_BUDGET:
                 cited += f" · long message: an excerpt of {len(text):,} characters was sent"
@@ -759,11 +825,26 @@ class Osiris:
             self.stats["core_spoke"] += 1
         heldout = idx % HELDOUT_EVERY == 0
         lesson = f"User: {text}\nOSIRIS: {reply}\n"
-        key = self._record({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "voice": voice, "heldout": heldout,
-                            "learnable": learnable and not interrupted, "user": text, "reply": reply,
-                            "index": idx})
+        rec_data = {
+            "t": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "voice": voice,
+            "heldout": heldout,
+            "learnable": effective_learnable and not interrupted,
+            "user": text,
+            "reply": reply,
+            "index": idx,
+            "input_transport": resolved_transport,
+            "is_multiline": is_multiline,
+            "char_count": char_count,
+            "line_count": line_count,
+            "source_type": resolved_transport,
+            "pasted": (resolved_transport == "bracketed_paste"),
+        }
+        key = self._record(rec_data)
+        if (resolved_transport in ("bracketed_paste", "unknown")) or not effective_learnable:
+            self.last_paste = dict(rec_data, hash=key)
         self._save_stats()
-        if learnable and not interrupted and voice != "core" and self.core is not None:
+        if effective_learnable and not interrupted and voice != "core" and self.core is not None:
             self._after(lesson, reply, heldout, key, idx)
         return reply
 
@@ -830,6 +911,9 @@ class Osiris:
         if self._claims_hit:
             from osiris_cli import claims as claims_mod
             context += "\n\n" + claims_mod.context_block(self._claims_hit)
+        if self._on_record:
+            context += ("\n\n[On record for this message -- the scorecard's own verdicts, already shown to "
+                        "Devin; state them exactly, do not re-describe them]\n" + "\n".join(self._on_record))
         if hits:
             context += ("\n\n[Notes looked up for this message -- Devin's files; cite the file if "
                         "you use one]\n" + self.knowledge.format_notes(hits))
@@ -915,8 +999,15 @@ class Osiris:
 
     def _hold(self, typed: str) -> None:
         """Lines typed during the reply become the next messages, visibly; an
-        unfinished line (no Enter) is shown, not sent."""
+        unfinished line (no Enter) is shown, not sent. A paste is one message,
+        whole, its last line too (2026-10-01: the end of a pasted review was
+        reported as "you were typing" and dropped)."""
         if not typed:
+            return
+        if PASTE_START in typed:
+            message = typed.replace(PASTE_START, "").replace(PASTE_END, "").replace("\r", "\n").strip()
+            if message:
+                self.held.append(message)
             return
         lines = typed.replace("\r", "\n").split("\n")
         partial = lines.pop().strip()

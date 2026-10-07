@@ -132,6 +132,23 @@ class Knowledge:
                 break
         return "\n\n".join(parts)
 
+    def on_record(self, text: str) -> List[str]:
+        """Scorecard rows for the experiments a message names ("what did M3b find?"
+        -> "m3b: open-ended tasks, 12-16 bit, PARAMS16: PASS"), so code states the
+        recorded verdict and a model paraphrase is not the only account of it.
+        A row matches on its name before the first ':' as whole words, ignoring
+        case and '-' vs ' ' ("substrate opt 2" finds "substrate-opt-2")."""
+        flat = " " + re.sub(r"[-_]", " ", text.lower()) + " "
+        rows = []
+        for src in sorted(self.texts, key=lambda k: k != SCORECARD_SOURCE):
+            for row in scorecard_verdicts(self.texts[src]):
+                name = re.sub(r"[-_]", " ", row.split(":")[0].lower()).strip()
+                if name and re.search(r"(?<![\w])" + re.escape(name) + r"(?![\w])", flat):
+                    rows.append(row)
+            if rows:
+                return [f"{r}  ({src})" for r in rows]
+        return []
+
     def lookup(self, query: str, k: int = 3, per_source: int = 2) -> List[dict]:
         q = set(_tokens(query))
         if not q or not self.chunks:
