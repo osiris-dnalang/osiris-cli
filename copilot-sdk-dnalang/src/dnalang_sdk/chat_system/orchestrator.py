@@ -61,7 +61,10 @@ class OSIRISChatOrchestrator:
         Initialize the OSIRIS Chat Orchestrator.
         """
         self.state_dir = Path(state_dir) if state_dir else Path.home() / ".osiris"
-        self.state_dir.mkdir(exist_ok=True, parents=True)
+        try:
+            self.state_dir.mkdir(exist_ok=True, parents=True)
+        except OSError:
+            pass
         
         # Initialize all subsystems
         self.intent_processor = create_intent_processor(state_dir=self.state_dir / "intent")

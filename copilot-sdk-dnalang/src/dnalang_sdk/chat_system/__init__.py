@@ -64,7 +64,7 @@ from .mentor_protocol import (
     create_mentor_protocol,
 )
 
-from .quantum_supremacy import (
+from ..quantum_supremacy import (
     QasmGenerationResult,
     compute_linear_xeb,
     generate_recursive_qasm,

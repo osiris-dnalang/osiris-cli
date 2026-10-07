@@ -58,7 +58,10 @@ class MemoryGraph:
 
     def __init__(self, state_dir: Optional[Path] = None):
         self.state_dir = Path(state_dir) if state_dir else Path.home() / ".osiris" / "memory_graph"
-        self.state_dir.mkdir(exist_ok=True, parents=True)
+        try:
+            self.state_dir.mkdir(exist_ok=True, parents=True)
+        except OSError:
+            pass
         self.nodes: Dict[str, MemoryNode] = {}
         self.edges: List[MemoryEdge] = []
         self._load_state()
