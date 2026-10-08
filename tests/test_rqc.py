@@ -100,7 +100,13 @@ def test_arms_spend_equal_shots_and_calls(tmp_path):
     led = Ledger(str(tmp_path / "l.jsonl"))
     rnd = run_random(5, 4, 4, 500, depolarizing_sampler(0.3), led, seed=2)
     ada = run_adaptive(5, 4, 4, 500, depolarizing_sampler(0.3), led, seed=2)
-    assert len(rnd) == len(ada) == 4 and sum(r["shots"] for r in rnd) == sum(r["shots"] for r in ada) == 2000
+    assert len(rnd) == len(ada) == 5 and sum(r["shots"] for r in rnd) == sum(r["shots"] for r in ada) == 2500
+    for arm in (rnd, ada):
+        final = arm[-1]
+        assert final["round"] == "final" and final["selected_round"] in range(4)
+        chosen = arm[final["selected_round"]]
+        assert final["circuit_sha256"] == chosen["circuit_sha256"]                    # same circuit, fresh shots
+        assert chosen["xeb_normalized"] == max(r["xeb_normalized"] for r in arm[:-1])
     for r in rnd + ada:
         assert {"xeb_normalized", "xeb_linear", "collision_probability", "circuit_sha256"} <= set(r)
 
@@ -125,3 +131,9 @@ def test_old_execution_path_no_longer_fabricates_xeb():
         job = IBMExecutionManager._submit_job(m, "h", ExecutionStage.STAGE1_BASELINE, "ibm_x", 8, 6, 2000, "t")
     assert job.status == "not_executed" and job.result_xeb is None and job.job_id.startswith("NOT_EXECUTED_")
     assert any("no hardware path" in str(x.message) for x in w)
+
+
+def test_counts_to_indices_puts_qubit_zero_first():
+    from rqc.samplers import counts_to_indices
+    # Qiskit key '01' means q1 = 0, q0 = 1; here qubit 0 is the most significant bit, so index 0b10 = 2
+    assert list(counts_to_indices({"01": 3, "10": 1})) == [2, 2, 2, 1]

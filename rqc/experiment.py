@@ -6,7 +6,11 @@ and flushed, so a run that dies mid-way still shows what was attempted.
 
 Random arm (RCS): k fresh random circuits with the same (n, depth).
 Adaptive arm (RQC): start from one random circuit; each round perturb its angles, measure, and keep the candidate
-if its normalized XEB is higher. k sampler calls per arm in both cases, so shots are equal.
+if its normalized XEB is higher.
+Both arms then re-measure their selected circuit (highest measured normalized XEB) on fresh shots: round "final".
+Selecting the best of k noisy estimates inflates that estimate (winner's curse) in both arms; the fresh
+re-measurement is unbiased, so the arms' "final" values compare feedback-driven local search with random search
+at equal cost: k + 1 sampler calls and (k + 1) * shots per arm.
 """
 import hashlib
 import json
@@ -67,18 +71,29 @@ def _measure(circuit, sampler, shots, ledger, arm, rnd):
     return result
 
 
+def _remeasure_best(arm, circuits, results, sampler, shots, ledger):
+    i = max(range(len(results)), key=lambda j: results[j]["xeb_normalized"])
+    final = _measure(circuits[i], sampler, shots, ledger, arm, "final")
+    final["selected_round"] = results[i]["round"]
+    final["selected_estimate"] = results[i]["xeb_normalized"]
+    return final
+
+
 def run_random(n, depth, k, shots, sampler, ledger, seed):
-    return [_measure(random_circuit(n, depth, seed * 1000 + r), sampler, shots, ledger, "random", r) for r in range(k)]
+    circuits = [random_circuit(n, depth, seed * 1000 + r) for r in range(k)]
+    results = [_measure(c, sampler, shots, ledger, "random", r) for r, c in enumerate(circuits)]
+    return results + [_remeasure_best("random", circuits, results, sampler, shots, ledger)]
 
 
 def run_adaptive(n, depth, k, shots, sampler, ledger, seed, sigma=0.2):
-    best = random_circuit(n, depth, seed * 1000)
+    best = random_circuit(n, depth, seed * 1000)       # the same starting circuit as the random arm's round 0
     best_res = _measure(best, sampler, shots, ledger, "adaptive", 0)
-    results = [best_res]
+    circuits, results = [best], [best_res]
     for r in range(1, k):
         cand = perturbed(best, sigma, seed * 1000 + 500 + r)
         res = _measure(cand, sampler, shots, ledger, "adaptive", r)
+        circuits.append(cand)
         results.append(res)
         if res["xeb_normalized"] > best_res["xeb_normalized"]:
             best, best_res = cand, res
-    return results
+    return results + [_remeasure_best("adaptive", circuits, results, sampler, shots, ledger)]
