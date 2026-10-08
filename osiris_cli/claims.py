@@ -273,6 +273,23 @@ REGISTER: Tuple[Claim, ...] = (
           (r"\bnclm\b", r"(core|osiris)[^.\n]{0,30}\blearn\w*", r"living (language )?model"),
           testable="A confirmatory run that replicates the training run (about 4 runs for a 0.05 "
                    "bits/byte minimum effect), not only held-out items."),
+    Claim("RQC_XEB_PIPELINE", "The OSIRIS IBM execution pipeline (osiris_ibm_execution, the RQC/RCS stages) measured "
+          "cross-entropy benchmark (XEB) scores on IBM hardware", "NOT_MEASURED",
+          "No circuit was ever submitted: _submit_job built a job id from a hash of its label and set "
+          "result_xeb = 0.90 - noise + random.uniform(-0.03, 0.03), marking the job 'completed'; "
+          "osiris_tournament_evo labelled those numbers as hardware results. Quarantined 2026-10-08: jobs are now "
+          "recorded as not executed with no XEB. Real XEB measurement lives in the rqc package.",
+          (("file", "osiris-cli/osiris_ibm_execution.py", "the quarantined path"),
+           ("file", "osiris-cli/docs/rqc/SCOPE.md", "the 2026-10-08 finding")),
+          (r"rqc.{0,40}\bxeb\b|\bxeb\b.{0,40}(ibm|hardware|stage)", r"execute_all_stages|osiris_ibm_execution")),
+    Claim("TESSERACT_DECODER", "The Tesseract decoder organism (osiris.decoders) decodes quantum error-correction "
+          "syndromes", "REFUTED",
+          "It never uses a code's parity checks, an error model or a logical observable: its 'correction' is a "
+          "bit vector as long as the syndrome, and the search stops when syndrome XOR correction is zero, so it "
+          "returns the syndrome itself. That predicts nothing about whether a logical qubit flipped, so it cannot "
+          "be compared with a matching or tensor-network decoder.",
+          (("file", "osiris-cli/osiris/decoders/tesseract.py", "the module"),),
+          (r"tesseract (decoder|organism)", r"osiris\.decoders")),
     Claim("RQC_ADVANTAGE", "Recursive Quantum Circuits with adaptive feedback outperform random circuit sampling "
           "(p < 0.05); research-grade and ready for peer review", "UNTESTED",
           "RQC_RESEARCH_METHODOLOGY.md is a proposal: its p-values (0.024, 0.018, 0.009) are listed under "
@@ -282,7 +299,10 @@ REGISTER: Tuple[Claim, ...] = (
           "is matched), with 5 trials per stage, an independent t-test and no held-out circuits -- and its "
           "citation is a placeholder (doi zenodo.XXXXXXX) for a paper never submitted. The portfolio, drug-"
           "discovery and materials claims do not follow from an XEB comparison.",
-          (("file", "osiris-cli/RQC_RESEARCH_METHODOLOGY.md", "the brief"),),
+          (("file", "osiris-cli/RQC_RESEARCH_METHODOLOGY.md", "the brief"),
+           ("file", "osiris-cli/docs/rqc/S1/summary.json", "S1 simulation, ibm_fez noise model (2026-10-08)"),
+           ("file", "osiris-cli/docs/rqc/S1_willow/summary.json", "S1 simulation, Willow noise model (2026-10-08)"),
+           ("file", "osiris-cli/docs/rqc/S2_PREREGISTRATION.DRAFT.md", "hardware test, drafted, not run")),
           (r"\brqc\b", r"recursive quantum circuits?", r"random circuit sampling"),
           testable="Pre-registered: adaptive policy vs static and shuffled-feedback controls on held-out "
                    "circuits, matched depth and two-qubit-gate count, jobs interleaved across calibration "
