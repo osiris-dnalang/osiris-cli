@@ -31,7 +31,7 @@ import time
 import urllib.error
 import urllib.request
 from collections import Counter
-from typing import Callable, Dict, Iterator, List, Optional
+from typing import Any, Callable, Dict, Iterator, List, Optional
 
 LIVING_HOME = os.path.join(os.path.expanduser("~"), ".osiris", "living")
 OLLAMA_BASE = os.environ.get("OSIRIS_OLLAMA", "http://localhost:11434").rstrip("/")
@@ -95,6 +95,81 @@ FIRST_WORD_SAMPLES = 10
 # after a question from OSIRIS they are answers, and a canned "Okay." would drop them.
 # Bracketed paste (DECSET 2004, turned on by the REPL): a paste arrives between these.
 PASTE_START, PASTE_END = "\x1b[200~", "\x1b[201~"
+# A paste still arriving when a reply ends is read to its end marker: input must go quiet for
+# PASTE_IDLE seconds (or PASTE_WAIT_MAX pass) before the rest is left for the prompt to read.
+PASTE_IDLE, PASTE_WAIT_MAX = 1.0, 15.0
+
+
+class Held(str):
+    """A message typed or pasted while OSIRIS was answering, sent next. `pasted` travels with
+    it so the REPL does not classify it by the previous prompt's input (2026-10-08: a document
+    pasted during a reply was dispatched as typed and trained on)."""
+    pasted: bool = False
+
+    def __new__(cls, text: str, pasted: bool = False):
+        s = super().__new__(cls, text)
+        s.pasted = pasted
+        return s
+
+
+# A long paste with no request in its first or last lines is acknowledged by code, not restated
+# by a model (2026-10-08: a pasted policy proposal was "restated" from an excerpt, cut off, and
+# a "potential overlap" came back as NUMERICAL_OVERLAP = OBSERVED).
+REQUEST = re.compile(r"\?|\b(?:review|summari[sz]e|rewrite|compare|check|critique|evaluate|assess|explain|"
+                     r"analy[sz]e|adopt|apply|translate|what do you think|thoughts|tell me|can you|could you|"
+                     r"please)\b", re.IGNORECASE)
+HEADING = re.compile(r"^\s{0,3}(?:#{1,6}\s+\S.*|(?:\d+(?:\.\d+)*[.)]|[A-Z]{1,4}-\d+[:.)]?)\s+\S.*)$")
+# Status-like labels (NUMERICAL_OVERLAP, "= OBSERVED") a reply uses that nothing it was sent contains.
+LABEL = re.compile(r"\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b|(?<==\s)[A-Z][A-Z_]{3,}\b")
+
+
+def asks_something(text: str) -> bool:
+    """Whether a pasted document carries a request: in its first two or last three non-empty lines."""
+    lines = [ln for ln in text.splitlines() if ln.strip()]
+    return any(REQUEST.search(ln) for ln in lines[:2] + lines[-3:])
+
+
+def headings(text: str, limit: int = 12) -> List[str]:
+    """Section headings of a pasted document, outside code blocks."""
+    out, fenced = [], False
+    for ln in text.splitlines():
+        if ln.lstrip().startswith("```"):
+            fenced = not fenced
+        elif not fenced and HEADING.match(ln):
+            out.append(ln.strip()[:70])
+    return out[:limit]
+
+
+def invented_labels(reply: str, sent: str) -> List[str]:
+    """Labels in a reply that appear nowhere in what the model was sent. Not a fact check: a
+    flag that the model introduced status names of its own."""
+    known = set(re.findall(r"[A-Za-z0-9_]+", sent))
+    return sorted({m.group(0) for m in LABEL.finditer(reply)} - known)
+
+
+def drain_input(read: Callable[[], bytes], ready: Callable[[float], bool], clock: Callable[[], float] = time.time,
+                idle: float = PASTE_IDLE, wait_max: float = PASTE_WAIT_MAX) -> bytes:
+    """Everything waiting on input now; and if a bracketed paste has started but not ended, keep
+    reading until its end marker, a quiet `idle`, or `wait_max` -- so one paste stays one message."""
+    data = b""
+    try:
+        while ready(0):
+            chunk = read()
+            if not chunk:
+                return data
+            data += chunk
+        start, end = PASTE_START.encode(), PASTE_END.encode()
+        t0 = clock()
+        while data.count(start) > data.count(end) and clock() - t0 < wait_max:
+            if not ready(idle):
+                break
+            chunk = read()
+            if not chunk:
+                break
+            data += chunk
+    except OSError:
+        pass                                    # keep what was read
+    return data
 SMALL_TALK = re.compile(r"^\s*(?:(?P<hello>hi|hello|hey|yo|gm|good (?:morning|afternoon|evening))|"
                         r"(?P<thanks>thanks|thank you))\b", re.IGNORECASE)
 
@@ -149,6 +224,9 @@ class OllamaMentor:
         self.base = base
         self.timeout = timeout
         self._model = model
+        # Ollama's final chunk of the last stream: done_reason ("stop" or "length") and its
+        # timings (load_duration, prompt_eval_count/_duration, eval_count/_duration, in ns).
+        self.last_done: Optional[Dict[str, Any]] = None
 
     def installed(self) -> List[str]:
         try:
@@ -211,6 +289,7 @@ class OllamaMentor:
                               "options": {"num_predict": MENTOR_MAX_TOKENS, "num_ctx": MENTOR_NUM_CTX}}).encode()
         req = urllib.request.Request(self.base + "/api/chat", data=payload,
                                      headers={"Content-Type": "application/json"})
+        self.last_done = None
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
             for line in resp:
                 if not line.strip():
@@ -222,6 +301,7 @@ class OllamaMentor:
                 if piece:
                     yield piece
                 if chunk.get("done"):
+                    self.last_done = {k: v for k, v in chunk.items() if k != "message"}
                     return
 
 
@@ -446,18 +526,14 @@ class TypeAhead:
         import select
         import termios
         fd = sys.stdin.fileno()
-        chunks = []
+        data = b""
         try:
-            while select.select([fd], [], [], 0)[0]:
-                data = os.read(fd, 4096)
-                if not data:
-                    break
-                chunks.append(data)
+            data = drain_input(lambda: os.read(fd, 4096), lambda t: bool(select.select([fd], [], [], t)[0]))
         except OSError:
             pass
         finally:
             termios.tcsetattr(fd, termios.TCSANOW, self._saved)
-        self.text = keys_typed(b"".join(chunks).decode("utf-8", errors="replace"))
+        self.text = keys_typed(data.decode("utf-8", errors="replace"))
         return False
 
 
@@ -677,13 +753,59 @@ class Osiris:
                        for m in history)
 
     @staticmethod
+    def excerpt_sizes(text: str, budget: int = MESSAGE_BUDGET):
+        """(head, tail): how many characters of a message the model is given from each end."""
+        if len(text) <= budget:
+            return len(text), 0
+        return budget * 2 // 3, budget // 3
+
+    @staticmethod
     def excerpt(text: str, budget: int = MESSAGE_BUDGET) -> str:
         """Head and tail of a long message, with what was left out stated in it."""
         if len(text) <= budget:
             return text
-        head, tail = text[: budget * 2 // 3], text[-budget // 3:]
+        h, t = Osiris.excerpt_sizes(text, budget)
+        head, tail = text[:h], text[-t:]
         return (f"{head}\n\n[... {len(text) - len(head) - len(tail):,} characters of this {len(text):,}-character "
                 f"message omitted: too long for the local model ...]\n\n{tail}")
+
+    @staticmethod
+    def timing_detail(done: Dict[str, Any]) -> str:
+        """Where the time went, from Ollama's own final-chunk counters (absent: nothing said)."""
+        ns = 1e9
+        parts = []
+        if done.get("load_duration"):
+            parts.append(f"load {done['load_duration'] / ns:.0f} s")
+        if done.get("prompt_eval_duration"):
+            parts.append(f"read {done.get('prompt_eval_count', '?')} tokens in {done['prompt_eval_duration'] / ns:.0f} s")
+        if done.get("eval_duration"):
+            parts.append(f"wrote {done.get('eval_count', '?')} tokens in {done['eval_duration'] / ns:.0f} s")
+        return f" ({', '.join(parts)})" if parts else ""
+
+    def _document_reply(self, text: str, gate: dict) -> str:
+        """A long paste with no request: acknowledged by code, with nothing reviewed, restated,
+        adopted or learned. The excerpt stays in the conversation, so a follow-up request
+        ("review it") reaches the model with it."""
+        heads = headings(text)
+        shown = "".join(f"\n    {h}" for h in heads)
+        more = " (first 12)" if len(heads) == 12 else ""
+        reply = (f"I have your pasted document: {len(text):,} characters, {len(text.splitlines()):,} lines"
+                 + (f", sections{more}:{shown}\n" if heads else ".\n")
+                 + "You didn't say what to do with it, so I haven't reviewed, summarised or adopted any of it. "
+                   "Tell me which: review it, summarise it, compare it with something on record, or something "
+                   f"else. A local model reads at most {MESSAGE_BUDGET:,} characters of it at once "
+                   "(the beginning and the end); say if you want a particular section.")
+        self.out(f"\nOSIRIS › {reply}\n  · voice: code, no model · instant · recorded; pasted, not approved "
+                 f"for learning; not adopted as policy · core step {self._core_step()}, {self.gate_brief(gate)}\n")
+        user = {"role": "user", "content": "[Pasted document]\n" + self.excerpt(text)}
+        self.history.append({"role": "assistant", "content": reply})
+        self._sent += [user, {"role": "assistant", "content": reply}]
+        self._record({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "voice": "code", "heldout": False,
+                      "learnable": False, "user": text, "reply": reply, "index": None,
+                      "input_transport": "bracketed_paste", "source_type": "bracketed_paste", "pasted": True,
+                      "char_count": len(text), "line_count": len(text.splitlines())})
+        self._save_stats()
+        return reply
 
     def converse(self, text: str, learnable: bool = True,
                  source_type: Optional[str] = None,
@@ -730,7 +852,11 @@ class Osiris:
         else:
             effective_learnable = bool(learnable)
 
+        if resolved_transport == "bracketed_paste" and len(text) > LONG_MESSAGE and not asks_something(text):
+            return self._document_reply(text, gate)
+
         sent_user = None
+        incomplete = ""
         if gate["open"] and self.core is not None:
             self.out("\nOSIRIS › ")
             try:
@@ -792,11 +918,25 @@ class Osiris:
             voice = "mentor:" + model
             if first_word is not None:
                 self._note_first_word(model, first_word)
+            done = getattr(self.mentor, "last_done", None) or {}
+            if not interrupted and done.get("done_reason") == "length":
+                incomplete = f"cut off at the {MENTOR_MAX_TOKENS}-token reply limit"
+            elif not interrupted and reply.count("```") % 2:
+                incomplete = "ends inside an unclosed code block"
+            if incomplete:
+                self.out(f" …[incomplete: {incomplete}]")
             self.out("\n")
+            idx = self.stats["exchanges"]
             if interrupted:
                 note = "not learned: interrupted"
+            elif incomplete:
+                note = "not learned: incomplete reply"
+            elif effective_learnable and self.core is None:
+                note = "recorded; no core is loaded, so nothing is learned"
+            elif effective_learnable and idx % HELDOUT_EVERY == 0:
+                note = "held out: the core is scored on this exchange, not trained on it"
             elif effective_learnable:
-                note = "learning from this"
+                note = "the core trains on this exchange (your words and this reply)"
             elif resolved_transport == "bracketed_paste" or not learnable:
                 note = "not learned: pasted transcript (ledger-only; use /learn last to propose)"
             elif resolved_transport == "unknown":
@@ -806,9 +946,18 @@ class Osiris:
 
             cited = f" · used: {', '.join(sources)}" if sources else ""
             if len(text) > MESSAGE_BUDGET:
-                cited += f" · long message: an excerpt of {len(text):,} characters was sent"
+                head, tail = self.excerpt_sizes(text)
+                cited += (f" · long message: an excerpt was sent -- the first {head:,} and last {tail:,} of "
+                          f"{len(text):,} characters ({len(text) - head - tail:,} left out, not read)")
+            # sources are what OSIRIS and Devin sent, not earlier replies: a label the model made
+            # up once must not become "known" on the next turn
+            invented = invented_labels(reply, "\n".join(m["content"] for m in messages if m["role"] != "assistant"))
+            if invented:
+                cited += (f" · labels in the reply that nothing it was sent contains: {', '.join(invented)} "
+                          "(the model's own, not recorded states)")
             timing = (f"first word {first_word:.0f} s, done {time.time() - started:.0f} s"
                       if first_word is not None else f"{time.time() - started:.0f} s")
+            timing += self.timing_detail(done)
             self.out(f"  · voice: {model} speaking for OSIRIS{f' ({why})' if why else ''} · {timing} · "
                      f"core step {self._core_step()}, {self.gate_brief(gate)} · {note}{cited}\n")
             self._hold(typed.text)
@@ -829,7 +978,8 @@ class Osiris:
             "t": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "voice": voice,
             "heldout": heldout,
-            "learnable": effective_learnable and not interrupted,
+            "learnable": effective_learnable and not interrupted and not incomplete,
+            "incomplete": incomplete or None,
             "user": text,
             "reply": reply,
             "index": idx,
@@ -844,7 +994,7 @@ class Osiris:
         if (resolved_transport in ("bracketed_paste", "unknown")) or not effective_learnable:
             self.last_paste = dict(rec_data, hash=key)
         self._save_stats()
-        if effective_learnable and not interrupted and voice != "core" and self.core is not None:
+        if effective_learnable and not interrupted and not incomplete and voice != "core" and self.core is not None:
             self._after(lesson, reply, heldout, key, idx)
         return reply
 
@@ -919,7 +1069,9 @@ class Osiris:
                         "you use one]\n" + self.knowledge.format_notes(hits))
         if long_message:
             context += (f"\n\n[This message is {len(text):,} characters; you are given an excerpt. Say what "
-                        "you can from it, and that you saw only part of it.]")
+                        "you can from it, and that you saw only part of it. Do not describe the parts you "
+                        "were not given. Keep its own hedges (could, if, potential, not established): a "
+                        "possibility it describes is not a finding.]")
         last = {"role": "user", "content": context + "\n\n[Message]\n" + self.excerpt(text)}
         self._fit(len(system) + len(last["content"]))
         messages = [{"role": "system", "content": system}] + self._sent + [last]
@@ -1004,14 +1156,20 @@ class Osiris:
         reported as "you were typing" and dropped)."""
         if not typed:
             return
-        if PASTE_START in typed:
+        if PASTE_START in typed or PASTE_END in typed:
+            # A paste, whole -- or, with only its end marker here, the tail of a paste whose start
+            # was read before this reply. The markers are terminal syntax, never "typing".
+            whole = PASTE_START in typed and typed.count(PASTE_START) == typed.count(PASTE_END)
             message = typed.replace(PASTE_START, "").replace(PASTE_END, "").replace("\r", "\n").strip()
             if message:
-                self.held.append(message)
+                self.held.append(Held(message, pasted=True))
+                if not whole:
+                    self.out(f"  · part of a paste ({len(message):,} characters) arrived apart from the rest; held as "
+                             "its own pasted message (not learned)\n")
             return
         lines = typed.replace("\r", "\n").split("\n")
         partial = lines.pop().strip()
-        self.held.extend(line.strip() for line in lines if line.strip())
+        self.held.extend(Held(line.strip()) for line in lines if line.strip())
         if partial:
             self.out(f"  · you were typing {partial!r} while I answered -- not sent; retype it to send\n")
 

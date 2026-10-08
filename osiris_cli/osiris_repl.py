@@ -1297,6 +1297,19 @@ def safe_dispatch(state: OsirisReplState, line: str) -> None:
         print(f"    The session continues; {where}.\n")
 
 
+def dispatch_held(state: OsirisReplState, line: str) -> None:
+    """A message held while OSIRIS answered. A multi-line paste is content: it goes to the
+    conversation whole, never to the command router, where a first word such as /apply would
+    run a command and drop the rest. Typed lines and one-line pastes dispatch as usual."""
+    if getattr(line, "pasted", False) and "\n" in line.strip():
+        try:
+            handle_livlm_prompt(state, line.strip())
+        except Exception as exc:  # noqa: BLE001 - as safe_dispatch: the session continues
+            print(f"\n[!] the held paste failed: {type(exc).__name__}: {str(exc)[:200]}\n")
+        return
+    safe_dispatch(state, line)
+
+
 def dispatch_command(state: OsirisReplState, line: str) -> None:
     line_clean = line.strip()
     if not line_clean:
@@ -1541,8 +1554,14 @@ def boot_repl() -> None:
     while True:
         if _LIVING is not None and _LIVING.held:
             line = _LIVING.held.pop(0)
-            print(f"{prompt}{line}   \033[2m(typed while OSIRIS was answering)\033[0m")
-            safe_dispatch(SESSION, line)
+            pasted = bool(getattr(line, "pasted", False))
+            # The held message's own transport, not the previous prompt's (2026-10-08: a document
+            # pasted during a reply was dispatched as "typed" and trained on).
+            if otc is not None and hasattr(otc, "_last_input"):
+                otc._last_input["pasted"] = pasted
+            shown = line if len(line) <= 200 else f"{line[:200]}… ({len(line):,} characters)"
+            print(f"{prompt}{shown}   \033[2m({'pasted' if pasted else 'typed'} while OSIRIS was answering)\033[0m")
+            dispatch_held(SESSION, line)
             continue
         try:
             if otc is not None:
