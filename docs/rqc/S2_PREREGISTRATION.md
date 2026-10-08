@@ -1,7 +1,6 @@
-# RQC S2 — pre-registration (DRAFT, not deposited)
+# RQC S2 — pre-registration
 
-**Status:** draft for review, 2026-10-08. It becomes binding when deposited on Zenodo with its SHA-256; no hardware job
-runs before that. **Repository:** osiris-dnalang/osiris-cli, branch `feat/rqc-s0`.
+**Status:** 2026-10-08. Binding from its Zenodo deposit; no hardware job runs before that. **Repository:** osiris-dnalang/osiris-cli, branch `feat/rqc-s0`.
 
 ## 1. Question
 
@@ -27,7 +26,10 @@ circuit compared with random search of the same structure and cost — **at equa
 - Qubits: among all simple paths of 8 connected qubits on that backend, the one with the lowest sum of CZ errors in the
   calibration snapshot taken immediately before the first job (ties: lexicographically smallest qubit list). The
   snapshot's SHA-256 is written to the ledger before the first job.
-- Both arms of a seed run in the same session; the arm that runs first alternates with seed parity.
+- All seeds run in one IBM Runtime batch session; within a seed the arm that runs first alternates with seed parity
+  (even seed: random first).
+- Implementation, frozen at commit **`86e3a3f4`**: `rqc/hardware.py` (`choose_backend`, `best_path`,
+  `HardwareSampler`) and the driver `docs/rqc/S2/s2_run.py`, which refuses to run without this record's DOI.
 
 ## 4. Primary estimand and test (amendment 1)
 
@@ -71,11 +73,14 @@ exploratory data as every other S1 number and is not corroboration. On the Willo
 
 - QPU ceiling: **10 minutes** of billed QPU time. Estimate: 80 seeds × 24,000 shots ≈ 9.3 minutes at the 2026-09 rate of
   about 0.3 s per 1,024 shots.
-- The run stops at the ceiling. If it stops early, the analysis uses the completed seeds and the report states that the
+- The run stops at the ceiling: the budget is checked before every job (each job is one sampler call of 2,000 shots,
+  under a second of QPU time), so the overshoot is at most one job. If it stops early, the analysis uses the completed seeds and the report states that the
   registered size was not reached and gives the achieved power.
 - No interim analysis: results are not examined until all seeds finish or the ceiling is reached.
 
 ## 9. Provenance
+
+The driver prints only progress (seeds, jobs, QPU seconds) until the run ends.
 
 A hash-chained ledger row is written before every sampler call (`rqc.experiment.Ledger`). Raw counts, IBM job IDs and
 the calibration snapshot hash go to `gs://living-language-model-osiris-evidence/rqc/S2/`. The analysis script is
