@@ -421,41 +421,27 @@ class IBMExecutionManager:
         shots: int,
         label: str
     ) -> JobMetadata:
-        """Submit a single job to IBM hardware"""
+        """Record a job request. This module has no working hardware path: it never submitted
+        circuits and, until 2026-10-08, filled in a random 'XEB' (0.90 - noise + uniform(-0.03, 0.03))
+        and marked the job completed. Jobs are now recorded as not executed, with no result.
+        Real measurements: the rqc package (rqc.experiment) with an explicit sampler."""
+        import warnings
+        warnings.warn("osiris_ibm_execution has no hardware path; job recorded as not executed, no XEB",
+                      RuntimeWarning, stacklevel=2)
         now = datetime.now()
-        
-        if self.service:
-            # Real submission
-            job_id = f"job_{hashlib.sha256(label.encode()).hexdigest()[:8]}"
-            estimated_wait = 15  # minutes (mock)
-        else:
-            # Mock mode
-            job_id = f"MOCK_{hashlib.sha256(label.encode()).hexdigest()[:8]}"
-            estimated_wait = 5
-        
-        # Store stage as string for JSON serialization
         metadata = JobMetadata(
-            job_id=job_id,
+            job_id=f"NOT_EXECUTED_{hashlib.sha256(label.encode()).hexdigest()[:8]}",
             circuit_hash=circuit_hash,
-            stage=stage,  # Keep as enum internally
+            stage=stage,
             backend=backend,
             n_qubits=n_qubits,
             depth=depth,
             shots=shots,
             submit_time=now.isoformat(),
-            expected_completion=(now + timedelta(minutes=estimated_wait)).isoformat(),
-            status="completed"  # Mock: immediate completion
+            expected_completion=now.isoformat(),
+            status="not_executed",
         )
-        
-        # Mock result
-        # import numpy as np  # Disabled for restricted environments
-        # Fallback: use random.uniform for mock XEB
-        noise_per_gate = (depth * 0.005) + (max(0, (n_qubits - 10) * 0.001))
-        base_xeb = 0.90 - noise_per_gate
-        # Simulate XEB with uniform noise
-        import random
-        metadata.result_xeb = max(0.0, min(1.0, base_xeb + random.uniform(-0.03, 0.03)))
-        
+        metadata.result_xeb = None
         return metadata
     
     def execute_all_stages(self, stages: List[ExecutionStage] = None) -> Dict[ExecutionStage, Dict[str, ExecutionLog]]:

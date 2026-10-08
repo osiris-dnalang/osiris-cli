@@ -166,7 +166,7 @@ py-modules = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["osiris*", "osiris_cli*", "nclm*", "qbyte_system*", "quantum_discovery*", "scimitar_sse*", "bench_tasks"]
+include = ["osiris*", "osiris_cli*", "nclm*", "qbyte_system*", "quantum_discovery*", "scimitar_sse*", "bench_tasks", "rqc*"]
 namespaces = true   # bench_tasks has no __init__.py: a .py there would change osiris_bench.suite_sha256
 
 [tool.setuptools.package-data]
