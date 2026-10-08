@@ -328,7 +328,7 @@ The proposed error suppression intervention T is formally declared falsified if 
 
 Adherence to this pre-registered execution and provenance framework guarantees publication-grade scientific validity.
 
-## What works today (v4.5.0)
+## What works today (v4.5.1)
 
 | Part | What it does | Where |
 |---|---|---|
