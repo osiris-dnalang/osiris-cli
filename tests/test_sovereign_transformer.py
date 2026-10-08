@@ -85,7 +85,9 @@ class TestAutograd:
         self._check_grad(lambda t: t * t, x)
 
     def test_div(self):
-        x = np.random.randn(3, 4).astype(np.float32) + 2.0
+        # keep t + 1 >= 1.5: near the pole at t = -1 the gradient 1/(t+1)^2 is large and a float32
+        # central difference cannot meet rtol=0.01 (randn + 2.0 reached t = -0.92 on Cloud Build)
+        x = np.abs(np.random.randn(3, 4).astype(np.float32)) + 0.5
         self._check_grad(lambda t: t / (t + 1.0), x)
 
     def test_pow(self):
