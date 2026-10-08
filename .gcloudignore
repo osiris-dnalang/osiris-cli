@@ -1,0 +1,9 @@
+# What `gcloud builds submit` uploads: the repository as git tracks it, minus large legacy
+# bundles the tests do not use.
+.git
+.gitignore
+#!include:.gitignore
+results/
+*.zip
+*.tar.gz
+world-record-quantum-supremacy.md.txt
