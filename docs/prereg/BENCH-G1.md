@@ -60,5 +60,20 @@ suite 09037df6…, runner f70c781f… (as registered).
 
 Gemini tokens used by arm G: 103,415 (gateway budget file, 13,023 → 116,438).
 
-### Arm Q
-(not yet run: Ollama is in use by another benchmark process)
+### Arm Q — not yet run validly
+
+- Run `bench-20261008T095059Z-4f9280` (2026-10-08T09:50:59Z) was stopped after 46 s, before any task
+  finished: `qwen2.5-coder:7b` is not installed in this machine's Ollama, and the console's
+  `query_model` silently substituted the first installed model (`qwen2.5:3b`) while the ledger
+  recorded the requested name. It has a `bench_run_start` entry only and is invalid for this comparison.
+- The Ollama journal (from 2026-04-11) shows pulls but no deletes, and there is no `qwen2.5-coder`
+  manifest, so earlier ledger runs labelled `qwen2.5-coder:7b` (`f30690`, `0b58b2`, `0cf8d7`) also ran a
+  substituted model. Their labels are not corrected in the append-only ledger; this note is the record.
+- Unterminated runs (`0cf8d7`, `4f9280`) are left without an end entry, as the bench's design
+  specifies for killed runs; no end entry was written by hand.
+- Before a valid arm Q: either install `qwen2.5-coder:7b` (as registered) or amend the arm to an
+  installed model; the choice is recorded here before the run.
+
+### Observation (not a registered outcome)
+Arm G's first candidate passed the hidden tests on 6 of 9 tasks but only 2 were delivered: on 4
+tasks the candidate's own test failed, so the loop discarded code the hidden tests accept.
