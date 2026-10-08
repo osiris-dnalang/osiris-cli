@@ -1,0 +1,52 @@
+{
+ "schema": "rqc-s2-budget-audit/1",
+ "provenance": "Read-only queries made in a Claude Code session on 2026-10-08 (QiskitRuntimeService().usage(), service.jobs(created_after=now-29d), job.usage(), job.metrics(), job.inputs). The values below are transcribed from that session's tool output; the raw API responses were not saved to disk. They are a historical snapshot, not the current balance.",
+ "observed_at_utc": "2026-10-08T15:34:30.782Z",
+ "account": {
+  "plan": "open",
+  "instance": "open-instance (us-east)",
+  "usage_period": {"start_time": "2026-09-10T15:34:30.782Z", "end_time": "2026-10-08T15:34:30.782Z",
+                   "semantics": "rolling 28-day window ending at the moment of the query (end_time equalled the query time); inferred from the response, not from provider documentation"},
+  "usage_limit_seconds": 600,
+  "usage_consumed_seconds": 552,
+  "usage_remaining_seconds": 48,
+  "usage_limit_reached": false,
+  "usage_consumed_ru": 9.0093,
+  "usage_limit_ru": 10
+ },
+ "earlier_report_check": "An earlier session said the period 'ended at 15:04:41Z' and the allocation 'may have just reset'. The 15:34 observation shows a window ending at the query time, with the same 552 s consumed, so that was not a reset. The earlier session's raw output is not available locally; only the truncated paste.",
+ "billing_fields": {
+  "job.usage()": "float seconds; equals metrics()['usage']['qpu_charge_time_seconds'] for all 24 jobs; qiskit-ibm-runtime 0.49.0 documents that it returns 0 until the usage calculation is complete",
+  "metrics()['usage']": "{'qpu_charge_time_seconds': int, 'value': resource units, 'unit': 'resource_units', 'status': 'complete'}",
+  "rqc.hardware._quantum_seconds": "returned the same value as job.usage() for all 24 jobs; returns 0.0 when usage is absent (fake/local modes) - so a 0 is ambiguous between 'free' and 'not yet computed'; rqc.control counts max(reported, reserved)",
+  "units": "whole seconds in every observed job"
+ },
+ "jobs_last_28_days": {
+  "count": 24, "billed_seconds_total": 552,
+  "billed_seconds": [141, 26, 30, 30, 18, 31, 70, 20, 31, 21, 71, 9, 12, 12, 3, 3, 3, 3, 2, 2, 3, 3, 3, 5],
+  "created_utc_dates": {"2026-09-20": 245, "2026-09-21": 277, "2026-09-25": 25, "2026-09-29": 5},
+  "ageing_out": "if the window is rolling, consumption returns 28 days after each job: ~293 s free by 2026-10-18, ~570 s by 2026-10-19 08:30Z, 600 s after 2026-10-27 15:10Z (inferred)"
+ },
+ "jobs_with_execution_time": [
+  {"created": "2026-09-25T12:32Z", "pubs": 1, "shots": 2048, "cz_after_transpile": 45, "circuit_qubits": 156, "execution_s": 0.537, "billed_s": 3},
+  {"created": "2026-09-25T12:32Z", "pubs": 1, "shots": 2048, "cz_after_transpile": 45, "circuit_qubits": 156, "execution_s": 0.537, "billed_s": 3},
+  {"created": "2026-09-25T12:32Z", "pubs": 1, "shots": 2048, "cz_after_transpile": 42, "circuit_qubits": 156, "execution_s": 0.538, "billed_s": 3},
+  {"created": "2026-09-25T12:27Z", "pubs": 1, "shots": 1024, "cz_after_transpile": 33, "circuit_qubits": 156, "execution_s": 0.268, "billed_s": 2},
+  {"created": "2026-09-25T12:27Z", "pubs": 1, "shots": 1024, "cz_after_transpile": 45, "circuit_qubits": 156, "execution_s": 0.269, "billed_s": 2},
+  {"created": "2026-09-25T12:20Z", "pubs": 1, "shots": 4096, "cz_after_transpile": 42, "circuit_qubits": 156, "execution_s": 1.076, "billed_s": 3},
+  {"created": "2026-09-25T12:15Z", "pubs": 1, "shots": 4096, "cz_after_transpile": 45, "circuit_qubits": 156, "execution_s": 1.087, "billed_s": 3},
+  {"created": "2026-09-25T12:08Z", "pubs": 1, "shots": 4096, "cz_after_transpile": 42, "circuit_qubits": 156, "execution_s": 1.076, "billed_s": 3},
+  {"created": "2026-09-25T11:21Z", "pubs": 1, "shots": 4096, "cz_after_transpile": 0, "circuit_qubits": 156, "execution_s": 1.080, "billed_s": 3},
+  {"created": "2026-09-29T15:10Z", "pubs": 20, "shots": 10240, "cz_after_transpile": 0, "circuit_qubits": 156, "execution_s": 2.949, "billed_s": 5}
+ ],
+ "derived": {
+  "execution_s_per_shot_single_pub": 0.000262,
+  "execution_s_per_pub_overhead": "about 0.0135 s, from the single 20-pub job only",
+  "billing_model_fit": "billed = ceil(execution + c) with c in (1.46, 1.73] fits all 10 jobs; locally observed, 10 jobs, 2 backends; not provider-documented",
+  "status": "locally observed / inferred; none of this is a provider guarantee"
+ },
+ "frozen_schedule": {"source": "docs/rqc/S2/s2_run.py + rqc/experiment.py @ 86e3a3f4 / 06761071",
+                     "jobs": 960, "derivation": "80 seeds x 2 arms x (k + 1 = 6) sampler calls, one job per call"},
+ "amended_schedule": {"source": "docs/rqc/S2/s2_run_batched.py, observed in tests/test_rqc_batch.py::test_registered_schedule_yields_twelve_jobs_of_eighty_pubs",
+                      "jobs": 12, "pubs_per_job": 80, "shots_per_job": 160000}
+}
