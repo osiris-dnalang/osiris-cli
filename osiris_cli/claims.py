@@ -45,6 +45,15 @@ GUIDE = ("file", "docs/CLAIM_LANGUAGE_GUIDE.md", "claim ceilings and negative co
 DNALANG = ("file", "dnalang-core/README.md", "lists the refuted claims and their errata")
 SELFTEST = ("doi", "10.5281/zenodo.18781261", "Feb 2026 hardware self-test: 4 confirmed, 6 refuted")
 
+# TAU_PHASE's duration pattern: 46, 46.0... or 46.9... (φ⁸ ≈ 46.98) microseconds, written µs (U+00B5), μs (U+03BC,
+# which re.I already folds together with U+00B5), us, µsec or micro-second(s); not part of a larger number (4.46,
+# 146, 460, 46,000) and not "46 users". A bare duration is an ordinary delay, so it counts only within 40
+# characters of a τ/tau, revival, anomaly, oscillation, period, phase or φ word. Matching identifies a reference to
+# the claim; it says nothing about whether the text endorses or criticises it.
+_DUR46 = r"(?<![\d.,])46(?:\.(?:0+|9\d*))?\s*(?:[µμ]s(?:ec)?|us|micro-?\s?seconds?|microsec)\b"
+_CTX46 = r"(?:τ|\btau|revival|anomal\w*|oscillat\w*|period|phase|φ)"
+_TAU46 = rf"{_CTX46}[^\n;]{{0,40}}?{_DUR46}|{_DUR46}[^\n;]{{0,40}}?{_CTX46}"
+
 
 @dataclass(frozen=True)
 class Claim:
@@ -65,10 +74,13 @@ REGISTER: Tuple[Claim, ...] = (
     # ── the 2025-2026 framework claims ───────────────────────────────────────
     Claim("TAU_PHASE", "τ-phase coherence anomaly: fidelity oscillates with τ₀ = φ⁸ ≈ 46 µs (p ≈ 10⁻¹⁴)",
           "ARTIFACT",
-          "The τ-phase is (job-creation unix timestamp mod 46 µs) / 46 µs -- a property of the server "
-          "clock, not of the qubits. The 580-job corpus is pseudoreplicated: it collapses to 103 runs.",
-          (HONEST, GUIDE, DNALANG),
-          (r"(τ|tau)[\s_-]*phase", r"φ\s*\^?\s*8|φ⁸|phi\s*\^\s*8", r"\b46(\.9\d*)?\s*(µs|us|micro)",
+          "The τ-phase is (unix timestamp mod 46 µs) / 46 µs, using the job's execution-start time and falling "
+          "back to its creation time (calculate_tau_phase in analysis/analyze_existing_hardware.py) -- a property "
+          "of the server clock, not of the qubits. Per the 2026-09-20 written assessment, the 580-job corpus "
+          "is pseudoreplicated and collapses to 103 runs.",
+          (("file", "dnalang/enki/analysis/analyze_existing_hardware.py", "calculate_tau_phase: the phase "
+            "definition"), HONEST, GUIDE, DNALANG),
+          (r"(τ|tau)[\s_-]*phase", r"φ\s*\^?\s*8|φ⁸|phi\s*\^\s*8", _TAU46,
            r"golden[- ]ratio (anomaly|decoherence)"),
           testable="A pre-registered τ-sweep with controlled idle delays (K₈), as written in "
                    "10.5281/zenodo.22863245 -- not yet run."),
@@ -318,7 +330,11 @@ _COMPILED = [(c, [re.compile(p, re.I) for p in c.patterns]) for c in REGISTER]
 
 
 def match(text: str, limit: Optional[int] = None) -> List[Claim]:
-    """Registered claims a text touches, most specific first (most distinct patterns hit)."""
+    """Registered claims a text touches, most specific first (most distinct patterns hit).
+
+    A match identifies a reference to a claim, nothing more: a sentence refuting the τ-phase claim matches
+    TAU_PHASE exactly as one asserting it does. Whether the text endorses the claim, and whether the claim is
+    supported, are separate questions (the latter is the entry's verdict). The text is searched as given."""
     scored = []
     for order, (claim, rxs) in enumerate(_COMPILED):
         hits = sum(1 for rx in rxs if rx.search(text))
