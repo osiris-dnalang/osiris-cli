@@ -9,8 +9,9 @@ budget or by an error contributes no seeds.
 
 Every job goes through rqc.control: a persisted intent whose payload names the code manifest, parameters, seeds,
 DOIs, budget and target; an approval bound to that payload's hash; an outbox row leased and marked 'dispatching'
-before the provider is called. The hardware path refuses before touching the network unless an unexpired 'execute'
-approval for target 'ibm-quantum' covers exactly this payload. No such approval is created by this script.
+before the provider is called. The hardware path refuses before touching the network unless (1) the bundle manifest
+verifies against the files on disk and records status 'deposited' with this amendment DOI, and (2) an unexpired
+'execute' approval for target 'ibm-quantum' covers exactly this payload. This script creates neither.
 
   python s2_run_batched.py --fake --seeds 4 --block 2 --out DIR                 # local Aer on a fake Heron
   python s2_run_batched.py --prereg-doi 10.5281/zenodo.23241223 --amendment-doi 10.5281/zenodo.M \\
@@ -28,7 +29,7 @@ if ROOT not in sys.path:
 from rqc import Ledger  # noqa: E402
 from rqc.batch import GatheringSampler, projected_seconds  # noqa: E402
 from rqc.control import (Dispatcher, Evidence, NotAuthorized, QiskitBatchAdapter, Telemetry,  # noqa: E402
-                         canonical, code_manifest, sha256)
+                         canonical, code_manifest, sha256, verify_bundle)
 from rqc.experiment import run_adaptive, run_random  # noqa: E402
 from rqc.hardware import BudgetExhausted, best_path, choose_backend  # noqa: E402
 
@@ -38,10 +39,17 @@ BLOCK = 40
 BUDGET_SECONDS = 600
 PREREG_DOI = "10.5281/zenodo.23241223"
 HARDWARE_TARGET = "ibm-quantum"
-PROTOCOL_FILES = ["rqc/__init__.py", "rqc/circuits.py", "rqc/sim.py", "rqc/xeb.py", "rqc/experiment.py",
-                  "rqc/samplers.py", "rqc/hardware.py", "rqc/batch.py", "rqc/control.py",
-                  "docs/rqc/S2/s2_run_batched.py", "docs/rqc/s1_adjusted.py", "docs/rqc/S2_PREREGISTRATION.md",
-                  "docs/rqc/S2_AMENDMENT_5.DRAFT.md"]
+# Provenance is three separate artifacts with no circular hash (CONTROL_NOTES.md, ADR-10):
+#   A. implementation snapshot: CODE_FILES at one commit (no document inside it names that commit);
+#   B. documents: the frozen pre-registration and the amendment, which names A's commit;
+#   C. bundle manifest (MANIFEST): A's commit and file hashes plus B's hashes, written after both.
+# The intent payload carries the hashes of A and B computed from the files, plus the hash of C, so an approval
+# binds code, amendment and manifest together; any change to any of them voids it.
+CODE_FILES = ["rqc/__init__.py", "rqc/circuits.py", "rqc/sim.py", "rqc/xeb.py", "rqc/experiment.py",
+              "rqc/samplers.py", "rqc/hardware.py", "rqc/batch.py", "rqc/control.py",
+              "docs/rqc/S2/s2_run_batched.py", "docs/rqc/s1_adjusted.py"]
+DOCUMENT_FILES = ["docs/rqc/S2_PREREGISTRATION.md", "docs/rqc/S2/S2_AMENDMENT_5.md"]
+MANIFEST = "docs/rqc/S2/AMENDMENT_5_MANIFEST.json"
 
 
 def participants(seeds, shots=None):
@@ -70,11 +78,19 @@ def projected_total(n_seeds, block, shots=None, **constants):
     return total
 
 
-def intent_payload(prereg_doi, amendment_doi, target, n_seeds=len(SEEDS), block=BLOCK, shots=None):
+def intent_payload(prereg_doi, amendment_doi, target, n_seeds=len(SEEDS), block=BLOCK, shots=None,
+                   manifest_path=None):
     shots = SHOTS if shots is None else shots
-    return {"schema": "rqc-s2-intent/1", "protocol": "RQC-S2", "amendment": "5-draft",
+    mp = os.path.join(ROOT, MANIFEST) if manifest_path is None else manifest_path
+    bundle = None
+    if os.path.exists(mp):
+        with open(mp, "rb") as f:
+            bundle = sha256(f.read())
+    return {"schema": "rqc-s2-intent/2", "protocol": "RQC-S2", "amendment": "5-draft",
             "prereg_doi": prereg_doi, "amendment_doi": amendment_doi, "target": target,
-            "code_manifest": code_manifest(ROOT, PROTOCOL_FILES),
+            "code_manifest": code_manifest(ROOT, CODE_FILES),
+            "document_manifest": code_manifest(ROOT, DOCUMENT_FILES),
+            "bundle_manifest_sha256": bundle,
             "params": {"n": N, "depth": DEPTH, "k": K, "shots": shots, "sigma": SIGMA,
                        "seeds": [SEEDS[0], SEEDS[0] + n_seeds - 1], "block": block},
             "backend_rule": "first in ascending name order of operational Heron-family backends on the UTC date "
@@ -93,17 +109,23 @@ def main(argv=None):
     ap.add_argument("--seeds", type=int, default=len(SEEDS), help="testing only; the registered run uses all 80")
     ap.add_argument("--block", type=int, default=BLOCK, help="testing only; the registered run uses 40")
     ap.add_argument("--shots", type=int, default=SHOTS, help="testing only; the registered run uses 2,000")
+    ap.add_argument("--manifest", help=f"bundle manifest (default: {MANIFEST})")
     a = ap.parse_args(argv)
     hardware = not a.fake
     if hardware and (a.seeds != len(SEEDS) or a.block != BLOCK or a.shots != SHOTS or a.prereg_doi != PREREG_DOI
                      or not a.amendment_doi.startswith("10.5281/zenodo.")):
         raise SystemExit("hardware runs use all 80 seeds in blocks of 40 at 2,000 shots and need the pre-registration "
                          f"DOI {PREREG_DOI} and the Zenodo DOI of amendment 5")
+    manifest_path = a.manifest or os.path.join(ROOT, MANIFEST)
+    if hardware:                                           # the files on disk must be the bundle that was deposited
+        problems = verify_bundle(ROOT, manifest_path, CODE_FILES, DOCUMENT_FILES, amendment_doi=a.amendment_doi)
+        if problems:
+            raise SystemExit("bundle verification failed: " + "; ".join(problems))
     target = HARDWARE_TARGET if hardware else "local-fake"
     os.makedirs(a.out, exist_ok=True)
     ev = Evidence(a.evidence or os.path.join(a.out, "evidence"))
     tel = Telemetry(os.path.join(a.out, "telemetry.sqlite"))
-    payload = intent_payload(a.prereg_doi, a.amendment_doi, target, a.seeds, a.block, a.shots)
+    payload = intent_payload(a.prereg_doi, a.amendment_doi, target, a.seeds, a.block, a.shots, manifest_path)
     intent_id = ev.create_intent("rqc-s2", payload, target)
     if not hardware:
         ev.approve(intent_id, "execute", BUDGET_SECONDS, ev.clock() + 3600, "policy:local-fake")
