@@ -43,3 +43,48 @@ def aer_sampler_from_backend(backend, layout, seed=0, optimization_level=1):
         return counts_to_indices(res.get_counts())
 
     return sample, calibration_record(backend)
+
+
+def _line_on_device(graph, n):
+    """A simple path of n connected qubits, found deterministically: depth-first from each qubit in sorted order."""
+    nodes = sorted(graph.nodes)
+
+    def extend(path):
+        if len(path) == n:
+            return path
+        for nb in sorted(graph.neighbors(path[-1])):
+            if nb not in path:
+                found = extend(path + [nb])
+                if found:
+                    return found
+        return None
+    for start in nodes:
+        found = extend([start])
+        if found:
+            return found
+    raise ValueError(f"no path of {n} connected qubits")
+
+
+def cirq_qvm_sampler(processor_id, n, seed=0):
+    """Google Quantum Virtual Machine: a device noise model shipped with cirq-google (e.g. 'willow_pink'),
+    simulated with qsim. Circuits are compiled to the CZ gateset and validated against the device."""
+    import cirq
+    import cirq_google
+    import qsimcirq
+    props = cirq_google.engine.load_device_noise_properties(processor_id)
+    noise = cirq_google.NoiseModelFromGoogleNoiseProperties(props)
+    device = cirq_google.engine.create_device_from_processor_id(processor_id)
+    qubits = _line_on_device(device.metadata.nx_graph, n)
+    sim = qsimcirq.QSimSimulator(noise=noise, seed=seed)
+    from .circuits import to_cirq
+
+    def sample(circuit, shots):
+        c = cirq.optimize_for_target_gateset(to_cirq(circuit, qubits), gateset=cirq.CZTargetGateset())
+        device.validate_circuit(c)
+        bits = sim.run(c, repetitions=shots).measurements["m"]          # shots x n, column q = qubit q
+        weights = 1 << np.arange(circuit.n - 1, -1, -1)
+        return (bits.astype(np.int64) * weights).sum(axis=1)
+
+    record = {"backend": f"cirq-qvm:{processor_id}", "qubits": [str(q) for q in qubits],
+              "noise_source": "cirq_google.engine.load_device_noise_properties (shipped median calibration)"}
+    return sample, record

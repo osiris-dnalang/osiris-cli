@@ -68,3 +68,14 @@ def to_qiskit(circuit):
             qc.cz(a, b)
     qc.measure_all()
     return qc
+
+
+def to_cirq(circuit, qubits):
+    """Cirq circuit on the given device qubits (qubit q here -> qubits[q]); measurement key 'm' in that order."""
+    import cirq
+    ops = []
+    for layer, gates in enumerate(circuit.angles):
+        for q, (theta, phi, lam) in enumerate(gates):
+            ops += [cirq.rz(lam).on(qubits[q]), cirq.ry(theta).on(qubits[q]), cirq.rz(phi).on(qubits[q])]
+        ops += [cirq.CZ(qubits[a], qubits[b]) for a, b in circuit.cz_pairs(layer)]
+    return cirq.Circuit(ops + [cirq.measure(*qubits, key="m")])

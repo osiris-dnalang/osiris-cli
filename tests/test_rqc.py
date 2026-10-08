@@ -137,3 +137,21 @@ def test_counts_to_indices_puts_qubit_zero_first():
     from rqc.samplers import counts_to_indices
     # Qiskit key '01' means q1 = 0, q0 = 1; here qubit 0 is the most significant bit, so index 0b10 = 2
     assert list(counts_to_indices({"01": 3, "10": 1})) == [2, 2, 2, 1]
+
+
+def test_cirq_circuit_matches_the_simulator():
+    cirq = pytest.importorskip("cirq")
+    from rqc.circuits import to_cirq
+    c = random_circuit(4, 3, 6)
+    qs = cirq.LineQubit.range(4)
+    sv = cirq.Simulator().simulate(to_cirq(c, qs)[:-1], qubit_order=qs).final_state_vector    # drop measurement
+    assert np.allclose(np.abs(sv) ** 2, probabilities(c), atol=1e-6)
+
+
+def test_qvm_sampler_noiseless_limit_recovers_ideal_xeb():
+    pytest.importorskip("cirq_google"); pytest.importorskip("qsimcirq")
+    from rqc.samplers import cirq_qvm_sampler
+    sample, rec = cirq_qvm_sampler("willow_pink", 4, seed=1)
+    c = random_circuit(4, 3, 2)
+    f = normalized_xeb(probabilities(c), sample(c, 4000))
+    assert 0.6 < f < 1.05 and rec["backend"] == "cirq-qvm:willow_pink"     # noisy but clearly correlated with ideal
