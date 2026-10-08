@@ -363,12 +363,13 @@ def status_line():
         return "Gemini         : not configured (GEMINI_API_KEY or GOOGLE_API_KEY in ~/.env)"
     ok, _ = Ledger().verify()
     where = f" ({gcp_settings()[0]}/{gcp_settings()[1]})" if name == "vertex-project" else ""
+    line = (f"Gemini         : {name}{where} {model_for(name)} · budget {Budget().used():,}/{Budget().limit:,} tokens · "
+            f"ledger {'intact' if ok else 'BROKEN'}")
     try:
         from osiris_cli import gcp_secrets
         if gcp_secrets.wanted():
             r = gcp_secrets.last_result
-            where += f" · secrets: {len(r['loaded'])} from Secret Manager" + (f" ({r['error']})" if r["error"] else "")
+            line += f" · secrets: {len(r['loaded'])} from Secret Manager" + (f" ({r['error']})" if r["error"] else "")
     except Exception:  # noqa: BLE001
         pass
-    return (f"Gemini         : {name}{where} {model_for(name)} · budget {Budget().used():,}/{Budget().limit:,} tokens · "
-            f"ledger {'intact' if ok else 'BROKEN'}")
+    return line
