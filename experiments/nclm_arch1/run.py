@@ -54,7 +54,7 @@ def preflight():
     import osiris_termux_console as otc
     from osiris.nclm import cross_entropy_loss
     from osiris.nclm.autograd import no_grad
-    where = os.path.dirname(os.path.dirname(os.path.abspath(osiris.nclm.__file__)))
+    where = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(osiris.nclm.__file__))))
     if where != REPO:
         raise SystemExit(f"osiris.nclm imported from {where}, not {REPO} (see nclm_mix1/EXECUTION.md)")
     reg = git("log", "--diff-filter=A", "--format=%H", "--", PREREG)
