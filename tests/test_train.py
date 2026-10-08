@@ -143,6 +143,21 @@ def test_rescore_updates_heldout_exchange_scores(tmp_path):
     n = train.rescore_chat(FakeCore(str(tmp_path / "l")), str(tmp_path))
     stats = json.load(open(o.stats_path))
     assert n == 1 and stats["heldout_scores"][key][0] == 2.5
+    assert stats["heldout_scores"][key][4] == train.SCORER
+
+
+def test_rescore_only_replaces_pre_fix_scores_without_training(tmp_path):
+    o = Osiris(core=None, home=str(tmp_path), out=lambda s: None, background=False)
+    key = o._record({"heldout": True, "learnable": True, "voice": "mentor:x", "user": "q",
+                     "reply": "an answer long enough to score", "index": 0})
+    o.stats["heldout_scores"][key] = [9.9, 4.4, 0, 0]       # written by v4.5.1
+    o._save_stats()
+    core = FakeCore(str(tmp_path / "l"))
+    msg = train.rescore_only(core, str(tmp_path))
+    stats = json.load(open(o.stats_path))
+    assert stats["heldout_scores"][key][0] == 2.5 and stats["heldout_scores"][key][4] == train.SCORER
+    assert core.batches == [] and "rescored 1 held-out exchanges" in msg
+    assert "predate v4.5.2" in msg.split("now:")[0] and "predate" not in msg.split("now:")[1]
 
 
 def test_archive_tier_dedupes_and_skips_third_party(tmp_path):

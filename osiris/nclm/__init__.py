@@ -13,7 +13,7 @@ from .core.engine import (
 
 from .autograd import Tensor, softmax, log_softmax, gelu, cross_entropy_loss, no_grad
 from .layers import Module, Embedding, Linear, LayerNorm, GELU, Dropout
-from .positions import phase_conjugate_positional_encoding
+from .positions import phase_conjugate_positional_encoding, standard_sinusoidal_positional_encoding
 from .transformer import SovereignTransformer, SovereignTransformerV2, SovereignConfig
 from .sovereign_mechanics import (
     TorsionLockedAttention, PhaseConjugateCorrector,
@@ -36,7 +36,7 @@ __all__ = [
     # Layers
     "Module", "Embedding", "Linear", "LayerNorm", "GELU", "Dropout",
     # Positions
-    "phase_conjugate_positional_encoding",
+    "phase_conjugate_positional_encoding", "standard_sinusoidal_positional_encoding",
     # Transformer
     "SovereignTransformer", "SovereignTransformerV2", "SovereignConfig",
     # 11D-CRSM Mechanics

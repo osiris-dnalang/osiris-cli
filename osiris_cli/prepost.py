@@ -181,8 +181,8 @@ def load(where: str, with_optimizer: bool = False):
     architecture and loader as the live core."""
     import numpy as np
     otc = _console()
-    model, opt = otc._organism_build()
     ckpt, meta = snapshot_paths(where)
+    model, opt = otc._organism_build(otc._organism_arch(os.path.dirname(ckpt)))
     with open(meta, encoding="utf-8") as f:
         m = json.load(f)
     with np.load(ckpt) as blob:

@@ -1156,7 +1156,7 @@ def display_status(state: Optional[OsirisReplState] = None) -> None:
             c = _claims.by_id(cid)
             return c.verdict if c else "unregistered"
         print(f"  CRSM constants : historical, not established -- θ_lock {THETA_LOCK_DEG}° {_verdict('THETA_LOCK')}, "
-              f"Λ_Φ {LAMBDA_PHI:.6e} {_verdict('LAMBDA_PHI')}, F_max {F_MAX_PREDICTED:.5f} {_verdict('K8_REVIVAL')} (/legit list)")
+              f"Λ_Φ {LAMBDA_PHI:.6e} {_verdict('LAMBDA_PHI')}, F_max {F_MAX_PREDICTED:.5f} {_verdict('F_MAX')} (/legit list)")
     except Exception:  # noqa: BLE001 - status must render even without the register
         print("  CRSM constants : historical, not established (/legit list)")
     try:
@@ -1203,7 +1203,7 @@ def display_help() -> None:
     print("    /legit <text|ID|list> Is a claim legit? Verdicts from the claims register, with evidence")
     print("    /gemini [--dry] <q>  Ask Gemini directly (advisory; redacted, budgeted, ledgered)")
     print("    /physics <check> k=v  Physics bounds: thrust, rim, metric, chsh, efficiency, entropy, dd")
-    print("    /train [start H|stop] Overnight batch training (status by default)")
+    print("    /train [start H|stop|rescore] Overnight batch training (status by default)")
     print()
     print("  \033[1;36mCore Substrate\033[0m")
     print("    /ignite              Boot 11D CRSM Substrate, Cl(3,0) rotor & 9-Agent Cognitive Mesh")
@@ -1467,6 +1467,15 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
             print("[OSIRIS] " + osiris_train.detach(["--hours", hours]))
         elif sub == "stop":
             print("[OSIRIS] " + osiris_train.stop(lock) if lock else "[OSIRIS] core unavailable")
+        elif sub == "rescore":
+            living = get_living()
+            if living.core is None:
+                print("[OSIRIS] core unavailable")
+            elif living.core.training_locked():
+                print("[OSIRIS] a trainer is running; it rescores when it finishes")
+            else:
+                print("[OSIRIS] " + osiris_train.rescore_only(living.core, living.home, warn_open_chat=False))
+                living._save_stats()   # take the rescored entries into this session's gate
         else:
             print("\n OSIRIS · batch training")
             for ln in osiris_train.status_lines(lock_path=lock):

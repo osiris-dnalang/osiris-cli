@@ -24,7 +24,7 @@ from typing import Optional, Dict, Any
 
 from .autograd import Tensor, softmax, no_grad, _is_grad_enabled
 from .layers import Module, Embedding, Linear, LayerNorm, GELU, Dropout
-from .positions import phase_conjugate_positional_encoding
+from .positions import phase_conjugate_positional_encoding, standard_sinusoidal_positional_encoding
 from .sovereign_mechanics import (
     SovereignBlock, FractalAntennaEmbedding, NegentropicTracker,
 )
@@ -56,6 +56,7 @@ class SovereignConfig:
     torsion_lock: bool = False       # T-Lock attention stabilization
     phase_conjugate: bool = False    # phase-conjugate error correction
     fractal_embedding: bool = False  # 133-mode fractal antenna embedding
+    positional: str = "phi"          # V2 only: "phi" (the table above) or "standard" (base 10000)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -71,6 +72,7 @@ class SovereignConfig:
             "torsion_lock": self.torsion_lock,
             "phase_conjugate": self.phase_conjugate,
             "fractal_embedding": self.fractal_embedding,
+            "positional": self.positional,
             "model_type": "SovereignTransformer",
             "framework": "DNA::}{::lang v51.843",
         }
@@ -428,6 +430,11 @@ class SovereignTransformerV2(Module):
 
     Backward-compatible: with all flags False, behaves identically to V1.
 
+    The flags are not independent: torsion_lock OR phase_conjugate selects SovereignBlock, which always
+    applies T-Lock, the phase-conjugate corrector, the pilot-wave factor and the 1/phi FFN scale
+    (pilot_wave and golden_scale are honoured only by TransformerBlock). `positional` picks the frozen
+    position table: "phi" (default; every checkpoint so far) or "standard".
+
     Forward signature:  token_ids (B, T) → logits (B, T, vocab_size)
     """
 
@@ -444,10 +451,13 @@ class SovereignTransformerV2(Module):
         else:
             self.tok_emb = Embedding(config.vocab_size, config.dim)
 
-        # Phase-conjugate positional encoding (frozen)
-        self.pos_enc = phase_conjugate_positional_encoding(
-            config.max_seq_len, config.dim,
-        )
+        # Positional encoding (frozen)
+        if config.positional == "phi":
+            self.pos_enc = phase_conjugate_positional_encoding(config.max_seq_len, config.dim)
+        elif config.positional == "standard":
+            self.pos_enc = standard_sinusoidal_positional_encoding(config.max_seq_len, config.dim)
+        else:
+            raise ValueError(f"positional must be 'phi' or 'standard', not {config.positional!r}")
 
         self.emb_dropout = Dropout(config.dropout)
 

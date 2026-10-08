@@ -45,6 +45,11 @@ OLLAMA_BASE = os.environ.get("OSIRIS_OLLAMA", "http://localhost:11434").rstrip("
 GATE_WINDOW = 30
 SPEAK_BPB = 2.0
 HELDOUT_EVERY = 5
+# Version of the forward pass that held-out scores come from, stored as a score's 5th field. Scores without
+# it (before v4.5.2) were computed with the phase-conjugate corrector skipped -- a layer the core trains with
+# in every block -- so they measure a different network: they do not count toward the gate, and
+# `osiris train --rescore-only` replaces them.
+SCORER = 2
 TRAIN_STEPS_PER_EXCHANGE = 3
 SCORE_WINDOWS = 2
 HISTORY_TURNS = 12
@@ -187,9 +192,10 @@ Honesty rules, which matter more than sounding impressive:
 If you do not know, say so and say how it could be checked.
 - Keep hypotheses and measured results clearly separate.
 - Don't say you have learned, remembered or kept up with Devin's work unless a note, a recall \
-line or a check in this message shows it. What is measured about your learning (pilot, \
-2026-10-01): training on conversations lowers the core's error on held-out replies by about \
-0.07 bits/byte, and the core is still worse than a simple letter-frequency model.
+line or a check in this message shows it. What was measured about your learning (pilot, \
+2026-10-01): training on conversations lowered the core's error on held-out replies by about \
+0.07 bits/byte, and the core was worse than a simple letter-frequency model -- but those scores \
+skipped a layer the core trains with (fixed in v4.5.2) and have not been re-measured.
 - Devin's own hardware audits refuted the tau-phase anomaly, theta_lock = 51.843 deg, \
 the 10^6 suppression and the CCCE "consciousness" metrics; do not present them as \
 established. His measured work (staggered dynamical decoupling, GHZ witnesses, the \
@@ -483,6 +489,13 @@ class NclmCore:
         sched = getattr(opt, "schedule", None)
         return sched.get_lr(opt.step_count, opt.base_lr) if sched else opt.base_lr
 
+    def describe(self) -> dict:
+        """What a run trains: its architecture, configuration and size (recorded in run manifests)."""
+        with self._otc._organism_lock:
+            model = self._model()["model"]
+            return {"arch": getattr(model, "organism_arch", "crsm"), "config": model.config.to_dict(),
+                    "n_params": int(model.num_parameters()), "scorer": SCORER}
+
     def draft(self, prompt: str, max_bytes: int = 160) -> str:
         with self._otc._organism_lock:
             model = self._model()["model"]
@@ -496,6 +509,16 @@ def printable_ratio(text: str) -> float:
         return 0.0
     ok = sum(1 for ch in text if ch.isprintable() or ch in "\n\t")
     return ok / len(text)
+
+
+def scorer_of(score: list) -> int:
+    """The SCORER version a held-out score came from; scores written before v4.5.2 have none (1)."""
+    return int(score[4]) if len(score) > 4 else 1
+
+
+def score_rank(score: list) -> tuple:
+    """Which of two scores for one exchange to keep: the newer scorer, then the newer weights."""
+    return scorer_of(score), score[2]
 
 
 class TypeAhead:
@@ -638,8 +661,8 @@ class Osiris:
             s = {}
         s.setdefault("exchanges", 0)
         s.setdefault("core_spoke", 0)
-        # exchange hash -> [core_bpb, unigram_bpb, core_step, exchange_index]; a
-        # batch trainer rescoring with newer weights replaces an entry (higher step).
+        # exchange hash -> [core_bpb, unigram_bpb, core_step, exchange_index, scorer]; a
+        # batch trainer rescoring with a newer scorer or newer weights replaces an entry.
         s.setdefault("heldout_scores", {})
         s.pop("heldout", None)
         s.setdefault("unigram", {})       # byte -> count, train text only
@@ -656,7 +679,7 @@ class Osiris:
                 disk = {}
             mine = self.stats["heldout_scores"]
             for key, val in disk.items():
-                if key not in mine or val[2] > mine[key][2]:
+                if key not in mine or score_rank(val) > score_rank(mine[key]):
                     mine[key] = val
             tmp = self.stats_path + ".tmp"
             with open(tmp, "w", encoding="utf-8") as f:
@@ -684,18 +707,24 @@ class Osiris:
         return nats / len(data) / math.log(2)
 
     def gate(self) -> dict:
-        recent = sorted(self.stats["heldout_scores"].values(), key=lambda r: r[3])[-GATE_WINDOW:]
+        scores = self.stats["heldout_scores"].values()
+        current = [r for r in scores if scorer_of(r) == SCORER]
+        recent = sorted(current, key=lambda r: r[3])[-GATE_WINDOW:]
         n = len(recent)
         core = sum(r[0] for r in recent) / n if n else None
         uni = sum(r[1] for r in recent) / n if n else None
         open_ = n >= GATE_WINDOW and core is not None and core <= SPEAK_BPB and core < uni
-        return {"open": open_, "n": n, "core_bpb": core, "unigram_bpb": uni}
+        return {"open": open_, "n": n, "core_bpb": core, "unigram_bpb": uni,
+                "stale": sum(1 for r in scores if scorer_of(r) != SCORER)}
 
     @staticmethod
     def gate_note(gate: dict) -> str:
         """Why the core is or is not speaking, in one clause."""
         if gate["open"]:
             return "gate open"
+        if not gate["n"] and gate.get("stale"):
+            return (f"gate closed: {gate['stale']} held-out scores predate v4.5.2's scoring fix "
+                    "(osiris train --rescore-only)")
         if not gate["n"]:
             return "gate closed: not scored on held-out text yet"
         return (f"gate closed: {gate['core_bpb']:.2f} bits/byte on {gate['n']}/{GATE_WINDOW} held-out "
@@ -705,6 +734,8 @@ class Osiris:
     def gate_brief(gate: dict) -> str:
         if gate["open"]:
             return "gate open"
+        if not gate["n"] and gate.get("stale"):
+            return "gate closed, held-out scores need rescoring"
         if not gate["n"]:
             return "gate closed, not scored yet"
         return f"gate closed ({gate['core_bpb']:.2f} bits/byte held-out; speaks at <= {SPEAK_BPB})"
@@ -1187,6 +1218,9 @@ class Osiris:
             return who + (f"\nYour core's current state: {gate['n']} held-out exchanges scored, "
                     f"{gate['core_bpb']:.2f} bits/byte vs {gate['unigram_bpb']:.2f} for a unigram "
                     f"baseline; it speaks on its own at <= {SPEAK_BPB} bits/byte.")
+        if gate.get("stale"):
+            return who + (f"\nYour core's {gate['stale']} held-out scores were computed before a scoring fix "
+                          "(v4.5.2) and measured a different network; they are not counted until rescored.")
         return who + "\nYour core has not been scored on held-out conversation yet."
 
     def _after(self, lesson: str, reply: str, heldout: bool, key: str, idx: int) -> None:
@@ -1200,7 +1234,7 @@ class Osiris:
                 with self._lock:
                     if heldout and core_bpb is not None:
                         self.stats["heldout_scores"][key] = [round(core_bpb, 4), round(uni_bpb, 4),
-                                                             int(self.core.step()), idx]
+                                                             int(self.core.step()), idx, SCORER]
                     if trained:
                         for b, c in Counter(lesson.encode("utf-8", errors="ignore")).items():
                             self.stats["unigram"][str(b)] = self.stats["unigram"].get(str(b), 0) + c
@@ -1253,6 +1287,9 @@ class Osiris:
                          f"unigram {g['unigram_bpb']:.2f} bpb")
         else:
             lines.append(f"held-out      none scored yet (every {HELDOUT_EVERY}th exchange is held out)")
+        if g["stale"]:
+            lines.append(f"              {g['stale']} older scores predate the v4.5.2 scoring fix and are not "
+                         "counted; osiris train --rescore-only rescores them")
         lines.append("gate          " + ("OPEN: the core answers in its own voice" if g["open"] else
                      f"closed: needs {GATE_WINDOW} held-out exchanges at <= {SPEAK_BPB} bpb and below unigram"))
         return lines

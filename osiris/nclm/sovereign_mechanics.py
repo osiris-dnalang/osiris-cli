@@ -36,7 +36,7 @@ import math
 import numpy as np
 from typing import Optional
 
-from .autograd import Tensor, softmax, _is_grad_enabled
+from .autograd import Tensor, softmax
 from .layers import Module, Linear, LayerNorm, Dropout
 
 # ===========================================================================
@@ -203,7 +203,10 @@ class PhaseConjugateCorrector(Module):
         mean_var = float(np.mean(var))
         gamma = np.clip(mean_var / (mean_var + 1.0), 0, 1)
 
-        if gamma <= self.gamma_critical or not _is_grad_enabled():
+        # The same rule with gradients on or off. Before v4.5.2 this also returned x under no_grad, so
+        # scoring and generation skipped a layer that training applied in every block (Gamma is 0.7-0.9):
+        # the gate measured a different network from the one trained.
+        if gamma <= self.gamma_critical:
             return x
 
         # 2. Phase-conjugate operator: Theta|Psi>*
