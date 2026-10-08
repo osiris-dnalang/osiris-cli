@@ -15,7 +15,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 @pytest.fixture(autouse=True)
 def isolated(monkeypatch, tmp_path):
-    for k in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OSIRIS_GEMINI_BACKEND", "GEMINI_MODEL", "GEMINI_VERTEX_MODEL"):
+    for k in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OSIRIS_GEMINI_BACKEND", "GEMINI_MODEL", "GEMINI_VERTEX_MODEL",
+              "OSIRIS_GCP_PROJECT", "OSIRIS_GCP_LOCATION", "OSIRIS_GCP_MODEL"):
         monkeypatch.delenv(k, raising=False)
     monkeypatch.setattr(g, "ENV_PATH", str(tmp_path / "no.env"))
     monkeypatch.setattr(g, "LEDGER_PATH", str(tmp_path / "ledger.jsonl"))
@@ -138,3 +139,32 @@ def test_only_the_gateway_talks_to_google_model_apis():
                 if rel not in allowed and hosts.search(src) and "urlopen" in src:
                     offenders.append(rel)
     assert not offenders, f"direct calls to Google model APIs outside the gateway: {offenders}"
+
+
+def test_project_backend_uses_gcloud_token_not_a_key(monkeypatch):
+    monkeypatch.setattr(g, "_gcloud", lambda: "/usr/bin/gcloud")
+    monkeypatch.setattr(g, "_gcp_token", lambda: "ya29.FAKETOKEN")
+    monkeypatch.setenv("GOOGLE_API_KEY", VTX_KEY)
+    assert g.choose_backend() == "vertex"                     # no project configured: key backends only
+    monkeypatch.setenv("OSIRIS_GCP_PROJECT", "my-proj")
+    assert g.choose_backend() == "vertex-project"
+    t, sent = fake()
+    r = g.generate("hi", purpose="t", transport=t)
+    assert sent["url"].startswith("https://aiplatform.googleapis.com/v1/projects/my-proj/locations/global/")
+    assert sent["url"].endswith("/models/gemini-3.6-flash:generateContent")
+    assert sent["headers"]["Authorization"] == "Bearer ya29.FAKETOKEN" and "x-goog-api-key" not in sent["headers"]
+    assert sent["headers"]["x-goog-user-project"] == "my-proj" and r["backend"] == "vertex-project"
+    assert "ya29" not in open(g.LEDGER_PATH).read()
+
+
+def test_project_backend_regional_and_missing_token(monkeypatch):
+    monkeypatch.setattr(g, "_gcloud", lambda: "/usr/bin/gcloud")
+    monkeypatch.setenv("OSIRIS_GCP_PROJECT", "my-proj")
+    monkeypatch.setenv("OSIRIS_GCP_LOCATION", "europe-west1")
+    monkeypatch.setattr(g, "_gcp_token", lambda: "")
+    with pytest.raises(g.GatewayError, match="gcloud auth login"):
+        g.generate("hi", purpose="t", transport=fake()[0])
+    monkeypatch.setattr(g, "_gcp_token", lambda: "tok")
+    t, sent = fake()
+    g.generate("hi", purpose="t", transport=t)
+    assert sent["url"].startswith("https://europe-west1-aiplatform.googleapis.com/v1/projects/my-proj/locations/europe-west1/")
