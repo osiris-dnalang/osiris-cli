@@ -2,9 +2,10 @@
 
 Every Gemini request -- the Synthesizer, /lab discovery, vision, /gemini -- goes through
 send(), which:
-  * picks a backend by which key is available: the Gemini Developer API with GEMINI_API_KEY,
-    or Vertex AI (express mode) with GOOGLE_API_KEY; keys come from the environment, then
-    ~/.env (parsed, never sourced), and are never logged, printed or returned;
+  * picks a backend: Vertex AI in your own GCP project with your gcloud login (when
+    OSIRIS_GCP_PROJECT is set; no API key needed), else the Gemini Developer API with an
+    AIza-type key, else Vertex AI express mode with an AQ-type key; keys and tokens come from the
+    environment, ~/.env (parsed, never sourced) or gcloud, and are never logged, printed or returned;
   * redacts every outbound text part first (any value held in ~/.env, and secret-shaped
     strings: Google/GitHub/AWS/sk- keys, private keys, database URLs with passwords);
   * enforces a persistent token budget, refusing a call that would exceed it;
@@ -30,6 +31,8 @@ GENESIS = "0" * 64
 
 BACKENDS = {
     # name: (key variable, URL template, default model, model variable)
+    "vertex-project": (None, "https://{host}/v1/projects/{project}/locations/{location}/publishers/google/models/{model}:generateContent",
+                       "gemini-3.6-flash", "OSIRIS_GCP_MODEL"),
     "developer": ("GEMINI_API_KEY", "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
                   "gemini-3.6-flash", "GEMINI_MODEL"),
     "vertex": ("GOOGLE_API_KEY", "https://aiplatform.googleapis.com/v1/publishers/google/models/{model}:generateContent",
@@ -183,10 +186,45 @@ def _key(name, env):
     return (os.environ.get(name, "") or env.get(name, "")).strip()
 
 
+_TOKEN = {"value": "", "until": 0.0}
+
+
+def gcp_settings(env=None):
+    """(project, location) for the vertex-project backend; project None when not configured."""
+    env = load_env() if env is None else env
+    project = _key("OSIRIS_GCP_PROJECT", env) or None
+    return project, _key("OSIRIS_GCP_LOCATION", env) or "global"
+
+
+def _gcloud():
+    import shutil
+    return shutil.which("gcloud") or next((p for p in (os.path.join(HOME, "google-cloud-sdk", "bin", "gcloud"),)
+                                           if os.access(p, os.X_OK)), None)
+
+
+def _gcp_token():
+    """An OAuth access token from your gcloud login, cached for 45 minutes. '' if unavailable."""
+    import subprocess
+    if _TOKEN["value"] and time.time() < _TOKEN["until"]:
+        return _TOKEN["value"]
+    exe = _gcloud()
+    if not exe:
+        return ""
+    try:
+        out = subprocess.run([exe, "auth", "print-access-token"], capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    tok = out.stdout.strip() if out.returncode == 0 else ""
+    _TOKEN.update(value=tok, until=time.time() + 45 * 60 if tok else 0.0)
+    return tok
+
+
 def backend_key(backend, env):
     """The key that works on this backend. Developer API keys look like 'AIza...'; Vertex
     express / agent-platform keys look like 'AQ....' and are rejected by the Developer API
     (401), so an AQ-type GEMINI_API_KEY is used on Vertex instead."""
+    if backend == "vertex-project":
+        return "gcloud" if gcp_settings(env)[0] and _gcloud() else ""     # the token is fetched at send time
     gem, goog = _key("GEMINI_API_KEY", env), _key("GOOGLE_API_KEY", env)
     if backend == "developer":
         return next((k for k in (gem, goog) if k.startswith("AIza")), "")
@@ -198,7 +236,7 @@ def choose_backend(env=None, backend=None):
     is; OSIRIS_GEMINI_BACKEND or the argument forces one. None when no usable key exists."""
     env = load_env() if env is None else env
     wanted = backend or os.environ.get("OSIRIS_GEMINI_BACKEND", "").strip() or "auto"
-    order = [wanted] if wanted in BACKENDS else ["developer", "vertex"]
+    order = [wanted] if wanted in BACKENDS else ["vertex-project", "developer", "vertex"]
     for name in order:
         if backend_key(name, env):
             return name
@@ -236,6 +274,16 @@ def send(payload, *, purpose, model=None, backend=None, timeout=60, transport=_p
     if name is None:
         raise GatewayError("no Gemini key: set GEMINI_API_KEY or GOOGLE_API_KEY in ~/.env")
     url_tmpl = BACKENDS[name][1]
+    if name == "vertex-project":
+        project, location = gcp_settings(env)
+        token = _gcp_token()
+        if not token:
+            raise GatewayError("vertex-project: no gcloud access token (run: gcloud auth login)")
+        host = "aiplatform.googleapis.com" if location == "global" else f"{location}-aiplatform.googleapis.com"
+        url_tmpl = url_tmpl.replace("{host}", host).replace("{project}", project).replace("{location}", location)
+        headers = {"Authorization": f"Bearer {token}", "x-goog-user-project": project, "Content-Type": "application/json"}
+    else:
+        headers = {"x-goog-api-key": backend_key(name, env), "Content-Type": "application/json"}
     model = model_for(name, model)
     clean, found = _redact_payload(payload, env)
     text_chars = sum(len(p.get("text", "")) for b in clean.get("contents", []) for p in b.get("parts", []))
@@ -248,9 +296,7 @@ def send(payload, *, purpose, model=None, backend=None, timeout=60, transport=_p
             "text_chars": text_chars, "redactions": found}
     ledger.append("GEMINI_CALL_SENT", meta)                      # written before the network call
     try:
-        status, resp = transport(url_tmpl.format(model=model),
-                                 {"x-goog-api-key": backend_key(name, env), "Content-Type": "application/json"},
-                                 clean, timeout)
+        status, resp = transport(url_tmpl.format(model=model), headers, clean, timeout)
     except Exception as e:  # noqa: BLE001 - recorded, then re-raised without any key material
         ledger.append("GEMINI_CALL_RESULT", {"payload_sha256": body_sha, "http": None, "error": type(e).__name__})
         raise GatewayError(f"Gemini request failed: {type(e).__name__}") from None
@@ -261,6 +307,8 @@ def send(payload, *, purpose, model=None, backend=None, timeout=60, transport=_p
     ledger.append("GEMINI_CALL_RESULT", {"payload_sha256": body_sha, "http": status, "response_sha256": _sha(text),
                                          "tokens": usage, "model_version": resp.get("modelVersion"),
                                          "finish": [c.get("finishReason") for c in resp.get("candidates", []) or []]})
+    if status == 401 and name == "vertex-project":
+        _TOKEN.update(value="", until=0.0)                       # expired: fetch a new one next time
     if status != 200:
         msg = str((resp.get("error") or {}).get("message", ""))[:200] if isinstance(resp, dict) else ""
         raise GatewayError(f"Gemini HTTP {status} ({name}): {msg}")
@@ -297,7 +345,7 @@ def run_command(arg):
         return "[gemini] usage: /gemini [--dry] [--pro] <prompt>  (advisory only; redacted, budgeted, ledgered)"
     try:
         backend = choose_backend()
-        model = ("gemini-2.5-pro" if backend == "vertex" else None) if pro else None
+        model = {"vertex": "gemini-2.5-pro", "vertex-project": "gemini-3.1-pro-preview"}.get(backend) if pro else None
         r = generate(prompt, purpose="interactive /gemini command", model=model, max_output_tokens=4096, dry_run=dry)
     except GatewayError as e:
         return f"[gemini] refused: {e}"
@@ -314,5 +362,6 @@ def status_line():
     if name is None:
         return "Gemini         : not configured (GEMINI_API_KEY or GOOGLE_API_KEY in ~/.env)"
     ok, _ = Ledger().verify()
-    return (f"Gemini         : {name} {model_for(name)} · budget {Budget().used():,}/{Budget().limit:,} tokens · "
+    where = f" ({gcp_settings()[0]}/{gcp_settings()[1]})" if name == "vertex-project" else ""
+    return (f"Gemini         : {name}{where} {model_for(name)} · budget {Budget().used():,}/{Budget().limit:,} tokens · "
             f"ledger {'intact' if ok else 'BROKEN'}")
