@@ -163,3 +163,26 @@ def test_qsim_fast_path_matches_reference_simulator():
     for seed in range(2):
         c = random_circuit(10, 6, seed)
         assert np.allclose(sim_qsim.probabilities(c), probabilities(c), atol=1e-6)
+
+
+def test_hardware_rules_and_budget_stop_on_a_fake_heron(tmp_path):
+    pytest.importorskip("qiskit_aer"); fp = pytest.importorskip("qiskit_ibm_runtime.fake_provider")
+    from rqc.hardware import BudgetExhausted, HardwareSampler, best_path, choose_backend
+    fez, kingston, torino = fp.FakeFez(), fp.FakeKingston(), fp.FakeTorino()
+    assert choose_backend([torino, kingston, fez]).name == "fake_fez"           # alphabetical first
+    path, cost = best_path(fez, 8)
+    assert len(path) == len(set(path)) == 8 and cost > 0
+    cz = {frozenset(q) for q in fez.target["cz"]}
+    assert all(frozenset((a, b)) in cz for a, b in zip(path, path[1:]))
+    assert best_path(fez, 8) == (path, cost)                                     # deterministic
+    s = HardwareSampler(fez, path, str(tmp_path / "evidence"), budget_seconds=2.0, usage_of=lambda job: 1.0)
+    c = random_circuit(8, 2, 0)
+    idx = s(c, 200)
+    assert len(idx) == 200 and s.spent == 1.0
+    files = list((tmp_path / "evidence").iterdir())
+    rec = json.loads(files[0].read_text())
+    assert rec["circuit_sha256"] == c.digest() and rec["layout"] == path and sum(rec["counts"].values()) == 200
+    s(c, 200)
+    with pytest.raises(BudgetExhausted):
+        s(c, 200)                                                                 # 2 s spent of 2 s: no third job
+    assert len(list((tmp_path / "evidence").iterdir())) == 2
