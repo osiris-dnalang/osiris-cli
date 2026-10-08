@@ -1,0 +1,120 @@
+# BENCH-G1 — does Gemini write better Synthesizer candidates than the local mentor?
+
+Pre-registered 2026-10-07, before either arm is run. Results are recorded below this line in a
+later commit, whichever way they fall; nothing here is changed after the first arm starts.
+
+## Question
+On OSIRIS's frozen benchmark, are candidates written by Gemini (Vertex AI `gemini-2.5-flash`,
+reached through `osiris_cli.gemini_gateway`, exactly as the console's Synthesizer calls it) delivered
+— accepted by the hidden acceptance tests — for more tasks than candidates written by the local
+mentor `qwen2.5-coder:7b` (Ollama)?
+
+## Fixed conditions
+- Code: osiris-cli v4.4.0 (commit db371b66), `osiris_bench.py` unmodified.
+- Suite: all 9 tasks, `suite_sha256` 09037df636145b1e…; runner `runner_sha256` f70c781f199f6a1c….
+  A run whose recorded hashes differ is invalid for this comparison.
+- k = 3 candidates per task, the bench's own verify loop; same prompts by construction.
+- Arm G: `osiris_bench.py --backend gemini --k 3`. Arm Q: `osiris_bench.py --backend ollama
+  --model qwen2.5-coder:7b --k 3`. One run per arm, on this machine, results in ~/.osiris/bench.
+- Arm G first; arm Q only when no other process is using Ollama. Model sampling settings are each
+  backend's defaults as OSIRIS uses them; nothing is tuned.
+- A backend error or timeout on a task counts as not delivered for that task. Arm G is capped at
+  400,000 Gemini tokens for this round; if the cap stops it, the round is reported incomplete.
+
+## Primary outcome and decision rule
+Per task, `delivered` (bench ledger field). Paired by task, let G+ = tasks delivered by G and not Q,
+Q+ = delivered by Q and not G. Exact one-sided sign test on the discordant tasks, α = 0.05:
+- **G better** if G+ ≥ Q+ + 3 and the sign test gives p < 0.05 (with 9 tasks this needs at least 5
+  discordant tasks all favouring G, or 6 of 7, …);
+- **Q better** by the mirror rule;
+- otherwise **no detectable difference at this size** (n = 9 tasks is small; this is a pilot).
+
+## Secondary (reported, not judged)
+`pass_at_1` and `oracle_at_k` counts, `false_confidence` totals, wall-clock seconds per arm,
+Gemini tokens used (gateway ledger), per-task outcomes.
+
+## Results
+
+### Protocol deviation (recorded before any valid result was read)
+Run `bench-20261007T160505Z-dbefc4` (backend gemini, k=3, 2026-10-07T16:05:05Z) was launched by
+mistake from v4.3.2 code, which predates the gateway: every Gemini request was refused (HTTP 401,
+AQ-type key sent to the Developer API) and all 9 tasks recorded as not delivered. It is invalid for
+this comparison (wrong code; the bench ledger records `commit: null`, so it is identified by run id
+and its 401 errors). It used no Gemini tokens. It stays in the append-only bench ledger.
+
+### Arm G — `bench-20261007T160545Z-6656f3` (v4.4.0, Vertex gemini-2.5-flash, k=3), complete
+suite 09037df6…, runner f70c781f… (as registered).
+
+| task | delivered | pass@1 | oracle@k | false confidence | seconds |
+|---|---|---|---|---|---|
+| backend_breaker | yes | yes | yes | 0 | 34 |
+| backlog | no | no | no | 0 | 33 |
+| claims | no | yes | yes | 0 | 213 |
+| gaps | no | no | no | 0 | 314 |
+| genome_ledger | no | no | no | 1 | 320 |
+| nclm_corpus | no | yes | yes | 0 | 270 |
+| nclm_eval | yes | yes | yes | 0 | 130 |
+| repl_commands | no | yes | yes | 0 | 350 |
+| stub_detector | no | yes | yes | 0 | 261 |
+| **total** | **2 / 9** | **6 / 9** | **6 / 9** | **1** | **1,924** |
+
+Gemini tokens used by arm G: 103,415 (gateway budget file, 13,023 → 116,438).
+
+### Arm Q — not yet run validly
+
+- Run `bench-20261008T095059Z-4f9280` (2026-10-08T09:50:59Z) was stopped after 46 s, before any task
+  finished: `qwen2.5-coder:7b` is not installed in this machine's Ollama, and the console's
+  `query_model` silently substituted the first installed model (`qwen2.5:3b`) while the ledger
+  recorded the requested name. It has a `bench_run_start` entry only and is invalid for this comparison.
+- The Ollama journal (from 2026-04-11) shows pulls but no deletes, and there is no `qwen2.5-coder`
+  manifest, so earlier ledger runs labelled `qwen2.5-coder:7b` (`f30690`, `0b58b2`, `0cf8d7`) also ran a
+  substituted model. Their labels are not corrected in the append-only ledger; this note is the record.
+- Unterminated runs (`0cf8d7`, `4f9280`) are left without an end entry, as the bench's design
+  specifies for killed runs; no end entry was written by hand.
+- Before a valid arm Q: either install `qwen2.5-coder:7b` (as registered) or amend the arm to an
+  installed model; the choice is recorded here before the run.
+- Decision (2026-10-08, before the valid run): install the registered model. `ollama pull
+  qwen2.5-coder:7b` → digest `dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364`. Arm Q is valid only if its log shows no
+  "Switching to installed model" message.
+
+### Observation (not a registered outcome)
+Arm G's first candidate passed the hidden tests on 6 of 9 tasks but only 2 were delivered: on 4
+tasks the candidate's own test failed, so the loop discarded code the hidden tests accept.
+
+### Arm Q — `bench-20261008T095637Z-b8dcf2` (v4.4.0, Ollama qwen2.5-coder:7b digest dae161e2…, k=3), complete
+suite 09037df6…, runner f70c781f… (as registered); no "Switching to installed model" message in the log.
+
+| task | delivered | pass@1 | oracle@k | seconds |
+|---|---|---|---|---|
+| backend_breaker | no | no | no | 372 |
+| backlog | no | no | no | 58 |
+| claims | no | no | no | 42 |
+| gaps | no | no | no | 227 |
+| genome_ledger | yes | yes | yes | 174 |
+| nclm_corpus | no | no | no | 269 |
+| nclm_eval | no | no | no | 368 |
+| repl_commands | no | no | no | 439 |
+| stub_detector | no | no | no | 374 |
+| **total** | **1 / 9** | **1 / 9** | **1 / 9** | **2,323** |
+
+False confidence: 2. Local CPU only; no cloud tokens.
+
+### Primary outcome (as registered)
+Delivered by G and not Q: backend_breaker, nclm_eval (G+ = 2). Delivered by Q and not G: genome_ledger (Q+ = 1).
+Discordant tasks: 3. Exact one-sided sign test: p = 0.500 for "G better", p = 0.875 for "Q better".
+G+ − Q+ = 1 < 3. **Verdict: no detectable difference at this size.**
+
+### Secondary (reported, not judged)
+| | Arm G (Gemini 2.5 Flash, Vertex) | Arm Q (qwen2.5-coder:7b, local) |
+|---|---|---|
+| delivered | 2 / 9 | 1 / 9 |
+| hidden pass, first candidate (pass@1) | 6 / 9 | 1 / 9 |
+| hidden pass, any of 3 (oracle@k) | 6 / 9 | 1 / 9 |
+| false confidence | 1 | 2 |
+| wall clock | 1,924 s | 2,323 s |
+| resources | 103,415 Gemini tokens | local CPU |
+
+On pass@1, G passed 6 tasks Q did not and Q passed 1 task G did not (one-sided sign test p = 0.0625; not a
+registered outcome). Read together with the arm G observation above: Gemini writes code the hidden tests accept far
+more often, but the loop delivers little of it because the candidate's own test fails; delivery, the registered
+measure, does not separate the two models at n = 9.
