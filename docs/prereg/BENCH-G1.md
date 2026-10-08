@@ -80,3 +80,41 @@ Gemini tokens used by arm G: 103,415 (gateway budget file, 13,023 → 116,438).
 ### Observation (not a registered outcome)
 Arm G's first candidate passed the hidden tests on 6 of 9 tasks but only 2 were delivered: on 4
 tasks the candidate's own test failed, so the loop discarded code the hidden tests accept.
+
+### Arm Q — `bench-20261008T095637Z-b8dcf2` (v4.4.0, Ollama qwen2.5-coder:7b digest dae161e2…, k=3), complete
+suite 09037df6…, runner f70c781f… (as registered); no "Switching to installed model" message in the log.
+
+| task | delivered | pass@1 | oracle@k | seconds |
+|---|---|---|---|---|
+| backend_breaker | no | no | no | 372 |
+| backlog | no | no | no | 58 |
+| claims | no | no | no | 42 |
+| gaps | no | no | no | 227 |
+| genome_ledger | yes | yes | yes | 174 |
+| nclm_corpus | no | no | no | 269 |
+| nclm_eval | no | no | no | 368 |
+| repl_commands | no | no | no | 439 |
+| stub_detector | no | no | no | 374 |
+| **total** | **1 / 9** | **1 / 9** | **1 / 9** | **2,323** |
+
+False confidence: 2. Local CPU only; no cloud tokens.
+
+### Primary outcome (as registered)
+Delivered by G and not Q: backend_breaker, nclm_eval (G+ = 2). Delivered by Q and not G: genome_ledger (Q+ = 1).
+Discordant tasks: 3. Exact one-sided sign test: p = 0.500 for "G better", p = 0.875 for "Q better".
+G+ − Q+ = 1 < 3. **Verdict: no detectable difference at this size.**
+
+### Secondary (reported, not judged)
+| | Arm G (Gemini 2.5 Flash, Vertex) | Arm Q (qwen2.5-coder:7b, local) |
+|---|---|---|
+| delivered | 2 / 9 | 1 / 9 |
+| hidden pass, first candidate (pass@1) | 6 / 9 | 1 / 9 |
+| hidden pass, any of 3 (oracle@k) | 6 / 9 | 1 / 9 |
+| false confidence | 1 | 2 |
+| wall clock | 1,924 s | 2,323 s |
+| resources | 103,415 Gemini tokens | local CPU |
+
+On pass@1, G passed 6 tasks Q did not and Q passed 1 task G did not (one-sided sign test p = 0.0625; not a
+registered outcome). Read together with the arm G observation above: Gemini writes code the hidden tests accept far
+more often, but the loop delivers little of it because the candidate's own test fails; delivery, the registered
+measure, does not separate the two models at n = 9.
