@@ -65,6 +65,13 @@ def _load_dotenv():
                         os.environ[key] = value
         except OSError:
             pass
+    # keys kept in Google Secret Manager (opt-in: OSIRIS_SECRETS_SOURCE=gcp + OSIRIS_GCP_PROJECT)
+    try:
+        from osiris_cli import gcp_secrets
+        if gcp_secrets.wanted():
+            gcp_secrets.load_into_environ()
+    except Exception:  # noqa: BLE001 - optional; never blocks startup
+        pass
 
 
 _load_dotenv()
