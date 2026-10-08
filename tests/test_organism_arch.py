@@ -73,3 +73,13 @@ def test_a_checkpoint_round_trips_into_its_own_architecture(home):
     again, aopt = otc._organism_build()
     assert otc._organism_load(again, aopt)[0] == 11
     assert all(np.array_equal(a.data, b.data) for a, b in zip(model.parameters(), again.parameters()))
+
+
+def test_the_core_reports_its_architecture_and_scorer(home, monkeypatch):
+    from osiris_cli.living import SCORER, NclmCore
+
+    monkeypatch.setattr(otc, "_organism_state", {"model": None, "optimizer": None, "step": 0, "history": []})
+    core = NclmCore(otc)
+    d = core.describe()
+    assert (d["arch"], d["n_params"], d["scorer"]) == ("crsm", 726_304, SCORER) and core.scorer() == SCORER
+    assert d["config"]["phase_conjugate"] and d["config"]["positional"] == "phi" and d["nclm_path"]

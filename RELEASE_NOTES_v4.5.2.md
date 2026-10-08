@@ -42,6 +42,12 @@ existing checkpoints load as before.
 **Two regression tests pin it** (`tests/test_sovereign_transformer.py`): the same logits with and without
 gradients, and the same loss after training. Both fail on v4.5.1.
 
+**No reference cycles without gradients.** The corrector's backward hook is attached only when gradients are on.
+The first version of this fix attached it under `no_grad` too. The hook is a closure that refers to its own
+tensor, so it kept each scoring or generation graph alive until the cycle collector ran: 191 MB peak for 10
+forwards of the live core, against 21 MB now. Logits are unchanged. A test asserts that a no-grad forward
+leaves nothing for the collector.
+
 **The early-stopping incident may have been this.** The pattern recorded for 2026-09-30 is: training loss
 fell 3.9 → 1.7 nats/byte while held-out rose 7.2 → 9.9 bits/byte, worse than uniform. That incident is why
 early stopping exists (RELEASE_NOTES_v4.2.0.md), and it was put down to overfitting. It is what this defect
@@ -74,6 +80,10 @@ Unchanged and still comparable:
 
 - **Scores carry their scorer.** Each held-out score now has a 5th field, `SCORER = 2`. Scores without it
   were written before this release.
+  - The tag comes from the `osiris.nclm` package actually loaded (`SCORING_FORWARD`), not from the console.
+  - An older copy of the model code on `PYTHONPATH`, or the phone's fallback checkout, therefore writes scores
+    tagged 1, and they never count.
+  - `--rescore-only` refuses to run on such a copy and names its path.
 - **The gate counts only current scores.** Older scores are counted as `stale` and shown in `/osiris`, in the
   gate note and in the mentor's state line, with how to replace them.
 - **Merging prefers the newer scorer.** When stats are merged, a score from the newer scorer wins over an
@@ -92,7 +102,9 @@ Unchanged and still comparable:
 2. Quit every OSIRIS console from v4.5.1 or earlier. An old console merges by step only and can write old
    scores back.
 3. Optionally, keep the old scores: `cp ~/.osiris/living/stats.json ~/.osiris/living/stats.v4.5.1.json`.
-4. Run `osiris train --rescore-only`. This scores the same weights with the fixed scorer. The next
+4. Run `osiris train --rescore-only`. This scores the same weights with the fixed scorer, and refuses if the
+   loaded model code is older than v4.5.2. Its message also counts any old scores that have no exchange left in
+   the ledger to rescore; those stay uncounted. The next
    `osiris train` run would also rescore, but only after training has changed the weights, mixing the fix's
    effect with training's.
 
@@ -101,8 +113,13 @@ and beat the unigram baseline, the gate opens and the core starts answering in i
 `voice: "core"` in the exchange ledger. That is the gate working as designed, on scores that now measure the
 trained network.
 
-The phone harness (osiris-mobile-termux) shares this checkpoint format. Until it runs v4.5.2's `osiris.nclm`,
-its own scoring still skips the corrector.
+The phone harness (osiris-mobile-termux) shares this checkpoint format:
+- Checkpoints move between versions in both directions unchanged.
+- Any score or generated text from a pre-4.5.2 harness measures the network without the corrector, so don't copy
+  its stats into a v4.5.2 `stats.json`.
+- Update `~/crsm/osiris-cli` on the phone too: the console falls back to it for `osiris.nclm`.
+- To check which model code is loaded:
+  `python -c "import osiris.nclm as n; print(n.__file__, getattr(n, 'SCORING_FORWARD', 1))"`. It must print 2.
 
 ## New — NCLM-ARCH-1 pre-registration, and the code it needs (not run)
 
@@ -116,6 +133,13 @@ its own scoring still skips the corrector.
   20,000 simulated experiments per scenario reproduce the power table.
 - **What was seen first.** One-seed checks made before registration hint that the corrector may not help. The
   pre-registration lists them.
+- **Amendment 1, before any run.** It records:
+  - the memory fix above;
+  - scorer tagging;
+  - a preflight that compares the watched code with the latest commit to the pre-registration or its execution
+    log;
+  - that the power basis (pilot replay seeds, scored before the fix) may understate run-to-run variance;
+  - a held-out score at the last step both runs of a seed reached, reported but not judged.
 
 `python experiments/nclm_arch1/run.py --check` runs the preflight, then `run.py` runs the experiment and
 `--analyse` writes the result.
@@ -133,6 +157,16 @@ What it needed:
   which always applies T-lock, the corrector, the pilot-wave factor and the 1/φ scale. `pilot_wave` and
   `golden_scale` act only on the plain block. This is documented in `SovereignTransformerV2`; ARCH-1 is
   therefore a bundle comparison.
+
+## Companion change: dnalang-core 0.3.0
+
+Circuit lineage on the run ledger
+([osiris-dnalang/dnalang-core#1](https://github.com/osiris-dnalang/dnalang-core/pull/1)):
+- `evolve(..., ledger=...)` and `breed_from_ranking(..., ledger=...)` record each generation's genomes with
+  parents, operator, fitness and, optionally, the compiled circuit's hash.
+- `dnalang trace-lineage` walks an evolved circuit back to generation 0.
+- dnalang's `ledger.py` is unchanged, so this console's genome ledger is unaffected.
+- `pyproject.toml` installs dnalang from git `main`, so 0.3.0 arrives when that PR merges.
 
 ## Claims register
 
@@ -162,9 +196,15 @@ Other changes to the register:
   they are re-scored (or re-run). Only the synthetic numbers above are measured.
 - **NCLM-1 may use the old scorer.** Its evaluator (`NCLM-1_v1_evaluate.py`, not in this repository) should
   pin v4.5.2's scoring forward before any run, if it uses `NclmCore.bits_per_byte` or `prepost.byte_nats`.
-- **The corrector is still batch-dependent.** It is a threshold switch on Γ averaged over the whole batch.
-  Training and scoring now apply the same rule, but whether it fires can in principle depend on batch
-  composition. Γ has never been seen near 0.3.
+- **The corrector is still batch-dependent.** It is a threshold switch on Γ averaged over the whole window and
+  batch.
+  - Training and scoring now apply the same rule, but whether it fires can in principle depend on batch
+    composition and on later bytes.
+  - That is the one exception to "causal decoder" (NCLM_MECHANICS).
+  - Γ has never been seen near 0.3: the minimum across checks was 0.57, including single-byte inputs.
+- **The pilot-wave factor depends on the window length.** Its decay is λ = 1/T, so a reply shorter than 127
+  bytes is scored with attention scaling that the batch trainer, which always uses T = 127, never trains.
+  Console `learn()` uses the same variable windows. This was true before this release too.
 - **The T-lock diagonal is still detached.** It is read from the scores' values, so no gradient reaches q and
   k through it. Unchanged.
 - **The phase-conjugate `zero_point` is still never used.** It is kept so that checkpoint indices do not move.

@@ -200,9 +200,11 @@ def test_v452_computations():
     phi = (1 + math.sqrt(5)) / 2
     bound = claims._check_lines("one_minus_phi_power", (8, (0.993, 0.999, 0.9992)))
     assert bound[0] == f"1 - phi^-8 = {1 - phi ** -8:.6f}" == "1 - phi^-8 = 0.978714"
-    assert bound[1].startswith("3 of the 3 published fidelities cited exceed it")
-    cover = claims._check_lines("multiple_coverage", (46.0, 0.15, 100.0, 300.0))
-    assert "94% of 100-300 µs" in cover[0] and "from n = 3" in cover[1] and "above 117.3 µs" in cover[1]
+    assert bound[1].startswith("3 of the 3 cited Bell-state or Bell-derived gate fidelities exceed it")
+    cover = claims._check_lines("multiple_coverage", (46.0, 0.10, 100.0, 300.0))
+    assert "79% of 100-300 µs" in cover[0] and "from n = 5" in cover[1] and "above 207.0 µs" in cover[1]
+    wide = claims._check_lines("multiple_coverage", (46.0, 0.15, 100.0, 300.0))
+    assert "94% of 100-300 µs" in wide[0] and "from n = 3" in wide[1] and "above 117.3 µs" in wide[1]
     table = claims._check_lines("phi_positional", (128, 51.843, 0.946))
     assert "sine 0.305-0.786" in table[0] and "cosine 0.227-0.584" in table[0]
     assert "longest period 27.7 positions" in table[1] and "span 2.58x" in table[1] and "8,660x" in table[1]
@@ -272,7 +274,11 @@ def test_roadmap_texts_that_touch_two_entries(text, also):
     "We fine-tuned a transformer on quantum chemistry data; its attention weights look sparse.",
     "4-bit quantization reduces the coherence of long answers.", "How does in-context learning work?",
     "Error correction for LLM-generated code: retry on syntax errors.",
-    "A phase-conjugate mirror corrects aberrations in the laser beam.", "The token budget is 4,000 tokens."])
+    "A phase-conjugate mirror corrects aberrations in the laser beam.", "The token budget is 4,000 tokens.",
+    # found by review after the first draft (2026-10-08)
+    "a glass of purified water", "fraction of purified protein", "Gemma 2 uses hybrid attention with sliding windows",
+    "Quantum optimal control draws attention from industry", "the T2 instance was slow after 8-bit quantization",
+    "There is a T-lock on this door"])
 def test_v452_entries_do_not_overmatch(text):
     assert not set(NEW_V452) & {c.id for c in claims.match(text)}, text
 
@@ -312,6 +318,11 @@ def test_crsm_arch_points_at_its_pre_registration():
     [(kind, ref, _)] = c.evidence
     assert kind == "file" and ref == "osiris-cli/experiments/nclm_arch1/PRE_REGISTRATION.md"
     assert (Path(__file__).resolve().parents[1] / "experiments" / "nclm_arch1" / "PRE_REGISTRATION.md").exists()
+
+
+def test_the_chsh_shell_command_is_not_the_chsh_test():
+    assert "CHSH_TEST" not in {c.id for c in claims.match("run chsh -s /bin/zsh to change your shell")}
+    assert "CHSH_TEST" in {c.id for c in claims.match("our CHSH value was 2.4")}
 
 
 def test_rendering_the_v452_entries(tmp_path):

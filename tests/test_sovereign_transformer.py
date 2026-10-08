@@ -873,6 +873,25 @@ class TestSovereignMechanics:
             scored = float(cross_entropy_loss(model.forward(x), y).data)
         assert abs(trained - scored) < 1e-4, (trained, scored)
 
+    def test_v2_no_grad_forward_leaves_no_reference_cycles(self, monkeypatch):
+        """Scoring and generation must not keep their graphs alive: the corrector's backward hook used to be
+        attached under no_grad, a self-referencing closure that held every forward until gc ran."""
+        import gc
+
+        from osiris.nclm.autograd import no_grad
+
+        fired = self._corrector_fired(monkeypatch)
+        model = self._live_like_v2(seed=13)
+        x = (np.arange(24, dtype=np.int64) * 5 % 256).reshape(1, 24)
+        gc.collect()
+        gc.disable()
+        try:
+            with no_grad():
+                model.forward(x)
+            assert any(fired) and gc.collect() == 0
+        finally:
+            gc.enable()
+
     def test_v2_state_dict_roundtrip(self):
         from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
         from osiris.nclm.autograd import no_grad

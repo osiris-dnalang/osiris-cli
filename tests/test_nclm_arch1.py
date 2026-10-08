@@ -60,3 +60,9 @@ def test_divergence_one_pair_is_excluded_two_make_it_inconclusive():
 @pytest.mark.parametrize("n", [7, 8])
 def test_the_t_quantile_matches_the_pair_count(n):
     assert arch1.T95[n - 1] == {7: 1.943, 8: 1.895}[n]
+
+
+def test_common_step_is_the_last_eval_both_runs_reached():
+    c = {"seed": 200, "evals": [(0, 9.0), (200, 6.0), (400, 5.5), (600, 5.4)]}
+    d = {"seed": 200, "evals": [(0, 9.1), (200, 5.9), (400, 5.6)]}
+    assert arch1.common_step(c, d) == {"seed": 200, "step": 400, "crsm": 5.5, "standard": 5.6}

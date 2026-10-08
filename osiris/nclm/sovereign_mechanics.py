@@ -36,7 +36,7 @@ import math
 import numpy as np
 from typing import Optional
 
-from .autograd import Tensor, softmax
+from .autograd import Tensor, softmax, _is_grad_enabled
 from .layers import Module, Linear, LayerNorm, Dropout
 
 # ===========================================================================
@@ -213,8 +213,12 @@ class PhaseConjugateCorrector(Module):
         #    Time-reverse via negating odd-indexed dimensions
         x_conj_data = x.data.copy()
         x_conj_data[:, :, 1::2] *= -1.0
-        x_conjugated = Tensor(x_conj_data, requires_grad=x.requires_grad)
-        if x.requires_grad:
+        # The backward hook only when gradients are on (autograd.py's rule): the closure refers to
+        # x_conjugated itself, so attaching it under no_grad left a reference cycle that held every
+        # scoring and generation graph until the cycle collector ran (hundreds of MB).
+        track = _is_grad_enabled() and x.requires_grad
+        x_conjugated = Tensor(x_conj_data, requires_grad=track)
+        if track:
             x_conjugated._prev = [x]
 
             def _backward():

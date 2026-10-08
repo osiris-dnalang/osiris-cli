@@ -157,17 +157,17 @@ REGISTER: Tuple[Claim, ...] = (
           "The record is three round backend T2 values, 150, 200 and 250 µs, set against 3, 4 and 5 × 46 µs: each "
           "is exactly 0.92 of its prediction because all three are multiples of 50 µs, which a 50 µs base fits "
           "exactly. The stated protocol -- T2 histograms from 1,000 runs per backend and a chi-squared test -- was "
-          "not run, and τ_base was fitted to the same hardware. As worded the test cannot fail: ±15 % bands around "
-          "n × 46 µs overlap from n = 3 (computed below), while the document's absolute tolerance, δ < 0.15 τ_base "
-          "= 6.9 µs, rejects all three points. Its τ_mem = 1/Λ_Φ is 4.6×10⁷ s, as it notes; 46 µs keeps the "
-          "digits, not the value.",
+          "not run, and τ_base was fitted to the same hardware. Its success criterion, T2 within ±10 % of a "
+          "multiple, can barely fail: the bands overlap from n = 5, so every T2 above 207 µs passes and 79 % of "
+          "100-300 µs is covered (computed below); its other tolerance, δ < 0.15 τ_base = 6.9 µs, rejects all "
+          "three points. Its τ_mem = 1/Λ_Φ is 4.6×10⁷ s, as it notes; 46 µs keeps the digits, not the value.",
           (("file", "osiris-cli/falsifiable_predictions.md", "Prediction 1 and the validation tables"),),
           (r"coherence[\s-]*(times?[\s-]*)?quantiz\w*", r"τ[\s_]*(base|mem)\b|\btau[\s_-]*(base|mem)\b",
-           r"\bt\s*_?2\b[^.\n]{0,30}?(quantiz\w*|integer multiples?)"),
+           r"\bt\s*_?2\b[^.\n]{0,30}?(clusters?|quantiz\w*)[^.\n]{0,20}?multiples?"),
           testable="Fix the base in advance (φ⁸ = 46.98 µs, not fitted), take per-qubit T2 from calibration "
                    "snapshots of three or more backends, and compare the share within ±5 % of a multiple with the "
                    "share a smooth fit to the same histogram predicts.",
-          checks=(("multiple_coverage", (46.0, 0.15, 100.0, 300.0)),)),
+          checks=(("multiple_coverage", (46.0, 0.10, 100.0, 300.0)),)),
     Claim("PENTERACT_COSMOLOGY", "Zero-parameter predictions of Ω_Λ, w, n_s and r = 0.00298 from seven geometric "
           "constants (P = 10⁻⁹)", "OVERCLAIM",
           "The author's own concordance analysis: four effective parameters for four independent "
@@ -189,7 +189,7 @@ REGISTER: Tuple[Claim, ...] = (
     Claim("CHSH_TEST", "A Bell (CHSH) violation on IBM hardware (Feb 2026 test)", "REFUTED",
           "The test reached max |S| = 0.106, far below even the local bound of 2 (computed below); a working "
           "CHSH experiment lands between 2 and 2√2.",
-          (SELFTEST,), (r"\bchsh(?![a-z0-9])", r"bell (inequality|violation)"),
+          (SELFTEST,), (r"\bchsh(?![a-z0-9])(?!\s+-[a-z])", r"bell (inequality|violation)"),
           checks=(("chsh", (0.106,)),)),
     Claim("ZZ_UNIVERSAL", "The ZZ coupling period is universal across qubit pairs", "REFUTED",
           "Feb 2026 self-test: periods range 6.7-333 µs (coefficient of variation 123 %) -- pair-specific.",
@@ -220,12 +220,13 @@ REGISTER: Tuple[Claim, ...] = (
           "what QUANTUM_ADVANTAGE lists.",
           (GUIDE,),
           (r"quantum[\s-]*(guided|aided|assisted|enhanced)\s+(attention|in[\s-]*context|icl|transformers?|llms?)",
-           r"quantum[\w\s-]{0,30}?\b(guid\w*|steer\w*|modulat\w*|bias\w*|shap\w*|drives?|controls?|advantage in)\b"
+           r"quantum[\w\s-]{0,30}?\b(guid\w*|steer\w*|modulat\w*|bias\w*|shap\w*|drives?|advantage in)\b"
            r"[^.\n]{0,20}?\battention",
            r"quantum[^.\n]{0,40}?\bin[\s-]*context learning|\bin[\s-]*context learning\b[^.\n]{0,40}?quantum",
            r"quantum\b[^.\n]{0,30}?\b(saves?|reduc\w*|cuts?)\b[^.\n]{0,30}?\btokens?\b",
            r"hybrid[\s-]*(pilot[\s-]*wave|quantum)[^.\n]{0,30}?(transformer|attention|llm|language model)|"
-           r"\bhybrid attention\b", r"\bncqm\b|non[\s-]*causal[^.\n]{0,30}?quantum memory"),
+           r"\bhybrid attention\b[^.\n]{0,60}?quantum|quantum[^.\n]{0,60}?\bhybrid attention\b",
+           r"\bncqm\b|non[\s-]*causal[^.\n]{0,30}?quantum memory"),
           testable="Pre-registered: one model and dataset with the quantum-derived gate, the same gate computed "
                    "classically, and a shuffled gate; held-out tasks, tokens to a fixed accuracy, several seeds, "
                    "the run as the unit."),
@@ -351,9 +352,10 @@ REGISTER: Tuple[Claim, ...] = (
           "5 replay seeds, 79 lessons): +0.067 bits/byte, positive on 20/20 items -- but about 86 % of the "
           "variance is the training run (seed means 0.030-0.101), and the trained core (5.56 bits/byte) is "
           "still worse than a unigram model of the same replies (4.68) on every item. Learning is "
-          "measurable and small; the core is far from its speaking gate. Both pilots were scored before v4.5.2 "
-          "(prepost, under no_grad), which skipped a layer training used in every block (NCLM_PC_CORRECTOR); "
-          "they have not been re-scored, so these figures describe a different network from the one trained.",
+          "measurable and small; the core is far from its speaking gate. Both pilots were scored before v4.5.2. "
+          "If they were scored with osiris_cli.prepost (which runs without gradients; the pilot runner is not in "
+          "this repository), they skipped a layer training used in every block (NCLM_PC_CORRECTOR) and describe a "
+          "different network from the one trained. They have not been re-scored.",
           (("doi", "10.5281/zenodo.23075229", "NCLM-GATE-PILOT-0"),
            ("file", "experiments/nclm_gate_pilot1/analysis/REPORT.md", "NCLM-GATE-PILOT-1 report")),
           (r"\bnclm\b", r"(core|osiris)[^.\n]{0,30}\blearn\w*", r"living (language )?model"),
@@ -362,7 +364,8 @@ REGISTER: Tuple[Claim, ...] = (
     Claim("NCLM_MECHANICS", "The NCLM core is a non-causal, physics-based model: pilot-wave non-local attention, "
           "torsion-locked attention and phase-conjugate positional encoding", "NOT_MEASURED",
           "Ordinary transformer parts under physics names (osiris/nclm). The core is a causal decoder: it masks "
-          "future positions like any autoregressive model. 'Pilot-wave' attention multiplies the logits by a fixed "
+          "future positions like any autoregressive model (one exception: the corrector's on/off switch, Γ, is "
+          "pooled over the whole window and batch, but it has never been seen near its threshold). 'Pilot-wave' attention multiplies the logits by a fixed "
           "1 + exp(-|i-j|/T) -- a position-dependent temperature between about 1.37 and 2 with no parameter, which "
           "shifts with context length (distance 5: 1.54 at T = 8, 1.96 at T = 128). 'Torsion-locked' attention is a "
           "learnable per-head scale (initially sin 51.843° = 0.786) plus a bonus on each position's own score "
@@ -375,7 +378,8 @@ REGISTER: Tuple[Claim, ...] = (
            ("file", "osiris-cli/osiris/nclm/transformer.py", "_build_causal_mask, SovereignConfig")),
           (r"pilot[\s-]*wave[^.\n]{0,30}?(attention|transformer|modulation)|"
            r"(attention|transformer)[^.\n]{0,30}?pilot[\s-]*wave",
-           r"torsion[\s-]*lock\w*[\s-]+attention|\bt-lock\b", r"phase[\s-]*conjugat\w*[\s-]+positional",
+           r"torsion[\s-]*lock\w*[\s-]+attention|\bt-lock\b[^.\n]{0,40}?(attention|stabili\w*|torsion|θ|theta)|"
+           r"(attention|torsion)[^.\n]{0,40}?\bt-lock\b", r"phase[\s-]*conjugat\w*[\s-]+positional",
            r"non[\s-]*local[\s,]+non[\s-]*causal|non[\s-]*causal[\s-]+living|\bncllm\b|\bnc-lm\b",
            r"information[\s-]*manifold collapse|non[\s-]*local correlation factor"),
           testable="Whether these parts help as architecture is CRSM_ARCH (NCLM-ARCH-1, pre-registered); the "
@@ -394,7 +398,7 @@ REGISTER: Tuple[Claim, ...] = (
           (("file", "osiris-cli/osiris/nclm/sovereign_mechanics.py", "PhaseConjugateCorrector"),
            ("file", "osiris-cli/tests/test_sovereign_transformer.py", "v4.5.2 regression: same logits with and "
             "without gradients"), ("file", "osiris-cli/RELEASE_NOTES_v4.5.2.md", "the train/eval fix")),
-          (r"phase[\s-]*conjugat\w*[\s-]+(error[\s-]*correct\w*|corrector)", r"f[\s_]*\{?purified|purified fidelity",
+          (r"phase[\s-]*conjugat\w*[\s-]+(error[\s-]*correct\w*|corrector)", r"(?<![a-z])f[\s_]*\{?purified|purified fidelity",
            r"zero[\s-]*point integrity"),
           testable="Whether the layer helps the model is part of CRSM_ARCH (NCLM-ARCH-1, pre-registered, with "
                    "the rest of the CRSM block); alone it needs a leave-one-out follow-up."),
@@ -486,7 +490,7 @@ def _check_lines(name: str, args: Sequence) -> List[str]:
         bound = 1 - ((1 + math.sqrt(5)) / 2) ** -n
         above = [f for f in published if f > bound]
         return [f"1 - phi^-{n} = {bound:.6f}",
-                f"{len(above)} of the {len(published)} published fidelities cited exceed it: "
+                f"{len(above)} of the {len(published)} cited Bell-state or Bell-derived gate fidelities exceed it: "
                 + ", ".join(f"{f:g}" for f in above)]
     if name == "multiple_coverage":
         base, tol, lo, hi = args

@@ -48,7 +48,8 @@ HELDOUT_EVERY = 5
 # Version of the forward pass that held-out scores come from, stored as a score's 5th field. Scores without
 # it (before v4.5.2) were computed with the phase-conjugate corrector skipped -- a layer the core trains with
 # in every block -- so they measure a different network: they do not count toward the gate, and
-# `osiris train --rescore-only` replaces them.
+# `osiris train --rescore-only` replaces them. A score is tagged with the SCORING_FORWARD of the osiris.nclm
+# actually loaded (NclmCore.scorer), so a stale copy of the model code cannot write a "current" score.
 SCORER = 2
 TRAIN_STEPS_PER_EXCHANGE = 3
 SCORE_WINDOWS = 2
@@ -489,12 +490,23 @@ class NclmCore:
         sched = getattr(opt, "schedule", None)
         return sched.get_lr(opt.step_count, opt.base_lr) if sched else opt.base_lr
 
+    def scorer(self) -> int:
+        """SCORING_FORWARD of the osiris.nclm this core runs on (1 for code without the v4.5.2 fix)."""
+        with self._otc._organism_lock:
+            self._model()        # imports the model code from where the console finds it
+        return self._loaded_scorer()
+
+    @staticmethod
+    def _loaded_scorer() -> int:
+        return int(getattr(sys.modules.get("osiris.nclm"), "SCORING_FORWARD", 1))
+
     def describe(self) -> dict:
         """What a run trains: its architecture, configuration and size (recorded in run manifests)."""
-        with self._otc._organism_lock:
+        with self._otc._organism_lock:   # not reentrant: nothing below may take it again
             model = self._model()["model"]
             return {"arch": getattr(model, "organism_arch", "crsm"), "config": model.config.to_dict(),
-                    "n_params": int(model.num_parameters()), "scorer": SCORER}
+                    "n_params": int(model.num_parameters()), "scorer": self._loaded_scorer(),
+                    "nclm_path": os.path.dirname(getattr(sys.modules.get("osiris.nclm"), "__file__", "") or "")}
 
     def draft(self, prompt: str, max_bytes: int = 160) -> str:
         with self._otc._organism_lock:
@@ -509,6 +521,12 @@ def printable_ratio(text: str) -> float:
         return 0.0
     ok = sum(1 for ch in text if ch.isprintable() or ch in "\n\t")
     return ok / len(text)
+
+
+def core_scorer(core) -> int:
+    """The scorer version a core's scores carry: its own report, or SCORER for a core without one."""
+    fn = getattr(core, "scorer", None)
+    return int(fn()) if callable(fn) else SCORER
 
 
 def scorer_of(score: list) -> int:
@@ -1234,7 +1252,7 @@ class Osiris:
                 with self._lock:
                     if heldout and core_bpb is not None:
                         self.stats["heldout_scores"][key] = [round(core_bpb, 4), round(uni_bpb, 4),
-                                                             int(self.core.step()), idx, SCORER]
+                                                             int(self.core.step()), idx, core_scorer(self.core)]
                     if trained:
                         for b, c in Counter(lesson.encode("utf-8", errors="ignore")).items():
                             self.stats["unigram"][str(b)] = self.stats["unigram"].get(str(b), 0) + c

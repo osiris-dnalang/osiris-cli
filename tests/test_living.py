@@ -190,6 +190,29 @@ def test_a_rescore_by_the_fixed_scorer_wins_over_an_old_score_at_the_same_step(t
     assert json.load(open(o.stats_path))["heldout_scores"]["a"] == [4.9, 4.4, 900, 0, living.SCORER]
 
 
+def test_scores_from_a_stale_copy_of_the_model_code_do_not_count(tmp_path):
+    class StaleCore(FakeCore):
+        def scorer(self):            # an osiris.nclm without SCORING_FORWARD: the pre-v4.5.2 forward
+            return 1
+
+    o, _ = make(tmp_path, core=StaleCore(bpb=1.0))
+    for i in range(6):
+        o.converse(f"message {i}")
+    assert [r[4] for r in o.stats["heldout_scores"].values()] == [1, 1]
+    assert o.gate()["n"] == 0 and o.gate()["stale"] == 2
+
+
+def test_the_mentor_is_told_why_old_scores_do_not_count(tmp_path):
+    o, _ = make(tmp_path)
+    o.stats["heldout_scores"] = {"h0": [9.0, 4.5, 0, 0]}
+    assert "not counted until rescored" in o._state_note(o.gate())
+
+
+def test_the_package_and_the_console_agree_on_the_scorer():
+    import osiris.nclm
+    assert osiris.nclm.SCORING_FORWARD == living.SCORER
+
+
 def test_new_heldout_scores_carry_the_scorer_version(tmp_path):
     o, _ = make(tmp_path)
     for i in range(6):

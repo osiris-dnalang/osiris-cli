@@ -146,6 +146,21 @@ def test_rescore_updates_heldout_exchange_scores(tmp_path):
     assert stats["heldout_scores"][key][4] == train.SCORER
 
 
+def test_rescore_only_refuses_a_stale_copy_of_the_model_code(tmp_path):
+    class StaleCore(FakeCore):
+        def scorer(self):
+            return 1
+
+    o = Osiris(core=None, home=str(tmp_path), out=lambda s: None, background=False)
+    key = o._record({"heldout": True, "learnable": True, "voice": "mentor:x", "user": "q",
+                     "reply": "an answer long enough to score", "index": 0})
+    o.stats["heldout_scores"][key] = [9.9, 4.4, 0, 0]
+    o._save_stats()
+    msg = train.rescore_only(StaleCore(str(tmp_path / "l")), str(tmp_path))
+    assert msg.startswith("not rescored") and "version 1" in msg
+    assert json.load(open(o.stats_path))["heldout_scores"][key] == [9.9, 4.4, 0, 0]
+
+
 def test_rescore_only_replaces_pre_fix_scores_without_training(tmp_path):
     o = Osiris(core=None, home=str(tmp_path), out=lambda s: None, background=False)
     key = o._record({"heldout": True, "learnable": True, "voice": "mentor:x", "user": "q",

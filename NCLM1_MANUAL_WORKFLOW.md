@@ -1,5 +1,7 @@
 # NCLM-1 Manual Collection + Auto-Analysis Workflow
 
+> **v4.5.2:** every bits/byte figure below, including the 7.60 baseline, was scored before the phase-conjugate corrector ran with gradients off, so it describes a different network from the one trained. Rescore (`osiris train --rescore-only`) before comparing; see `RELEASE_NOTES_v4.5.2.md`.
+
 ## Overview
 
 You interact with OSIRIS manually. The memory engine and analysis pipeline work automatically in the background.

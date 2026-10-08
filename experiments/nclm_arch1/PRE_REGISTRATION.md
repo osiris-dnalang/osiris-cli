@@ -260,3 +260,32 @@ The CRSM_ARCH entry in the claims register is updated as follows:
 | FAIL | REFUTED, which points at the standard architecture for the next core |
 | NO-DIFFERENCE (equivalent) | NULL |
 | NO-DIFFERENCE (mixed or inconclusive) | stays UNTESTED, with the numbers; any follow-up is pre-registered anew using the observed SD |
+
+## Amendment 1 (2026-10-08, before any run, in the same unmerged change as the registration)
+
+A review of the v4.5.2 change found these points before any ARCH-1 run was launched or any result seen. Arms,
+seeds, inputs, training, evaluation, metric, criterion and `decide()` are unchanged.
+
+1. **Model code:**
+   - **Memory fix.** The corrector's backward hook is now attached only when gradients are on. It was a
+     self-referencing closure, and under `no_grad` it kept every scoring and generation graph alive until the
+     cycle collector ran: 191 MB vs 21 MB peak for 10 forwards of the live core. Logits are identical; only
+     memory changes.
+   - **Scorer tagging.** `osiris.nclm.SCORING_FORWARD` (= 2) and the console's scorer tagging were added.
+     Scoring itself does not change.
+2. **Reference commit.** The preflight's reference commit is now the latest commit that touched this file or
+   `EXECUTION.md`, not the commit that added this file. A change to the watched model or trainer code must be
+   recorded there before a run can launch. The registration commit's own `run.py --check` could not run
+   (EXECUTION.md, first entry), so runs use this amendment's commit or a later one with the watched files
+   unchanged.
+3. **Power basis.** σ_run ≈ 0.03 comes from NCLM-GATE-PILOT-1's replay seeds, which differ from this
+   experiment in two ways:
+   - those pilots measured fine-tuning gains, not best from-scratch bits/byte;
+   - they were scored before v4.5.2, with the corrector skipped.
+
+   σ_run for these runs is therefore unknown. If it is 0.05 or more, the likely verdict at a true zero is
+   "inconclusive" (equivalence only 0.22 of the time; table above). The observed SD is reported either way.
+4. **Correction.** In the components table, sin 51.843° is 0.786 (0.78632), not 0.787.
+5. **Reported, not judged.** Early stopping (5 evals of 200 steps) under a 12,000-step cosine schedule can stop
+   an arm before its learning rate has decayed much. RESULT.md also reports each arm's held-out-documents
+   score at the last eval that both runs of a seed reached. This adds nothing to the criterion.

@@ -125,6 +125,9 @@ class LedgerAnalyzer:
             return []
 
     STATS_PATH = Path.home() / '.osiris' / 'living' / 'stats.json'
+    # osiris_cli.living.SCORER: scores without it (before v4.5.2) skipped a layer the core trains with
+    CURRENT_SCORER = 2
+    stale_skipped = 0
 
     @classmethod
     def extract_bpb(cls, exchanges: List[Dict]) -> List[tuple]:
@@ -139,7 +142,13 @@ class LedgerAnalyzer:
                 pass
         heldout_scores = stats.get("heldout_scores", {})
         # stats.json keys are full 64-hex exchange hashes; ledger rows carry a 40-hex prefix.
-        by_hash = {h: score for h, score in heldout_scores.items() if isinstance(score, list) and score}
+        scored = {h: s for h, s in heldout_scores.items() if isinstance(s, list) and s}
+        by_hash = {h: s for h, s in scored.items() if len(s) > 4 and s[4] == cls.CURRENT_SCORER}
+        cls.stale_skipped = len(scored) - len(by_hash)
+        if cls.stale_skipped:
+            logger.warning(f"{cls.stale_skipped} held-out scores predate the v4.5.2 scoring fix (they measured "
+                           "a network without the phase-conjugate corrector) and are left out; "
+                           "run `osiris train --rescore-only`")
 
         for i, exch in enumerate(exchanges):
             h = exch.get('hash') or ''
@@ -165,6 +174,7 @@ class LedgerAnalyzer:
 
         return {
             'heldout_scored': len(bpbs),
+            'stale_skipped': cls.stale_skipped,
             'mean_bpb': sum(bpbs) / len(bpbs),
             'min_bpb': min(bpbs),
             'max_bpb': max(bpbs),

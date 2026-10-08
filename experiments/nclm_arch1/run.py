@@ -29,6 +29,7 @@ MAX_STEPS = 12000
 QUIET_LOAD = 3.0
 N_PARAMS = {"crsm": 726304, "standard": 725760}
 PREREG = "experiments/nclm_arch1/PRE_REGISTRATION.md"
+EXECUTION = "experiments/nclm_arch1/EXECUTION.md"   # Amendment 1: a change to WATCHED is recorded here
 WATCHED = ("osiris/nclm", "osiris_termux_console.py", "osiris_cli/train.py", "osiris_cli/living.py")
 # pre-registered criterion
 DELTA, GUARD, MIN_CHAT_WINDOWS = 0.05, 0.10, 8
@@ -57,13 +58,16 @@ def preflight():
     where = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(osiris.nclm.__file__))))
     if where != REPO:
         raise SystemExit(f"osiris.nclm imported from {where}, not {REPO} (see nclm_mix1/EXECUTION.md)")
-    reg = git("log", "--diff-filter=A", "--format=%H", "--", PREREG)
+    # The reference is the latest commit that touched the pre-registration or its execution log (Amendment 1):
+    # model or trainer code may change only together with, or before, a recorded entry.
+    reg = git("log", "-1", "--format=%H", "--", PREREG, EXECUTION)
     if not reg:
         raise SystemExit("PRE_REGISTRATION.md is not committed")
     changed = "\n".join(filter(None, (git("diff", "--name-only", reg, "HEAD", "--", *WATCHED),
                                       git("status", "--porcelain", "--", *WATCHED))))
     if changed:
-        raise SystemExit("model or trainer code differs from the pre-registration commit:\n" + changed)
+        raise SystemExit("model or trainer code changed since the last recorded pre-registration or "
+                         "EXECUTION.md commit (record it there first):\n" + changed)
     data = np.frombuffer(open(os.path.join(REPO, "README.md"), "rb").read()[:128], dtype=np.uint8).astype(np.int64)
     x, y = data[None, :-1], data[None, 1:]
     params = {}
@@ -91,7 +95,7 @@ def preflight():
             pass
     if used & set(SEEDS):
         raise SystemExit(f"seeds already used by earlier runs: {sorted(used & set(SEEDS))}")
-    info = {"prereg_commit": reg, "head": git("rev-parse", "HEAD"), "params": params}
+    info = {"reference_commit": reg, "head": git("rev-parse", "HEAD"), "params": params}
     print("preflight", json.dumps(info), flush=True)
     return info
 
@@ -191,6 +195,7 @@ def summarise(arm, seed):
     return {"arm": arm, "seed": seed, "run_id": run_id, "arch": model.get("arch"), "n_params": model.get("n_params"),
             "best_docs_bpb": best["heldout_docs_bpb"], "chat_bpb_at_best": best.get("heldout_chat_bpb"),
             "best_step": best["step"], "final_docs_bpb": evals[-1].get("heldout_docs_bpb") if evals else None,
+            "evals": [(r["step"], r.get("heldout_docs_bpb")) for r in evals],
             "unigram_docs_bpb": best.get("unigram_docs_bpb"), "unigram_chat_bpb": best.get("unigram_chat_bpb"),
             "stop_reason": end.get("reason"), "steps": end.get("steps"), "hours": end.get("hours"),
             "hit_step_cap": end.get("reason") in ("deadline", "max steps"), "diverged": diverged,
@@ -198,6 +203,14 @@ def summarise(arm, seed):
             "inputs": {k: manifest.get(k) for k in ("bytes", "chat_train", "chat_heldout", "distill_lessons")},
             "pool_weights": manifest.get("pool_weights"), "code": manifest.get("code"),
             "manifest_sha256": manifest.get("manifest_sha256")}
+
+
+def common_step(c, d):
+    """Both arms' held-out-documents score at the last eval step both runs of a seed reached."""
+    shared = sorted(set(s for s, _ in c["evals"]) & set(s for s, _ in d["evals"]))
+    step = shared[-1] if shared else None
+    pick = lambda r: next((b for s, b in reversed(r["evals"]) if s == step), None)  # noqa: E731
+    return {"seed": c["seed"], "step": step, "crsm": pick(c), "standard": pick(d)}
 
 
 def problems(rows):
@@ -274,8 +287,9 @@ def analyse():
                       "winner": "crsm" if gain > 0 else ("standard" if gain < 0 else None)})
     chat_judged = all(r["chat_windows"] >= MIN_CHAT_WINDOWS for r in rows.values())
     v = decide(pairs, chat_judged)
+    common = [common_step(rows[("crsm", s)], rows[("standard", s)]) for s in SEEDS]   # Amendment 1, item 5
     out = {"experiment": "nclm_arch1", "arms": ARMS, "seeds": SEEDS, "mix": MIX, "runs": list(rows.values()),
-           "pairs": pairs, "decision": v, "verdict": v["verdict"]}
+           "pairs": pairs, "decision": v, "verdict": v["verdict"], "common_step_reported_not_judged": common}
     json.dump(out, open(os.path.join(HERE, "results.json"), "w"), indent=2)
     lo, hi = v["one_sided_95"]
     lo, hi = _num(lo), _num(hi)
@@ -301,6 +315,10 @@ def analyse():
                   "understated: " + ", ".join(capped) + "."]
     below = [f"{r['arm']} s{r['seed']}" for r in rows.values() if r["best_docs_bpb"] < r["unigram_docs_bpb"]]
     ref = rows[(ARMS[0], SEEDS[0])]
+    lines += ["", "Reported, not judged (Amendment 1, item 5): held-out documents at the last eval both runs of a "
+              "seed reached -- " + "; ".join(
+                  f"s{c['seed']} step {c['step']}: crsm {_num(c['crsm']):.3f}, standard {_num(c['standard']):.3f}"
+                  for c in common) + "."]
     lines += ["", f"Unigram baseline (train split) {ref['unigram_docs_bpb']:.3f} bpb on held-out documents; runs "
               "below it: " + (", ".join(below) or "none") + ".",
               f"Parameters: crsm {N_PARAMS['crsm']:,}, standard {N_PARAMS['standard']:,}. "

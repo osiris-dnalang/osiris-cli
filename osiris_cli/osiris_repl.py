@@ -78,6 +78,16 @@ GAMMA_COHERENCE_FLOOR = 0.0920                 # Fail-closed decoherence ceiling
 LAMBDA_PHI = 2.176435e-8                      # Universal Memory Constant (s^-1 / kg)
 PHI_CONSCIOUSNESS = 0.7734                    # Phase-conjugate threshold
 F_MAX_PREDICTED = 1.0 - (PHI_GOLDEN ** -8)      # F_max = 0.97871...
+
+
+def _claim_verdict(cid: str) -> str:
+    """A constant's claims-register verdict, for banners that print the constant."""
+    try:
+        from osiris_cli import claims as _claims
+        c = _claims.by_id(cid)
+        return c.verdict if c else "unregistered"
+    except Exception:  # noqa: BLE001 - a banner must render without the register
+        return "see /legit"
 TAU_0_US = PHI_GOLDEN ** 8                    # τ_0 = 46.9787... µs
 CHI_PC = 0.869                                # Phase-conjugate coupling coefficient
 
@@ -471,7 +481,7 @@ def execute_ignite(state: Optional[OsirisReplState] = None) -> Dict[str, Any]:
     print(f"  ├─ Locking Resonance: θ_lock = {THETA_LOCK_DEG}° (Pyramid face slope arctan(14/11))")
     print(f"  ├─ Coherence Floor:  Γ_floor = {GAMMA_COHERENCE_FLOOR:.4f} [ENFORCED FAIL-CLOSED]")
     print(f"  ├─ Memory Invariant: Λ_Φ     = {LAMBDA_PHI:.6e} kg")
-    print(f"  ├─ Peak Fidelity:    F_max   = {F_MAX_PREDICTED:.5f} (1 - φ^-8)")
+    print(f"  ├─ Peak Fidelity:    F_max   = {F_MAX_PREDICTED:.5f} (1 - φ^-8; claims register: {_claim_verdict('F_MAX')})")
     print("  └─ Substrate Status: \033[1;32m11D CRSM Substrate LOCKED & OPERATIONAL\033[0m")
 
     # 2. Cognitive 9-Agent Mesh
@@ -793,7 +803,7 @@ def execute_benchmark_flywheel(state: Optional[OsirisReplState] = None, output_p
 
     print(f"  Protocol ID     : {k8.EXPERIMENT_ID}")
     print(f"  Predicted Peak  : τ_0 = {k8.TAU_0_PREDICTED_US:.4f} µs (φ^8)")
-    print(f"  Predicted F_max : {k8.F_MAX_PREDICTED:.5f} (1 - φ^-8)")
+    print(f"  Predicted F_max : {k8.F_MAX_PREDICTED:.5f} (1 - φ^-8; claims register: {_claim_verdict('F_MAX')})")
     print(f"  Coherence Floor : {state.coherence_floor:.4f}")
     print("  Sweeping τ targets across NCLM Organism vs Static Baseline...\n")
 
@@ -879,7 +889,7 @@ def execute_benchmark_flywheel(state: Optional[OsirisReplState] = None, output_p
     print(f"\n  \033[1;32m[CRYPTOGRAPHIC PROOF GENERATED]\033[0m")
     print(f"  ├─ Merkle Root   : {merkle_root}")
     print(f"  ├─ Mean Gain ΔF  : {mean_gain:+.5f} (NCLM vs Static Baseline)")
-    print(f"  ├─ Peak Fidelity : {max_fidelity:.5f} (Target F_max = {k8.F_MAX_PREDICTED:.5f})")
+    print(f"  ├─ Peak Fidelity : {max_fidelity:.5f} (F_max = {k8.F_MAX_PREDICTED:.5f}, {_claim_verdict('F_MAX')})")
     print(f"  ├─ Coherence     : {'100% SATISFIED (Γ <= 0.092)' if report['coherence_verified'] else 'BREACH'}")
     print(f"  └─ Proof Report  : {out_file}\n")
 

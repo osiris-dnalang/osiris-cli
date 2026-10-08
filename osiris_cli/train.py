@@ -45,7 +45,7 @@ from dataclasses import dataclass
 from typing import Callable, Dict, List, Optional
 
 from osiris_cli.living import (CHAT_MARKER, CHAT_QUIET_SECONDS, HELDOUT_EVERY, LIVING_HOME, SCORER,
-                               OllamaMentor, Osiris)
+                               OllamaMentor, Osiris, core_scorer)
 
 HOME = os.path.expanduser("~")
 RUNS_HOME = os.path.join(LIVING_HOME, "train_runs")
@@ -579,7 +579,7 @@ def rescore_chat(core, living_home: str) -> int:
             rows = [json.loads(line) for line in f if line.strip()]
     except (OSError, ValueError):
         return 0
-    step = int(core.step())
+    step, scorer = int(core.step()), core_scorer(core)
     for r in rows:
         if not r.get("heldout") or not r.get("learnable") or r.get("voice") == "core":
             continue
@@ -587,7 +587,7 @@ def rescore_chat(core, living_home: str) -> int:
         if bpb is None:
             continue
         o.stats["heldout_scores"][r["hash"]] = [round(bpb, 4), round(o.unigram_bpb(r["reply"]), 4),
-                                                step, int(r.get("index", 0)), SCORER]
+                                                step, int(r.get("index", 0)), scorer]
         n += 1
     o._save_stats()
     return n
@@ -595,13 +595,22 @@ def rescore_chat(core, living_home: str) -> int:
 
 def rescore_only(core, living_home: str, warn_open_chat: bool = True) -> str:
     """`osiris train --rescore-only` (`/train rescore`): rescore the gate's held-out exchanges, no training."""
+    scorer = core_scorer(core)
+    if scorer != SCORER:
+        where = getattr(sys.modules.get("osiris.nclm"), "__file__", None) or "unknown"
+        return (f"not rescored: the loaded osiris.nclm ({os.path.dirname(where)}) scores as version {scorer}, "
+                f"not {SCORER} -- an older copy of the model code (check PYTHONPATH); its scores would not "
+                "count toward the gate")
     before = Osiris(core=core, home=living_home, out=lambda s: None, background=False).gate()
     n = rescore_chat(core, living_home)
     after = Osiris(core=core, home=living_home, out=lambda s: None, background=False)
+    g = after.gate()
+    left = (f" {g['stale']} older scores have no rescorable exchange in the ledger and stay uncounted."
+            if g["stale"] else "")
     note = (" A console still open from before v4.5.2 can write old scores back: restart it."
             if warn_open_chat and chat_active(living_home) else "")
-    return (f"rescored {n} held-out exchanges at step {core.step()} (scorer {SCORER}); "
-            f"before: {Osiris.gate_note(before)}; now: {Osiris.gate_note(after.gate())}.{note}")
+    return (f"rescored {n} held-out exchanges at step {core.step()} (scorer {scorer}); "
+            f"before: {Osiris.gate_note(before)}; now: {Osiris.gate_note(g)}.{left}{note}")
 
 
 # ---------------------------------------------------------------------------

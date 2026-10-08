@@ -14,3 +14,11 @@ Procedural record, kept separate from the pre-registration (which is unchanged).
   No run was started. Arms, seeds, mix, inputs, stopping rule, criterion and `decide()` are unchanged.
   `run.py` is not among the watched files, so preflight still compares the model and trainer code with
   4ac93db.
+- **2026-10-08 — Amendment 1 recorded before any run** (`PRE_REGISTRATION.md`):
+  - the corrector's backward hook is guarded under `no_grad` (memory only; logits identical);
+  - scores are tagged with the loaded `osiris.nclm`'s `SCORING_FORWARD`;
+  - preflight now compares the watched code with the latest commit to `PRE_REGISTRATION.md` or this log;
+  - the power-basis caveat is stated;
+  - one table value is corrected (sin 51.843° = 0.786).
+
+  No run has started.
