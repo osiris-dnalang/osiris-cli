@@ -155,3 +155,11 @@ def test_qvm_sampler_noiseless_limit_recovers_ideal_xeb():
     c = random_circuit(4, 3, 2)
     f = normalized_xeb(probabilities(c), sample(c, 4000))
     assert 0.6 < f < 1.05 and rec["backend"] == "cirq-qvm:willow_pink"     # noisy but clearly correlated with ideal
+
+
+def test_qsim_fast_path_matches_reference_simulator():
+    pytest.importorskip("qsimcirq")
+    from rqc import sim_qsim
+    for seed in range(2):
+        c = random_circuit(10, 6, seed)
+        assert np.allclose(sim_qsim.probabilities(c), probabilities(c), atol=1e-6)
