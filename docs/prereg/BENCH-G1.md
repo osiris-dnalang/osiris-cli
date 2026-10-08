@@ -73,6 +73,9 @@ Gemini tokens used by arm G: 103,415 (gateway budget file, 13,023 → 116,438).
   specifies for killed runs; no end entry was written by hand.
 - Before a valid arm Q: either install `qwen2.5-coder:7b` (as registered) or amend the arm to an
   installed model; the choice is recorded here before the run.
+- Decision (2026-10-08, before the valid run): install the registered model. `ollama pull
+  qwen2.5-coder:7b` → digest `dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364`. Arm Q is valid only if its log shows no
+  "Switching to installed model" message.
 
 ### Observation (not a registered outcome)
 Arm G's first candidate passed the hidden tests on 6 of 9 tasks but only 2 were delivered: on 4
