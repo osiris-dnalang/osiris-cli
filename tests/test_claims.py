@@ -125,6 +125,33 @@ def test_matching_on_real_texts():
     assert claims.match("RQC beats RCS with p < 0.05, ready for peer review")[0].id == "RQC_ADVANTAGE"
 
 
+@pytest.mark.parametrize("text", [
+    "the tau-phase anomaly at 46 µs", "τ₀ ≈ 46.0 μs", "τ₀ ≈ 46.0 µs", "a revival at 46 μs",
+    "an oscillation period of 46.98 µs", "τ0 = 46.9 us", "the 46 µs anomaly", "46 microseconds: the revival",
+    "tau_0 = 46.000 μs", "phase folded at 46 µsec", "the revival near   46.0   μs",
+    "CRSM Coherence Revival Period (τ₀) τ₀ ≈ 46.0 μs Davis (6D-CRSM, 2025)"])
+def test_tau_phase_duration_spellings_are_recognised(text):
+    assert "TAU_PHASE" in [c.id for c in claims.match(text)], text
+
+
+@pytest.mark.parametrize("text", [
+    "set the idle delay to 46 µs", "a 46 μs Ramsey delay", "T2 was 146 µs at the revival check",
+    "the revival window is 460 µs", "a revival after 4.46 µs", "46,000 µs of phase drift",
+    "46 users saw the anomaly", "46 microphones and a phase meter", "the anomaly: 46 ms, not microseconds",
+    "a revival at 46 ns", "period 46.3 µs"])
+def test_tau_phase_duration_does_not_overmatch(text):
+    assert "TAU_PHASE" not in [c.id for c in claims.match(text)], text
+
+
+def test_a_reference_is_not_an_endorsement():
+    # criticism and negation reference the claim too; the verdict, not the match, says it is not legit
+    for text in ("The τ-phase claim was an artifact of the server clock.",
+                 "There is no revival at 46.0 μs; that was T1 decay."):
+        hits = [c.id for c in claims.match(text)]
+        assert "TAU_PHASE" in hits or "K8_REVIVAL" in hits, text
+    assert claims.by_id("TAU_PHASE").verdict == "ARTIFACT"
+
+
 @pytest.mark.parametrize("text", ["hello osiris", "what's the weather like", "write a unit test for the parser",
                                   "please summarise my notes from yesterday", "run git status"])
 def test_ordinary_chat_matches_nothing(text):
