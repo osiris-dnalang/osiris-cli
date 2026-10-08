@@ -81,7 +81,7 @@ REGISTER: Tuple[Claim, ...] = (
           "No resonance on hardware: z = -1.0 at 51.843° (Feb 2026 self-test). The RZ 'correction' built "
           "on it moved GHZ fidelity by +0.002 ± 0.006 against sign-flipped and random-angle controls "
           "(N = 12). The angle is arctan(14/11), the slope of the Great Pyramid of Khufu (computed below).",
-          (SELFTEST, ("doi", "10.5281/zenodo.22855102", "controlled RZ-correction test, ibm_fez"), DNALANG),
+          (SELFTEST, ("doi", "10.5281/zenodo.22855102", "controlled RZ-correction test, ibm_fez (job dannuhgpqrnc73991ntg)"), DNALANG),
           (r"51\.84", r"θ[\s_]*lock|theta[\s_-]*lock", r"torsion[\s-]*lock", r"lock angle"),
           checks=(("arctan_degrees", (14, 11)),)),
     Claim("ERROR_SUPPRESSION_1E6", "10⁶× error suppression and 0.99999 logical fidelity from a 40-qubit "
@@ -97,7 +97,8 @@ REGISTER: Tuple[Claim, ...] = (
           "All 10⁶ shots were unique, so the plug-in entropy is log₂(10⁶) = 19.93 bits -- exactly the "
           "reported number; it measures the shot count (computed below). Per-qubit marginals sum to 149.7 "
           "of 156 bits: the output is close to maximally mixed, the opposite of a collapse.",
-          (HONEST, GUIDE, ("doi", "10.5281/zenodo.19656600", "the original record (errata filed)")),
+          (HONEST, GUIDE, ("doi", "10.5281/zenodo.19656600", "the original record (errata filed)"),
+              ("doi", "10.5281/zenodo.23213023", "v4.2.0 erratum + re-analysis: nulls give the same 19.93 bits; scripts and results")),
           (r"negentrop\w*", r"136[\s-]*bit", r"\b19\.93", r"entropy gap"),
           checks=(("entropy_ceiling", (1e6, 19.9316)),)),
     Claim("PHI_THRESHOLD", "Φ = 0.7734 consciousness threshold and phase transition (51× enhancement, d = 1.65)",
@@ -212,7 +213,7 @@ REGISTER: Tuple[Claim, ...] = (
           "Controlled test: ΔF = +0.002 ± 0.006 at N = 12 against sign-flipped and random-angle controls. "
           "An RZ before Z-basis measurement commutes through the CX chain and cannot change the outcome, "
           "which is what the compiler predicts.",
-          (("doi", "10.5281/zenodo.22855102", "ibm_fez controlled tests"), HONEST),
+          (("doi", "10.5281/zenodo.22855102", "ibm_fez controlled tests (job dannuhgpqrnc73991ntg)"), HONEST),
           (r"tetrahedral (rz|correction)", r"\b16\.9\s*%", r"\brz correction")),
     Claim("GHZ_GME", "Genuine multipartite entanglement in GHZ chains to N = 20 on ibm_fez", "SUPPORTED",
           "Pre-registered E2: a chain mapping keeps the GME witness (F > 0.5) to N = 20 on ibm_fez "
