@@ -423,7 +423,10 @@ REGISTER: Tuple[Claim, ...] = (
           "is matched), with 5 trials per stage, an independent t-test and no held-out circuits -- and its "
           "citation is a placeholder (doi zenodo.XXXXXXX) for a paper never submitted. The portfolio, drug-"
           "discovery and materials claims do not follow from an XEB comparison.",
-          (("file", "osiris-cli/RQC_RESEARCH_METHODOLOGY.md", "the brief"),),
+          (("file", "osiris-cli/RQC_RESEARCH_METHODOLOGY.md", "the brief"),
+           ("file", "osiris-cli/docs/rqc/S1/summary.json", "S1 simulation, ibm_fez noise model (2026-10-08)"),
+           ("file", "osiris-cli/docs/rqc/S1_willow/summary.json", "S1 simulation, Willow noise model (2026-10-08)"),
+           ("file", "osiris-cli/docs/rqc/S2_PREREGISTRATION.DRAFT.md", "hardware test, drafted, not run")),
           (r"\brqc\b", r"recursive quantum circuits?", r"random circuit sampling"),
           testable="Pre-registered: adaptive policy vs static and shuffled-feedback controls on held-out "
                    "circuits, matched depth and two-qubit-gate count, jobs interleaved across calibration "

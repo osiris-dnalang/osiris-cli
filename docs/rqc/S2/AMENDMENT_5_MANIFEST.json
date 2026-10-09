@@ -1,0 +1,48 @@
+{
+ "amendment_doi": "10.5281/zenodo.23256344",
+ "amendment_path": "docs/rqc/S2/S2_AMENDMENT_5.md",
+ "documents": {
+  "docs/rqc/S2/S2_AMENDMENT_5.md": "6bbfaa3c6304976cf2390a416c4be7d85d9d2a201fd4383552cf7199cb31e8b0",
+  "docs/rqc/S2_PREREGISTRATION.md": "ee179e8f53b9b81c336db09ff68ff1fd7617edd728000a50f7a34d95cfa00e5d"
+ },
+ "frozen": {
+  "prereg_commit": "964efe1931ead531ad4408945e03d6f2b2ddf3aa",
+  "prereg_doi_operator_supplied_unverified": "10.5281/zenodo.23241223",
+  "prereg_sha256": "ee179e8f53b9b81c336db09ff68ff1fd7617edd728000a50f7a34d95cfa00e5d",
+  "search_code_commit": "0676107155d3ca5c5777937f49ce56a99085ca5c",
+  "tooling_commit": "86e3a3f4db6e449044fa0d7c173fc107b1b74452"
+ },
+ "implementation": {
+  "commit": "3332e8935ba208dbcdf38e4bdece6a507b5cf089",
+  "files": {
+   "docs/rqc/S2/s2_run_batched.py": "58dc8ff8d60758281ce630138d7ac114db94fee71cdff82cc360df162681b162",
+   "docs/rqc/s1_adjusted.py": "6829eeb027345c4554c75c23c30248f932b5b0c1480c34f1fa58c464e8b4dd5b",
+   "rqc/__init__.py": "c42b0c0b0d4319045f067656bfdf9aa4bafffd9ebf670f8e5bfab1a568d00b4e",
+   "rqc/batch.py": "e02d02ae19363d4adb21b328d892050773b6fca79681dccd86446e295dd28f57",
+   "rqc/circuits.py": "4ab1d8499228f9313385fe6433affc5f7e11d31b93c530d3eff6f290b4bca897",
+   "rqc/control.py": "dc43d4d96471e9650a60aa5c1535a75e4f8115a541488036aa6f523c7c5f48de",
+   "rqc/experiment.py": "4f80d8912bbed540a7a14149bac7b12819bd2f8c00397bbf9fb8d3b0aedb84af",
+   "rqc/hardware.py": "165221a7fe2f931cdb85f1a5d3465367d4917a8ee5eb7516c9e3f38f25c30ee2",
+   "rqc/samplers.py": "1bd68a72fe464700f8b112f5456328a9db71a5c8ca2b4127b1ea2baf8f4b1865",
+   "rqc/sim.py": "6e7a745313df095a0fed147df1597ee315fc5a37dbec5f2a901bc56c2a0ab5ea",
+   "rqc/xeb.py": "ce64cf3375bc32c470f2f039a7491b54cc8eaadcd441e078c68b2fdcab654229"
+  },
+  "scope": "code only: files the S2 run executes or analyses with"
+ },
+ "note": "Deposited 2026-10-09 as 10.5281/zenodo.23256344 (new version of concept 10.5281/zenodo.23241222). NOT APPROVED FOR EXECUTION: a run needs a recorded execute approval bound to the run payload.",
+ "schema": "rqc-s2-amendment5-bundle/1",
+ "status": "deposited",
+ "supporting": {
+  "docs/rqc/S1/results.json": "fc20b8d32037e630db7bb19ae7e51e1bc087cb8ae0a7e13882c8ec0785338e50",
+  "docs/rqc/S1_willow/results.json": "755bcdef0e6487d2a99b1b9f55e52dd973e4a46ff5969a740db0428c8e0eaef8",
+  "docs/rqc/S2/CONTROL_NOTES.md": "9ea67759664efaddbb72b65a5786c455f1290d3ee47377b632024b45ca98974c",
+  "docs/rqc/S2/amendment5_analysis.json": "ef6edfcddbf505efb94ce22378b5a7b509b821560285e5b43c635fc879da8ce0",
+  "docs/rqc/S2/amendment5_analysis.py": "4bdc7c79b861d20bd6cb5119a25effa381c2963b23b06cb5aef3261f8a2e6908",
+  "docs/rqc/S2/budget_audit.json": "36d5e170d406968649f3fc5b1d1d048d263fb149cc73c4295540ca41d761473a",
+  "docs/rqc/S2/make_bundle_manifest.py": "755686ca8b8d2a4f26bbf727559099fe1949a248b81d7fad5ac743a083b55677",
+  "tests/test_rqc.py": "b303d05d8840c14e38e052166ab267690c1498c2b6f2114a38e0283444b7161a",
+  "tests/test_rqc_batch.py": "59e71c246fd0c2ccacf613c398c887063c18e260aedd3e8255f4d31c1a151c41",
+  "tests/test_rqc_control.py": "99e04c8a74de86d1b7d56f27468a193d6e9efdce500a15ac375d8b79fc8df424",
+  "tests/test_rqc_s2_bundle.py": "1909792b1defbd490611a72d0f8d1dba7744dbf3f45c3ab1f07049de6bed49fd"
+ }
+}

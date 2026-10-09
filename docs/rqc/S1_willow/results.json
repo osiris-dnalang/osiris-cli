@@ -1,0 +1,3608 @@
+{
+ "config": {
+  "backend": "qvm:willow_pink",
+  "seeds": 30,
+  "first_seed": 100,
+  "n": 8,
+  "depth": 6,
+  "k": 5,
+  "shots": 2000,
+  "sigma": 0.2
+ },
+ "layout": [
+  "q(0, 6)",
+  "q(0, 7)",
+  "q(0, 8)",
+  "q(1, 8)",
+  "q(1, 7)",
+  "q(1, 6)",
+  "q(1, 5)",
+  "q(2, 5)"
+ ],
+ "calibration": {
+  "backend": "cirq-qvm:willow_pink",
+  "qubits": [
+   "q(0, 6)",
+   "q(0, 7)",
+   "q(0, 8)",
+   "q(1, 8)",
+   "q(1, 7)",
+   "q(1, 6)",
+   "q(1, 5)",
+   "q(2, 5)"
+  ],
+  "noise_source": "cirq_google.engine.load_device_noise_properties (shipped median calibration)"
+ },
+ "rows": [
+  {
+   "seed": 100,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "9cf424ae21b715db3203f1e19df5e2a60091540c806b6ce0f65273def357cf73",
+     "shots": 2000,
+     "xeb_normalized": 0.9113429323959665,
+     "xeb_linear": 1.1516155847630358,
+     "collision_probability": 0.008842370331952133
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "262736cd68fa96b97dfb4c60abc7b218af543fe9d7ed97dcc7de5c0b666061f8",
+     "shots": 2000,
+     "xeb_normalized": 0.9208617425009101,
+     "xeb_linear": 2.3309586230375405,
+     "collision_probability": 0.013794061276111727
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "8b345b8f5d5b955307f1a15a583dca01d4f53f9bd4bf89daf29943db6f184b5c",
+     "shots": 2000,
+     "xeb_normalized": 0.8950904586440063,
+     "xeb_linear": 1.4509071813068588,
+     "collision_probability": 0.010238130897899312
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "3a5cc9b0b1311524eb41892aa3c64d3ff4302d8dd41e96e9228afd122a66c4c9",
+     "shots": 2000,
+     "xeb_normalized": 0.9113543255609984,
+     "xeb_linear": 1.9880273607678691,
+     "collision_probability": 0.01242733961376704
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "7395f1895d719e0a9399554fafaba34d4e40f60eda8339e129a4f1576e05ce87",
+     "shots": 2000,
+     "xeb_normalized": 0.8502567736192264,
+     "xeb_linear": 1.9773502284584294,
+     "collision_probability": 0.012990593188514036
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "262736cd68fa96b97dfb4c60abc7b218af543fe9d7ed97dcc7de5c0b666061f8",
+     "shots": 2000,
+     "xeb_normalized": 0.9087558347378927,
+     "xeb_linear": 2.300315184628137,
+     "collision_probability": 0.013794061276111727,
+     "selected_round": 1,
+     "selected_estimate": 0.9208617425009101
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "9cf424ae21b715db3203f1e19df5e2a60091540c806b6ce0f65273def357cf73",
+     "shots": 2000,
+     "xeb_normalized": 0.9395419327042895,
+     "xeb_linear": 1.187249161406271,
+     "collision_probability": 0.008842370331952133
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "858286c092a46baf50b87a7a692ef11849002d82bcf1918bcbf3aa958e41a6e5",
+     "shots": 2000,
+     "xeb_normalized": 0.847571769519555,
+     "xeb_linear": 1.6986547810705086,
+     "collision_probability": 0.011734932451655893
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "ddc2eaf415388d60266b12735a75901ca9081006bab3a9e2a5c2595b74d80882",
+     "shots": 2000,
+     "xeb_normalized": 0.9031354545587013,
+     "xeb_linear": 1.5863590278342272,
+     "collision_probability": 0.010767585053561094
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "0718c197122a66331a9e3d235738a7e2e112b7d4677f212b3fb8d4293da07937",
+     "shots": 2000,
+     "xeb_normalized": 0.9090422776318186,
+     "xeb_linear": 1.2896691506868012,
+     "collision_probability": 0.009448093590591197
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "9cc4bfa01ac2a388f00f4bf15a3a1b4e287b08ac699a48df98d9ec6018b1ef5e",
+     "shots": 2000,
+     "xeb_normalized": 0.8165318243020114,
+     "xeb_linear": 1.222110232718125,
+     "collision_probability": 0.009752768108018605
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "9cf424ae21b715db3203f1e19df5e2a60091540c806b6ce0f65273def357cf73",
+     "shots": 2000,
+     "xeb_normalized": 0.9271721715065108,
+     "xeb_linear": 1.1716181521903355,
+     "collision_probability": 0.008842370331952133,
+     "selected_round": 0,
+     "selected_estimate": 0.9395419327042895
+    }
+   ]
+  },
+  {
+   "seed": 101,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "dcd0d2d7d495f71173717890e4464ed8ab44eca3589aa20e2a1ea1b16de2cfa6",
+     "shots": 2000,
+     "xeb_normalized": 0.9366746423149306,
+     "xeb_linear": 1.0525711569638392,
+     "collision_probability": 0.008295827657113071
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "20fba38c9a6f249a3002505a4cd32f87bf390d8dd26b0608197ba51f8a275a8e",
+     "shots": 2000,
+     "xeb_normalized": 0.8987233524026131,
+     "xeb_linear": 0.8789473721656804,
+     "collision_probability": 0.00772654482525796
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "6487a85b14543bf036305a8d0c906f6105c8a02f60717820c951d9e601fdfe35",
+     "shots": 2000,
+     "xeb_normalized": 0.8110016562391936,
+     "xeb_linear": 1.6777030898558905,
+     "collision_probability": 0.011987032134453127
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "4fd82fe935a0c3f65cca217ecdf15f914e6c9e553d470b258d6d70630d809dbd",
+     "shots": 2000,
+     "xeb_normalized": 0.7889589738539585,
+     "xeb_linear": 1.4490990780209336,
+     "collision_probability": 0.01108094914293297
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "dfb1d86f51f1142c490c6444525c2e993c015b199b6f44cb89a95565bdb345b7",
+     "shots": 2000,
+     "xeb_normalized": 0.8445036810848959,
+     "xeb_linear": 1.4838528370333095,
+     "collision_probability": 0.010769808175631774
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "dcd0d2d7d495f71173717890e4464ed8ab44eca3589aa20e2a1ea1b16de2cfa6",
+     "shots": 2000,
+     "xeb_normalized": 0.9053527228782356,
+     "xeb_linear": 1.017373717543113,
+     "collision_probability": 0.008295827657113071,
+     "selected_round": 0,
+     "selected_estimate": 0.9366746423149306
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "dcd0d2d7d495f71173717890e4464ed8ab44eca3589aa20e2a1ea1b16de2cfa6",
+     "shots": 2000,
+     "xeb_normalized": 0.9762102083826821,
+     "xeb_linear": 1.096998532956753,
+     "collision_probability": 0.008295827657113071
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "6513080b5528e232480a2af62e45ead4f7632d5ce0ff2f49e51e67d061f49c16",
+     "shots": 2000,
+     "xeb_normalized": 0.8433738558752778,
+     "xeb_linear": 1.2257049167386769,
+     "collision_probability": 0.009583340649248814
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "bc58c2c449e13d09ee51604f69bc82673bb6866d7c931b07536f94f5c6c89c07",
+     "shots": 2000,
+     "xeb_normalized": 0.8540438790553901,
+     "xeb_linear": 2.5920943742996396,
+     "collision_probability": 0.015762044412819944
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "f15396ae8eec3bcaee0a5e30e3231405e3c944ced93c5bf3e3c7ebba1e515a34",
+     "shots": 2000,
+     "xeb_normalized": 0.8655958818914171,
+     "xeb_linear": 1.4900924601033805,
+     "collision_probability": 0.01063072015293101
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "1877d96656519cd7acc289a2d60486ebe76419002663310f4fd1c85d0f63747c",
+     "shots": 2000,
+     "xeb_normalized": 0.9313484204701612,
+     "xeb_linear": 2.0674734825597136,
+     "collision_probability": 0.012577621651837815
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "dcd0d2d7d495f71173717890e4464ed8ab44eca3589aa20e2a1ea1b16de2cfa6",
+     "shots": 2000,
+     "xeb_normalized": 0.8967378862141699,
+     "xeb_linear": 1.0076929509408061,
+     "collision_probability": 0.008295827657113071,
+     "selected_round": 0,
+     "selected_estimate": 0.9762102083826821
+    }
+   ]
+  },
+  {
+   "seed": 102,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "1249a12b689ee25f8665dd0dee9401f06570c9894532bce168f3cf3e283ca5ea",
+     "shots": 2000,
+     "xeb_normalized": 0.9104228995739475,
+     "xeb_linear": 2.2020640705871473,
+     "collision_probability": 0.013354400721776058
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "00b53ed797885fa1feaf2f65912027d136ad04c29aaffd673135f5272a00e0d6",
+     "shots": 2000,
+     "xeb_normalized": 0.9608723862038389,
+     "xeb_linear": 2.829931499041145,
+     "collision_probability": 0.015410816138904939
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "ccc031cafcdb36abe5cc898a343165acd01873fd8470d11dd7e47946a8ae8561",
+     "shots": 2000,
+     "xeb_normalized": 0.8393696965401923,
+     "xeb_linear": 1.4709414564955487,
+     "collision_probability": 0.01075170211498543
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "45a179638d5899ad6401584298080bd3a022f451f572c59ef11e80362f196d5c",
+     "shots": 2000,
+     "xeb_normalized": 0.8818700760752329,
+     "xeb_linear": 2.0521059456631763,
+     "collision_probability": 0.012996068407176488
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "1cfb10b9581d5a1b4639750673c14b67267b6c245452f9edad08490717dd24de",
+     "shots": 2000,
+     "xeb_normalized": 0.8104370235603074,
+     "xeb_linear": 1.4806636238568283,
+     "collision_probability": 0.011042945526670173
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "00b53ed797885fa1feaf2f65912027d136ad04c29aaffd673135f5272a00e0d6",
+     "shots": 2000,
+     "xeb_normalized": 0.8581328510036224,
+     "xeb_linear": 2.527346211926587,
+     "collision_probability": 0.015410816138904939,
+     "selected_round": 1,
+     "selected_estimate": 0.9608723862038389
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "1249a12b689ee25f8665dd0dee9401f06570c9894532bce168f3cf3e283ca5ea",
+     "shots": 2000,
+     "xeb_normalized": 0.8867027577596398,
+     "xeb_linear": 2.144691532986256,
+     "collision_probability": 0.013354400721776058
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "6b81a504f5189934584ee40b008ca58859b8d643d6d294ad90cc006129244f36",
+     "shots": 2000,
+     "xeb_normalized": 0.8945934808366154,
+     "xeb_linear": 2.94169759698252,
+     "collision_probability": 0.01675119743631117
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "5ada503645c8e7a6ea7da6bd666015331ca069cf165b5d6de694a8a74ea47ee6",
+     "shots": 2000,
+     "xeb_normalized": 0.8498846628379363,
+     "xeb_linear": 1.8870685833544765,
+     "collision_probability": 0.012579617076791292
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "2226484c1e7aa149b2314797b6bb0ca6e2bd02130f0fbc610560a703343835ed",
+     "shots": 2000,
+     "xeb_normalized": 0.9383096298754366,
+     "xeb_linear": 2.7370981929794036,
+     "collision_probability": 0.015300985251459757
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "8a8620215300b4b56d8a65a40b671249d447f128f620e778e28f92d317cece95",
+     "shots": 2000,
+     "xeb_normalized": 0.8757809015345219,
+     "xeb_linear": 2.27989743856786,
+     "collision_probability": 0.014075288116498191
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "2226484c1e7aa149b2314797b6bb0ca6e2bd02130f0fbc610560a703343835ed",
+     "shots": 2000,
+     "xeb_normalized": 0.9264479823888807,
+     "xeb_linear": 2.7024971477940087,
+     "collision_probability": 0.015300985251459757,
+     "selected_round": 3,
+     "selected_estimate": 0.9383096298754366
+    }
+   ]
+  },
+  {
+   "seed": 103,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "9150d99d1764bf634bf5c0dce486e9c63219930061c3f146ef0f4f6fa5d0e7e3",
+     "shots": 2000,
+     "xeb_normalized": 0.8921702953047351,
+     "xeb_linear": 0.9612559962214209,
+     "collision_probability": 0.008114982632100665
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "aadeae2560d0a3ebff049e216d10d26e7f68da039b4caa44d39e75088c1282a2",
+     "shots": 2000,
+     "xeb_normalized": 0.8702534204617611,
+     "xeb_linear": 6.072442237469533,
+     "collision_probability": 0.031163227028058273
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "d6619f63cb7a9b01ee4ce5ceeaca90a8f09a3a8f154adc903553e49d55b81907",
+     "shots": 2000,
+     "xeb_normalized": 0.8061388451373175,
+     "xeb_linear": 1.0110862887632988,
+     "collision_probability": 0.008805599335794468
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "680d60fb29ecd606d940e10e89ebb6134943152f8b3513d8df2967e7ddeab931",
+     "shots": 2000,
+     "xeb_normalized": 0.812346256631658,
+     "xeb_linear": 1.121946682911763,
+     "collision_probability": 0.009301245292150742
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "72d15fd344c8e6a5ad3a7d18a8f788ff9f9b29f518021eae2a75c6473ba93dbc",
+     "shots": 2000,
+     "xeb_normalized": 0.9172563009476142,
+     "xeb_linear": 1.7637885739118873,
+     "collision_probability": 0.01141756293371927
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "72d15fd344c8e6a5ad3a7d18a8f788ff9f9b29f518021eae2a75c6473ba93dbc",
+     "shots": 2000,
+     "xeb_normalized": 0.8869990327249643,
+     "xeb_linear": 1.7056069905160975,
+     "collision_probability": 0.01141756293371927,
+     "selected_round": 4,
+     "selected_estimate": 0.9172563009476142
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "9150d99d1764bf634bf5c0dce486e9c63219930061c3f146ef0f4f6fa5d0e7e3",
+     "shots": 2000,
+     "xeb_normalized": 0.8850296122183696,
+     "xeb_linear": 0.9535623703856255,
+     "collision_probability": 0.008114982632100665
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "fc98025bd42934f35fd46cfc81966d49578880048724fcd02b500122f95cf7a3",
+     "shots": 2000,
+     "xeb_normalized": 0.8359465944207997,
+     "xeb_linear": 1.031957377451194,
+     "collision_probability": 0.008728428273794792
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "41fd4110c6591fbadd1343e63bbfaf97be6f486e0f6f91102fc83dda6f346d3b",
+     "shots": 2000,
+     "xeb_normalized": 0.8654003149148106,
+     "xeb_linear": 1.708218606716775,
+     "collision_probability": 0.011616819105979885
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "6f17f78819014c88c8d95ab4ccd38d32beb4b47fe57dd3f93659965f10376dfd",
+     "shots": 2000,
+     "xeb_normalized": 0.9029635305457138,
+     "xeb_linear": 1.6288188707550506,
+     "collision_probability": 0.01095257413010262
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "13980c3ae209d80928928b71233a2c1bb94bd380e1f4f6a43bc5c353b3c34b5e",
+     "shots": 2000,
+     "xeb_normalized": 0.8842006030454359,
+     "xeb_linear": 1.4170288496184216,
+     "collision_probability": 0.010166445847816586
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "6f17f78819014c88c8d95ab4ccd38d32beb4b47fe57dd3f93659965f10376dfd",
+     "shots": 2000,
+     "xeb_normalized": 0.9294075523292835,
+     "xeb_linear": 1.6765201568454255,
+     "collision_probability": 0.01095257413010262,
+     "selected_round": 3,
+     "selected_estimate": 0.9029635305457138
+    }
+   ]
+  },
+  {
+   "seed": 104,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "056f732b77a0244cbcc2f654dbb5b361a571e0735843324223d092268f4cec0a",
+     "shots": 2000,
+     "xeb_normalized": 0.9419002606941153,
+     "xeb_linear": 1.9323757524358625,
+     "collision_probability": 0.011920201262090088
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "97ca27a4966b6773c1605117293f3e05867705c15ff28bf63886a5f2677bb248",
+     "shots": 2000,
+     "xeb_normalized": 0.897335340297728,
+     "xeb_linear": 1.5786256161253132,
+     "collision_probability": 0.010778269897203104
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "dbdcbc6adf18bc71bbffd38cddfd895af1464c72cbbbfb6ede30dcf35396b8f9",
+     "shots": 2000,
+     "xeb_normalized": 0.8360848823966143,
+     "xeb_linear": 3.8084698747723085,
+     "collision_probability": 0.021699701073634163
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "cff2e761dc2ab4217fae8a367d15198d58a5956ba1629ae0694b30ccc784fc1a",
+     "shots": 2000,
+     "xeb_normalized": 0.8405851707131653,
+     "xeb_linear": 2.8432856582508563,
+     "collision_probability": 0.01711916998658436
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "2acbe245445bbe4ecb9f9e307c319babc95abde10aa80cdccca07cfdeb2d95f2",
+     "shots": 2000,
+     "xeb_normalized": 0.9017273143169731,
+     "xeb_linear": 1.37906955119516,
+     "collision_probability": 0.009880329246381209
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "056f732b77a0244cbcc2f654dbb5b361a571e0735843324223d092268f4cec0a",
+     "shots": 2000,
+     "xeb_normalized": 0.903865290515897,
+     "xeb_linear": 1.85434429073646,
+     "collision_probability": 0.011920201262090088,
+     "selected_round": 0,
+     "selected_estimate": 0.9419002606941153
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "056f732b77a0244cbcc2f654dbb5b361a571e0735843324223d092268f4cec0a",
+     "shots": 2000,
+     "xeb_normalized": 0.9117438483373144,
+     "xeb_linear": 1.8705077156059375,
+     "collision_probability": 0.011920201262090088
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "d30289deaefdd4cf3076bbd82faaa062481777ec035627b3e347835d437f8499",
+     "shots": 2000,
+     "xeb_normalized": 0.9284486199638395,
+     "xeb_linear": 2.2773686833417424,
+     "collision_probability": 0.013487794124272761
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "4ca043b52e34cc932fe2253ddc4a2064a3e82cf2792de73e055f2fcb9e8b468a",
+     "shots": 2000,
+     "xeb_normalized": 0.9351647816671935,
+     "xeb_linear": 2.5567648399989786,
+     "collision_probability": 0.014586039115283764
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "7fcc1418644e4ae93b2f27b9879d2db19b0cb2cd8e7ff1122092c84b26b1bbc7",
+     "shots": 2000,
+     "xeb_normalized": 0.8658181661820992,
+     "xeb_linear": 4.426742519286957,
+     "collision_probability": 0.023878068150010756
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "6a112f93ac697858915e7a6c50eb1931f6ee8b0e3bbd872885b19ed59920570d",
+     "shots": 2000,
+     "xeb_normalized": 0.9056737645528864,
+     "xeb_linear": 3.0465163264757678,
+     "collision_probability": 0.017046140837150385
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "4ca043b52e34cc932fe2253ddc4a2064a3e82cf2792de73e055f2fcb9e8b468a",
+     "shots": 2000,
+     "xeb_normalized": 0.9421386062552346,
+     "xeb_linear": 2.5758314578363573,
+     "collision_probability": 0.014586039115283764,
+     "selected_round": 2,
+     "selected_estimate": 0.9351647816671935
+    }
+   ]
+  },
+  {
+   "seed": 105,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "d365b2603eec2f472a1c2175855f4840aefed2f1483bcc529d4827429ee87f0b",
+     "shots": 2000,
+     "xeb_normalized": 0.9397321265625621,
+     "xeb_linear": 2.725780407363142,
+     "collision_probability": 0.015236691319708801
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "b71f4fc8a60a20b393f54bc334d9ae8aebdcd5ec972329e9086dcc8234ba14b1",
+     "shots": 2000,
+     "xeb_normalized": 0.8640697509289945,
+     "xeb_linear": 2.266707825241553,
+     "collision_probability": 0.014153486907472099
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "46570463612688632e43fafd7b5c853e48bcf119d1df09c81d2f30b1a449defa",
+     "shots": 2000,
+     "xeb_normalized": 0.8506876249106164,
+     "xeb_linear": 1.442001477051737,
+     "collision_probability": 0.010527738434518135
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "e7963422aa2fa56e6024878ac13386730e325e00762ad59bac05b0064f60269f",
+     "shots": 2000,
+     "xeb_normalized": 0.8437551821557518,
+     "xeb_linear": 1.1104808823315429,
+     "collision_probability": 0.009047333620398857
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "eb98191e94e77f39da0a76f1d87bca1b80bbe58637d8194be4d19cd26e595b46",
+     "shots": 2000,
+     "xeb_normalized": 0.867875035657698,
+     "xeb_linear": 2.269129128299586,
+     "collision_probability": 0.014119455004454419
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "d365b2603eec2f472a1c2175855f4840aefed2f1483bcc529d4827429ee87f0b",
+     "shots": 2000,
+     "xeb_normalized": 0.896638562166472,
+     "xeb_linear": 2.6007835170855125,
+     "collision_probability": 0.015236691319708801,
+     "selected_round": 0,
+     "selected_estimate": 0.9397321265625621
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "d365b2603eec2f472a1c2175855f4840aefed2f1483bcc529d4827429ee87f0b",
+     "shots": 2000,
+     "xeb_normalized": 0.8710335138838651,
+     "xeb_linear": 2.526513693839589,
+     "collision_probability": 0.015236691319708801
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "51c7bcc2ae631da21f582ceeb8dd6e38c05534470e46be8ecd15a4be0c031727",
+     "shots": 2000,
+     "xeb_normalized": 0.87870747042169,
+     "xeb_linear": 1.5771689788723315,
+     "collision_probability": 0.010917475613870657
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "259e6594929fa44c23cb90302043ed872a16ed9b061a11704b46d5d1c30dfa98",
+     "shots": 2000,
+     "xeb_normalized": 0.9152623739557162,
+     "xeb_linear": 3.643444956011219,
+     "collision_probability": 0.019456115551566344
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "f1abb13f69793321ecdcc440a1d91342dd4fa75c152a6234be244ff7a85f30d0",
+     "shots": 2000,
+     "xeb_normalized": 0.8589948523915155,
+     "xeb_linear": 2.127445616546221,
+     "collision_probability": 0.013580736891856208
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "5fe64b524a385b5e650cf94e38c567e6fde387b034d69fe71a89144524aecec3",
+     "shots": 2000,
+     "xeb_normalized": 0.9014987764372522,
+     "xeb_linear": 1.8148263125736848,
+     "collision_probability": 0.011770004747962644
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "259e6594929fa44c23cb90302043ed872a16ed9b061a11704b46d5d1c30dfa98",
+     "shots": 2000,
+     "xeb_normalized": 0.8997556725601793,
+     "xeb_linear": 3.5817164128179044,
+     "collision_probability": 0.019456115551566344,
+     "selected_round": 2,
+     "selected_estimate": 0.9152623739557162
+    }
+   ]
+  },
+  {
+   "seed": 106,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "9c3118f29a289373e7711825493597604b1d33a63f79d6861598f86a9676cd40",
+     "shots": 2000,
+     "xeb_normalized": 0.8528407620225139,
+     "xeb_linear": 1.5101866683564018,
+     "collision_probability": 0.010823328704443379
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "1e71464337f044da9b8a32e654bf11863413f7dbaba828555d05c679f39ae5a5",
+     "shots": 2000,
+     "xeb_normalized": 0.9217723785360393,
+     "xeb_linear": 2.499448909454436,
+     "collision_probability": 0.014498314299065628
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "a77cbe9b10ddfd92eb8a0c57aa8925ac6da9fb7108707a733bf575bff8e3d4ae",
+     "shots": 2000,
+     "xeb_normalized": 0.8815489055061075,
+     "xeb_linear": 1.715810416039265,
+     "collision_probability": 0.01150921382400414
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "c7b75187442de9f65c843dcf10b6afde616ca868bc7a4168b18bd452265389b7",
+     "shots": 2000,
+     "xeb_normalized": 0.9095776302576116,
+     "xeb_linear": 1.9978794374126907,
+     "collision_probability": 0.012486294509431266
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "06c62ae01f9e45e1015199605f327a045ada1fdad4e9f1f4e6689349cae9a419",
+     "shots": 2000,
+     "xeb_normalized": 0.772615266763878,
+     "xeb_linear": 1.40122823646385,
+     "collision_probability": 0.010990691680285495
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "1e71464337f044da9b8a32e654bf11863413f7dbaba828555d05c679f39ae5a5",
+     "shots": 2000,
+     "xeb_normalized": 0.8211332652311937,
+     "xeb_linear": 2.2265590639182116,
+     "collision_probability": 0.014498314299065628,
+     "selected_round": 1,
+     "selected_estimate": 0.9217723785360393
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "9c3118f29a289373e7711825493597604b1d33a63f79d6861598f86a9676cd40",
+     "shots": 2000,
+     "xeb_normalized": 0.8477130757304968,
+     "xeb_linear": 1.5011067042850859,
+     "collision_probability": 0.010823328704443379
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "a095cf057f05db21caf467b0e2bca74cc6321ff0e60121ddb6b44100476ec5ed",
+     "shots": 2000,
+     "xeb_normalized": 0.9032182716945387,
+     "xeb_linear": 3.020314273246571,
+     "collision_probability": 0.01696854402084045
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "e1a384e280a2154445d7fa54597d9fd54f9fc47a31e8705dae59616d4e874250",
+     "shots": 2000,
+     "xeb_normalized": 0.9185229499819287,
+     "xeb_linear": 3.964067802255401,
+     "collision_probability": 0.020764445925169652
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "8967191f4e306470d1956ad11bfa8ffd7aaf397ece5c067ac0e49173f8a79c12",
+     "shots": 2000,
+     "xeb_normalized": 0.9135630658497388,
+     "xeb_linear": 1.863630088242831,
+     "collision_probability": 0.011874835097545885
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "b55095ece75fba89d073d877eece11763d7f1fdcdabc7f778532c63f7a1dcb43",
+     "shots": 2000,
+     "xeb_normalized": 0.8515374504501595,
+     "xeb_linear": 1.9477244477839788,
+     "collision_probability": 0.012841028640838512
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "e1a384e280a2154445d7fa54597d9fd54f9fc47a31e8705dae59616d4e874250",
+     "shots": 2000,
+     "xeb_normalized": 0.9122988422425045,
+     "xeb_linear": 3.9372064319563727,
+     "collision_probability": 0.020764445925169652,
+     "selected_round": 2,
+     "selected_estimate": 0.9185229499819287
+    }
+   ]
+  },
+  {
+   "seed": 107,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "8fd0eee0bd2bbccc2c0ddd6b80b4f595caddc8a008a7399d2dd580582fe1a75c",
+     "shots": 2000,
+     "xeb_normalized": 0.8098161226468378,
+     "xeb_linear": 1.189160854499785,
+     "collision_probability": 0.009642317062615827
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "28c0fe71f928bfa70090d26694f21e37c9fa4349bf2ae768241a092e3d0be771",
+     "shots": 2000,
+     "xeb_normalized": 0.8477225306926988,
+     "xeb_linear": 2.2966033852616037,
+     "collision_probability": 0.014488848254581705
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "f0d423613177a26238ce23b9473b2fecb946b637dd2a9af9034eb69242cff718",
+     "shots": 2000,
+     "xeb_normalized": 0.8710923880897431,
+     "xeb_linear": 3.262106209275169,
+     "collision_probability": 0.018534551835956738
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "f403cc679eb9e327097d1dbb19b2ac4e9fc940ae495aeee7752279a6bfc58b4c",
+     "shots": 2000,
+     "xeb_normalized": 0.9027804826461331,
+     "xeb_linear": 1.3675199082062464,
+     "collision_probability": 0.009823385720272908
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "6d0289c6864377cf5c1d452c5bacec3231784d2cf221478a6c96340108fb0d81",
+     "shots": 2000,
+     "xeb_normalized": 0.8910485618503651,
+     "xeb_linear": 1.7546368417082023,
+     "collision_probability": 0.011598367418033243
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "f403cc679eb9e327097d1dbb19b2ac4e9fc940ae495aeee7752279a6bfc58b4c",
+     "shots": 2000,
+     "xeb_normalized": 0.9356996643398018,
+     "xeb_linear": 1.4173854482719772,
+     "collision_probability": 0.009823385720272908,
+     "selected_round": 3,
+     "selected_estimate": 0.9027804826461331
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "8fd0eee0bd2bbccc2c0ddd6b80b4f595caddc8a008a7399d2dd580582fe1a75c",
+     "shots": 2000,
+     "xeb_normalized": 0.8599101663691596,
+     "xeb_linear": 1.2627206098223698,
+     "collision_probability": 0.009642317062615827
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "95790e95f3f976954234d31adeba6c97768ed312b6eb740bd92876ce6a5c468d",
+     "shots": 2000,
+     "xeb_normalized": 0.8807913599785471,
+     "xeb_linear": 1.4088491378964982,
+     "collision_probability": 0.010154400464421265
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "a7cd9df22c2b9586a2e9d79ce2b0777c0bb66969425023330d713c554644563d",
+     "shots": 2000,
+     "xeb_normalized": 0.8405411838079918,
+     "xeb_linear": 1.435367105670312,
+     "collision_probability": 0.010576836598889916
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "4531cf18aa54b18c8bdf8367d30873ac08272518d447c93405a5619b78b382c4",
+     "shots": 2000,
+     "xeb_normalized": 0.8469590349500316,
+     "xeb_linear": 1.4089227848162311,
+     "collision_probability": 0.010404326531544529
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "bfcd72a31114079a805624f9111b00dece43243065ba0c1b64b1257526f80040",
+     "shots": 2000,
+     "xeb_normalized": 0.8095661006598514,
+     "xeb_linear": 1.860661859388463,
+     "collision_probability": 0.012884158514588368
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "95790e95f3f976954234d31adeba6c97768ed312b6eb740bd92876ce6a5c468d",
+     "shots": 2000,
+     "xeb_normalized": 0.8671520476010328,
+     "xeb_linear": 1.3870326960492143,
+     "collision_probability": 0.010154400464421265,
+     "selected_round": 1,
+     "selected_estimate": 0.8807913599785471
+    }
+   ]
+  },
+  {
+   "seed": 108,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "356a7003a129c5f9c421e3eff41dbc48046cd14ca970585dee199a5afda1d9fa",
+     "shots": 2000,
+     "xeb_normalized": 0.8158168127763515,
+     "xeb_linear": 0.7740904213168129,
+     "collision_probability": 0.0076127079460900915
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "519622959c16bc15fdeb721f11b0d4f8195d9205481bde6ee9d886e6dc83f4fb",
+     "shots": 2000,
+     "xeb_normalized": 0.7863004786991685,
+     "xeb_linear": 1.4732553812685993,
+     "collision_probability": 0.011225212647207342
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "ea1dc1d02874ece278d679340d827409f7eda3bc2380014c8f02911124a4b850",
+     "shots": 2000,
+     "xeb_normalized": 0.96555258471546,
+     "xeb_linear": 2.645228472610272,
+     "collision_probability": 0.014607814973987304
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "13f822789687e9091d738fd976092aa94184f64a174db8bb923aa6da0a114ee5",
+     "shots": 2000,
+     "xeb_normalized": 0.8405955940498693,
+     "xeb_linear": 3.220523367947207,
+     "collision_probability": 0.018872030804815216
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "27996237880c4845c8488065804595d2f21f0e6467cf60fc0e8a432d05f209d9",
+     "shots": 2000,
+     "xeb_normalized": 0.840230185015745,
+     "xeb_linear": 2.0961708048222722,
+     "collision_probability": 0.013651397642111386
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "ea1dc1d02874ece278d679340d827409f7eda3bc2380014c8f02911124a4b850",
+     "shots": 2000,
+     "xeb_normalized": 0.8954262572763112,
+     "xeb_linear": 2.4531103415441193,
+     "collision_probability": 0.014607814973987304,
+     "selected_round": 2,
+     "selected_estimate": 0.96555258471546
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "356a7003a129c5f9c421e3eff41dbc48046cd14ca970585dee199a5afda1d9fa",
+     "shots": 2000,
+     "xeb_normalized": 0.8627116374116811,
+     "xeb_linear": 0.8185867273392433,
+     "collision_probability": 0.0076127079460900915
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "f07cac2267a29582c40c841aafce95306fb765cc349a938bcd02a04281c56dad",
+     "shots": 2000,
+     "xeb_normalized": 0.8276327648347097,
+     "xeb_linear": 1.4043835751336022,
+     "collision_probability": 0.010534640722860329
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "869e2c0ee4fa4019c0433a73a128234e72f21879ece8e8b4f8a5791aa53d46fb",
+     "shots": 2000,
+     "xeb_normalized": 0.9076570184016682,
+     "xeb_linear": 2.741738749236288,
+     "collision_probability": 0.015705769831911614
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "f845e67260c5c01d2c88036434664e8289e2593e836a23d14f9d49c22d9747b3",
+     "shots": 2000,
+     "xeb_normalized": 0.8755389371600424,
+     "xeb_linear": 4.302759646958275,
+     "collision_probability": 0.023103174497098
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "9da67aa3aa261c441185653b8297f3a075be0db3740d4e14546c9a332e13ff40",
+     "shots": 2000,
+     "xeb_normalized": 0.8795855047710441,
+     "xeb_linear": 2.329435967592949,
+     "collision_probability": 0.014251303663405376
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "869e2c0ee4fa4019c0433a73a128234e72f21879ece8e8b4f8a5791aa53d46fb",
+     "shots": 2000,
+     "xeb_normalized": 0.8225203085234312,
+     "xeb_linear": 2.484568241298505,
+     "collision_probability": 0.015705769831911614,
+     "selected_round": 2,
+     "selected_estimate": 0.9076570184016682
+    }
+   ]
+  },
+  {
+   "seed": 109,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "c6497842744865822b531a074564915b5edb5158ea1fbf82eb2b7d782869cf91",
+     "shots": 2000,
+     "xeb_normalized": 0.7991259094637565,
+     "xeb_linear": 1.2056950418595163,
+     "collision_probability": 0.009799872270893647
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "e311ecbe7de720f264b88bb66fdfe6938b901bb8c92af84db8b04e93dd58750c",
+     "shots": 2000,
+     "xeb_normalized": 0.8547558621500702,
+     "xeb_linear": 1.682952600614383,
+     "collision_probability": 0.011597374316613023
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "fdc4199cb4cd1dc11e0256d99fb19625bba6cf74ea15203765da3fabea01f5f2",
+     "shots": 2000,
+     "xeb_normalized": 0.859170638603122,
+     "xeb_linear": 0.9618835169063387,
+     "collision_probability": 0.008279487770350561
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "9d4de4190bec23e7bd2915124670054735f85ca7bb923f377ee807d85ea47d7d",
+     "shots": 2000,
+     "xeb_normalized": 0.8269777962168886,
+     "xeb_linear": 1.241918920768065,
+     "collision_probability": 0.009772484627390086
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "a8922c6a01ce2fff98d9860c5630334153172ebad10f22de54ac07e879cd7932",
+     "shots": 2000,
+     "xeb_normalized": 0.8534261606433551,
+     "xeb_linear": 3.8208113922639004,
+     "collision_probability": 0.021394634103177268
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "fdc4199cb4cd1dc11e0256d99fb19625bba6cf74ea15203765da3fabea01f5f2",
+     "shots": 2000,
+     "xeb_normalized": 0.8811540578359168,
+     "xeb_linear": 0.9864950290497778,
+     "collision_probability": 0.008279487770350561,
+     "selected_round": 2,
+     "selected_estimate": 0.859170638603122
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "c6497842744865822b531a074564915b5edb5158ea1fbf82eb2b7d782869cf91",
+     "shots": 2000,
+     "xeb_normalized": 0.8944528620760188,
+     "xeb_linear": 1.3495212308981217,
+     "collision_probability": 0.009799872270893647
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "3c7791c45114f2d832b7669ea561afeeba79ca3344c39314ee9203a7a5d1e030",
+     "shots": 2000,
+     "xeb_normalized": 0.8614671233518392,
+     "xeb_linear": 0.9242713682096009,
+     "collision_probability": 0.008097280550325697
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "4d523d6c48d3b5177fb8f5bf41750ecf03828e99ce4b69149195fbd9a1a8e161",
+     "shots": 2000,
+     "xeb_normalized": 0.7978261014664094,
+     "xeb_linear": 1.2756417506638793,
+     "collision_probability": 0.010151941359773813
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "590255ce347fcfc0baa82e62820bdc5dfe5c656901555976053d624b3cb3f512",
+     "shots": 2000,
+     "xeb_normalized": 0.9153150981931477,
+     "xeb_linear": 1.6264316886968264,
+     "collision_probability": 0.010847301006930217
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "fd57ad0adeeba56ae42f9ed09daadf6d3d17af0397fc0f9fa78df260cec6273d",
+     "shots": 2000,
+     "xeb_normalized": 0.8860811398403753,
+     "xeb_linear": 1.3100915729017069,
+     "collision_probability": 0.009681731472914774
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "590255ce347fcfc0baa82e62820bdc5dfe5c656901555976053d624b3cb3f512",
+     "shots": 2000,
+     "xeb_normalized": 0.9095829085711673,
+     "xeb_linear": 1.6162461090366507,
+     "collision_probability": 0.010847301006930217,
+     "selected_round": 3,
+     "selected_estimate": 0.9153150981931477
+    }
+   ]
+  },
+  {
+   "seed": 110,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "f9b8ecec80078314e272e93a151b833e4b641a72d0e58e26ee7826630c7e810c",
+     "shots": 2000,
+     "xeb_normalized": 0.7674366628249739,
+     "xeb_linear": 0.7143527760339112,
+     "collision_probability": 0.00754230319702959
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "9c50899e629ea84b7a12d2428e85e153beda352f0faa8eb231ad584e923f4768",
+     "shots": 2000,
+     "xeb_normalized": 0.9685160706602645,
+     "xeb_linear": 1.755301874372571,
+     "collision_probability": 0.010985789673609636
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "a864dbffa69c65fb7ee000fdb1246c49188dd9b5d49721150bd24687f8156c06",
+     "shots": 2000,
+     "xeb_normalized": 0.8818986393296798,
+     "xeb_linear": 0.9688086591320149,
+     "collision_probability": 0.008197456104605077
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "7ea4109846ed867467cc80eff8468bf2bfdd1c2631caea95d7e2d82839cb910c",
+     "shots": 2000,
+     "xeb_normalized": 0.9443318068317736,
+     "xeb_linear": 0.9790223163373519,
+     "collision_probability": 0.007955998081686774
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "8ddbbbf564c5da4fd96d406810f9c24bd17100a4de892552caa4d906e601f991",
+     "shots": 2000,
+     "xeb_normalized": 0.814780793722024,
+     "xeb_linear": 0.8894212982639629,
+     "collision_probability": 0.00817034406445695
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "9c50899e629ea84b7a12d2428e85e153beda352f0faa8eb231ad584e923f4768",
+     "shots": 2000,
+     "xeb_normalized": 0.9319292753375162,
+     "xeb_linear": 1.6889933511040573,
+     "collision_probability": 0.010985789673609636,
+     "selected_round": 1,
+     "selected_estimate": 0.9685160706602645
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "f9b8ecec80078314e272e93a151b833e4b641a72d0e58e26ee7826630c7e810c",
+     "shots": 2000,
+     "xeb_normalized": 0.7570232707734695,
+     "xeb_linear": 0.7046596822839477,
+     "collision_probability": 0.00754230319702959
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "c17b935d04ea8d89cc7cc6d56e52774c713e2ca8716ea0b61dbdc15249f4eebd",
+     "shots": 2000,
+     "xeb_normalized": 0.8251124311248426,
+     "xeb_linear": 1.2399652344179604,
+     "collision_probability": 0.009776497513229261
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "e9a812ddb5a5b442f7dcfa6c701b6abe5c7eb1f7e60b1af1ceb85b2784c3793b",
+     "shots": 2000,
+     "xeb_normalized": 0.868911292471309,
+     "xeb_linear": 1.2923024328121606,
+     "collision_probability": 0.009715883758832967
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "08a246b48fa5ecf8a85e71ec33f4b1a860ab840179084a9bbef002bee1fcc877",
+     "shots": 2000,
+     "xeb_normalized": 0.9256061488831112,
+     "xeb_linear": 1.5729496644627678,
+     "collision_probability": 0.010544423951439053
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "c412b1a1915086fcb4552ede854edec7ff6db902af2ea15bb3feabb4639817fe",
+     "shots": 2000,
+     "xeb_normalized": 0.9514658459829388,
+     "xeb_linear": 2.7629165627163603,
+     "collision_probability": 0.01524942418610138
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "c412b1a1915086fcb4552ede854edec7ff6db902af2ea15bb3feabb4639817fe",
+     "shots": 2000,
+     "xeb_normalized": 1.0082208378918225,
+     "xeb_linear": 2.92772469305959,
+     "collision_probability": 0.01524942418610138,
+     "selected_round": 4,
+     "selected_estimate": 0.9514658459829388
+    }
+   ]
+  },
+  {
+   "seed": 111,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "33642ad7f19864e6546d85a1bc55ad926ed0df3c107a5d18ffb9fe1b067d14f0",
+     "shots": 2000,
+     "xeb_normalized": 0.8203172915075544,
+     "xeb_linear": 1.803820772633694,
+     "collision_probability": 0.012495822554482082
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "4a08c07cb8020b4a6a32ce8a32752990eaa2cc4a90b14ab9b0fd7e04b117500e",
+     "shots": 2000,
+     "xeb_normalized": 0.9253127054288911,
+     "xeb_linear": 3.6619892333133954,
+     "collision_probability": 0.019365505404906728
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "d016b79349b82981ee98f54e98cad0bfbaf45ac3fc80dd14e5e270174bfec06b",
+     "shots": 2000,
+     "xeb_normalized": 0.8360326803278668,
+     "xeb_linear": 1.8804404831109895,
+     "collision_probability": 0.012692354670300245
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "1a57ed69f83367e0cf15f1ac5b83972679dc6f6a7ea39999a49f78b1dcb9a20a",
+     "shots": 2000,
+     "xeb_normalized": 0.8126520691080661,
+     "xeb_linear": 1.4565671282653425,
+     "collision_probability": 0.010907666179289736
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "082fddc6fcac265234df4bd49ee5f5fb9ab9f11480d905d0f6f1bea66fea164f",
+     "shots": 2000,
+     "xeb_normalized": 0.8761498290975831,
+     "xeb_linear": 1.5316379962763587,
+     "collision_probability": 0.010734946102260109
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "4a08c07cb8020b4a6a32ce8a32752990eaa2cc4a90b14ab9b0fd7e04b117500e",
+     "shots": 2000,
+     "xeb_normalized": 0.9196345585643247,
+     "xeb_linear": 3.6395175731262848,
+     "collision_probability": 0.019365505404906728,
+     "selected_round": 1,
+     "selected_estimate": 0.9253127054288911
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "33642ad7f19864e6546d85a1bc55ad926ed0df3c107a5d18ffb9fe1b067d14f0",
+     "shots": 2000,
+     "xeb_normalized": 0.7928616421158605,
+     "xeb_linear": 1.7434477057587174,
+     "collision_probability": 0.012495822554482082
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "981091b3010be16761f3d9d8799889e197f8f2d731c7c05b1f38c859bfc0b264",
+     "shots": 2000,
+     "xeb_normalized": 0.8321770686877574,
+     "xeb_linear": 1.804013568163512,
+     "collision_probability": 0.012374313187262384
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "2bc528b3baa244f15d9e497766469172b5b5c26dbd2abf17c6e4179f857adfec",
+     "shots": 2000,
+     "xeb_normalized": 0.8213779531339572,
+     "xeb_linear": 1.7441105041393357,
+     "collision_probability": 0.012200764882947156
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "de50a2d36444855307cdfb0195f2a4afea046206e3dd21af8fb8108c6da29e79",
+     "shots": 2000,
+     "xeb_normalized": 0.8337475955205655,
+     "xeb_linear": 2.691912795733233,
+     "collision_probability": 0.016518321584767248
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "486085a86a9425e82483faee42c3c634a7c245107863d99ceca4b3bfd622798a",
+     "shots": 2000,
+     "xeb_normalized": 0.9595725750710955,
+     "xeb_linear": 1.9163206320841892,
+     "collision_probability": 0.011707251887245734
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "486085a86a9425e82483faee42c3c634a7c245107863d99ceca4b3bfd622798a",
+     "shots": 2000,
+     "xeb_normalized": 0.8691275195226847,
+     "xeb_linear": 1.7356967475337388,
+     "collision_probability": 0.011707251887245734,
+     "selected_round": 4,
+     "selected_estimate": 0.9595725750710955
+    }
+   ]
+  },
+  {
+   "seed": 112,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "8aba382db75e2075cdd8534e63a27e9bc98e369c027647bf9286a77c0b8e11f0",
+     "shots": 2000,
+     "xeb_normalized": 0.8894240630217716,
+     "xeb_linear": 1.3472677511622981,
+     "collision_probability": 0.00982329775233735
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "f6cf84801d162b803ccba6dbf0853d46b6eb87707fc49454255715a04a49e525",
+     "shots": 2000,
+     "xeb_normalized": 0.9302776154803957,
+     "xeb_linear": 1.5053813052163978,
+     "collision_probability": 0.01022736922897867
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "b363916e3b1d1c10c62f9e257a8b01c4433782d29a52a791e6d1215906038f2a",
+     "shots": 2000,
+     "xeb_normalized": 0.8189863773851007,
+     "xeb_linear": 1.493167677279236,
+     "collision_probability": 0.011028085479113704
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "7ec5a23b98d8c4cfe40c57e4743dd62b66fa5391feb350f81c833da8662be370",
+     "shots": 2000,
+     "xeb_normalized": 0.821218416648487,
+     "xeb_linear": 1.243873892049621,
+     "collision_probability": 0.009822924897098198
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "f406d291c8d73cb8e8d667e79098059f4bd6971eaa289649c37af348cfbec3a6",
+     "shots": 2000,
+     "xeb_normalized": 0.8782113004474728,
+     "xeb_linear": 1.2504982605358217,
+     "collision_probability": 0.009468418042849295
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "f6cf84801d162b803ccba6dbf0853d46b6eb87707fc49454255715a04a49e525",
+     "shots": 2000,
+     "xeb_normalized": 0.9013328158580006,
+     "xeb_linear": 1.4585426416715515,
+     "collision_probability": 0.01022736922897867,
+     "selected_round": 1,
+     "selected_estimate": 0.9302776154803957
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "8aba382db75e2075cdd8534e63a27e9bc98e369c027647bf9286a77c0b8e11f0",
+     "shots": 2000,
+     "xeb_normalized": 0.8705794131763754,
+     "xeb_linear": 1.318722549751409,
+     "collision_probability": 0.00982329775233735
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "ab2161033e14b6f71c4d32453f89ec3608336e979df4b3fee9ce93d68e09963b",
+     "shots": 2000,
+     "xeb_normalized": 0.8264621214368462,
+     "xeb_linear": 2.132728262804428,
+     "collision_probability": 0.01398653022154964
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "e9068326f2aec8e2b545d4bc38eb589d61a45af8897728b521e142166cd5fc4d",
+     "shots": 2000,
+     "xeb_normalized": 0.8884525198781446,
+     "xeb_linear": 2.632924641652601,
+     "collision_probability": 0.01548240252514123
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "e5ec0ab06a7e734904e9b3bf1bce2694f2db0274415893d475fcb7f19cd47428",
+     "shots": 2000,
+     "xeb_normalized": 0.889548886818064,
+     "xeb_linear": 1.7620342344939135,
+     "collision_probability": 0.011643819379814863
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "f7d78c131432d9f0b9ddcb491db590a436eec9e370c6094001dd28a040dec80b",
+     "shots": 2000,
+     "xeb_normalized": 0.8822906501640295,
+     "xeb_linear": 1.475976488944501,
+     "collision_probability": 0.010440982243697208
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "e5ec0ab06a7e734904e9b3bf1bce2694f2db0274415893d475fcb7f19cd47428",
+     "shots": 2000,
+     "xeb_normalized": 0.8387584794985755,
+     "xeb_linear": 1.6614276935752321,
+     "collision_probability": 0.011643819379814863,
+     "selected_round": 3,
+     "selected_estimate": 0.889548886818064
+    }
+   ]
+  },
+  {
+   "seed": 113,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "d54c5e48d9b5b1cfb756614010d3eb760c94ca48579fe7a33ca8ae065c822536",
+     "shots": 2000,
+     "xeb_normalized": 0.8827407962586606,
+     "xeb_linear": 1.2344479348224322,
+     "collision_probability": 0.009368852686810869
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "02a74ebedaa11ff476d738b46edface4bffad15448db3532d1fa4247aa39a56f",
+     "shots": 2000,
+     "xeb_normalized": 0.8670835451685853,
+     "xeb_linear": 1.5300792477337515,
+     "collision_probability": 0.010799325176853801
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "d027854aeb2c5bf5ebdea2ef77c4cebf74a3cf1b3a3954e5653d3ad4681b2183",
+     "shots": 2000,
+     "xeb_normalized": 0.7384900792616248,
+     "xeb_linear": 1.4107685969911907,
+     "collision_probability": 0.011368523342259108
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "f8f7c683cb48dd7ad75cca061ce801a3e2ba618507e201a4fcd862307517c6c4",
+     "shots": 2000,
+     "xeb_normalized": 0.8320910778142053,
+     "xeb_linear": 1.1800984579277558,
+     "collision_probability": 0.00944621999149364
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "c36c8fd42535fc46207cdceaf0cb37028e56f58b242d68e7fac1eb427d106b66",
+     "shots": 2000,
+     "xeb_normalized": 0.8857632370876163,
+     "xeb_linear": 1.364418739935263,
+     "collision_probability": 0.009923389207985578
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "c36c8fd42535fc46207cdceaf0cb37028e56f58b242d68e7fac1eb427d106b66",
+     "shots": 2000,
+     "xeb_normalized": 0.8632593307809875,
+     "xeb_linear": 1.3297540008708277,
+     "collision_probability": 0.009923389207985578,
+     "selected_round": 4,
+     "selected_estimate": 0.8857632370876163
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "d54c5e48d9b5b1cfb756614010d3eb760c94ca48579fe7a33ca8ae065c822536",
+     "shots": 2000,
+     "xeb_normalized": 0.8064218381118335,
+     "xeb_linear": 1.1277214974906014,
+     "collision_probability": 0.009368852686810869
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "073f91c81d3b57734d853d9834e99507066fe90ca150f019a9fc237ae9fac671",
+     "shots": 2000,
+     "xeb_normalized": 0.8142570976311377,
+     "xeb_linear": 1.2936386245719267,
+     "collision_probability": 0.010112245492007668
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "991f50147df4c67b0185debe0156bd453bf410dd46230a3b34333af95250f2e0",
+     "shots": 2000,
+     "xeb_normalized": 0.8462061898081826,
+     "xeb_linear": 3.4226337860895075,
+     "collision_probability": 0.019705783716413447
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "c45f71653b206e905c9fa9f8725106f6a74a9802035ad2791950b1668868a2ed",
+     "shots": 2000,
+     "xeb_normalized": 0.8194121767146946,
+     "xeb_linear": 3.2018926878189884,
+     "collision_probability": 0.019170110688450308
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "4d09238a66b99f8145f70a891ad3449268b871e5521ea2469a577ce22a74c867",
+     "shots": 2000,
+     "xeb_normalized": 0.8979178087222536,
+     "xeb_linear": 1.6285350937519723,
+     "collision_probability": 0.010990935422400825
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "4d09238a66b99f8145f70a891ad3449268b871e5521ea2469a577ce22a74c867",
+     "shots": 2000,
+     "xeb_normalized": 0.8763097615238875,
+     "xeb_linear": 1.5893450222018122,
+     "collision_probability": 0.010990935422400825,
+     "selected_round": 4,
+     "selected_estimate": 0.8979178087222536
+    }
+   ]
+  },
+  {
+   "seed": 114,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "58f18f15110b5171a5074108b93142fae85aff177501aecdef4ed5b20eacf57b",
+     "shots": 2000,
+     "xeb_normalized": 0.7914133704931815,
+     "xeb_linear": 0.9964189005534771,
+     "collision_probability": 0.008824364193422708
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "8726d2ac52833019f7526c83734cc0e0d9171ca9783fb1e1e89d48c954e929bd",
+     "shots": 2000,
+     "xeb_normalized": 0.9330731713919194,
+     "xeb_linear": 1.6763613351593465,
+     "collision_probability": 0.010924227438680118
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "20018fb00e91b705e1134da17596c3aec291cee84fc776f2a6cac8e9a928f2c4",
+     "shots": 2000,
+     "xeb_normalized": 0.8430822913639339,
+     "xeb_linear": 1.9667941627548906,
+     "collision_probability": 0.013018989974447948
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "5a3e042104ed34273158160b7d14865b55dd3b14cbea68bc77121d11958a5c11",
+     "shots": 2000,
+     "xeb_normalized": 0.865397312507325,
+     "xeb_linear": 1.9010711805070155,
+     "collision_probability": 0.012487348174825535
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "bfe6cdb68af85b20d4e68e03967d884829cee38c0223687314ad554dd5dd261d",
+     "shots": 2000,
+     "xeb_normalized": 0.8904338497035742,
+     "xeb_linear": 2.0774407633429437,
+     "collision_probability": 0.013019788287554838
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "8726d2ac52833019f7526c83734cc0e0d9171ca9783fb1e1e89d48c954e929bd",
+     "shots": 2000,
+     "xeb_normalized": 0.8823954472359683,
+     "xeb_linear": 1.585313623218196,
+     "collision_probability": 0.010924227438680118,
+     "selected_round": 1,
+     "selected_estimate": 0.9330731713919194
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "58f18f15110b5171a5074108b93142fae85aff177501aecdef4ed5b20eacf57b",
+     "shots": 2000,
+     "xeb_normalized": 0.8673465630203446,
+     "xeb_linear": 1.0920216172049306,
+     "collision_probability": 0.008824364193422708
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "86b8c9c05f82072c7e3d5372ab7bc42675db20ef60d1d94794bb9697966c8bf8",
+     "shots": 2000,
+     "xeb_normalized": 0.8514498199967819,
+     "xeb_linear": 2.4546099974992712,
+     "collision_probability": 0.015167418982063755
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "e417903ab2ab1a8f41c8174ded99c5de3c15497e68fec36a234b0c6854893cfd",
+     "shots": 2000,
+     "xeb_normalized": 0.9149783191008165,
+     "xeb_linear": 1.203718989510902,
+     "collision_probability": 0.00904519942056968
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "5d941b8c58098b98721c8ba830296afeb982b08955b71fd02284067ceb2304ef",
+     "shots": 2000,
+     "xeb_normalized": 0.915988835626701,
+     "xeb_linear": 1.1769334529238868,
+     "collision_probability": 0.00892530276753563
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "a1e90cad668b471722e99fade6c7a5fbced1f3b8025e3fb8ed14655c50101f9f",
+     "shots": 2000,
+     "xeb_normalized": 0.8821949809929959,
+     "xeb_linear": 2.045782842530973,
+     "collision_probability": 0.012964722787548153
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "5d941b8c58098b98721c8ba830296afeb982b08955b71fd02284067ceb2304ef",
+     "shots": 2000,
+     "xeb_normalized": 0.8512083691999394,
+     "xeb_linear": 1.0936984886227061,
+     "collision_probability": 0.00892530276753563,
+     "selected_round": 3,
+     "selected_estimate": 0.915988835626701
+    }
+   ]
+  },
+  {
+   "seed": 115,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "39b06a631150c23afccfee9200910256a9bef0f1fb720dec881e9ae152ff05de",
+     "shots": 2000,
+     "xeb_normalized": 0.9273397956129634,
+     "xeb_linear": 2.7159776236089956,
+     "collision_probability": 0.015346811100055016
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "b33bec1576d4af5bb7f4b0f1db20fcf1a77164fc6fddc3a85e27c48c98d88571",
+     "shots": 2000,
+     "xeb_normalized": 0.8949782936912541,
+     "xeb_linear": 2.483659929114201,
+     "collision_probability": 0.014746509106271947
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "11a548ff94a289e4d211f098f95bb9064c864515e6b94d82638fa561f779a3f6",
+     "shots": 2000,
+     "xeb_normalized": 0.8469909727496447,
+     "xeb_linear": 1.403940164908629,
+     "collision_probability": 0.010381102088884476
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "31228ec04621c915cf208de7d6f0eb5832f842e8e7d7691186481e0a56f2eba3",
+     "shots": 2000,
+     "xeb_normalized": 0.8596177220368091,
+     "xeb_linear": 6.224069387817951,
+     "collision_probability": 0.032189486167533074
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "9d36ad0223e3f4e6a136465c5c02ff82ae4f5cd80f5714c0741f26de9d8b297d",
+     "shots": 2000,
+     "xeb_normalized": 0.8970700493097288,
+     "xeb_linear": 1.8351350684656262,
+     "collision_probability": 0.011897260698339351
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "39b06a631150c23afccfee9200910256a9bef0f1fb720dec881e9ae152ff05de",
+     "shots": 2000,
+     "xeb_normalized": 0.8566706766356812,
+     "xeb_linear": 2.509003063981052,
+     "collision_probability": 0.015346811100055016,
+     "selected_round": 0,
+     "selected_estimate": 0.9273397956129634
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "39b06a631150c23afccfee9200910256a9bef0f1fb720dec881e9ae152ff05de",
+     "shots": 2000,
+     "xeb_normalized": 0.8634275102442873,
+     "xeb_linear": 2.528792367723046,
+     "collision_probability": 0.015346811100055016
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "bd8822bcf49e829fec0796cef7ef66c148431d1f2f10901a44311e18cbdda7f1",
+     "shots": 2000,
+     "xeb_normalized": 0.8360179727138306,
+     "xeb_linear": 2.8816125400125956,
+     "collision_probability": 0.0173704330101866
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "92a8a49bac1a77faf9b0a1129d480097bfc5337e69e57c016e163d8511317852",
+     "shots": 2000,
+     "xeb_normalized": 0.8936596068003124,
+     "xeb_linear": 1.3331835564915844,
+     "collision_probability": 0.00973369059138047
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "777f8d8e73049c9e9993b119c1e672cd951990356e37081b81d13411f306f58a",
+     "shots": 2000,
+     "xeb_normalized": 0.8282999308904526,
+     "xeb_linear": 1.7301006400501167,
+     "collision_probability": 0.012065378563406315
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "679faa90b1370b82f59c9b436e0ea6be1d8e6b05d0c0768f80401599d4a7ca94",
+     "shots": 2000,
+     "xeb_normalized": 0.9082157800039694,
+     "xeb_linear": 1.1527620240601673,
+     "collision_probability": 0.008864297146533116
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "679faa90b1370b82f59c9b436e0ea6be1d8e6b05d0c0768f80401599d4a7ca94",
+     "shots": 2000,
+     "xeb_normalized": 0.8990809004065748,
+     "xeb_linear": 1.1411674861473902,
+     "collision_probability": 0.008864297146533116,
+     "selected_round": 4,
+     "selected_estimate": 0.9082157800039694
+    }
+   ]
+  },
+  {
+   "seed": 116,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "52fb6f826dccb946c4f457c1239612b8e57e74f4350cd893d65462c16ebf3f9d",
+     "shots": 2000,
+     "xeb_normalized": 0.8688594154530906,
+     "xeb_linear": 1.39804102805491,
+     "collision_probability": 0.010191614086192992
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "b6902c31137aacf0541c574ffa20c7634d2e0985af4be7d30e5a3b6f4da04d1e",
+     "shots": 2000,
+     "xeb_normalized": 0.8749430032055026,
+     "xeb_linear": 1.8768543751199513,
+     "collision_probability": 0.012285609999396818
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "bffcf439e3f6bb75432355078597085fdfa437b7bdaf18841cdaf0876920d9e3",
+     "shots": 2000,
+     "xeb_normalized": 0.8988393277019978,
+     "xeb_linear": 2.648810702968204,
+     "collision_probability": 0.015417669771676898
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "4f6398617b29c7263aed61f99fb1266f878bea253b8030504b5c102e13477dfa",
+     "shots": 2000,
+     "xeb_normalized": 0.8722560926158692,
+     "xeb_linear": 1.6113015007730827,
+     "collision_probability": 0.011122188691260845
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "6d187221860447f65f071f51fc86a98285b6bc85da1c4aea4e813e0f8f611a0a",
+     "shots": 2000,
+     "xeb_normalized": 0.9377374965432063,
+     "xeb_linear": 3.1483782972379375,
+     "collision_probability": 0.017021170506987583
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "6d187221860447f65f071f51fc86a98285b6bc85da1c4aea4e813e0f8f611a0a",
+     "shots": 2000,
+     "xeb_normalized": 0.8919723114862577,
+     "xeb_linear": 2.9947253656515165,
+     "collision_probability": 0.017021170506987583,
+     "selected_round": 4,
+     "selected_estimate": 0.9377374965432063
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "52fb6f826dccb946c4f457c1239612b8e57e74f4350cd893d65462c16ebf3f9d",
+     "shots": 2000,
+     "xeb_normalized": 0.9282732928760807,
+     "xeb_linear": 1.4936411180071492,
+     "collision_probability": 0.010191614086192992
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "bb6b05818173b6a06b1dd30482753b1caa5ea96762896aa5ea434d6ab3513d06",
+     "shots": 2000,
+     "xeb_normalized": 0.8442586243146314,
+     "xeb_linear": 1.5761507041802156,
+     "collision_probability": 0.011198847920692945
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "d4a9c2a1f520a06356df6514464c21cd0836b4825edf0da150c6123950274620",
+     "shots": 2000,
+     "xeb_normalized": 0.9796227356634504,
+     "xeb_linear": 1.8811404306656843,
+     "collision_probability": 0.011407305804213497
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "3f1453ac842cd46ea2d9e69f4c1c2d190e5fa059c95d3a558f3a24264c80de94",
+     "shots": 2000,
+     "xeb_normalized": 0.8514623122088895,
+     "xeb_linear": 1.7525549670744112,
+     "collision_probability": 0.011946438910269593
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "ec7bc9d237667aeb5d01cfea9f56dbbf195ee2e536bc8c8855826316d43ffe01",
+     "shots": 2000,
+     "xeb_normalized": 0.8220731651164039,
+     "xeb_linear": 1.5174166053120213,
+     "collision_probability": 0.011116567604347021
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "d4a9c2a1f520a06356df6514464c21cd0836b4825edf0da150c6123950274620",
+     "shots": 2000,
+     "xeb_normalized": 0.9214747372214401,
+     "xeb_linear": 1.7694805570741736,
+     "collision_probability": 0.011407305804213497,
+     "selected_round": 2,
+     "selected_estimate": 0.9796227356634504
+    }
+   ]
+  },
+  {
+   "seed": 117,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "d1b3a806025686427f7645a09973cb7bb2c95aec5a3a6778ad7fc90328b0bbb8",
+     "shots": 2000,
+     "xeb_normalized": 0.8792196457442167,
+     "xeb_linear": 3.8890365625081325,
+     "collision_probability": 0.02118469588758988
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "b126a4071b010e63e7dcbcae276c7433b786a6d0cd534d90aa92a0c933766aef",
+     "shots": 2000,
+     "xeb_normalized": 0.8345259549916754,
+     "xeb_linear": 2.916192793301205,
+     "collision_probability": 0.01755636840637894
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "27b7990afada79ae957e509b1bb40d17f2194a524ca504665cbff48b3766a604",
+     "shots": 2000,
+     "xeb_normalized": 0.9416502612174023,
+     "xeb_linear": 1.8890706978058418,
+     "collision_probability": 0.011742686432103756
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "510e33b263072c1df16922ab5229aff0a1d04f9a6fc4308bb3986f4865b23391",
+     "shots": 2000,
+     "xeb_normalized": 0.9008690205566647,
+     "xeb_linear": 1.6813298158369299,
+     "collision_probability": 0.011196648985031919
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "d7963819bfabffdcfb36d5849a2947acc297b63d6c523afcb8420809ea8f979f",
+     "shots": 2000,
+     "xeb_normalized": 0.8293518001741988,
+     "xeb_linear": 1.9954778274350988,
+     "collision_probability": 0.013304957836386333
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "27b7990afada79ae957e509b1bb40d17f2194a524ca504665cbff48b3766a604",
+     "shots": 2000,
+     "xeb_normalized": 0.9115636955034079,
+     "xeb_linear": 1.8287132041282663,
+     "collision_probability": 0.011742686432103756,
+     "selected_round": 2,
+     "selected_estimate": 0.9416502612174023
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "d1b3a806025686427f7645a09973cb7bb2c95aec5a3a6778ad7fc90328b0bbb8",
+     "shots": 2000,
+     "xeb_normalized": 0.8782102376888192,
+     "xeb_linear": 3.88457166587743,
+     "collision_probability": 0.02118469588758988
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "11831399ce4fed2ccf3a156a8ee91abadc12d0410584734882608d67e169873d",
+     "shots": 2000,
+     "xeb_normalized": 0.9044257053459489,
+     "xeb_linear": 3.9461367663390057,
+     "collision_probability": 0.020949769055681366
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "c8aa1102fa1a90aa63ed65c8a7d2b30cfff6c00428a34ea1fa27186d0a47fadc",
+     "shots": 2000,
+     "xeb_normalized": 0.9123216087019939,
+     "xeb_linear": 1.7611035853147516,
+     "collision_probability": 0.011446694964274487
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "7a9559ea25e8682298cefc14c11621478df912a3a7ceebdba8e7d122fe8f1b1d",
+     "shots": 2000,
+     "xeb_normalized": 0.9036073446506195,
+     "xeb_linear": 1.6573487852763957,
+     "collision_probability": 0.011070887085800918
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "dcd4bc439617bb624df79e0145e47df4c0b179fa59770d0e65e8509434bee698",
+     "shots": 2000,
+     "xeb_normalized": 0.9370957033617364,
+     "xeb_linear": 1.9085964637429695,
+     "collision_probability": 0.011862166252470566
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "dcd4bc439617bb624df79e0145e47df4c0b179fa59770d0e65e8509434bee698",
+     "shots": 2000,
+     "xeb_normalized": 0.8973641444288538,
+     "xeb_linear": 1.8276746191477407,
+     "collision_probability": 0.011862166252470566,
+     "selected_round": 4,
+     "selected_estimate": 0.9370957033617364
+    }
+   ]
+  },
+  {
+   "seed": 118,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "8e27a776b2a7d56bf48e7b4605d31c1a210ca0071005c389fb2ea796e662b4bc",
+     "shots": 2000,
+     "xeb_normalized": 0.8256753845191973,
+     "xeb_linear": 3.082125891401067,
+     "collision_probability": 0.018487712023717982
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "dcd8c1beda85ac7ea39e0ce2ba4467ceeb7d68045d65d4553a544473d3243e50",
+     "shots": 2000,
+     "xeb_normalized": 0.856464901777374,
+     "xeb_linear": 1.4532141505556044,
+     "collision_probability": 0.01053421311188872
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "7caacdc79995308008df8eca358cd551a344728ecae089202652def721bab04b",
+     "shots": 2000,
+     "xeb_normalized": 0.8983402147681201,
+     "xeb_linear": 1.2714324595469968,
+     "collision_probability": 0.009434815863421153
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "142269b68fcfa5e26dfc12edad81e88a8262c3d4b5014233ceac475bdaa01e01",
+     "shots": 2000,
+     "xeb_normalized": 0.8633323165623226,
+     "xeb_linear": 1.2005857481156443,
+     "collision_probability": 0.009338443361243402
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "28530f1e9ce518b9d7fe5d4d99d91db12d4376d3fd1e1cfb969cc2b5bf09546d",
+     "shots": 2000,
+     "xeb_normalized": 0.8918213651809234,
+     "xeb_linear": 1.4510086869504213,
+     "collision_probability": 0.010261785878253172
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "7caacdc79995308008df8eca358cd551a344728ecae089202652def721bab04b",
+     "shots": 2000,
+     "xeb_normalized": 0.8267427356365455,
+     "xeb_linear": 1.170099626514336,
+     "collision_probability": 0.009434815863421153,
+     "selected_round": 2,
+     "selected_estimate": 0.8983402147681201
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "8e27a776b2a7d56bf48e7b4605d31c1a210ca0071005c389fb2ea796e662b4bc",
+     "shots": 2000,
+     "xeb_normalized": 0.869859489129118,
+     "xeb_linear": 3.2470587153169816,
+     "collision_probability": 0.018487712023717982
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "71256637cf58ce410763caa25250ec98751b80e3a4e24b7f263924d1dbe516ff",
+     "shots": 2000,
+     "xeb_normalized": 0.8674697633099535,
+     "xeb_linear": 2.8165562481764366,
+     "collision_probability": 0.016589312061389735
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "0995db79e0758161daf8d224c096bddd52c15e753cdb05a848b25ab9a0fbd3cd",
+     "shots": 2000,
+     "xeb_normalized": 0.8660130937094894,
+     "xeb_linear": 1.8007882651567577,
+     "collision_probability": 0.01202890912820979
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "81f638cad7b7f38baeaf3eb4d1f6285eed90e9466251ee42d90ca541cfeb8482",
+     "shots": 2000,
+     "xeb_normalized": 0.8117325865531881,
+     "xeb_linear": 6.764665066718983,
+     "collision_probability": 0.03645942496747999
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "bcb650bc7ba8456a5927142b02f208b5e6ba203abfbf3099eb710ad83b11b320",
+     "shots": 2000,
+     "xeb_normalized": 0.9500096373191251,
+     "xeb_linear": 3.6436078846878033,
+     "collision_probability": 0.01888803833188054
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "bcb650bc7ba8456a5927142b02f208b5e6ba203abfbf3099eb710ad83b11b320",
+     "shots": 2000,
+     "xeb_normalized": 0.871697245802259,
+     "xeb_linear": 3.343253408279728,
+     "collision_probability": 0.01888803833188054,
+     "selected_round": 4,
+     "selected_estimate": 0.9500096373191251
+    }
+   ]
+  },
+  {
+   "seed": 119,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "9b2b82f050d524fa9fcad960b646055eb3871eef723eaba115461df0f311aeb9",
+     "shots": 2000,
+     "xeb_normalized": 0.9180773797737588,
+     "xeb_linear": 2.6723858498690998,
+     "collision_probability": 0.015276759127045096
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "7e444dee10ed6ef9232187fd272d140e214099481480e89b4ed0b6f40f19130e",
+     "shots": 2000,
+     "xeb_normalized": 0.8210012693668365,
+     "xeb_linear": 1.9553950791410388,
+     "collision_probability": 0.013209843444849823
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "9c7e3d8b01d6070ae589fab4af87c7ed47bff76f3529a06bd856e269ae84f4ac",
+     "shots": 2000,
+     "xeb_normalized": 0.8727946284597426,
+     "xeb_linear": 2.203763087211618,
+     "collision_probability": 0.013769337235782001
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "9cb59922d68331a489294c469223ce22f4345ad9f2d653b5d8d5e55737a58b76",
+     "shots": 2000,
+     "xeb_normalized": 0.9151080060690141,
+     "xeb_linear": 1.230069754457971,
+     "collision_probability": 0.009156952590825194
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "60534e1b52a8c03b67db1a18a67875870498f16b1aa10989f5f3f8e8324dd961",
+     "shots": 2000,
+     "xeb_normalized": 0.9382907180346586,
+     "xeb_linear": 1.7034183302559023,
+     "collision_probability": 0.01099784509378876
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "60534e1b52a8c03b67db1a18a67875870498f16b1aa10989f5f3f8e8324dd961",
+     "shots": 2000,
+     "xeb_normalized": 0.9007065674535824,
+     "xeb_linear": 1.6351862463224678,
+     "collision_probability": 0.01099784509378876,
+     "selected_round": 4,
+     "selected_estimate": 0.9382907180346586
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "9b2b82f050d524fa9fcad960b646055eb3871eef723eaba115461df0f311aeb9",
+     "shots": 2000,
+     "xeb_normalized": 0.8364172678173919,
+     "xeb_linear": 2.434685485500359,
+     "collision_probability": 0.015276759127045096
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "f0a012ea2abf45cbf9e8ecb3e351fcf5d577b36fde5234079b7e055b4301a915",
+     "shots": 2000,
+     "xeb_normalized": 0.8599988493852547,
+     "xeb_linear": 1.2021987854279779,
+     "collision_probability": 0.009366825916973496
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "b651d22b0276f6c24e4cc3444f38ea3b88202ff5e6097f703b14cc8381c51cdb",
+     "shots": 2000,
+     "xeb_normalized": 0.8889753642944778,
+     "xeb_linear": 2.135338175357297,
+     "collision_probability": 0.013289147527322688
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "6c1bab90c61de4bcd3660a73ed2add06ebdfffd7b6b27e3ce6197a1b1fc86d82",
+     "shots": 2000,
+     "xeb_normalized": 0.8533153917030807,
+     "xeb_linear": 2.085474290749743,
+     "collision_probability": 0.013452994412968232
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "38ff8086095d3afb15ca7cdb639feb5bb7db70efef7ac3e8b1f7e9246e3d1615",
+     "shots": 2000,
+     "xeb_normalized": 0.8408456917083796,
+     "xeb_linear": 2.321383293761095,
+     "collision_probability": 0.014690515865512918
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "b651d22b0276f6c24e4cc3444f38ea3b88202ff5e6097f703b14cc8381c51cdb",
+     "shots": 2000,
+     "xeb_normalized": 0.8620203875798806,
+     "xeb_linear": 2.070591734560002,
+     "collision_probability": 0.013289147527322688,
+     "selected_round": 2,
+     "selected_estimate": 0.8889753642944778
+    }
+   ]
+  },
+  {
+   "seed": 120,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "34c86c4c594c47ef5f500d7cfa741e06b6f3f28d85fdf04ac0d7d7eeeb0c6b48",
+     "shots": 2000,
+     "xeb_normalized": 0.8356039254366439,
+     "xeb_linear": 0.9764757169268736,
+     "collision_probability": 0.00847104218578636
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "f6d9ce6e9c9263bf2b853b70b5b2c288f00207d69776314b098045c79abf5435",
+     "shots": 2000,
+     "xeb_normalized": 0.8556486385904188,
+     "xeb_linear": 0.9181868018233994,
+     "collision_probability": 0.008098002353549313
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "0cdfff555de7973263765ceadba32c705070f5e1e8f69fe6d281ec9bfb237989",
+     "shots": 2000,
+     "xeb_normalized": 0.8068875070742357,
+     "xeb_linear": 1.154211161817619,
+     "collision_probability": 0.009493940119528976
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "9594aa9bebde8d82462f33eb4631f4dc39505115115e5dd9ea1e4dc3c9035cf7",
+     "shots": 2000,
+     "xeb_normalized": 0.8150390329530325,
+     "xeb_linear": 2.025382181135798,
+     "collision_probability": 0.013613330060198329
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "49a1fd4295d8884cb2f17aab925c777510a808937d92c0025b59813cdebfd8b4",
+     "shots": 2000,
+     "xeb_normalized": 0.8409555862642762,
+     "xeb_linear": 2.0678553756276825,
+     "collision_probability": 0.013511466010191535
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "f6d9ce6e9c9263bf2b853b70b5b2c288f00207d69776314b098045c79abf5435",
+     "shots": 2000,
+     "xeb_normalized": 0.8682671679039754,
+     "xeb_linear": 0.9317276018101979,
+     "collision_probability": 0.008098002353549313,
+     "selected_round": 1,
+     "selected_estimate": 0.8556486385904188
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "34c86c4c594c47ef5f500d7cfa741e06b6f3f28d85fdf04ac0d7d7eeeb0c6b48",
+     "shots": 2000,
+     "xeb_normalized": 0.836609163984892,
+     "xeb_linear": 0.9776504254247667,
+     "collision_probability": 0.00847104218578636
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "ac932af43c666382ab2f374669f3358bdd08e88da4953e6b237bc31f3d6637d3",
+     "shots": 2000,
+     "xeb_normalized": 0.8579824225617784,
+     "xeb_linear": 0.8954972047931062,
+     "collision_probability": 0.007983298508498084
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "e3398b6f472b980985ae7bad72bb1cb7e659a72585ba1de5692b3f4ec48f1adf",
+     "shots": 2000,
+     "xeb_normalized": 0.8714322273400822,
+     "xeb_linear": 1.8193260957170931,
+     "collision_probability": 0.012061494135378346
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "b038cbeb4cc43078b1edd75e0066fbc552f190515cedb231737b71e3b012716b",
+     "shots": 2000,
+     "xeb_normalized": 0.8467342799642312,
+     "xeb_linear": 1.765555595481906,
+     "collision_probability": 0.012051310036003897
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "ce1828b76935e1410f1a88630edf3c58ad3256f958a2c864915209545bc7260a",
+     "shots": 2000,
+     "xeb_normalized": 0.8250717298102674,
+     "xeb_linear": 1.0973034572678761,
+     "collision_probability": 0.009101363921717235
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "e3398b6f472b980985ae7bad72bb1cb7e659a72585ba1de5692b3f4ec48f1adf",
+     "shots": 2000,
+     "xeb_normalized": 0.8835968784322769,
+     "xeb_linear": 1.8447227547836005,
+     "collision_probability": 0.012061494135378346,
+     "selected_round": 2,
+     "selected_estimate": 0.8714322273400822
+    }
+   ]
+  },
+  {
+   "seed": 121,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "04cbb3900a4168e7fb733b9fec806b17f94bc7f0c0b33aa806a39cfe069a9e26",
+     "shots": 2000,
+     "xeb_normalized": 0.9439573516129448,
+     "xeb_linear": 1.219380405291453,
+     "collision_probability": 0.008952245669222583
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "30e30f9cd59201caba4b0541fbeee6ace6a75c9ea847fa3f177d700a15d9476e",
+     "shots": 2000,
+     "xeb_normalized": 0.7484052307640288,
+     "xeb_linear": 0.9422256285805193,
+     "collision_probability": 0.008824132332122732
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "ca72077b93b11af78d84f652da2fe705ad5115c4453d50af385abcc715f079bd",
+     "shots": 2000,
+     "xeb_normalized": 0.9122301268579273,
+     "xeb_linear": 1.280184192962318,
+     "collision_probability": 0.009388111820310038
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "b1f68a5cbdf2056d56fd89d131e3e1fc7d26b7f7a6e80242926ca0c69ff9e0e9",
+     "shots": 2000,
+     "xeb_normalized": 0.9199063241200073,
+     "xeb_linear": 2.6657263895710566,
+     "collision_probability": 0.015225874005436778
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "c16e845dc8613357be3f3f0e3d8c68ddf68b20c6382954402003afcb65953ec8",
+     "shots": 2000,
+     "xeb_normalized": 0.8551017328550483,
+     "xeb_linear": 1.2311630646374354,
+     "collision_probability": 0.009530412057516511
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "04cbb3900a4168e7fb733b9fec806b17f94bc7f0c0b33aa806a39cfe069a9e26",
+     "shots": 2000,
+     "xeb_normalized": 1.012657016475129,
+     "xeb_linear": 1.308124907402589,
+     "collision_probability": 0.008952245669222583,
+     "selected_round": 0,
+     "selected_estimate": 0.9439573516129448
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "04cbb3900a4168e7fb733b9fec806b17f94bc7f0c0b33aa806a39cfe069a9e26",
+     "shots": 2000,
+     "xeb_normalized": 0.9335209610891751,
+     "xeb_linear": 1.2058989380568272,
+     "collision_probability": 0.008952245669222583
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "e26fe3fbef6e81b5e240ed8e58d0bd0a31eb4b1d2436f5bb297df116255a1395",
+     "shots": 2000,
+     "xeb_normalized": 0.910076406355923,
+     "xeb_linear": 1.8568208330982325,
+     "collision_probability": 0.011876137284885072
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "9eb37eee42782fa7912d144fe5d5565cde272cb185cfef052e969d2555169777",
+     "shots": 2000,
+     "xeb_normalized": 0.871713657058943,
+     "xeb_linear": 2.1950220321929326,
+     "collision_probability": 0.013742398308358866
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "10c4a4596bab6f802fc35fb026fa139ec7fb6f52541488ccd574d7aaac9fcf2f",
+     "shots": 2000,
+     "xeb_normalized": 0.8538038600528673,
+     "xeb_linear": 1.1390128913491462,
+     "collision_probability": 0.009117363834220783
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "b61636884e44881fa77379424034557b23da188698be3dd0cbccbe40553a1183",
+     "shots": 2000,
+     "xeb_normalized": 0.8943686958447974,
+     "xeb_linear": 2.3293608953533784,
+     "collision_probability": 0.014079980408664844
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "04cbb3900a4168e7fb733b9fec806b17f94bc7f0c0b33aa806a39cfe069a9e26",
+     "shots": 2000,
+     "xeb_normalized": 0.9453250286987112,
+     "xeb_linear": 1.221147136210281,
+     "collision_probability": 0.008952245669222583,
+     "selected_round": 0,
+     "selected_estimate": 0.9335209610891751
+    }
+   ]
+  },
+  {
+   "seed": 122,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "84b6d6c3191f9ae4b0a1247a73eea078efc7afb362002668eb1126e5073d0360",
+     "shots": 2000,
+     "xeb_normalized": 0.8964622908401424,
+     "xeb_linear": 3.791520502371104,
+     "collision_probability": 0.020427443488804722
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "dec94103afb2ce40439277f2cce903e00e9826dba158c72b4246126ce61cb2fb",
+     "shots": 2000,
+     "xeb_normalized": 0.8588736963414446,
+     "xeb_linear": 2.356729423526293,
+     "collision_probability": 0.01462490904132865
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "84853aa6da98569a12b805866a3035020089134f016e466f1c8019e17e559ae7",
+     "shots": 2000,
+     "xeb_normalized": 0.8264466174468107,
+     "xeb_linear": 1.524856858546198,
+     "collision_probability": 0.011113578311292215
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "a22d62aa08ad3de3f71b65b6b83f5c47287435b0250574dff98a91c47348b689",
+     "shots": 2000,
+     "xeb_normalized": 0.8969530924248383,
+     "xeb_linear": 1.67549639489296,
+     "collision_probability": 0.01120307281919226
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "c4aabee9efad5b5ec3afdaa391e0f4a03e89d7b38615ca03ff2d472fa90c7526",
+     "shots": 2000,
+     "xeb_normalized": 0.9090109861935304,
+     "xeb_linear": 2.0072261124119466,
+     "collision_probability": 0.012531808019317336
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "c4aabee9efad5b5ec3afdaa391e0f4a03e89d7b38615ca03ff2d472fa90c7526",
+     "shots": 2000,
+     "xeb_normalized": 0.9498506510192396,
+     "xeb_linear": 2.0974059264135154,
+     "collision_probability": 0.012531808019317336,
+     "selected_round": 4,
+     "selected_estimate": 0.9090109861935304
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "84b6d6c3191f9ae4b0a1247a73eea078efc7afb362002668eb1126e5073d0360",
+     "shots": 2000,
+     "xeb_normalized": 0.8864951923377434,
+     "xeb_linear": 3.7493654014737965,
+     "collision_probability": 0.020427443488804722
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "f419af819b73ee0719805f1fb79482a2fe456761f87b36cbbd964f4fdc659b54",
+     "shots": 2000,
+     "xeb_normalized": 0.9337318093655079,
+     "xeb_linear": 3.348271361381891,
+     "collision_probability": 0.017913682192211185
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "3ba0145d3351b7aecfe1928277f3dd5748560779bd34fa2aff3411e16bf732c7",
+     "shots": 2000,
+     "xeb_normalized": 0.9025289686995236,
+     "xeb_linear": 4.002463900380422,
+     "collision_probability": 0.021229377736707824
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "d2dd607c4e93b6bde6cdfa2c6c1cb4d2fa4054a039f1ead27cdc8e4ef8958ea8",
+     "shots": 2000,
+     "xeb_normalized": 0.8779858195774515,
+     "xeb_linear": 1.383459731837795,
+     "collision_probability": 0.010061405877223893
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "e952b8a39344ea50cc882b895b4614320e5b930832d3e8285d2bae65ca32cba1",
+     "shots": 2000,
+     "xeb_normalized": 0.9303213348753353,
+     "xeb_linear": 2.8197989489203934,
+     "collision_probability": 0.015746072684165675
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "f419af819b73ee0719805f1fb79482a2fe456761f87b36cbbd964f4fdc659b54",
+     "shots": 2000,
+     "xeb_normalized": 0.9510646761634387,
+     "xeb_linear": 3.410425334212264,
+     "collision_probability": 0.017913682192211185,
+     "selected_round": 1,
+     "selected_estimate": 0.9337318093655079
+    }
+   ]
+  },
+  {
+   "seed": 123,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "5e1f144c30da1f79af777a1f405caaabc496ce70d14acb622b280edb4954f29d",
+     "shots": 2000,
+     "xeb_normalized": 0.8422279113844982,
+     "xeb_linear": 3.390444885597816,
+     "collision_probability": 0.01963112108934138
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "97ed77a8943c787b7c10d2fce483f9eed2ffbe3c0bc90a6313a9bbf64a2eac0c",
+     "shots": 2000,
+     "xeb_normalized": 0.811920754873111,
+     "xeb_linear": 2.926937090205225,
+     "collision_probability": 0.017988102126567443
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "20111066c26a4a9ba9ff7592b868ae07b26401da341dcf54a75a07d9011f78a7",
+     "shots": 2000,
+     "xeb_normalized": 0.8564934661236029,
+     "xeb_linear": 2.518695748929251,
+     "collision_probability": 0.015393384062777595
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "5090933b9cd7c805e851384d8294713990311fa2e14ae7ddc589df50e87ab3e7",
+     "shots": 2000,
+     "xeb_normalized": 0.8451833198042566,
+     "xeb_linear": 1.281293010031678,
+     "collision_probability": 0.009828102340383865
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "f84b4ee8c4ac8000d1c86bdda8d4e5387e495c17ab163605c704cfadefe4507a",
+     "shots": 2000,
+     "xeb_normalized": 0.8418550384166937,
+     "xeb_linear": 1.6608532414541042,
+     "collision_probability": 0.011612693126635857
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "20111066c26a4a9ba9ff7592b868ae07b26401da341dcf54a75a07d9011f78a7",
+     "shots": 2000,
+     "xeb_normalized": 0.9049457934854029,
+     "xeb_linear": 2.6611798142242487,
+     "collision_probability": 0.015393384062777595,
+     "selected_round": 2,
+     "selected_estimate": 0.8564934661236029
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "5e1f144c30da1f79af777a1f405caaabc496ce70d14acb622b280edb4954f29d",
+     "shots": 2000,
+     "xeb_normalized": 0.7983115818553229,
+     "xeb_linear": 3.213656758733607,
+     "collision_probability": 0.01963112108934138
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "4608f8f054747c5b88ebaf94917fc1f8de75715f43b9dc7d9cc60526d797a459",
+     "shots": 2000,
+     "xeb_normalized": 0.8111508824412107,
+     "xeb_linear": 2.1634502101790063,
+     "collision_probability": 0.014324752360594103
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "baca1d44ce5dd796ed1db3a83eb9ed09f30a9d2251e21b02dea15e21a0e40d2a",
+     "shots": 2000,
+     "xeb_normalized": 0.8350755455716211,
+     "xeb_linear": 2.0459032214938175,
+     "collision_probability": 0.013476413443703428
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "7ee1b50d8a4d418c023ec3402370af2383a774ad1cd77eb48b76725d12bcdfd3",
+     "shots": 2000,
+     "xeb_normalized": 0.8791147035135491,
+     "xeb_linear": 1.4599901274881697,
+     "collision_probability": 0.010393556392109236
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "c217228b6772acb8a153666adcb3b7eca9df9bf23536e11f21288984f341cf3d",
+     "shots": 2000,
+     "xeb_normalized": 0.8946001051946548,
+     "xeb_linear": 2.029047511640069,
+     "collision_probability": 0.012766037514354716
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "c217228b6772acb8a153666adcb3b7eca9df9bf23536e11f21288984f341cf3d",
+     "shots": 2000,
+     "xeb_normalized": 0.8638000081650563,
+     "xeb_linear": 1.9591896389735086,
+     "collision_probability": 0.012766037514354716,
+     "selected_round": 4,
+     "selected_estimate": 0.8946001051946548
+    }
+   ]
+  },
+  {
+   "seed": 124,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "42e025ae35465e98aa83fd2a9c5f27c52f79bafdd5899ea58129929857feca09",
+     "shots": 2000,
+     "xeb_normalized": 0.8329193494461957,
+     "xeb_linear": 2.601159054479643,
+     "collision_probability": 0.016105243291867886
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "5bd3ca3430fe09c55a2135914876d550c271b929035c00ddb80051b6d3e96b72",
+     "shots": 2000,
+     "xeb_normalized": 0.8304489125167892,
+     "xeb_linear": 2.1968130545749758,
+     "collision_probability": 0.014239577992960687
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "14f469b6ce70a94131dded2f7599f5e876466dbd67549592d16bd1a2bb1e1f2a",
+     "shots": 2000,
+     "xeb_normalized": 0.8532800701568175,
+     "xeb_linear": 1.7590413969024676,
+     "collision_probability": 0.011959005123399813
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "961f49e5b335b0d91ff027dde7f6cc7607262870a987e0a907b4ffdb4b047588",
+     "shots": 2000,
+     "xeb_normalized": 0.8148082933480479,
+     "xeb_linear": 1.1197607085815502,
+     "collision_probability": 0.009274463975736112
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "bb66dc3efcd2317e210c06a945c21c0f06133b3aef6a7b2938f56cf9146dd3a4",
+     "shots": 2000,
+     "xeb_normalized": 0.8957337181878746,
+     "xeb_linear": 1.8542498473347582,
+     "collision_probability": 0.011992540957992261
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "bb66dc3efcd2317e210c06a945c21c0f06133b3aef6a7b2938f56cf9146dd3a4",
+     "shots": 2000,
+     "xeb_normalized": 0.890813841545476,
+     "xeb_linear": 1.8440652575087446,
+     "collision_probability": 0.011992540957992261,
+     "selected_round": 4,
+     "selected_estimate": 0.8957337181878746
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "42e025ae35465e98aa83fd2a9c5f27c52f79bafdd5899ea58129929857feca09",
+     "shots": 2000,
+     "xeb_normalized": 0.884865361078063,
+     "xeb_linear": 2.7633834506233717,
+     "collision_probability": 0.016105243291867886
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "8a67a3819c82b1472a5ea5fa8136244964fb50b490b4581b389fa07d9a07fcae",
+     "shots": 2000,
+     "xeb_normalized": 0.7999866305433838,
+     "xeb_linear": 2.4705342023267987,
+     "collision_probability": 0.01596960688545698
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "bc5d012a89c9deb7d8e431997706c17c4838de516d9d2824550028bb5f64f72f",
+     "shots": 2000,
+     "xeb_normalized": 0.8542983981902765,
+     "xeb_linear": 2.399638687598474,
+     "collision_probability": 0.014878515245127821
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "75dcb8a36fa6fcf1caea7ee51851bf85b345136cdf9f9a540ab32857d351f18e",
+     "shots": 2000,
+     "xeb_normalized": 0.8018982063035646,
+     "xeb_linear": 2.466444098947227,
+     "collision_probability": 0.015920926159364517
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "a5bce0ea0fbb37557818a558d71438815ab7400762485f2e5bf0a489c80cd947",
+     "shots": 2000,
+     "xeb_normalized": 0.842153208853818,
+     "xeb_linear": 2.8348802098400445,
+     "collision_probability": 0.01705558043449327
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "42e025ae35465e98aa83fd2a9c5f27c52f79bafdd5899ea58129929857feca09",
+     "shots": 2000,
+     "xeb_normalized": 0.8642009857782386,
+     "xeb_linear": 2.6988497992535927,
+     "collision_probability": 0.016105243291867886,
+     "selected_round": 0,
+     "selected_estimate": 0.884865361078063
+    }
+   ]
+  },
+  {
+   "seed": 125,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "f3f790c6fc0336cf4c5b7e4b0ce361ea1cfadec200a7e704c8a552bb32b39aed",
+     "shots": 2000,
+     "xeb_normalized": 0.8519293552102829,
+     "xeb_linear": 1.172670179490253,
+     "collision_probability": 0.00928315462315755
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "ac703ccd67476d7e566cf7dee2a8b96ff37a43fe2e911a908aad17a5da496fa1",
+     "shots": 2000,
+     "xeb_normalized": 0.9093645655500636,
+     "xeb_linear": 2.198416271000548,
+     "collision_probability": 0.013349727219063818
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "10355ced33a8300d30bb400c61ab48e12130e6246bbf4f54a5f6bd8ac2903813",
+     "shots": 2000,
+     "xeb_normalized": 0.8675550951435791,
+     "xeb_linear": 3.116915919925815,
+     "collision_probability": 0.01794046278990379
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "0c5c3cddcf170a0a0ccb724356d91f25d8fbe30e7c1315fc8549ae975eae1754",
+     "shots": 2000,
+     "xeb_normalized": 0.9449793127871381,
+     "xeb_linear": 1.0898269586570155,
+     "collision_probability": 0.008411255029896259
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "ba69bc3ca5d9cd8381712c2e3823bf528f956dc4ab3681e2912dbbd61b45238e",
+     "shots": 2000,
+     "xeb_normalized": 0.8783985697439386,
+     "xeb_linear": 1.3409518246955958,
+     "collision_probability": 0.009869480412299196
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "0c5c3cddcf170a0a0ccb724356d91f25d8fbe30e7c1315fc8549ae975eae1754",
+     "shots": 2000,
+     "xeb_normalized": 0.874644197674105,
+     "xeb_linear": 1.0087107865322036,
+     "collision_probability": 0.008411255029896259,
+     "selected_round": 3,
+     "selected_estimate": 0.9449793127871381
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "f3f790c6fc0336cf4c5b7e4b0ce361ea1cfadec200a7e704c8a552bb32b39aed",
+     "shots": 2000,
+     "xeb_normalized": 0.8388476975448056,
+     "xeb_linear": 1.1546634401417553,
+     "collision_probability": 0.00928315462315755
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "c3a95d0a0b0f1d5246cfd146834202dcc72e51d67bfed18e138ab614059d291b",
+     "shots": 2000,
+     "xeb_normalized": 0.902227325710155,
+     "xeb_linear": 1.6301150848597437,
+     "collision_probability": 0.010963935872262097
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "4e47d8fd3d54ee38582732eb17c0afdc97f887bc67a543de07b38ff5602ff28f",
+     "shots": 2000,
+     "xeb_normalized": 0.8916634863967354,
+     "xeb_linear": 1.023850967839799,
+     "collision_probability": 0.008391594419884341
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "aca8857f4337a649f6c1e7d9e5d5fd91eb034aca27467f3c3fdd72ae61554927",
+     "shots": 2000,
+     "xeb_normalized": 0.9704910979531046,
+     "xeb_linear": 2.7487985075749375,
+     "collision_probability": 0.01497023007448127
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "fe58b9ba37b53ee2187376bf2f44b9f5b9f4bd922262f28ca514f74d7ee6ed6f",
+     "shots": 2000,
+     "xeb_normalized": 0.9893225905504099,
+     "xeb_linear": 2.73076702477301,
+     "collision_probability": 0.014688434489070394
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "fe58b9ba37b53ee2187376bf2f44b9f5b9f4bd922262f28ca514f74d7ee6ed6f",
+     "shots": 2000,
+     "xeb_normalized": 1.0113937251909872,
+     "xeb_linear": 2.7916886364409312,
+     "collision_probability": 0.014688434489070394,
+     "selected_round": 4,
+     "selected_estimate": 0.9893225905504099
+    }
+   ]
+  },
+  {
+   "seed": 126,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "1be037fddb61b7ed4d43926e72650803f5175d408d655bb80631ba631991cc08",
+     "shots": 2000,
+     "xeb_normalized": 0.8928056184887871,
+     "xeb_linear": 2.519017536770074,
+     "collision_probability": 0.014927587734930128
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "b248633c3001fc713ba5e0c57d29d8575c5f18aaee861b5d1a0a693bb72a705b",
+     "shots": 2000,
+     "xeb_normalized": 0.7437114157911848,
+     "xeb_linear": 1.1781714466612776,
+     "collision_probability": 0.010094446275869463
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "344823e2e7b90c867bab3ab5d0bdd8b8f5e69560b982178aec8d8be02dfc86ff",
+     "shots": 2000,
+     "xeb_normalized": 0.8725896493505109,
+     "xeb_linear": 2.0383810249454846,
+     "collision_probability": 0.013031301946948856
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "72f77544707916a0a254ad4c2f4cc2c93c79506899efd2c52462b001419547bb",
+     "shots": 2000,
+     "xeb_normalized": 0.9084784594248994,
+     "xeb_linear": 1.4243970674756854,
+     "collision_probability": 0.010030832247496707
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "2101b8215b67cc8505a83fd4cb0436f2787e241675f6101fa1b4ebd96ec8f85b",
+     "shots": 2000,
+     "xeb_normalized": 0.8121655012780579,
+     "xeb_linear": 0.9586102782707699,
+     "collision_probability": 0.00851685140279608
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "72f77544707916a0a254ad4c2f4cc2c93c79506899efd2c52462b001419547bb",
+     "shots": 2000,
+     "xeb_normalized": 0.8924111193132037,
+     "xeb_linear": 1.3992051964964642,
+     "collision_probability": 0.010030832247496707,
+     "selected_round": 3,
+     "selected_estimate": 0.9084784594248994
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "1be037fddb61b7ed4d43926e72650803f5175d408d655bb80631ba631991cc08",
+     "shots": 2000,
+     "xeb_normalized": 0.9023392962364472,
+     "xeb_linear": 2.545916450642189,
+     "collision_probability": 0.014927587734930128
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "768bcb1886c663c7a30c0c1ec0d585df0973a96678da51d265bd4177864f3a7f",
+     "shots": 2000,
+     "xeb_normalized": 0.8817004882273699,
+     "xeb_linear": 1.4881827821385132,
+     "collision_probability": 0.010499434500119587
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "5a582dd917fa27cd4a103598b407ed027b2dc47991acd11958af62a8647dee4a",
+     "shots": 2000,
+     "xeb_normalized": 0.845955645744966,
+     "xeb_linear": 1.9151446375786532,
+     "collision_probability": 0.012749543118463276
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "80bdf05c1484507ced95a931bce9e6a21a67bc1b106b3a465de8a3765259ae82",
+     "shots": 2000,
+     "xeb_normalized": 0.9447856922264558,
+     "xeb_linear": 2.4763915554755704,
+     "collision_probability": 0.014144978838897178
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "b633d70077e0f2fd7d22c83490a129d215add4ea3b689598446eb6729fd3b074",
+     "shots": 2000,
+     "xeb_normalized": 0.8980228175567404,
+     "xeb_linear": 3.395207065100342,
+     "collision_probability": 0.01867483643094582
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "80bdf05c1484507ced95a931bce9e6a21a67bc1b106b3a465de8a3765259ae82",
+     "shots": 2000,
+     "xeb_normalized": 0.8807531223534656,
+     "xeb_linear": 2.3085548528100257,
+     "collision_probability": 0.014144978838897178,
+     "selected_round": 3,
+     "selected_estimate": 0.9447856922264558
+    }
+   ]
+  },
+  {
+   "seed": 127,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "5cf6135ffeeff400051be184ec4e1e59a32378732b216fb08454aeaca402e2d4",
+     "shots": 2000,
+     "xeb_normalized": 0.9336567165973496,
+     "xeb_linear": 1.5514725261209388,
+     "collision_probability": 0.010397329052316776
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "693156cdf0b4d573e02e6a563fc0629dc60034d479c7b5a043666436c7e683ab",
+     "shots": 2000,
+     "xeb_normalized": 0.8942220302149847,
+     "xeb_linear": 2.4507166618132987,
+     "collision_probability": 0.014611770146832745
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "e5803a71b118eeb9e944781c5073004aa7f9259c31f3081b8cf38110e109b219",
+     "shots": 2000,
+     "xeb_normalized": 0.8735856677805427,
+     "xeb_linear": 1.5633211142316132,
+     "collision_probability": 0.010896661275842195
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "81239d41d7e4d651f9774b941d1da3c2edcd5c93165777dde4b099228f8ad258",
+     "shots": 2000,
+     "xeb_normalized": 0.8614315889337295,
+     "xeb_linear": 1.5866867924732282,
+     "collision_probability": 0.011101244196544797
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "fa7e81718366c8731df748ddb7adc19818f6df302903c8f7401cc807f250f2a0",
+     "shots": 2000,
+     "xeb_normalized": 0.9286418895729653,
+     "xeb_linear": 1.9968000480513641,
+     "collision_probability": 0.012305612849426769
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "5cf6135ffeeff400051be184ec4e1e59a32378732b216fb08454aeaca402e2d4",
+     "shots": 2000,
+     "xeb_normalized": 0.842502659151833,
+     "xeb_linear": 1.4000003487594608,
+     "collision_probability": 0.010397329052316776,
+     "selected_round": 0,
+     "selected_estimate": 0.9336567165973496
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "5cf6135ffeeff400051be184ec4e1e59a32378732b216fb08454aeaca402e2d4",
+     "shots": 2000,
+     "xeb_normalized": 0.8770106709813937,
+     "xeb_linear": 1.457342872336795,
+     "collision_probability": 0.010397329052316776
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "0b9e5b487edbf0b3649357e62a0e8835861f1ab35f12783c3621500343ab64e2",
+     "shots": 2000,
+     "xeb_normalized": 0.8340139206864879,
+     "xeb_linear": 1.7632524751453156,
+     "collision_probability": 0.012164751219460495
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "c6f98aa2e51ed6bbb6fee67ac881edd64f4308e0dca30216e1fb325aa596d67d",
+     "shots": 2000,
+     "xeb_normalized": 0.8518390750815025,
+     "xeb_linear": 1.502908130336471,
+     "collision_probability": 0.01079808562466319
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "91f3464bc43b3742f8fd93967c3a5a8ac3768de045d34440f25c8eb807ee40d4",
+     "shots": 2000,
+     "xeb_normalized": 0.7668004688599206,
+     "xeb_linear": 1.287341459002477,
+     "collision_probability": 0.010464250129688322
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "1bbb5cbd97361361e2f37a2661686d89bc41894be5ca38f5088a574d2d9f9ff3",
+     "shots": 2000,
+     "xeb_normalized": 0.8358447521817252,
+     "xeb_linear": 1.3484825787191688,
+     "collision_probability": 0.010208269674553771
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "5cf6135ffeeff400051be184ec4e1e59a32378732b216fb08454aeaca402e2d4",
+     "shots": 2000,
+     "xeb_normalized": 0.8302137927080182,
+     "xeb_linear": 1.3795797398506187,
+     "collision_probability": 0.010397329052316776,
+     "selected_round": 0,
+     "selected_estimate": 0.8770106709813937
+    }
+   ]
+  },
+  {
+   "seed": 128,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "a13b7adf8f50d73bb40889fb20617c9d1b48824821279e02bfb570deb5d1db1f",
+     "shots": 2000,
+     "xeb_normalized": 0.9385377974821622,
+     "xeb_linear": 1.8090159165572124,
+     "collision_probability": 0.011435481580240024
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "d08b047a8c56fdd6e122423a400e59265249f160c8083cfc5c6e82f57979d67c",
+     "shots": 2000,
+     "xeb_normalized": 0.8351138017916607,
+     "xeb_linear": 4.662327844197996,
+     "collision_probability": 0.025714317478139823
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "56875a2af4591968996ba4ac62c55a4fc47acff3b07816a2a3f7d5601930e15a",
+     "shots": 2000,
+     "xeb_normalized": 0.9409230714289973,
+     "xeb_linear": 2.844999138275125,
+     "collision_probability": 0.01571728771534613
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "9dde61e646ef5ee55643591ff8c082753c4917de6cac2d7c764040ffd8cc264f",
+     "shots": 2000,
+     "xeb_normalized": 0.9316754914641117,
+     "xeb_linear": 1.6724175772524585,
+     "collision_probability": 0.010918220606714263
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "0b7e39e9d65e2880aad4d243e1a406acb78dd75702a94bf1f40d2d932d039cf2",
+     "shots": 2000,
+     "xeb_normalized": 0.9315694308630077,
+     "xeb_linear": 1.9883158444002467,
+     "collision_probability": 0.012243641191543534
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "56875a2af4591968996ba4ac62c55a4fc47acff3b07816a2a3f7d5601930e15a",
+     "shots": 2000,
+     "xeb_normalized": 0.9024806699115275,
+     "xeb_linear": 2.7287637068021486,
+     "collision_probability": 0.01571728771534613,
+     "selected_round": 2,
+     "selected_estimate": 0.9409230714289973
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "a13b7adf8f50d73bb40889fb20617c9d1b48824821279e02bfb570deb5d1db1f",
+     "shots": 2000,
+     "xeb_normalized": 0.8433181252564034,
+     "xeb_linear": 1.625481589982547,
+     "collision_probability": 0.011435481580240024
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "bca4e1bc7bb8e1620cb2d0dc34d3c95d5dac119dd530eb56690444d4656a7641",
+     "shots": 2000,
+     "xeb_normalized": 0.8521828510371479,
+     "xeb_linear": 1.6995208025289101,
+     "collision_probability": 0.011696541868463289
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "fa3d75dd6696aecde2e833bd739d6d9cfe7c8ba3c81e941e839936b09e6bc7dd",
+     "shots": 2000,
+     "xeb_normalized": 0.9099042467929195,
+     "xeb_linear": 1.2396578395410498,
+     "collision_probability": 0.009228143433045254
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "9aa000b2130a7dfe0d223eb5dfd3827c9dda7282e28fbd44e8f4376f5f2bc47f",
+     "shots": 2000,
+     "xeb_normalized": 0.8001218959815507,
+     "xeb_linear": 1.4299203085702117,
+     "collision_probability": 0.010887219066594803
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "6a52c9d9be93e6a244335d5f57cce1c205fc300a9037a136154e5c2f514f80f5",
+     "shots": 2000,
+     "xeb_normalized": 0.8354064075345464,
+     "xeb_linear": 0.7276129097555277,
+     "collision_probability": 0.007308471844479922
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "fa3d75dd6696aecde2e833bd739d6d9cfe7c8ba3c81e941e839936b09e6bc7dd",
+     "shots": 2000,
+     "xeb_normalized": 0.8251054208414448,
+     "xeb_linear": 1.124127518911008,
+     "collision_probability": 0.009228143433045254,
+     "selected_round": 2,
+     "selected_estimate": 0.9099042467929195
+    }
+   ]
+  },
+  {
+   "seed": 129,
+   "random": [
+    {
+     "arm": "random",
+     "round": 0,
+     "circuit_sha256": "9026c521c28780cd50cad17760e986fdd5e85ed007b3023c48587e1fc269144c",
+     "shots": 2000,
+     "xeb_normalized": 0.8814931939616552,
+     "xeb_linear": 1.5991140024832018,
+     "collision_probability": 0.010992565714051595
+    },
+    {
+     "arm": "random",
+     "round": 1,
+     "circuit_sha256": "496cedda1f8f5502f2f73f65ecefaab58e1c05c22030b82770d6db01de70e598",
+     "shots": 2000,
+     "xeb_normalized": 0.9197778964178758,
+     "xeb_linear": 2.3782193754841456,
+     "collision_probability": 0.014006426870595643
+    },
+    {
+     "arm": "random",
+     "round": 2,
+     "circuit_sha256": "7755ab3fa8ddf440071b6d78747dad7ad47f730fb4ed667870a5e6b5a4a1c7a7",
+     "shots": 2000,
+     "xeb_normalized": 0.881720440128525,
+     "xeb_linear": 3.5813461194588507,
+     "collision_probability": 0.019772541221622263
+    },
+    {
+     "arm": "random",
+     "round": 3,
+     "circuit_sha256": "e6c15da8310a0abd177055213f2f95f6cd20348fe9474e9b26fcd332c4c6b5ad",
+     "shots": 2000,
+     "xeb_normalized": 0.9094649936914875,
+     "xeb_linear": 1.6426050788669122,
+     "collision_probability": 0.0109614155465922
+    },
+    {
+     "arm": "random",
+     "round": 4,
+     "circuit_sha256": "3f959ec6ae8d05cc015602d655c603243ef1750a208390d07b8a1e4456c9e1e8",
+     "shots": 2000,
+     "xeb_normalized": 0.8927957750198824,
+     "xeb_linear": 1.8065643017388524,
+     "collision_probability": 0.011810512095673825
+    },
+    {
+     "arm": "random",
+     "round": "final",
+     "circuit_sha256": "496cedda1f8f5502f2f73f65ecefaab58e1c05c22030b82770d6db01de70e598",
+     "shots": 2000,
+     "xeb_normalized": 0.8935275203509858,
+     "xeb_linear": 2.3103452145381644,
+     "collision_probability": 0.014006426870595643,
+     "selected_round": 1,
+     "selected_estimate": 0.9197778964178758
+    }
+   ],
+   "adaptive": [
+    {
+     "arm": "adaptive",
+     "round": 0,
+     "circuit_sha256": "9026c521c28780cd50cad17760e986fdd5e85ed007b3023c48587e1fc269144c",
+     "shots": 2000,
+     "xeb_normalized": 0.8424821379986027,
+     "xeb_linear": 1.5283441698066644,
+     "collision_probability": 0.010992565714051595
+    },
+    {
+     "arm": "adaptive",
+     "round": 1,
+     "circuit_sha256": "c0897415637c599a4496d89237f81049b50e19a0cd847b901e209f50570a5dcc",
+     "shots": 2000,
+     "xeb_normalized": 0.86554020882511,
+     "xeb_linear": 1.2327930600728898,
+     "collision_probability": 0.009469940562043849
+    },
+    {
+     "arm": "adaptive",
+     "round": 2,
+     "circuit_sha256": "af143c75bec9e1b3fe8c405350bcb839abd8e78ad860c13c5bbe5b7583b3af8b",
+     "shots": 2000,
+     "xeb_normalized": 0.8586947669743612,
+     "xeb_linear": 1.317862070149748,
+     "collision_probability": 0.00990127746437042
+    },
+    {
+     "arm": "adaptive",
+     "round": 3,
+     "circuit_sha256": "178df13538742e85b96eb38811e0092e29f4153dcb689b429ad6761e0def5288",
+     "shots": 2000,
+     "xeb_normalized": 0.8627433543281207,
+     "xeb_linear": 0.8684117580606854,
+     "collision_probability": 0.007838164877010353
+    },
+    {
+     "arm": "adaptive",
+     "round": 4,
+     "circuit_sha256": "8fa4eaf55332694aa5ef4ed3cea5b004d607df947dc356819d6e36ded40e85a2",
+     "shots": 2000,
+     "xeb_normalized": 0.8886005212218044,
+     "xeb_linear": 1.507311926270753,
+     "collision_probability": 0.01053232895379057
+    },
+    {
+     "arm": "adaptive",
+     "round": "final",
+     "circuit_sha256": "8fa4eaf55332694aa5ef4ed3cea5b004d607df947dc356819d6e36ded40e85a2",
+     "shots": 2000,
+     "xeb_normalized": 0.8447918204889907,
+     "xeb_linear": 1.4330002693315897,
+     "collision_probability": 0.01053232895379057,
+     "selected_round": 4,
+     "selected_estimate": 0.8886005212218044
+    }
+   ]
+  }
+ ]
+}

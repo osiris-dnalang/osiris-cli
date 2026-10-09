@@ -1,0 +1,38 @@
+{
+ "seeds": 30,
+ "mean_final_random": 0.893715519667782,
+ "mean_final_adaptive": 0.894290727336298,
+ "paired_diff_mean": 0.0005752076685161127,
+ "paired_diff_sd": 0.05311524545164337,
+ "paired_diff_ci95": [
+  -0.01925612399022905,
+  0.020406539327261275
+ ],
+ "sign_test": {
+  "adaptive_higher": 15,
+  "random_higher": 15,
+  "p_one_sided_adaptive_better": 0.572232224047184
+ },
+ "collision_prob_final": {
+  "random": 0.01215949617601173,
+  "adaptive": 0.012817447851386138
+ },
+ "linear_xeb_final": {
+  "random": 1.8872899084098762,
+  "adaptive": 2.049075862924837
+ },
+ "winners_curse_inflation": {
+  "random": 0.02833562857604458,
+  "adaptive": 0.02690681407672204
+ },
+ "seeds_needed_power80": {
+  "delta=0.01": 175,
+  "delta=0.02": 44,
+  "delta=0.05": 7
+ },
+ "qpu_estimate": {
+  "shots_per_seed": 24000,
+  "seconds_per_seed_at_0.3s_per_1024_shots": 7.0
+ },
+ "wall_seconds": 219.3
+}

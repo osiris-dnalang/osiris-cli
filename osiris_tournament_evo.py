@@ -45,8 +45,9 @@ def experimentalist(config, problem_type="default", generation=0, use_ibm=False,
             shots=shots,
             label=f"LAB_trial_{generation}"
         )
-        error = 1.0 - (job_meta.result_xeb if job_meta.result_xeb is not None else 0.0)
-        return {**config, "error": error, "backend": backend, "hardware": True}
+        executed = job_meta.status == "completed" and job_meta.result_xeb is not None
+        error = 1.0 - (job_meta.result_xeb if executed else 0.0)
+        return {**config, "error": error, "backend": backend, "hardware": executed, "status": job_meta.status}
     # Simulated path
     if problem_type == "dynamic":
         base_error = (1 / (shots ** 0.5)) + (depth * 0.002)
