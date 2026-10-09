@@ -39,13 +39,21 @@ def test_manifest_matches_this_tree():
         assert hashlib.sha256(open(os.path.join(ROOT, p), "rb").read()).hexdigest() == h, p
 
 
-def test_manifest_is_a_draft_and_hardware_refuses_it(tmp_path):
+AMENDMENT_DOI = "10.5281/zenodo.23256344"
+
+
+def test_manifest_records_the_deposit_and_hardware_still_needs_an_approval(tmp_path):
     d = _driver()
     m = json.load(open(os.path.join(ROOT, d.MANIFEST)))
-    assert m["status"] == "draft" and m["amendment_doi"] is None
-    assert "NOT APPROVED" in open(os.path.join(ROOT, m["amendment_path"]), encoding="utf-8").read()
-    with pytest.raises(SystemExit, match="not 'deposited'"):
-        d.main(["--prereg-doi", d.PREREG_DOI, "--amendment-doi", "10.5281/zenodo.1", "--out", str(tmp_path)])
+    assert m["status"] == "deposited" and m["amendment_doi"] == AMENDMENT_DOI
+    text = open(os.path.join(ROOT, m["amendment_path"]), encoding="utf-8").read()
+    assert AMENDMENT_DOI in text and "NOT APPROVED FOR EXECUTION" in text
+    assert verify_bundle(ROOT, os.path.join(ROOT, d.MANIFEST), d.CODE_FILES, d.DOCUMENT_FILES,
+                         amendment_doi=AMENDMENT_DOI) == []
+    with pytest.raises(SystemExit, match="amendment_doi"):                 # any other DOI is refused
+        d.main(["--prereg-doi", d.PREREG_DOI, "--amendment-doi", "10.5281/zenodo.1", "--out", str(tmp_path / "a")])
+    with pytest.raises(SystemExit, match="not authorized"):                # no execute approval: refused offline
+        d.main(["--prereg-doi", d.PREREG_DOI, "--amendment-doi", AMENDMENT_DOI, "--out", str(tmp_path / "b")])
 
 
 def test_no_artifact_embeds_its_own_hash():

@@ -142,8 +142,8 @@ Publication (each step needs approval):
       hash (ADR-10).
 - [ ] `git diff 86e3a3f4 -- rqc/experiment.py rqc/hardware.py docs/rqc/S2/s2_run.py` and
       `git diff 964efe19 -- docs/rqc/S2_PREREGISTRATION.md` both empty.
-- [ ] Read-only check that DOI 10.5281/zenodo.23241223 is the S2 deposit with sha256 `ee179e8f…e5d`.
-- [ ] Deposit amendment 5; record its DOI in the amendment and the driver invocation.
+- [x] Read-only check that DOI 10.5281/zenodo.23241223 is the S2 deposit with sha256 `ee179e8f…e5d` (done 2026-10-09).
+- [x] Deposit amendment 5; record its DOI in the amendment and the driver invocation (10.5281/zenodo.23256344, 2026-10-09).
 
 Execution (separate approval):
 - [ ] Create the `ibm-quantum` intent with the final DOIs; record an `execute` approval bound to its payload hash

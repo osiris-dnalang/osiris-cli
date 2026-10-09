@@ -1,11 +1,11 @@
 # RQC S2 — amendment 5
 
-**DRAFT — NOT APPROVED FOR DEPOSIT OR EXECUTION.**
+**DEPOSITED 2026-10-09 as 10.5281/zenodo.23256344 — NOT APPROVED FOR EXECUTION.**
 
-**Status:** draft of 2026-10-08. Not binding until deposited as a new Zenodo version next to the original
-pre-registration. Not executable until (1) the bundle manifest records that deposit and (2) an operator records an
-`execute` approval bound to the exact run payload (see `CONTROL_NOTES.md`). The author decisions in §9 were made on
-2026-10-09. The original pre-registration and its frozen tooling are unchanged:
+**Status:** drafted 2026-10-08; deposited 2026-10-09, before any S2 data, as a new version of the S2 record
+(concept 10.5281/zenodo.23241222) next to the unchanged original pre-registration. Not executable until an operator
+records an `execute` approval bound to the exact run payload (see `CONTROL_NOTES.md`). The author decisions in §9
+were made on 2026-10-09. The original pre-registration and its frozen tooling are unchanged:
 
 | Frozen artifact | Identity |
 |---|---|
@@ -215,10 +215,10 @@ These decisions change no code and no registered parameter, so the implementatio
 ## 10. Prerequisites (in order; each is a separate approval)
 
 1. ~~The author decisions in §9.~~ Made 2026-10-09 (§9); no code or parameter change, so A stands.
-2. Verify that DOI 10.5281/zenodo.23241223 resolves to the deposited S2 text with sha256 `ee179e8f…e5d`
-   (read-only network check).
-3. Deposit this amendment (B) with the manifest (C) as a new Zenodo version. Record its DOI and status `deposited`
-   in a new manifest version, which is a later commit.
+2. ~~Verify DOI 10.5281/zenodo.23241223.~~ Done 2026-10-09: it holds `S2_PREREGISTRATION.md` with sha256
+   `ee179e8f53b9b81c336db09ff68ff1fd7617edd728000a50f7a34d95cfa00e5d` and `rqc-s2-frozen-86e3a3f4.zip`.
+3. ~~Deposit this amendment.~~ Deposited 2026-10-09 as 10.5281/zenodo.23256344 (DOI reserved first, then recorded
+   here and in the manifest, status `deposited`, before the files were uploaded).
 4. Record an `execute` approval bound to the final payload hash, with target `ibm-quantum`, budget 600 s and an
    expiry.
 5. On launch day: read-only usage check (≥ 600 s), then the run.
