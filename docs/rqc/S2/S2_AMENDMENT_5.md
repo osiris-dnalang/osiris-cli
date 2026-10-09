@@ -4,8 +4,8 @@
 
 **Status:** draft of 2026-10-08. Not binding until deposited as a new Zenodo version next to the original
 pre-registration. Not executable until (1) the bundle manifest records that deposit and (2) an operator records an
-`execute` approval bound to the exact run payload (see `CONTROL_NOTES.md`). The author decisions in §9 are open. The
-original pre-registration and its frozen tooling are unchanged:
+`execute` approval bound to the exact run payload (see `CONTROL_NOTES.md`). The author decisions in §9 were made on
+2026-10-09. The original pre-registration and its frozen tooling are unchanged:
 
 | Frozen artifact | Identity |
 |---|---|
@@ -194,21 +194,27 @@ The margin is real but thin. A deviation of about 13% loses block 2.
   amend creates a new hash, so the recorded one names a commit that is no longer on the branch. Commit hashes are
   only ever cited from a later commit.
 
-## 9. Open author decisions (not made in this draft)
+## 9. Author decisions (made 2026-10-09, before any S2 data)
 
-Quoting `CONTROL_NOTES.md` §4: "Author decisions in amendment §9 (shots, blocks, §5 exposure)." Specifically:
-1. **Shots:** keep the registered 2,000 per call, or register 1,500 with a re-simulated power statement (§6).
-2. **Blocks:** 2 blocks of 40 (12 jobs, §7), or 4 blocks of 20 (24 jobs; more independent clusters for §5, but a
-   projected 624 s, above the ceiling).
-3. **§5 exposure:** accept the shared-job (arm × job) exposure with the primary test unchanged and the per-block
-   diagnostic as secondary, or change the design.
+The author, Devin Phillip Davis, accepted on 2026-10-09 the three options recommended by the assistant that drafted
+this amendment. The recommendation and its reasons were presented first; the choice is the author's. No S2 outcome
+existed (§0).
 
-Pasted planning text received during drafting stated 2,000 shots. It is not treated as the author's decision.
+1. **Shots: 2,000 per sampler call, as registered.** 1,500 is not adopted: it would lose about 7 points of power at
+   n = 80, β₀ = 0.012 (§6), and its effect on circuit selection has not been simulated. There is no shot-count
+   fallback.
+2. **Blocks: 2 blocks of 40 seeds (1000–1039, 1040–1079), 12 jobs** (§2, §7; projected 576 s, about 540 s expected).
+   Four blocks of 20 are not adopted: they project to 624 s, above the 600 s ceiling.
+3. **§5 exposure: accepted.** The primary test stays the registered OLS t-test on all completed seeds. The per-block
+   β₀ estimates and their difference are reported as a secondary diagnostic, not used for the decision. The report
+   states that the primary test's nominal α assumes no arm × job interaction, and that grouping seeds into shared jobs
+   introduced this exposure (τ = 0.01 would raise the type I rate to about 0.15–0.17 in the offline model, §5).
+
+These decisions change no code and no registered parameter, so the implementation snapshot (§11) stands.
 
 ## 10. Prerequisites (in order; each is a separate approval)
 
-1. The author decisions in §9. If any changes code or parameters, A is re-snapshotted and this section updated in a
-   later commit.
+1. ~~The author decisions in §9.~~ Made 2026-10-09 (§9); no code or parameter change, so A stands.
 2. Verify that DOI 10.5281/zenodo.23241223 resolves to the deposited S2 text with sha256 `ee179e8f…e5d`
    (read-only network check).
 3. Deposit this amendment (B) with the manifest (C) as a new Zenodo version. Record its DOI and status `deposited`

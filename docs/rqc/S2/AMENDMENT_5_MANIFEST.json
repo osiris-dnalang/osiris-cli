@@ -2,7 +2,7 @@
  "amendment_doi": null,
  "amendment_path": "docs/rqc/S2/S2_AMENDMENT_5.md",
  "documents": {
-  "docs/rqc/S2/S2_AMENDMENT_5.md": "9f7776ccf43773a73a5c7a74f86afb024b7b5f14cd3bdd07f4f5ee8177d5111c",
+  "docs/rqc/S2/S2_AMENDMENT_5.md": "d5193029cbcee7f896810c4497f8cb6acff158dc7db2998d6585a7193e9f77d9",
   "docs/rqc/S2_PREREGISTRATION.md": "ee179e8f53b9b81c336db09ff68ff1fd7617edd728000a50f7a34d95cfa00e5d"
  },
  "frozen": {
@@ -35,7 +35,7 @@
  "supporting": {
   "docs/rqc/S1/results.json": "fc20b8d32037e630db7bb19ae7e51e1bc087cb8ae0a7e13882c8ec0785338e50",
   "docs/rqc/S1_willow/results.json": "755bcdef0e6487d2a99b1b9f55e52dd973e4a46ff5969a740db0428c8e0eaef8",
-  "docs/rqc/S2/CONTROL_NOTES.md": "4affed6fad5cc386ab05917a204a12b7df3463ebd760be415076539cd9b71acd",
+  "docs/rqc/S2/CONTROL_NOTES.md": "9f919f0d639c244fef8e9c4fc1311c82da430e628b7d8a0e2ca68263db10cf90",
   "docs/rqc/S2/amendment5_analysis.json": "ef6edfcddbf505efb94ce22378b5a7b509b821560285e5b43c635fc879da8ce0",
   "docs/rqc/S2/amendment5_analysis.py": "4bdc7c79b861d20bd6cb5119a25effa381c2963b23b06cb5aef3261f8a2e6908",
   "docs/rqc/S2/budget_audit.json": "36d5e170d406968649f3fc5b1d1d048d263fb149cc73c4295540ca41d761473a",

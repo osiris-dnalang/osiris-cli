@@ -133,7 +133,8 @@ investigated here, and it does not gate this workflow.
 ## 4. Preflight checklist (publication, then execution)
 
 Publication (each step needs approval):
-- [ ] Author decisions in amendment §9 (shots, blocks, §5 exposure).
+- [x] Author decisions in amendment §9 (shots, blocks, §5 exposure). Made 2026-10-09: 2,000 shots, 2 × 40 blocks,
+      exposure accepted with the primary test unchanged.
 - [ ] `pytest tests/test_rqc.py tests/test_rqc_batch.py tests/test_rqc_control.py tests/test_rqc_s2_bundle.py`
       green on a full `git archive` export of each commit, with sockets blocked and PYTHONPATH unset.
 - [ ] Implementation snapshot (A) committed first. Then, in a **later** commit, the amendment (B) cites A's full
