@@ -139,6 +139,14 @@ def _console():
     return otc
 
 
+def _version():
+    try:
+        from osiris_cli import __version__
+        return __version__
+    except Exception:  # noqa: BLE001 - provenance is recorded, never fatal
+        return None
+
+
 def file_sha256(path: str) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -181,8 +189,8 @@ def load(where: str, with_optimizer: bool = False):
     architecture and loader as the live core."""
     import numpy as np
     otc = _console()
-    model, opt = otc._organism_build()
     ckpt, meta = snapshot_paths(where)
+    model, opt = otc._organism_build(otc._organism_arch(os.path.dirname(ckpt)))
     with open(meta, encoding="utf-8") as f:
         m = json.load(f)
     with np.load(ckpt) as blob:
@@ -325,7 +333,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         pre_model, _, _ = load(a.pre)
         post_model, _, _ = load(a.post)
         pairs = score_pairs(pre_model, post_model, held, train)
-        out = {"pre": snapshot_info(a.pre), "post": snapshot_info(a.post),
+        nclm = sys.modules.get("osiris.nclm")
+        out = {"code": {"osiris_cli": _version(), "nclm_path": os.path.dirname(getattr(nclm, "__file__", "") or ""),
+                        "scoring_forward": int(getattr(nclm, "SCORING_FORWARD", 1))},
+               "pre": snapshot_info(a.pre), "post": snapshot_info(a.post),
                "exchanges": {"path": os.path.abspath(a.exchanges), "sha256": file_sha256(a.exchanges),
                              "n": len(rows), "train": len(train), "heldout": len(held)},
                "template_span": TEMPLATE_SPAN, "items": pairs, "analysis": analyse(pairs)}

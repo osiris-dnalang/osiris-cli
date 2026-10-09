@@ -45,6 +45,20 @@ KINDS = ("paper", "url", "note", "chat_log", "session_log")
 TRUST = {"paper": "external_reference", "url": "external_reference", "note": "operator_note",
          "chat_log": "untrusted_reference", "session_log": "untrusted_reference"}
 OUTCOMES = ("supported", "refuted", "inconclusive")
+EVIDENCE_KINDS = {"run": "sprint run", "bench": "bench round", "trial-bench": "prompt-strategy trial",
+                  "evo": "organism evolution run"}
+
+
+def _with_article(noun):
+    return ("an " if noun[0] in "aeiou" else "a ") + noun
+
+
+def evidence_kind(evidence_id):
+    """The experiment kind an evidence id names (its prefix), or None."""
+    if evidence_id.startswith("trial-bench-"):
+        return "trial-bench"
+    kind = evidence_id.split("-", 1)[0]
+    return kind if kind in EVIDENCE_KINDS else None
 
 # field -> concept -> regex. Plain vocabulary, no model: a concept is on the
 # map only if one of these patterns occurs in a source.
@@ -419,8 +433,31 @@ def save_hypothesis(h):
     return h
 
 
+def set_evidence_kind(hid, kind):
+    """Declares which kind of experiment can decide hypothesis hid. Fixed once
+    the hypothesis is decided."""
+    if kind not in EVIDENCE_KINDS:
+        raise ValueError(f"kind must be one of {', '.join(EVIDENCE_KINDS)}")
+    data = _load()
+    h = next((x for x in data["hypotheses"] if x["id"] == hid), None)
+    if h is None:
+        raise ValueError(f"no hypothesis {hid}")
+    if h.get("outcome"):
+        raise ValueError(f"{hid} is already decided; draft a new hypothesis to test it another way")
+    h["evidence_kind"] = kind
+    _save(data)
+    return h
+
+
+def open_hypotheses_for(evidence_id):
+    """Undecided hypotheses that declare the kind of experiment evidence_id is."""
+    kind = evidence_kind(evidence_id)
+    return [h for h in hypotheses() if not h.get("outcome") and kind and h.get("evidence_kind") == kind]
+
+
 def record_outcome(hid, outcome, evidence_id, verify):
-    """Marks hypothesis hid supported / refuted / inconclusive -- only if
+    """Marks hypothesis hid supported / refuted / inconclusive -- only if the
+    evidence is the kind of experiment hid declares (evidence_kind) and
     verify(evidence_id) returns (True, description, sha256). The outcome is
     stored with the evidence id, its description and hash. A hypothesis
     already decided cannot be decided again (a new hypothesis can be drafted).
@@ -434,6 +471,14 @@ def record_outcome(hid, outcome, evidence_id, verify):
     if h.get("outcome"):
         raise ValueError(f"{hid} is already {h['outcome']['result']} (evidence {h['outcome']['evidence']}); "
                          f"draft a new hypothesis to test it again")
+    required = h.get("evidence_kind")
+    if not required:
+        raise ValueError(f"{hid} does not say what kind of experiment decides it; declare it first with "
+                         f"/hypothesis {hid} tests <{'|'.join(EVIDENCE_KINDS)}>")
+    actual = evidence_kind(evidence_id)
+    if actual != required:
+        raise ValueError(f"HYPOTHESIS_EXPERIMENT_MISMATCH: {hid} is decided by {_with_article(EVIDENCE_KINDS[required])}, "
+                         f"but {evidence_id} is {_with_article(EVIDENCE_KINDS[actual]) if actual else 'not a known experiment'}")
     ok, description, sha = verify(evidence_id)
     if not ok:
         raise ValueError(f"evidence {evidence_id} does not verify: {description}")

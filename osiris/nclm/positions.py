@@ -63,3 +63,19 @@ def phase_conjugate_positional_encoding(
     pe[:, 1::2] = np.cos(positions * freqs * theta_odd)
 
     return Tensor(pe, requires_grad=False, name="pos_encoding")
+
+
+def standard_sinusoidal_positional_encoding(max_seq_len: int, dim: int, base: float = 10000.0) -> Tensor:
+    """The original transformer table: PE(pos, 2i) = sin(pos / base^(2i/d)), PE(pos, 2i+1) = cos(...).
+
+    Wavelengths run from 2*pi to about 2*pi*base positions. The phi table above spans only
+    1/phi^(2i/d) in [0.39, 1] rad/position (times the theta-lock factors): its longest wavelength is
+    about 21-28 positions, so absolute positions alias inside a 128-byte context. Used by the
+    NCLM-ARCH-1 'standard' arm (experiments/nclm_arch1/PRE_REGISTRATION.md).
+    """
+    pe = np.zeros((max_seq_len, dim), dtype=np.float32)
+    positions = np.arange(max_seq_len, dtype=np.float32)[:, np.newaxis]
+    freqs = 1.0 / (base ** (np.arange(0, dim, 2, dtype=np.float32) / dim))
+    pe[:, 0::2] = np.sin(positions * freqs)
+    pe[:, 1::2] = np.cos(positions * freqs)
+    return Tensor(pe, requires_grad=False, name="pos_encoding")

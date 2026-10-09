@@ -167,6 +167,19 @@ def dd_window(window_s: float, pulse_s: float, n_pulses: int, min_ratio: float =
                  "integer dt and check the backend's pulse alignment.", q)
 
 
+def repetition_code(n: int = 3) -> Check:
+    """The n-bit repetition (bit-flip) code, the classical content of an n-qubit GHZ encoding. Its syndrome is
+    the parity of each neighbouring pair, so it sees flips made after encoding, never the value encoded."""
+    def syndrome(bits):
+        return "".join(str(bits[i] ^ bits[i + 1]) for i in range(n - 1))
+    flagged = sum(1 for e in range(1, 2 ** n) if "1" in syndrome([(e >> i) & 1 for i in range(n)]))
+    q = {"syndrome of encoded 0": syndrome([0] * n), "syndrome of encoded 1": syndrome([1] * n),
+         "flip patterns flagged": f"{flagged} of {2 ** n - 1}"}
+    return Check("repetition code", "RULED_OUT", "Every valid codeword has the all-zero syndrome, so the syndrome "
+                 "says nothing about which value was encoded -- only about flips after encoding (and it "
+                 "misses the all-qubit flip, which turns one codeword into the other).", q)
+
+
 # ── quantities with units, for the /physics command ──────────────────────────
 
 _UNITS = {"": 1.0, "w": 1.0, "kw": 1e3, "gw": 1e9,   # "mw" is ambiguous: write mW or MW

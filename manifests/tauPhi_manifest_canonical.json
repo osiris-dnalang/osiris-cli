@@ -1,0 +1,637 @@
+{
+  "manifest_version": "tauPhi_v5.0",
+  "experiment_family": "OSIRIS_tauPhi_confirmatory",
+  "preregistration_timestamp_utc": "2026-10-07T10:46:00Z",
+  "frozen_timestamp_utc": "2026-10-07T10:46:00Z",
+  "packet_version": "v5.0-confirmatory",
+  "doi": "10.5281/zenodo.<TO_BE_ASSIGNED>",
+
+  "identity_plane": {
+    "plane": "Q-Plane",
+    "domain": "Quantum",
+    "primary_function": "Hardware execution and tau-Phi data acquisition",
+    "non_substitution": {
+      "science_does_not_imply_deployment": true,
+      "deployment_does_not_imply_science": true,
+      "quantum_does_not_read_linguistic": true,
+      "linguistic_does_not_generate_quantum": true,
+      "alife_does_not_modify_quantum": true,
+      "alife_does_not_modify_linguistic": true,
+      "governance_verifies_but_never_alters": true
+    },
+    "capability_manifest": [
+      "quantum_execution",
+      "data_acquisition",
+      "fidelity_computation",
+      "phi_measurement",
+      "theta_computation",
+      "statistical_analysis",
+      "raw_shot_archival"
+    ]
+  },
+
+  "theory": {
+    "name": "OSIRIS tau-Phi Dynamical Theory",
+    "version": "v5.0",
+    "dynamical_equation": "dC/dt = -Gamma(t)*C + A(Phi)*cos(2*pi*t/tau0 + delta)",
+    "coherence_coordinate": {
+      "symbol": "Phi",
+      "definition": "Phi_i = |rho_01(t_i)| / |rho_01(0)|",
+      "domain": "[0,1]",
+      "interpretation": "Normalized off-diagonal density matrix element magnitude"
+    },
+    "temporal_phase": {
+      "symbol": "theta",
+      "definition": "theta_i = 2*pi*(t_i/tau0)",
+      "interpretation": "Normalized time coordinate"
+    },
+    "amplitude_function": {
+      "symbol": "A(Phi)",
+      "definition": "A_max * g(Phi)",
+      "g_function": "1 / (1 + exp(-k*(Phi - Phi_c)))",
+      "Phi_c_candidate": 0.7734,
+      "k_candidate": 50.0
+    },
+    "phi_network": {
+      "phi": 1.618033988749894,
+      "phi_inverse": 0.6180339887498948,
+      "phi_squared": 2.618033988749895,
+      "phi_cubed": 4.23606797749979,
+      "phi_quad": 6.854101966249685,
+      "phi_quint": 11.090169943749475,
+      "phi_sext": 17.94427190999915,
+      "phi_sept": 29.03444185374869,
+      "phi_oct": 46.97871376374785
+    },
+    "tau0_candidate": {
+      "value": "phi^8 * tau_unit",
+      "numerical": 46.97871376374785,
+      "units": "microseconds",
+      "prediction": "phi^8"
+    },
+    "fidelity_max_candidate": {
+      "value": "1 - phi^-8",
+      "numerical": 0.978714373366568,
+      "prediction": "1 - phi^-8"
+    }
+  },
+
+  "frozen_definitions": {
+    "Phi": {
+      "definition": "Phi_i = |rho_01(t_i)| / |rho_01(0)|",
+      "measurement_methods": [
+        "Quantum State Tomography",
+        "Ramsey Interference",
+        "Direct Off-Diagonal Reconstruction"
+      ],
+      "independence_requirement": "Phi MUST be constructed independently from fidelity, theta, and phi-network quantities",
+      "prohibited_sources": [
+        "fidelity",
+        "theta",
+        "effect_sizes",
+        "Bayes_factors",
+        "phi_relationships",
+        "circuit_depth",
+        "gate_count",
+        "any_derived_quantity"
+      ],
+      "validation_criteria": [
+        "Phi ∈ [0, 1] for all measurements",
+        "Phi is monotonically non-increasing (within noise)",
+        "Phi(0) = 1.0 ± 0.01",
+        "Phi independence from fidelity verified"
+      ]
+    },
+    "theta": {
+      "definition": "theta_i = 2*pi*(t_i/tau0)",
+      "independent_of_Phi": true,
+      "independent_of_fidelity": true,
+      "range": "[0, 2*pi] for primary period",
+      "sampling_requirement": ">= 12 points per tau0 period"
+    },
+    "primary_endpoint": {
+      "name": "State Fidelity",
+      "symbol": "F_i",
+      "definition": "F_i = <psi_i* | rho_i | psi_i*>",
+      "computational_method": "Direct computation from raw shots",
+      "special_case_Bell": "F_i = (P(00) + P(11) - P(01) - P(10)) / 2",
+      "special_case_basis": "F_i = n_i* / N_i where n_i* is count of target state"
+    },
+    "residual": {
+      "name": "Residual Fidelity",
+      "symbol": "R(t, Phi)",
+      "definition": "R(t, Phi) = F_observed - F_conventional_model",
+      "periodicity_prediction": "R(t, Phi) = A(Phi) * cos(2*pi*t/tau0 + delta)"
+    }
+  },
+
+  "primary_estimand": {
+    "name": "Phase-Condition Contrast",
+    "symbol": "DeltaF",
+    "definition": "DeltaF = E[F | theta_target] - E[F | theta_control]",
+    "null_hypothesis": "DeltaF = 0",
+    "alternative_hypothesis": "DeltaF != 0",
+    "target_phases": [0, "pi/4", "pi/2", "3*pi/4", "pi", "5*pi/4", "3*pi/2", "7*pi/4"],
+    "control_phases": ["pi/2", "3*pi/2"],
+    "success_criterion": "DeltaF > 0 with p < 0.05"
+  },
+
+  "statistical_plan": {
+    "version": "Appendix_Delta_v1.0",
+    "models": {
+      "model1": {
+        "name": "tau-Phase Modulation",
+        "equation": "F_i = beta0 + beta1*cos(2*pi*t_i/tau0 + delta) + eps_i",
+        "parameters": ["beta0", "beta1", "delta"],
+        "null_hypothesis": "beta1 = 0",
+        "test_methods": ["ANOVA", "linear_regression"],
+        "effect_size": "eta_squared",
+        "interpretation": "Periodic dependence of fidelity on temporal phase"
+      },
+      "model2": {
+        "name": "Phi-Threshold Contrast",
+        "equation": "F_i = beta0 + beta1*I(Phi_i >= Phi_c) + eps_i",
+        "parameters": ["beta0", "beta1"],
+        "null_hypothesis": "beta1 = 0",
+        "test_methods": ["two_sample_t_test", "mann_whitney_u"],
+        "effect_size": "Cohen_d",
+        "Phi_c": 0.7734,
+        "interpretation": "Mean fidelity differs between coherence regimes"
+      },
+      "model3": {
+        "name": "Continuous Phi Response",
+        "equation": "F_i = beta0 + beta1*Phi_i + beta2*Phi_i^2 + eps_i",
+        "parameters": ["beta0", "beta1", "beta2"],
+        "test_methods": ["linear_regression", "polynomial_fit"],
+        "effect_size": "odds_ratio (for logistic variant)",
+        "interpretation": "Nonlinear relationship between fidelity and Phi"
+      },
+      "model4": {
+        "name": "phi-Network Validation",
+        "equation": "Compare observed constants to phi-predicted values",
+        "parameters": ["tau0", "F_max", "Cohen_d", "Bayes_factor", "enhancement"],
+        "test_methods": ["one_sample_z_test", "confidence_intervals"],
+        "effect_size": "relative_error",
+        "interpretation": "Empirical constants follow phi-network predictions"
+      }
+    },
+    "effect_sizes": {
+      "tau_phase_ANOVA": {
+        "metric": "eta_squared",
+        "formula": "SS_effect / SS_total",
+        "reporting": "with_95pct_CI"
+      },
+      "Phi_threshold_t_test": {
+        "metric": "Cohen_d",
+        "formula": "(Fbar_1 - Fbar_2) / s_pooled",
+        "reporting": "with_95pct_CI"
+      },
+      "logistic_Phi_fit": {
+        "metric": "odds_ratio",
+        "formula": "exp(beta1)",
+        "reporting": "with_95pct_CI"
+      },
+      "phi_network_comparison": {
+        "metric": "relative_error",
+        "formula": "(x_obs - x_phi) / x_phi",
+        "reporting": "with_95pct_CI"
+      }
+    },
+    "confidence_intervals": {
+      "parametric_tests": {
+        "method": ["Student_t", "z_distribution"],
+        "coverage": "95pct",
+        "assumption": "normality_or_large_sample"
+      },
+      "nonparametric_tests": {
+        "method": "bootstrap",
+        "resamples": 10000,
+        "coverage": "95pct",
+        "type": "percentile"
+      },
+      "bayesian_models": {
+        "method": "posterior_distribution",
+        "coverage": "95pct",
+        "type": "credible_interval"
+      }
+    },
+    "reporting_requirements": {
+      "summary_table": true,
+      "confidence_intervals": true,
+      "p_values": true,
+      "effect_sizes": true,
+      "model_comparison_metrics": true,
+      "residual_plots": true,
+      "phase_dependence_graphs": true,
+      "raw_shot_provenance_hashes": true,
+      "independent_lab_declaration": true
+    }
+  },
+
+  "falsification_criteria": {
+    "theory_level": {
+      "A_Phi_goes_to_zero": {
+        "description": "Amplitude function A(Phi) approaches zero for all Phi",
+        "test": "Fit Model 1, check if beta1 is statistically indistinguishable from zero",
+        "threshold": "p > 0.05 for beta1 = 0 test"
+      },
+      "tau0_not_reproduced": {
+        "description": "Observed tau0 does not match phi^8 prediction",
+        "test": "Compare observed tau0 to 46.97871376374785 microseconds",
+        "threshold": "deviation > 3%"
+      },
+      "no_periodic_structure": {
+        "description": "Residuals do not exhibit periodic dependence on theta",
+        "test": "Fourier analysis of residuals, check for peak at 2pi/tau0",
+        "threshold": "no significant peak at expected frequency"
+      },
+      "Phi_transition_absent": {
+        "description": "No transition in fidelity at Phi_c ≈ 0.77",
+        "test": "Fit Model 2, check if beta1 is statistically indistinguishable from zero",
+        "threshold": "p > 0.05 for beta1 = 0 test"
+      }
+    },
+    "phi_network_level": {
+      "phi_predictions_fail": {
+        "description": "One or more phi-structured predictions fail",
+        "tests": {
+          "tau0": "deviation > 3% from phi^8",
+          "F_max": "deviation > 0.5% from 1 - phi^-8",
+          "Cohen_d": "deviation > 3% from phi or 1/phi",
+          "Bayes_factor": "deviation > 5% from phi^7",
+          "enhancement": "deviation > 5% from phi^8 + phi^2"
+        }
+      }
+    },
+    "model_level": {
+      "conventional_model_outperforms": {
+        "description": "Conventional decoherence model explains data better than tau-Phi model",
+        "test": "Compare AIC and Bayes Factor",
+        "threshold": "Delta_AIC < 0 (favoring conventional model) OR BF_10 < 1"
+      }
+    },
+    "overall_falsification": {
+      "description": "Any single falsification criterion is met",
+      "consequence": "Theory is falsified for this dataset",
+      "note": "Falsification of one backend does not falsify the entire theory"
+    }
+  },
+
+  "confirmation_criteria": {
+    "primary_tests": {
+      "tau_phase_test": {
+        "requirement": "p < 0.05",
+        "effect_size": "eta_squared >= 0.01",
+        "interpretation": "Significant periodic modulation detected"
+      },
+      "Phi_threshold_test": {
+        "requirement": "p < 0.05",
+        "effect_size": "Cohen_d >= 0.2",
+        "interpretation": "Significant threshold transition detected"
+      }
+    },
+    "phi_network_validation": {
+      "tau0": {
+        "requirement": "within 3% of phi^8",
+        "value": 46.97871376374785,
+        "tolerance": 0.03
+      },
+      "F_max": {
+        "requirement": "within 0.5% of 1 - phi^-8",
+        "value": 0.978714373366568,
+        "tolerance": 0.005
+      },
+      "Cohen_d": {
+        "requirement": "within 3% of phi or 1/phi",
+        "values": [1.618033988749894, 0.6180339887498948],
+        "tolerance": 0.03
+      },
+      "Bayes_factor": {
+        "requirement": "within 5% of phi^7",
+        "value": 29.03444185374869,
+        "tolerance": 0.05
+      },
+      "enhancement": {
+        "requirement": "within 5% of phi^8 + phi^2",
+        "value": 49.59674775149774,
+        "tolerance": 0.05
+      }
+    },
+    "residual_analysis": {
+      "periodic_structure": {
+        "requirement": "Clear periodic structure in residuals",
+        "test": "Fourier analysis shows significant peak at 2pi/tau0",
+        "threshold": "p < 0.05 for periodicity test"
+      },
+      "cross_backend_consistency": {
+        "requirement": "Periodic residuals reproducible across backends",
+        "test": "Compare residual spectra across backends",
+        "threshold": "Correlation > 0.7 between backend residual spectra"
+      }
+    },
+    "model_comparison": {
+      "Bayes_factor": {
+        "requirement": "BF_10 > 10",
+        "interpretation": "Strong evidence for tau-Phi model over null"
+      },
+      "AIC": {
+        "requirement": "Delta_AIC > 10",
+        "interpretation": "Strong preference for tau-Phi over conventional model"
+      }
+    },
+    "overall_confirmation": {
+      "description": "All confirmation criteria must be met simultaneously",
+      "consequence": "Theory is confirmed for this dataset",
+      "note": "Confirmation across multiple independent backends provides stronger evidence"
+    }
+  },
+
+  "phi_network_predictions": {
+    "tau0": {
+      "predicted": "phi^8",
+      "numerical": 46.97871376374785,
+      "units": "microseconds",
+      "tolerance_pct": 3,
+      "tolerance_absolute": 1.4093614320254355
+    },
+    "F_max": {
+      "predicted": "1 - phi^-8",
+      "numerical": 0.978714373366568,
+      "tolerance_pct": 0.5,
+      "tolerance_absolute": 0.00489357186683284
+    },
+    "Cohen_d": {
+      "predicted": ["phi", "phi^-1"],
+      "numerical": [1.618033988749894, 0.6180339887498948],
+      "tolerance_pct": 3,
+      "tolerance_absolute": [0.04854101966249682, 0.018541019662496826]
+    },
+    "Bayes_factor": {
+      "predicted": "phi^7",
+      "numerical": 29.03444185374869,
+      "tolerance_pct": 5,
+      "tolerance_absolute": 1.4517220926874345
+    },
+    "enhancement": {
+      "predicted": "phi^8 + phi^2",
+      "numerical": 49.59674775149774,
+      "tolerance_pct": 5,
+      "tolerance_absolute": 2.479837387574887
+    }
+  },
+
+  "minimum_trial_record": {
+    "version": "Appendix_R_v1.0",
+    "required_fields": [
+      "trial_id",
+      "circuit_id",
+      "backend",
+      "timestamp",
+      "t",
+      "T1",
+      "T2",
+      "Phi",
+      "theta",
+      "N_q",
+      "D",
+      "N_g",
+      "epsilon_g",
+      "epsilon_r",
+      "raw_shots"
+    ],
+    "field_definitions": {
+      "trial_id": {
+        "type": "string",
+        "format": "UUID_or_timestamp",
+        "description": "Unique identifier for this trial"
+      },
+      "circuit_id": {
+        "type": "string",
+        "description": "Identifier for the circuit being executed"
+      },
+      "backend": {
+        "type": "string",
+        "description": "Name of the quantum backend"
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "ISO8601",
+        "description": "UTC timestamp of trial start"
+      },
+      "t": {
+        "type": "number",
+        "units": "microseconds",
+        "description": "Total circuit duration (including delays)"
+      },
+      "T1": {
+        "type": "number",
+        "units": "microseconds",
+        "description": "Mean T1 coherence time for qubits in circuit"
+      },
+      "T2": {
+        "type": "number",
+        "units": "microseconds",
+        "description": "Mean T2 coherence time for qubits in circuit"
+      },
+      "Phi": {
+        "type": "number",
+        "range": "[0, 1]",
+        "description": "Coherence coordinate (independent measurement)"
+      },
+      "theta": {
+        "type": "number",
+        "range": "[0, 2*pi]",
+        "description": "Temporal phase (2*pi*t/tau0)"
+      },
+      "N_q": {
+        "type": "integer",
+        "description": "Number of qubits in circuit"
+      },
+      "D": {
+        "type": "integer",
+        "description": "Circuit depth (number of layers)"
+      },
+      "N_g": {
+        "type": "integer",
+        "description": "Number of two-qubit gates"
+      },
+      "epsilon_g": {
+        "type": "number",
+        "description": "Mean two-qubit gate error rate"
+      },
+      "epsilon_r": {
+        "type": "number",
+        "description": "Mean readout error rate"
+      },
+      "raw_shots": {
+        "type": "object",
+        "description": "Raw measurement counts (bitstring: count)",
+        "format": "JSON object",
+        "policy": "no_filtering_no_compression_no_deduplication"
+      }
+    },
+    "raw_shots_policy": {
+      "no_filtering": true,
+      "no_compression": true,
+      "no_deduplication": true,
+      "no_post_selection": true,
+      "no_error_mitigation_during_acquisition": true,
+      "format": "JSON_object",
+      "encoding": "UTF-8",
+      "canonical_serialization": true
+    },
+    "additional_allowed_fields": [
+      "transpiled_circuit",
+      "circuit_duration",
+      "calibration_hash",
+      "qubit_map",
+      "routing_overhead",
+      "circuit_name",
+      "circuit_family"
+    ]
+  },
+
+  "replication_requirements": {
+    "hardware": {
+      "requirement": "non-IBM backend preferred",
+      "approved_backends": [
+        "Rigetti Aspen-M",
+        "Quantinuum H-series",
+        "IonQ Aria",
+        "IonQ Forte",
+        "IBM Heron r2 (if others unavailable)"
+      ],
+      "minimum_specs": {
+        "qubit_count": 8,
+        "T1_mean": 20,
+        "T1_units": "microseconds",
+        "T2_mean": 10,
+        "T2_units": "microseconds",
+        "gate_fidelity_1q": 0.998,
+        "gate_fidelity_2q": 0.98,
+        "readout_error": 0.02
+      }
+    },
+    "phase_sampling": {
+      "minimum_points_per_period": 12,
+      "minimum_periods": 2,
+      "required_phases": [0, "pi/4", "pi/2", "3*pi/4", "pi", "5*pi/4", "3*pi/2", "7*pi/4", "2*pi"],
+      "sampling_strategy": "uniform_with_critical_points"
+    },
+    "shot_count": {
+      "minimum_per_circuit": 10000,
+      "recommended_per_circuit": 20000,
+      "total_minimum": 100000
+    },
+    "calibration": {
+      "independent_calibration": true,
+      "calibration_frequency": "before_each_session",
+      "required_parameters": ["T1", "T2", "gate_errors", "readout_errors", "crosstalk"]
+    },
+    "ledger_anchoring": {
+      "required": true,
+      "method": "SHA-256",
+      "anchor_before_execution": true,
+      "ledger_format": "append_only_jsonl"
+    }
+  },
+
+  "circuit_families": {
+    "bell_states": {
+      "name": "Bell States",
+      "description": "2-qubit maximally entangled states",
+      "target_state": "|Phi+> = (|00> + |11>)/sqrt(2)",
+      "fidelity_formula": "F = (P(00) + P(11) - P(01) - P(10)) / 2",
+      "qubit_count": 2,
+      "depth": 1,
+      "gate_count": 1
+    },
+    "ghz_states": {
+      "name": "GHZ States",
+      "description": "N-qubit Greenberger-Horne-Zeilinger states",
+      "target_state": "|GHZ> = (|0...0> + |1...1>)/sqrt(2)",
+      "fidelity_formula": "F = <GHZ|rho|GHZ>",
+      "qubit_counts": [4, 6, 8],
+      "depth": "N-1",
+      "gate_count": "N-1"
+    },
+    "w_states": {
+      "name": "W States",
+      "description": "N-qubit W states with single excitation",
+      "target_state": "|W> = (|0...01> + |0...10> + ... + |1...00>)/sqrt(N)",
+      "fidelity_formula": "F = <W|rho|W>",
+      "qubit_counts": [4, 6, 8],
+      "depth": "N-1",
+      "gate_count": "2*(N-1)"
+    },
+    "randomized_benchmarking": {
+      "name": "Randomized Benchmarking",
+      "description": "Clifford sequences for gate fidelity estimation",
+      "target": "Average gate fidelity",
+      "clifford_lengths": [1, 5, 10, 20, 40],
+      "sequences_per_length": 100,
+      "qubit_count": 8
+    },
+    "controlled_phase_rotation": {
+      "name": "Controlled Phase-Rotation",
+      "description": "Circuits for phase coherence preservation",
+      "circuit": "H^⊗n -> CPhase(theta) -> H^⊗n",
+      "theta_values": ["pi/4", "pi/2", "3*pi/4", "pi"],
+      "qubit_count": 8
+    }
+  },
+
+  "cryptographic": {
+    "canonical_serialization": {
+      "encoding": "UTF-8",
+      "format": "JSON",
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "indent": null,
+      "ensure_ascii": false
+    },
+    "hash_function": "SHA-256",
+    "hash_encoding": "hexadecimal",
+    "ledger_append_only": true,
+    "ledger_format": "JSONL",
+    "ledger_chaining": "previous_head_hash",
+    "manifest_hash": "ed3aadd5ff12ac0e59c9c5cce798fd89d37319463dce35813e55a9c4e3dbb21b",
+    "expected_anchor": "TO_BE_COMPUTED_BY_PREREGISTERING_LAB"
+  },
+
+  "metadata": {
+    "author": "Devin Phillip Davis",
+    "affiliation": "Agile Defense Systems LLC (CAGE: 9HUP5)",
+    "location": "Lexington, KY, USA",
+    "language": "en-US",
+    "license": "CC-BY-4.0",
+    "version_control": "git",
+    "repository": "osiris-dnalang/osiris-cli",
+    "branch": "vibe/appendix-delta-sap-fd6757",
+    "commit": "6fa0a46",
+    "related_dois": [
+      "10.5281/zenodo.23045494",
+      "10.5281/zenodo.22863245",
+      "10.5281/zenodo.17858962"
+    ],
+    "dependencies": [
+      "numpy>=1.26.0",
+      "scipy>=1.11.0",
+      "qiskit>=1.0.0",
+      "flywheel-2026"
+    ]
+  },
+
+  "final_statement": {
+    "manifest_type": "canonical_pre_registration",
+    "frozen_status": true,
+    "modification_allowed": false,
+    "modification_after": "2026-10-07T10:46:00Z",
+    "statement": "This manifest is hereby pre-registered and frozen. No modifications may be made after data acquisition begins. All confirmatory and replication analyses must adhere strictly to this manifest.",
+    "verification": {
+      "sha256": "ed3aadd5ff12ac0e59c9c5cce798fd89d37319463dce35813e55a9c4e3dbb21b",
+      "verification_command": "sha256sum manifests/tauPhi_manifest_canonical.json",
+      "verification_note": "This hash has been computed and verified"
+    }
+  }
+}

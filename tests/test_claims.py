@@ -1,6 +1,7 @@
 """The claims register and physics checks: OSIRIS deciding what is legit, by code, before a model speaks."""
 import math
 import re
+from pathlib import Path
 
 import pytest
 
@@ -92,8 +93,9 @@ def test_register_is_well_formed():
         assert c.patterns and all(re.compile(p) for p in c.patterns), c.id
         for kind, ref, note in c.evidence:
             assert kind in ("doi", "file", "commit") and note, c.id
-            if kind == "doi":
-                assert re.fullmatch(r"10\.5281/zenodo\.\d+", ref), ref
+            if kind == "doi":                       # a Zenodo record, or a published paper's DOI
+                assert re.fullmatch(r"10\.5281/zenodo\.\d+", ref) if ref.startswith("10.5281/") else \
+                    re.fullmatch(r"10\.\d{4,9}/[-._;()/:A-Za-z0-9]+", ref), ref
             if kind == "file":
                 assert not ref.startswith("/") and ".." not in ref, ref
         # an absence of evidence cannot cite a record; every other verdict must rest on one
@@ -125,6 +127,33 @@ def test_matching_on_real_texts():
     assert claims.match("RQC beats RCS with p < 0.05, ready for peer review")[0].id == "RQC_ADVANTAGE"
 
 
+@pytest.mark.parametrize("text", [
+    "the tau-phase anomaly at 46 µs", "τ₀ ≈ 46.0 μs", "τ₀ ≈ 46.0 µs", "a revival at 46 μs",
+    "an oscillation period of 46.98 µs", "τ0 = 46.9 us", "the 46 µs anomaly", "46 microseconds: the revival",
+    "tau_0 = 46.000 μs", "phase folded at 46 µsec", "the revival near   46.0   μs",
+    "CRSM Coherence Revival Period (τ₀) τ₀ ≈ 46.0 μs Davis (6D-CRSM, 2025)"])
+def test_tau_phase_duration_spellings_are_recognised(text):
+    assert "TAU_PHASE" in [c.id for c in claims.match(text)], text
+
+
+@pytest.mark.parametrize("text", [
+    "set the idle delay to 46 µs", "a 46 μs Ramsey delay", "T2 was 146 µs at the revival check",
+    "the revival window is 460 µs", "a revival after 4.46 µs", "46,000 µs of phase drift",
+    "46 users saw the anomaly", "46 microphones and a phase meter", "the anomaly: 46 ms, not microseconds",
+    "a revival at 46 ns", "period 46.3 µs"])
+def test_tau_phase_duration_does_not_overmatch(text):
+    assert "TAU_PHASE" not in [c.id for c in claims.match(text)], text
+
+
+def test_a_reference_is_not_an_endorsement():
+    # criticism and negation reference the claim too; the verdict, not the match, says it is not legit
+    for text in ("The τ-phase claim was an artifact of the server clock.",
+                 "There is no revival at 46.0 μs; that was T1 decay."):
+        hits = [c.id for c in claims.match(text)]
+        assert "TAU_PHASE" in hits or "K8_REVIVAL" in hits, text
+    assert claims.by_id("TAU_PHASE").verdict == "ARTIFACT"
+
+
 @pytest.mark.parametrize("text", ["hello osiris", "what's the weather like", "write a unit test for the parser",
                                   "please summarise my notes from yesterday", "run git status"])
 def test_ordinary_chat_matches_nothing(text):
@@ -145,6 +174,163 @@ def test_legit_command():
     assert "RULED_OUT" in claims.command("can a Poynting asymmetry lift a bus?")
     assert "not that it is legit" in claims.command("my cat can fly")
 
+
+# ── v4.5.2 entries: F_max, coherence quantization, the core's physics names, the quantum-LLM roadmap ──
+
+NEW_V452 = {"F_MAX": "REFUTED", "COHERENCE_QUANTIZATION": "OVERCLAIM", "NCLM_MECHANICS": "NOT_MEASURED",
+            "NCLM_PC_CORRECTOR": "NOT_MEASURED", "QUANTUM_LM": "NO_EVIDENCE", "QEC_LLM_SAFETY": "RULED_OUT",
+            "CRSM_ARCH": "UNTESTED"}
+
+
+def test_v452_entries_and_verdicts():
+    assert {i: claims.by_id(i).verdict for i in NEW_V452} == NEW_V452
+    assert "v4.5.2" in claims.by_id("NCLM_PC_CORRECTOR").finding and "v4.5.2" in claims.by_id("NCLM_CORE").finding
+    papers = {r for k, r, _ in claims.by_id("F_MAX").evidence if k == "doi"}
+    assert {"10.1038/nphys961", "10.1103/PhysRevLett.117.060504", "10.1103/PhysRevLett.117.060505"} <= papers
+
+
+def test_repetition_code_sees_flips_not_values():
+    c = pc.repetition_code(3)
+    assert c.verdict == "RULED_OUT"
+    assert c.quantities["syndrome of encoded 0"] == c.quantities["syndrome of encoded 1"] == "00"
+    assert c.quantities["flip patterns flagged"] == "6 of 7"          # flipping all three gives the other codeword
+
+
+def test_v452_computations():
+    phi = (1 + math.sqrt(5)) / 2
+    bound = claims._check_lines("one_minus_phi_power", (8, (0.993, 0.999, 0.9992)))
+    assert bound[0] == f"1 - phi^-8 = {1 - phi ** -8:.6f}" == "1 - phi^-8 = 0.978714"
+    assert bound[1].startswith("3 of the 3 cited Bell-state or Bell-derived gate fidelities exceed it")
+    cover = claims._check_lines("multiple_coverage", (46.0, 0.10, 100.0, 300.0))
+    assert "79% of 100-300 µs" in cover[0] and "from n = 5" in cover[1] and "above 207.0 µs" in cover[1]
+    wide = claims._check_lines("multiple_coverage", (46.0, 0.15, 100.0, 300.0))
+    assert "94% of 100-300 µs" in wide[0] and "from n = 3" in wide[1] and "above 117.3 µs" in wide[1]
+    table = claims._check_lines("phi_positional", (128, 51.843, 0.946))
+    assert "sine 0.305-0.786" in table[0] and "cosine 0.227-0.584" in table[0]
+    assert "longest period 27.7 positions" in table[1] and "span 2.58x" in table[1] and "8,660x" in table[1]
+
+
+def test_f_max_statistics_as_the_finding_states():
+    def p_three(r):                     # two-sided p of a Pearson r from 3 points: t with 1 d.o.f. is Cauchy
+        return 1 - 2 / math.pi * math.atan(r / math.sqrt(1 - r * r))
+    pred, meas = (0.985, 0.982, 0.977), (0.900, 0.880, 0.869)   # falsifiable_predictions.md, Prediction 2 table
+    mp, mm = sum(pred) / 3, sum(meas) / 3
+    r = sum((a - mp) * (b - mm) for a, b in zip(pred, meas)) / math.sqrt(
+        sum((a - mp) ** 2 for a in pred) * sum((b - mm) ** 2 for b in meas))
+    assert round(r, 2) == 0.95 and round(p_three(r), 2) == 0.20
+    assert round(p_three(0.90), 2) == 0.29 and round(p_three(0.99996), 3) == 0.006
+    assert max(pred[:2]) > 1 - ((1 + math.sqrt(5)) / 2) ** -8    # the document's own predictions break its bound
+
+
+@pytest.mark.parametrize("text,first", [
+    ("Bell fidelity bound (F_max = 0.9787) — validated ✓", "F_MAX"),
+    ("H1: Bell fidelity bound (F_max = 0.9787) — validated", "F_MAX"),
+    ("F_max = 1 - φ^{-8} = 0.9787 bound **100% validated**", "F_MAX"),
+    ("Prediction 1 (Coherence Quantization) validated; 2–4 pending", "COHERENCE_QUANTIZATION"),
+    ("Insight: If coherence quantizes at τ_base × n, then memory cells could naturally align",
+     "COHERENCE_QUANTIZATION"),
+    ("#### 1. Hybrid Pilot-Wave + Transformer Architecture", "QUANTUM_LM"),
+    ("Layer 2: Hybrid attention (quantum phase coherence guides attention scores)", "QUANTUM_LM"),
+    ("Quantum-guided attention using phase information", "QUANTUM_LM"),
+    ("Hypothesis: Quantum saves 20–40% token budget on multi-turn reasoning", "QUANTUM_LM"),
+    ("Non-Causal Temporal Quantum Memory (NCQM)", "QUANTUM_LM"),
+    ("#### 7. Entanglement-Assisted Error Correction for LLM Outputs", "QEC_LLM_SAFETY"),
+    ("Encode each token in a 3-qubit GHZ state for error detection", "QEC_LLM_SAFETY"),
+    ("LLM safety as a quantum error correction problem", "QEC_LLM_SAFETY"),
+    ("Pilot-wave attention modulation (non-local correlation factor)", "NCLM_MECHANICS"),
+    ("Torsion-Locked Attention (T-Lock) prevents information manifold collapse", "NCLM_MECHANICS"),
+    ("Phase-Conjugate Error Correction: F_purified = 1 - 10^{-5}", "NCLM_PC_CORRECTOR"),
+    ("constraints=[hardware_calibration_drift, CHSH_bounds]", "CHSH_TEST"),
+    ("H2: θ-lock angle (51.843°) — prior P(H2|data) = ?", "THETA_LOCK"),
+    ("θ_lock = 51.8° ± 0.3° (95% credible interval, posterior)", "THETA_LOCK"),
+    ("H3: Phase-conjugate efficiency (χ_pc = 0.946)", "CHI_PC"),
+    ("Does the CRSM architecture beat a standard transformer? NCLM-ARCH-1 will say.", "CRSM_ARCH")])
+def test_roadmap_texts_lead_with_their_entry(text, first):
+    assert claims.match(text)[0].id == first, [c.id for c in claims.match(text)]
+
+
+@pytest.mark.parametrize("text,also", [
+    ("Benefit: Quantum advantage in attention pattern discovery", {"QUANTUM_ADVANTAGE", "QUANTUM_LM"}),
+    ("#### 6. Quantum Advantage in In-Context Learning", {"QUANTUM_ADVANTAGE", "QUANTUM_LM"}),
+    ("Time-series quantum state encoding: τ_mem ≈ 46 μs becomes a learned metric.",
+     {"TAU_PHASE", "COHERENCE_QUANTIZATION"}),
+    ("Phase-conjugate positional encoding (θ_lock = 51.843°)", {"THETA_LOCK", "NCLM_MECHANICS"}),
+    ("NCLM Engine — Non-Local Non-Causal Language Model", {"NCLM_CORE", "NCLM_MECHANICS"})])
+def test_roadmap_texts_that_touch_two_entries(text, also):
+    assert also <= {c.id for c in claims.match(text)}, text
+
+
+@pytest.mark.parametrize("text", [
+    "Please pay attention to the phase of the project plan.",
+    "The attention mechanism in a standard transformer uses softmax over scaled dot products.",
+    "We added positional encoding to the model.", "Quantum computing is interesting; can you explain qubits?",
+    "Error correction in our database layer retries failed writes.", "The fidelity of the translation was high.",
+    "Run the benchmark again in the next phase.", "Add a learning-rate warmup and a cosine schedule.",
+    "This sentence mentions a pilot and a wave at the beach.", "The tokenizer encodes each token as an integer id.",
+    # legitimate physics and machine learning that share words with the new entries
+    "Explain de Broglie-Bohm pilot-wave theory.", "BERT is a non-causal language model.",
+    "Entanglement-assisted quantum error-correcting codes need pre-shared ebits.",
+    "Use a 3-qubit repetition code to protect against bit flips.", "Bell state fidelity on ibm_fez was 0.91",
+    "We fine-tuned a transformer on quantum chemistry data; its attention weights look sparse.",
+    "4-bit quantization reduces the coherence of long answers.", "How does in-context learning work?",
+    "Error correction for LLM-generated code: retry on syntax errors.",
+    "A phase-conjugate mirror corrects aberrations in the laser beam.", "The token budget is 4,000 tokens.",
+    # found by review after the first draft (2026-10-08)
+    "a glass of purified water", "fraction of purified protein", "Gemma 2 uses hybrid attention with sliding windows",
+    "Quantum optimal control draws attention from industry", "the T2 instance was slow after 8-bit quantization",
+    "There is a T-lock on this door"])
+def test_v452_entries_do_not_overmatch(text):
+    assert not set(NEW_V452) & {c.id for c in claims.match(text)}, text
+
+
+def test_nclm_entries_describe_the_code():
+    np = pytest.importorskip("numpy")
+    import inspect
+
+    from osiris.nclm import positions
+    from osiris.nclm import sovereign_mechanics as sm
+    pw = sm.TorsionLockedAttention._pilot_wave_factor(128)[0, 0]
+    assert round(float(pw.min()), 2) == 1.37 and float(pw.max()) == 2.0      # a fixed multiplier, no parameter
+    assert round(float(sm.TorsionLockedAttention._pilot_wave_factor(8)[0, 0, 0, 5]), 2) == 1.54
+    assert round(float(pw[0, 5]), 2) == 1.96                                  # same distance, longer context
+    pe = positions.phase_conjugate_positional_encoding(128, 128).data
+    pos = np.arange(128, dtype=np.float32)[:, None]
+    freqs = 1.0 / (positions.PHI_GOLDEN ** (np.arange(0, 128, 2, dtype=np.float32) * 2.0 / 128))
+    plus = math.cos(positions.THETA_RAD) * positions.CHI_PC                   # the source uses minus this
+    assert np.allclose(pe[:, 1::2], np.cos(pos * freqs * plus), atol=1e-6)   # cos is even: the sign does nothing
+    corr = sm.PhaseConjugateCorrector(128)
+    assert 4 * sum(t.data.size for t in (corr.conj_gate.weight, corr.conj_gate.bias_param,
+                                         corr.theta_proj.weight)) == 131_584
+    body = inspect.getsource(sm.PhaseConjugateCorrector)
+    assert "FIDELITY_TARGET" not in body and "self.zero_point" not in inspect.getsource(
+        sm.PhaseConjugateCorrector.__call__)
+    assert "1::2" in body and "theta_proj" in body                            # sign flip, then a learned map
+
+
+def test_the_users_own_framing_gets_the_verdict():
+    """The phrase the core is described with is checked like any other claim."""
+    ids = {c.id for c in claims.match("the non causal living language model and the dnalang framework")}
+    assert "NCLM_MECHANICS" in ids and "NCLM_CORE" in ids
+
+
+def test_crsm_arch_points_at_its_pre_registration():
+    c = claims.by_id("CRSM_ARCH")
+    [(kind, ref, _)] = c.evidence
+    assert kind == "file" and ref == "osiris-cli/experiments/nclm_arch1/PRE_REGISTRATION.md"
+    assert (Path(__file__).resolve().parents[1] / "experiments" / "nclm_arch1" / "PRE_REGISTRATION.md").exists()
+
+
+def test_the_chsh_shell_command_is_not_the_chsh_test():
+    assert "CHSH_TEST" not in {c.id for c in claims.match("run chsh -s /bin/zsh to change your shell")}
+    assert "CHSH_TEST" in {c.id for c in claims.match("our CHSH value was 2.4")}
+
+
+def test_rendering_the_v452_entries(tmp_path):
+    f_max = "\n".join(claims.render(claims.by_id("F_MAX"), base=str(tmp_path)))
+    assert "[computed] 1 - phi^-8 = 0.978714" in f_max and "doi:10.1103/PhysRevLett.117.060504" in f_max
+    qec = "\n".join(claims.render(claims.by_id("QEC_LLM_SAFETY")))
+    assert "[computed] repetition code: RULED_OUT" in qec and "syndrome of encoded 1 = 00" in qec
+    assert "COHERENCE_QUANTIZATION" in claims.list_all()
 
 # ── chat: code answers first, the model is held to it ────────────────────────
 

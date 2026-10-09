@@ -78,6 +78,16 @@ GAMMA_COHERENCE_FLOOR = 0.0920                 # Fail-closed decoherence ceiling
 LAMBDA_PHI = 2.176435e-8                      # Universal Memory Constant (s^-1 / kg)
 PHI_CONSCIOUSNESS = 0.7734                    # Phase-conjugate threshold
 F_MAX_PREDICTED = 1.0 - (PHI_GOLDEN ** -8)      # F_max = 0.97871...
+
+
+def _claim_verdict(cid: str) -> str:
+    """A constant's claims-register verdict, for banners that print the constant."""
+    try:
+        from osiris_cli import claims as _claims
+        c = _claims.by_id(cid)
+        return c.verdict if c else "unregistered"
+    except Exception:  # noqa: BLE001 - a banner must render without the register
+        return "see /legit"
 TAU_0_US = PHI_GOLDEN ** 8                    # τ_0 = 46.9787... µs
 CHI_PC = 0.869                                # Phase-conjugate coupling coefficient
 
@@ -85,9 +95,9 @@ BANNER = r"""
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                  OSIRIS                                      ║
 ║                   ═══════════════════════════════════                        ║
-║     a living language model: learns from every conversation, speaks in its   ║
-║     own voice only after passing a held-out gate · models propose, code      ║
-║     decides · every exchange hash-chained                                    ║
+║     a living language model: records every exchange; learns only from        ║
+║     eligible material you explicitly approve · models propose, code decides  ║
+║     · hash-chained dynamic evidence ledger with separate memory states       ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 """
 
@@ -426,10 +436,9 @@ def print_banner():
     
     if otc is not None and osiris_ui is not None:
         try:
+            from osiris_cli import architecture
             canvas = osiris_ui.Canvas()
-            ollama_ok, _ = otc._check_ollama_reachable(timeout=0.5)
-            engines = otc._council_engines(ollama_ok)
-            print(osiris_ui.council(canvas, engines))
+            print(architecture.compact(canvas, architecture.live_state(get_living(), otc)))
             otc._home()
         except Exception as e:
             print(f"  [Console Status: {e}]")
@@ -472,7 +481,7 @@ def execute_ignite(state: Optional[OsirisReplState] = None) -> Dict[str, Any]:
     print(f"  ├─ Locking Resonance: θ_lock = {THETA_LOCK_DEG}° (Pyramid face slope arctan(14/11))")
     print(f"  ├─ Coherence Floor:  Γ_floor = {GAMMA_COHERENCE_FLOOR:.4f} [ENFORCED FAIL-CLOSED]")
     print(f"  ├─ Memory Invariant: Λ_Φ     = {LAMBDA_PHI:.6e} kg")
-    print(f"  ├─ Peak Fidelity:    F_max   = {F_MAX_PREDICTED:.5f} (1 - φ^-8)")
+    print(f"  ├─ Peak Fidelity:    F_max   = {F_MAX_PREDICTED:.5f} (1 - φ^-8; claims register: {_claim_verdict('F_MAX')})")
     print("  └─ Substrate Status: \033[1;32m11D CRSM Substrate LOCKED & OPERATIONAL\033[0m")
 
     # 2. Cognitive 9-Agent Mesh
@@ -794,7 +803,7 @@ def execute_benchmark_flywheel(state: Optional[OsirisReplState] = None, output_p
 
     print(f"  Protocol ID     : {k8.EXPERIMENT_ID}")
     print(f"  Predicted Peak  : τ_0 = {k8.TAU_0_PREDICTED_US:.4f} µs (φ^8)")
-    print(f"  Predicted F_max : {k8.F_MAX_PREDICTED:.5f} (1 - φ^-8)")
+    print(f"  Predicted F_max : {k8.F_MAX_PREDICTED:.5f} (1 - φ^-8; claims register: {_claim_verdict('F_MAX')})")
     print(f"  Coherence Floor : {state.coherence_floor:.4f}")
     print("  Sweeping τ targets across NCLM Organism vs Static Baseline...\n")
 
@@ -880,7 +889,7 @@ def execute_benchmark_flywheel(state: Optional[OsirisReplState] = None, output_p
     print(f"\n  \033[1;32m[CRYPTOGRAPHIC PROOF GENERATED]\033[0m")
     print(f"  ├─ Merkle Root   : {merkle_root}")
     print(f"  ├─ Mean Gain ΔF  : {mean_gain:+.5f} (NCLM vs Static Baseline)")
-    print(f"  ├─ Peak Fidelity : {max_fidelity:.5f} (Target F_max = {k8.F_MAX_PREDICTED:.5f})")
+    print(f"  ├─ Peak Fidelity : {max_fidelity:.5f} (F_max = {k8.F_MAX_PREDICTED:.5f}, {_claim_verdict('F_MAX')})")
     print(f"  ├─ Coherence     : {'100% SATISFIED (Γ <= 0.092)' if report['coherence_verified'] else 'BREACH'}")
     print(f"  └─ Proof Report  : {out_file}\n")
 
@@ -974,15 +983,42 @@ def get_living():
         def trainer_status():
             from osiris_cli import train as osiris_train
             return osiris_train.status_lines(lock_path=core.lock_path() if core else None)
-        _LIVING = Osiris(core=core, knowledge=knowledge, probes=Probes(LIVING_HOME, trainer_status=trainer_status))
+        small_talk = None
+        try:
+            import intent_router  # "hello osiris" is small talk; "hello, explain DD?" is a question
+
+            def small_talk(text):
+                return intent_router.classify(text)[0] == "conversation"
+        except ImportError:
+            pass
+        _LIVING = Osiris(core=core, knowledge=knowledge, probes=Probes(LIVING_HOME, trainer_status=trainer_status),
+                         small_talk=small_talk)
     return _LIVING
 
 
 def handle_livlm_prompt(state: OsirisReplState, prompt: str) -> None:
-    """Plain text is conversation with OSIRIS. Pasted UI transcripts are still
-    answered, but never become training data (source firewall)."""
+    """Plain text is conversation with OSIRIS.
+    Records every exchange; learns only from eligible material you explicitly approve."""
     tier, _reason = state.firewall.classify(prompt)
-    get_living().converse(prompt, learnable=(tier != SourceTier.QUARANTINED_LOOP))
+    input_transport = "unknown"
+    if otc is not None and hasattr(otc, "_last_input") and "pasted" in otc._last_input:
+        input_transport = "bracketed_paste" if bool(otc._last_input.get("pasted")) else "typed"
+
+    # If true transport metadata is unavailable or bracketed paste was used,
+    # conservatively require review before any training promotion.
+    learnable = (tier != SourceTier.QUARANTINED_LOOP) and (input_transport == "typed")
+    get_living().converse(prompt, learnable=learnable, input_transport=input_transport)
+
+
+def execute_architecture() -> None:
+    """Every pipeline layer: what implements it, its live state, what is not built."""
+    from osiris_cli import architecture
+    canvas = osiris_ui.Canvas() if osiris_ui is not None else None
+    if canvas is None:
+        print("[OSIRIS] /architecture needs osiris_ui")
+        return
+    state = architecture.live_state(get_living(), otc)
+    print("\n" + architecture.full(canvas, state, architecture.ledger_detail()) + "\n")
 
 
 def execute_osiris_status() -> None:
@@ -1123,10 +1159,21 @@ def display_status(state: Optional[OsirisReplState] = None) -> None:
     print(f"  Substrate State: {substrate}")
     print(f"  Cognitive Mesh : {mesh}")
     print(f"  Power Governor : {p_dec.reason}")
-    print(f"  Coherence Floor: {state.coherence_floor:.4f} (Invariant Γ <= 0.092)")
-    print(f"  Resonance Angle: {THETA_LOCK_DEG}° (Pyramid face slope arctan(14/11))")
-    print(f"  Memory Invariant: Λ_Φ = {LAMBDA_PHI:.6e} kg")
-    print(f"  Peak Fidelity  : F_max = {F_MAX_PREDICTED:.5f}")
+    print(f"  Coherence Floor: {state.coherence_floor:.4f} (configured threshold, not a measured invariant)")
+    try:
+        from osiris_cli import claims as _claims
+        def _verdict(cid):
+            c = _claims.by_id(cid)
+            return c.verdict if c else "unregistered"
+        print(f"  CRSM constants : historical, not established -- θ_lock {THETA_LOCK_DEG}° {_verdict('THETA_LOCK')}, "
+              f"Λ_Φ {LAMBDA_PHI:.6e} {_verdict('LAMBDA_PHI')}, F_max {F_MAX_PREDICTED:.5f} {_verdict('F_MAX')} (/legit list)")
+    except Exception:  # noqa: BLE001 - status must render even without the register
+        print("  CRSM constants : historical, not established (/legit list)")
+    try:
+        from osiris_cli import gemini_gateway
+        print("  " + gemini_gateway.status_line())
+    except Exception:  # noqa: BLE001 - status must render without the gateway
+        pass
     print(f"  Uptime         : {uptime:.1f} s")
     print(f"  Evidence Events: {len(state.evidence_ledger)} items in Merkle ledger")
     if state.last_benchmark:
@@ -1160,15 +1207,23 @@ def display_help() -> None:
     print("    /osiris              OSIRIS's core: step, held-out score, speaking gate")
     print("    /self <text>         Hear the core's own raw voice, even before it has earned it")
     print("    /mentor [model]      Choose which local Ollama model speaks while the core learns")
+    print("                         (default qwen2.5:3b; OSIRIS_VOICE sets it, long pastes use qwen2.5:1.5b)")
     print("    /remember <fact>     OSIRIS keeps this across sessions  (/forget <words> drops it)")
     print("    /check [trainer|git|ledger|system|evidence] [path|m3c]   Run OSIRIS's read-only checks")
     print("    /legit <text|ID|list> Is a claim legit? Verdicts from the claims register, with evidence")
+    print("    /gemini [--dry] <q>  Ask Gemini directly (advisory; redacted, budgeted, ledgered)")
     print("    /physics <check> k=v  Physics bounds: thrust, rim, metric, chsh, efficiency, entropy, dd")
-    print("    /train [start H|stop] Overnight batch training (status by default)")
+    print("    /train [start H|stop|rescore] Overnight batch training (status by default)")
     print()
     print("  \033[1;36mCore Substrate\033[0m")
     print("    /ignite              Boot 11D CRSM Substrate, Cl(3,0) rotor & 9-Agent Cognitive Mesh")
     print("    /learn [N]           Initiate autopoietic ALife evolution (zero backprop)")
+    print("    /learn last          Review card for most recent pasted/unverified input")
+    print("    /learn last <dest>   Create pending proposal: notes [title], facts, or training")
+    print("    /learn confirm <id>  Confirm pending proposal to execute durable write")
+    print("    /learn cancel <id>   Cancel pending proposal without creating durable records")
+    print("    /learn status        Show learning states: ledger, proposals, notes, facts, queue")
+    print("    /unlearn <id>        Preview unlearn/tombstone (use --confirm to execute)")
     print("    /dna \"<intent>\"      Synthesize .dna genome with Z3bra vectorizer & L0 AST firewall")
     print("    /ledger              Verify SHA-256 evidence ledger & Merkle provenance")
     print("    /status              Show substrate, node, mesh, and power status dashboard")
@@ -1194,6 +1249,7 @@ def display_help() -> None:
     print()
     print("  \033[1;36mConsole & Living Language Interaction\033[0m")
     print("    /home                Display Living Language Council & Next Best Action card")
+    print("    /architecture        Pipeline layers L0-L8: what implements each, live state, what is not built")
     print("    /why                 Show diagnosis/logs of the last failed sandbox execution")
     print("    /bench               Run or list benchmarks against installed mentors")
     print("    /mentors             Display mentor models and scorecard comparison")
@@ -1222,113 +1278,98 @@ def display_help() -> None:
 # DISPATCH & REPL LOOP
 # ═══════════════════════════════════════════════════════════════════════════════
 
+# First words the Living Language Console owns; the rest of its commands are
+# tried after this REPL's own (see the end of dispatch_command).
+CONSOLE_COMMANDS = {
+    "/home", "/why", "/bench", "/mentors", "/run", "/runs", "/apply", "/discard", "/gap", "/gaps",
+    "/experiment", "/experiments", "/lab", "/sources", "/source", "/hypotheses", "/hypothesis",
+    "/organism", "/ui", "/sprint", "/reroute", "/focus", "/suggest", "/digest", "/ingest", "/facts",
+    "/plan", "/consensus", "/check", "/nclm", "/intent", "/ask", "/cancel", "/engage", "/tap",
+}
+
+
+def safe_dispatch(state: OsirisReplState, line: str) -> None:
+    """Run one command; if it raises, say which command failed, keep the traceback in
+    ~/.osiris/logs/repl_errors.log and return to the prompt instead of ending the session."""
+    try:
+        dispatch_command(state, line)
+    except Exception as exc:  # noqa: BLE001 - one broken command must not close the REPL
+        import traceback
+        log = os.path.join(os.path.expanduser("~"), ".osiris", "logs", "repl_errors.log")
+        try:
+            os.makedirs(os.path.dirname(log), exist_ok=True)
+            with open(log, "a", encoding="utf-8") as f:
+                f.write(f"--- {time.strftime('%Y-%m-%dT%H:%M:%S')} {line[:200]!r}\n{traceback.format_exc()}\n")
+            where = f"traceback in {log}"
+        except OSError:
+            where = "traceback could not be written"
+        print(f"\n[!] '{line[:60]}' failed: {type(exc).__name__}: {str(exc)[:200]}")
+        print(f"    The session continues; {where}.\n")
+
+
+def dispatch_held(state: OsirisReplState, line: str) -> None:
+    """A message held while OSIRIS answered. A multi-line paste is content: it goes to the
+    conversation whole, never to the command router, where a first word such as /apply would
+    run a command and drop the rest. Typed lines and one-line pastes dispatch as usual."""
+    if getattr(line, "pasted", False) and "\n" in line.strip():
+        try:
+            handle_livlm_prompt(state, line.strip())
+        except Exception as exc:  # noqa: BLE001 - as safe_dispatch: the session continues
+            print(f"\n[!] the held paste failed: {type(exc).__name__}: {str(exc)[:200]}\n")
+        return
+    safe_dispatch(state, line)
+
+
 def dispatch_command(state: OsirisReplState, line: str) -> None:
     line_clean = line.strip()
     if not line_clean:
         return
 
-    # 1. Hotkey dispatch from Living Language Console suggestions
+    # 1. Menu keys. A key on the menu on screen runs its command; a lettered tool
+    # works from any screen; any other bare number or letter is not a message
+    # (a stray "c" used to wait a minute for the 7B mentor to answer it).
     if otc is not None:
-        upper_k = line_clean.upper()
-        if upper_k in otc._pending_suggestions:
-            target_cmd = otc._pending_suggestions[upper_k]
+        key = line_clean.upper() if otc._is_menu_letter(line_clean) else line_clean
+        target_cmd = otc._pending_suggestions.get(key)
+        if target_cmd is None and otc._is_menu_letter(line_clean):
+            target_cmd = next((c for k, _l, c in otc._home_letters() if k == key), None)
+        if target_cmd is not None:
+            if otc.SELF_MODIFY_OVERRIDE in target_cmd:
+                print(f"[!] [{key}] not run: it contains {otc.SELF_MODIFY_OVERRIDE}, which only "
+                      f"counts when you type it yourself.\n")
+                return
             return dispatch_command(state, target_cmd)
-        elif line_clean in otc._pending_suggestions:
-            target_cmd = otc._pending_suggestions[line_clean]
-            return dispatch_command(state, target_cmd)
+        if line_clean.isdigit() or otc._is_menu_letter(line_clean):
+            print(f"\n[!] No menu item {key} right now -- not sent to the model. Type /home for the menu.\n")
+            return
 
     parts = line_clean.split()
     cmd = parts[0].lower()
 
-    # 2. Living Language Console & Termux Routing
-    if otc is not None:
-        if cmd == "/home":
-            otc._home()
-            return
-        elif cmd == "/why":
-            otc._why()
-            return
-        elif cmd in ("/bench", "/mentors") or (cmd == "/benchmark" and len(parts) > 1 and parts[1].lower() in ("run", "runs", "tasks", "compare", "leaderboard")):
-            if cmd.startswith("/mentor"):
-                otc._mentors(line_clean)
+    # 2. Living Language Console commands run through the console's own router,
+    # otc.run_command, so both front ends call its functions the same way.
+    if otc is not None and cmd in CONSOLE_COMMANDS:
+        if cmd == "/apply":
+            if otc._pending_write["path"] is None:
+                print("\n[!] /apply: nothing pending.\n")
             else:
-                otc._bench(line_clean)
-            return
-        elif cmd == "/run" and len(parts) > 1 and parts[1].lower() == "show":
-            otc._run_show(line_clean)
-            return
-        elif cmd in ("/runs", "/run"):
-            otc._runs(line_clean)
-            return
-        elif cmd == "/apply":
-            otc._apply(line_clean)
-            return
+                otc._apply_pending_write()
         elif cmd == "/discard":
-            otc._discard(line_clean)
-            return
-        elif cmd in ("/gap", "/gaps"):
-            otc._gap(line_clean)
-            return
-        elif cmd in ("/experiment", "/experiments"):
-            otc._experiment(line_clean)
-            return
-        elif cmd == "/lab":
-            otc._lab(line_clean)
-            return
-        elif cmd == "/sources":
-            otc._sources(line_clean)
-            return
-        elif cmd == "/hypotheses":
-            otc._hypotheses(line_clean)
-            return
-        elif cmd == "/organism":
-            otc._organism(line_clean)
-            return
-        elif cmd == "/ui":
-            otc._ui(line_clean)
-            return
-        elif cmd == "/sprint":
-            otc._sprint(line_clean)
-            return
-        elif cmd == "/reroute":
-            otc._reroute(line_clean)
-            return
-        elif cmd == "/focus":
-            otc._focus(line_clean)
-            return
-        elif cmd == "/suggest":
-            otc._suggest(line_clean)
-            return
-        elif cmd == "/digest":
-            parts = line_clean.split(maxsplit=1)
-            if len(parts) > 1 and parts[1].strip():
-                execute_digest(state, parts[1].strip())
+            if otc._pending_write["path"] is None:
+                print("\n[!] /discard: nothing pending.\n")
             else:
-                otc._digest()
-            return
-        elif cmd == "/ingest":
-            parts = line_clean.split(maxsplit=1)
-            filepath = parts[1].strip() if len(parts) > 1 else ""
-            execute_digest(state, filepath)
-            return
-        elif cmd == "/facts":
-            otc._facts(line_clean)
-            return
-        elif cmd == "/plan":
-            otc._plan(line_clean)
-            return
-        elif cmd == "/consensus":
-            otc._consensus(line_clean)
-            return
-        elif cmd == "/check":
-            otc._check()
-            return
+                otc._discard_pending_write()
+        elif cmd in ("/digest", "/ingest") and (len(parts) > 1 or cmd == "/ingest"):
+            execute_digest(state, line_clean[len(parts[0]):].strip().strip('\'"'))
+        elif cmd in ("/run", "/runs") and parts[1:2] != ["show"]:
+            otc._runs_stats()
         elif cmd == "/nclm":
-            otc._nclm(line_clean)
-            return
+            execute_osiris_status()
         elif cmd == "/intent":
-            otc._intent(line_clean)
-            return
+            otc._intent_status()
+        elif not otc.run_command(line_clean):
+            otc._unknown_command(line_clean)
+        return
 
     # 3. Commands need a leading "/". Anything else is conversation with OSIRIS,
     # so a sentence that starts with "learn", "status" or "dna" is never hijacked.
@@ -1338,8 +1379,59 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     if cmd in ("/ignite", "ignite"):
         execute_ignite(state)
     elif cmd in ("/learn", "learn"):
-        steps = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 5
-        execute_learn(state, generations=steps)
+        from osiris_cli import paste_learning
+        sub = parts[1].lower() if len(parts) > 1 else ""
+        living_obj = get_living()
+        if sub == "last":
+            target = parts[2].lower() if len(parts) > 2 else ""
+            candidate = paste_learning.get_last_paste_candidate(living_obj.home)
+            if not candidate:
+                print("\n[OSIRIS] No recent pasted or unverified exchange found in ledger.\n")
+            elif target == "notes":
+                title = " ".join(parts[3:]) if len(parts) > 3 else None
+                ok, msg, prop_id = paste_learning.propose_notes(living_obj.home, candidate, title=title)
+                print(f"\n{msg}\n")
+            elif target == "facts":
+                ok, msg, prop_id = paste_learning.propose_facts(living_obj.home, candidate)
+                print(f"\n{msg}\n")
+            elif target == "training":
+                ok, msg, prop_id = paste_learning.propose_training(living_obj.home, candidate)
+                print(f"\n{msg}\n")
+            else:
+                print("\n" + paste_learning.format_review_card(candidate) + "\n")
+        elif sub == "confirm":
+            prop_id = parts[2] if len(parts) > 2 else ""
+            if not prop_id:
+                pending = paste_learning.get_pending_proposals(living_obj.home)
+                if not pending:
+                    print("\n[OSIRIS] Usage: /learn confirm <proposal-id>\nNo pending proposals.\n")
+                else:
+                    lines = [f"  - {p['proposal_id']} -> target={p['target']} (created {p['created_at']})" for p in pending]
+                    print("\n[OSIRIS] Usage: /learn confirm <proposal-id>\nPending proposals:\n" + "\n".join(lines) + "\n")
+            else:
+                ok, msg = paste_learning.confirm_proposal(living_obj.home, prop_id)
+                print(f"\n{msg}\n")
+        elif sub == "cancel":
+            prop_id = parts[2] if len(parts) > 2 else ""
+            if not prop_id:
+                print("\n[OSIRIS] Usage: /learn cancel <proposal-id>\n")
+            else:
+                ok, msg = paste_learning.cancel_proposal(living_obj.home, prop_id)
+                print(f"\n{msg}\n")
+        elif sub == "status":
+            st = paste_learning.get_learning_status(living_obj.home)
+            print("\n" + paste_learning.format_learning_status(st) + "\n")
+        else:
+            steps = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 5
+            execute_learn(state, generations=steps)
+    elif cmd in ("/unlearn", "unlearn"):
+        from osiris_cli import paste_learning
+        target_id = parts[1] if len(parts) > 1 else ""
+        confirm = ("--confirm" in parts)
+        reason_parts = [p for p in parts[2:] if not p.startswith("--")]
+        reason = " ".join(reason_parts) if reason_parts else "user_request"
+        ok, msg = paste_learning.unlearn(get_living().home, target_id=target_id, reason=reason, confirm=confirm)
+        print(f"\n{msg}\n")
     elif cmd in ("/dna", "dna"):
         intent = line_clean[len(parts[0]):].strip().strip('\'"')
         execute_dna(state, intent=intent or "Synthesize error repair gene for K8 tau-sweep")
@@ -1373,15 +1465,27 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
             handle_livlm_prompt(state, msg)
     elif cmd == "/osiris":
         execute_osiris_status()
+    elif cmd in ("/architecture", "/arch", "/layers"):
+        execute_architecture()
     elif cmd == "/train":
         from osiris_cli import train as osiris_train
         sub = parts[1].lower() if len(parts) > 1 else "status"
         lock = get_living().core.lock_path() if get_living().core else None
         if sub == "start":
             hours = parts[2] if len(parts) > 2 else "8"
+            get_living().finish()   # frees the chat's mentor: a resident 7B slows training ~25x
             print("[OSIRIS] " + osiris_train.detach(["--hours", hours]))
         elif sub == "stop":
             print("[OSIRIS] " + osiris_train.stop(lock) if lock else "[OSIRIS] core unavailable")
+        elif sub == "rescore":
+            living = get_living()
+            if living.core is None:
+                print("[OSIRIS] core unavailable")
+            elif living.core.training_locked():
+                print("[OSIRIS] a trainer is running; it rescores when it finishes")
+            else:
+                print("[OSIRIS] " + osiris_train.rescore_only(living.core, living.home, warn_open_chat=False))
+                living._save_stats()   # take the rescored entries into this session's gate
         else:
             print("\n OSIRIS · batch training")
             for ln in osiris_train.status_lines(lock_path=lock):
@@ -1433,22 +1537,50 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
         execute_update()
     elif cmd in ("/help", "help", "?"):
         display_help()
+    elif otc is not None and otc.run_command(line_clean):
+        pass
+    elif "\n" not in line_clean:
+        # A one-line "/typo" is not a message: it used to wait on the mentor.
+        if otc is not None:
+            otc._unknown_command(line_clean)
+        else:
+            print(f"[OSIRIS] Unknown command {parts[0]!r} -- /help lists them.")
     else:
-        # Pass to Living Language Model
+        # Multi-line text that happens to start with "/" (a pasted log) is conversation.
         handle_livlm_prompt(state, line_clean)
 
 
 def boot_repl() -> None:
     """Launches continuous interactive OSIRIS apex REPL."""
     print_banner()
+    if otc is not None:
+        # Bracketed paste: a paste reaches OSIRIS as one message, whatever its size
+        # or how the terminal splits it (the console turns this on; the REPL did not).
+        import atexit
+        otc._terminal_setup(True)
+        atexit.register(otc._terminal_setup, False)
+    if os.environ.get("OSIRIS_PREWARM", "1") != "0":
+        try:
+            warming = get_living().prewarm()
+        except Exception:  # noqa: BLE001 - the first reply then just reads everything itself
+            warming = None
+        if warming:
+            print(f"\033[2m  · loading {warming} in the background so your first reply starts sooner "
+                  f"(OSIRIS_PREWARM=0 skips this)\033[0m\n")
 
     prompt = "osiris::}{> "
 
     while True:
         if _LIVING is not None and _LIVING.held:
             line = _LIVING.held.pop(0)
-            print(f"{prompt}{line}   \033[2m(typed while OSIRIS was answering)\033[0m")
-            dispatch_command(SESSION, line)
+            pasted = bool(getattr(line, "pasted", False))
+            # The held message's own transport, not the previous prompt's (2026-10-08: a document
+            # pasted during a reply was dispatched as "typed" and trained on).
+            if otc is not None and hasattr(otc, "_last_input"):
+                otc._last_input["pasted"] = pasted
+            shown = line if len(line) <= 200 else f"{line[:200]}… ({len(line):,} characters)"
+            print(f"{prompt}{shown}   \033[2m({'pasted' if pasted else 'typed'} while OSIRIS was answering)\033[0m")
+            dispatch_held(SESSION, line)
             continue
         try:
             if otc is not None:
@@ -1468,7 +1600,7 @@ def boot_repl() -> None:
             print("[OSIRIS] Session closed.")
             break
 
-        dispatch_command(SESSION, line)
+        safe_dispatch(SESSION, line)
 
     if _LIVING is not None:
         _LIVING.finish()

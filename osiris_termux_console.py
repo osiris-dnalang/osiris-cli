@@ -46,21 +46,31 @@ def _load_dotenv():
     always wins over the file). Silent no-op if .env doesn't exist -- it's
     optional. Never logs or prints any value it loads."""
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    env_path = os.path.join(project_root, ".env")
+    # the checkout's parent (a source checkout in ~/osiris-cli reads ~/.env), then ~/.env
+    # itself: an installed wheel lives in site-packages, whose parent holds no .env
+    paths = [os.path.join(project_root, ".env"), os.path.join(os.path.expanduser("~"), ".env")]
+    for env_path in dict.fromkeys(paths):
+        try:
+            with open(env_path, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("export "):
+                        line = line[len("export "):].strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    key, _, value = line.partition("=")
+                    key = key.strip()
+                    value = value.strip().strip('"').strip("'")
+                    if key and key not in os.environ:
+                        os.environ[key] = value
+        except OSError:
+            pass
+    # keys kept in Google Secret Manager (opt-in: OSIRIS_SECRETS_SOURCE=gcp + OSIRIS_GCP_PROJECT)
     try:
-        with open(env_path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#") or "=" not in line:
-                    continue
-                key, _, value = line.partition("=")
-                key = key.strip()
-                value = value.strip().strip('"').strip("'")
-                if key and key not in os.environ:
-                    os.environ[key] = value
-    except FileNotFoundError:
-        pass
-    except OSError:
+        from osiris_cli import gcp_secrets
+        if gcp_secrets.wanted():
+            gcp_secrets.load_into_environ()
+    except Exception:  # noqa: BLE001 - optional; never blocks startup
         pass
 
 
@@ -141,6 +151,15 @@ TELEMETRY_HOME = os.path.join(os.path.expanduser("~"), ".osiris", "telemetry")
 TELEMETRY_LOG = os.path.join(TELEMETRY_HOME, "nclm_loss.log")
 PROMPT_LIBRARY_PATH = os.path.join(os.path.expanduser("~"), ".osiris", "prompt_library.json")
 ORGANISM_GEOMETRY = dict(dim=128, n_layers=4, n_heads=4, ff_dim=256, max_seq_len=128)
+# Architectures a checkpoint folder can hold, named by an `arch.json` ({"arch": name}) in that folder. The live
+# core (~/.osiris/nclm_organism) has none and is "crsm". "standard" is the NCLM-ARCH-1 comparison arm: plain
+# pre-norm blocks and base-10000 positions, FFN widened to 384 so the parameter counts match (725,760 vs
+# 726,304); see experiments/nclm_arch1/PRE_REGISTRATION.md.
+ORGANISM_ARCHES = {
+    "crsm": dict(torsion_lock=True, phase_conjugate=True, fractal_embedding=False, positional="phi"),
+    "standard": dict(torsion_lock=False, phase_conjugate=False, fractal_embedding=False,
+                     pilot_wave=False, golden_scale=False, positional="standard", ff_dim=384),
+}
 ORGANISM_MAX_BACKUPS = 5
 OLLAMA_STARTUP_TIMEOUT = 2.5
 _organism_lock = threading.Lock()
@@ -1421,7 +1440,10 @@ def _integrity():
         if os.path.exists(genome_ledger.DEFAULT_PATH):  # constructing a Ledger would create the file
             led = genome_ledger.GenomeLedger()
             ok = led.verify()
-            parts.append(f"genome ledger {'valid' if ok else 'BROKEN'} ({len(led.chain)})")
+            # The count is entries, not failures: "BROKEN (3)" was read as three
+            # broken records when one entry of three was (2026-10-02).
+            parts.append(f"genome ledger valid ({len(led.chain)} entries)" if ok else
+                         f"genome ledger BROKEN ({len(led.chain)} entries): {led.problem()}")
             kind = kind if ok else "blocked"
     except Exception as e:
         parts.append(f"genome ledger unreadable ({type(e).__name__})")
@@ -2115,6 +2137,14 @@ def _hypothesis(command: str = "/hypothesis", question: str = None):
             print("\n[!] No such draft -- /hypotheses draft makes them.\n")
             return
         prefill = _hyp_drafts[n - 1]["hypothesis"]
+    elif len(parts) == 4 and parts[2] == "tests":
+        try:
+            h = research.set_evidence_kind(parts[1], parts[3])
+        except ValueError as e:
+            print(f"\n[!] {e}\n")
+            return
+        print(f"\n[*] {h['id']} is decided only by {research._with_article(research.EVIDENCE_KINDS[h['evidence_kind']])}.\n")
+        return
     elif len(parts) > 1:
         return _hypothesis_card(parts[1])
     ui = osiris_ui.Canvas()
@@ -2605,9 +2635,10 @@ def _evolve_result(run_id, ui):
     print("\n" + ui.panel(f"ORGANISM RUN · RESULT · {end['run_id']}", inner.facts(rows).split("\n")))
     import trials
     allowed = trials.allowed_outcomes(end["verdict"])
-    open_h = [h for h in research.hypotheses() if not h.get("outcome")]
+    open_h = research.open_hypotheses_for(end["run_id"])
     hint = (f"/outcome {open_h[-1]['id']} {allowed[0]} {end['run_id']}" if open_h else
-            f"/outcome hyp-N {allowed[0]} {end['run_id']} (draft a hypothesis first)")
+            f"No open hypothesis is decided by an organism run: /hypothesis hyp-N tests evo, then "
+            f"/outcome hyp-N {allowed[0]} {end['run_id']}")
     _pending_suggestions.clear()
     _pending_suggestions.update({"1": f"/evolve {start['noise']}", "2": "/hypotheses", "0": "/home"})
     print(ui.actions("NEXT", [("1", "Run again (another seed of evidence)"), ("2", "Hypotheses"),
@@ -2942,8 +2973,9 @@ def _bench_argv(command: str):
     """'/bench [MODEL|gemini] [all|TASK,TASK] [k=N]' -> (argv, label) or (None, error).
     Defaults: the local qwen2.5-coder:7b mentor, 3 quick tasks, one attempt each."""
     backend, model, tasks, k = "ollama", BENCH_DEFAULT_MODEL, list(BENCH_QUICK_TASKS), 1
-    known = sorted(d for d in os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bench_tasks"))
-                   if not d.startswith((".", "_")))
+    tasks_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bench_tasks")
+    known = sorted(d for d in os.listdir(tasks_dir) if not d.startswith((".", "_"))
+                   and os.path.isdir(os.path.join(tasks_dir, d))) if os.path.isdir(tasks_dir) else []
     for w in command.split()[1:]:
         lw = w.lower()
         if lw == "gateway":
@@ -3200,9 +3232,10 @@ def _trial_result(run_id, ui):
     allowed = trials.allowed_outcomes(c["verdict"])
     print("\n" + ui.panel("PROMPT-STRATEGY TRIAL · RESULT", inner.facts(rows).split("\n") + [
         "", f"Backs a hypothesis outcome of: {' or '.join(allowed)}. Nothing changed which prompt OSIRIS uses."]))
-    open_h = [h for h in research.hypotheses() if not h.get("outcome")]
+    open_h = research.open_hypotheses_for("trial-" + c["treatment"])
     hint = (f"/outcome {open_h[-1]['id']} {allowed[0]} trial-{c['treatment']}" if open_h else
-            "No open hypothesis: /hypothesis drafts one, then /outcome hyp-N ... trial-" + c["treatment"])
+            "No open hypothesis is decided by a trial: /hypothesis hyp-N tests trial-bench, then "
+            "/outcome hyp-N ... trial-" + c["treatment"])
     _pending_suggestions.clear()
     _pending_suggestions.update({"1": f"/trial {c['strategy']} {c['model']}", "2": "/hypotheses", "0": "/home"})
     print(ui.actions("NEXT", [("1", "Repeat the trial (more evidence)"), ("2", "Hypotheses"), ("0", "Home menu")],
@@ -3487,14 +3520,29 @@ def _organism_telemetry(line: str):
     threading.Thread(target=_sync_telemetry_to_db, args=(line,), daemon=True).start()
 
 
-def _organism_build():
+def _organism_arch(home=None):
+    """The architecture a checkpoint folder holds: its arch.json, or "crsm" (the live core) without one.
+    An unreadable or unknown arch.json is an error, never a silent fallback to another architecture."""
+    path = os.path.join(home or ORGANISM_HOME, "arch.json")
+    if not os.path.exists(path):
+        return "crsm"
+    with open(path, encoding="utf-8") as f:
+        arch = json.load(f)["arch"]
+    if arch not in ORGANISM_ARCHES:
+        raise ValueError(f"{path}: unknown architecture {arch!r} (known: {', '.join(ORGANISM_ARCHES)})")
+    return arch
+
+
+def _organism_build(arch=None):
     if ORGANISM_SRC not in sys.path:
         sys.path.insert(0, ORGANISM_SRC)
     from osiris.nclm import AdamW, LRSchedule, SovereignConfig, SovereignTransformerV2
-    cfg = SovereignConfig(vocab_size=256, dropout=0.0, torsion_lock=True,
-                           phase_conjugate=True, fractal_embedding=False,
-                           **ORGANISM_GEOMETRY)
+    arch = arch or _organism_arch()
+    flags = dict(ORGANISM_ARCHES[arch])
+    geometry = dict(ORGANISM_GEOMETRY, ff_dim=flags.pop("ff_dim", ORGANISM_GEOMETRY["ff_dim"]))
+    cfg = SovereignConfig(vocab_size=256, dropout=0.0, **flags, **geometry)
     model = SovereignTransformerV2(cfg)
+    model.organism_arch = arch
     optimizer = AdamW(params=model.parameters(), lr=3e-4, weight_decay=0.01,
                        schedule=LRSchedule(warmup_steps=50, total_steps=10000))
     return model, optimizer
@@ -3509,7 +3557,14 @@ def _organism_load(model, optimizer):
         with open(meta, encoding="utf-8") as f:
             m = json.load(f)
         with np.load(ckpt) as blob:
-            for i, p in enumerate(model.parameters()):
+            params = model.parameters()
+            # Check every shape first: copying by index into another architecture used to overwrite the
+            # leading tensors before failing, leaving a half-loaded model behind "starting fresh".
+            if (f"p{len(params)}" in blob.files
+                    or any(f"p{i}" not in blob.files or blob[f"p{i}"].shape != p.data.shape
+                           for i, p in enumerate(params))):
+                raise ValueError("the checkpoint holds a different architecture")
+            for i, p in enumerate(params):
                 p.data[...] = blob[f"p{i}"]
                 optimizer._m[i][...] = blob[f"m{i}"]
                 optimizer._v[i][...] = blob[f"v{i}"]
@@ -5382,6 +5437,140 @@ def _council_engines(ollama_ok: bool):
             ("current", "Verifier", "sandbox · placeholder gate · genome ledger", "deterministic, no model")]
 
 
+def run_command(user_input: str) -> bool:
+    """Runs one console command and returns True, or returns False when the
+    input is not one. The one router for both front ends: main() below and
+    the `osiris` REPL (osiris_cli/osiris_repl.py), whose own copy of this
+    table drifted (2026-10-02: F crashed calling _mentors(line) and J opened
+    the brief with "/experiment" as its question)."""
+    if user_input.strip().lower() in ("/organism", "/organism status"):
+        _organism_status()
+        return True
+    if user_input.strip().lower() == "/organism alerts":
+        _organism_alerts()
+        return True
+    if user_input.strip().lower().startswith("/ledger verify"):
+        _ledger_verify(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/dd search"):
+        _dd_search(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/dd pretrain"):
+        _dd_pretrain(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/dd programmatic"):
+        _dd_programmatic(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/auto-enhance"):
+        _auto_enhance(user_input.strip())
+        return True
+    if user_input.strip().lower().startswith("/research"):
+        _research(user_input.strip())
+        return True
+    if user_input.strip().lower() in ("/intent", "/intent status"):
+        _intent_status()
+        return True
+    if user_input.strip().lower() == "/consensus":
+        _consensus()
+        return True
+    first = user_input.strip().split()[0].lower() if user_input.strip() else ""
+    if first == "/ask":
+        _answer(user_input.strip()[4:].strip() or "What can you do?")
+        return True
+    if first == "/plan":
+        _plan(user_input.strip()[5:])
+        return True
+    if first == "/experiment":
+        _experiment(user_input.strip()[len("/experiment"):])
+        return True
+    if first == "/experiments":
+        _experiments()
+        return True
+    if first == "/reroute":
+        _reroute(user_input.strip())
+        return True
+    if first == "/focus":
+        _focus(user_input.strip())
+        return True
+    if first == "/cancel":
+        print("[*] Cancelled.")
+        _home()
+        return True
+    if first == "/facts":
+        _facts()
+        return True
+    if user_input.strip().lower().split()[:1] == ["/gaps"]:
+        _gaps(user_input.strip())
+        return True
+    if user_input.strip().lower().split()[:1] == ["/gap"]:
+        _gap(user_input.strip()[4:])
+        return True
+    if user_input.strip().lower() == "/status":
+        _status()
+        return True
+    if user_input.strip().lower().split()[:2] == ["/run", "show"]:
+        _run_show(user_input.strip())
+        return True
+    if user_input.strip().lower() in ("/runs", "/runs stats"):
+        _runs_stats()
+        return True
+    if user_input.strip().lower() == "/check":
+        _check()
+        return True
+    if user_input.strip().lower() in ("/home", "/home stories"):
+        _home(user_input.strip())
+        return True
+    if user_input.strip().lower() == "/why":
+        _why()
+        return True
+    if user_input.strip().lower() == "/engage":
+        _engage()
+        return True
+    if user_input.strip().lower().split()[:1] == ["/ui"]:
+        _ui(user_input.strip())
+        return True
+    if user_input.strip().lower().split()[:1] == ["/bench"]:
+        _bench(user_input.strip())
+        return True
+    if user_input.strip().lower() == "/mentors":
+        _mentors()
+        return True
+    if user_input.strip().lower() == "/digest":
+        _digest()
+        return True
+    _word = user_input.strip().split()[0].lower() if user_input.strip() else ""
+    if _word in LAB_COMMANDS:
+        LAB_COMMANDS[_word](user_input.strip())
+        return True
+    if user_input.strip().lower() == "/help":
+        _help()
+        return True
+    if user_input.strip().lower() == "/suggest":
+        _suggest()
+        return True
+    if user_input.strip().lower() == "/vision latest":
+        _vision_latest()
+        return True
+    if user_input.strip().lower() == "/vision sync-sprint":
+        _vision_sync_sprint()
+        return True
+    if user_input.strip().lower().startswith("/sprint plan"):
+        _sprint_plan(user_input.strip())
+        return True
+    # Word match, not ==: "/sprint execute --k 1" and "--allow-self-modify"
+    # used to fall through to run_synergy_pipeline as a chat prompt.
+    if user_input.strip().lower().split()[:2] == ["/sprint", "execute"]:
+        _sprint_execute(user_input.strip())
+        return True
+    if user_input.strip().lower() == "/sprint review":
+        _sprint_review()
+        return True
+    if user_input.strip().lower() in ("/ignite", "/metamorphosis"):
+        _ignite(user_input.strip())
+        return True
+    return False
+
+
 def main():
     _terminal_setup(True)
     import atexit
@@ -5510,130 +5699,7 @@ def main():
                     continue
                 _discard_pending_write()
                 # fall through -- process user_input normally below
-            if user_input.strip().lower() in ("/organism", "/organism status"):
-                _organism_status()
-                continue
-            if user_input.strip().lower() == "/organism alerts":
-                _organism_alerts()
-                continue
-            if user_input.strip().lower().startswith("/ledger verify"):
-                _ledger_verify(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/dd search"):
-                _dd_search(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/dd pretrain"):
-                _dd_pretrain(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/dd programmatic"):
-                _dd_programmatic(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/auto-enhance"):
-                _auto_enhance(user_input.strip())
-                continue
-            if user_input.strip().lower().startswith("/research"):
-                _research(user_input.strip())
-                continue
-            if user_input.strip().lower() in ("/intent", "/intent status"):
-                _intent_status()
-                continue
-            if user_input.strip().lower() == "/consensus":
-                _consensus()
-                continue
-            first = user_input.strip().split()[0].lower() if user_input.strip() else ""
-            if first == "/ask":
-                _answer(user_input.strip()[4:].strip() or "What can you do?")
-                continue
-            if first == "/plan":
-                _plan(user_input.strip()[5:])
-                continue
-            if first == "/experiment":
-                _experiment(user_input.strip()[len("/experiment"):])
-                continue
-            if first == "/experiments":
-                _experiments()
-                continue
-            if first == "/reroute":
-                _reroute(user_input.strip())
-                continue
-            if first == "/focus":
-                _focus(user_input.strip())
-                continue
-            if first == "/cancel":
-                print("[*] Cancelled.")
-                _home()
-                continue
-            if first == "/facts":
-                _facts()
-                continue
-            if user_input.strip().lower().split()[:1] == ["/gaps"]:
-                _gaps(user_input.strip())
-                continue
-            if user_input.strip().lower().split()[:1] == ["/gap"]:
-                _gap(user_input.strip()[4:])
-                continue
-            if user_input.strip().lower() == "/status":
-                _status()
-                continue
-            if user_input.strip().lower().split()[:2] == ["/run", "show"]:
-                _run_show(user_input.strip())
-                continue
-            if user_input.strip().lower() in ("/runs", "/runs stats"):
-                _runs_stats()
-                continue
-            if user_input.strip().lower() == "/check":
-                _check()
-                continue
-            if user_input.strip().lower() in ("/home", "/home stories"):
-                _home(user_input.strip())
-                continue
-            if user_input.strip().lower() == "/why":
-                _why()
-                continue
-            if user_input.strip().lower() == "/engage":
-                _engage()
-                continue
-            if user_input.strip().lower().split()[:1] == ["/ui"]:
-                _ui(user_input.strip())
-                continue
-            if user_input.strip().lower().split()[:1] == ["/bench"]:
-                _bench(user_input.strip())
-                continue
-            if user_input.strip().lower() == "/mentors":
-                _mentors()
-                continue
-            if user_input.strip().lower() == "/digest":
-                _digest()
-                continue
-            _word = user_input.strip().split()[0].lower() if user_input.strip() else ""
-            if _word in LAB_COMMANDS:
-                LAB_COMMANDS[_word](user_input.strip())
-                continue
-            if user_input.strip().lower() == "/help":
-                _help()
-                continue
-            if user_input.strip().lower() == "/suggest":
-                _suggest()
-                continue
-            if user_input.strip().lower() == "/vision latest":
-                _vision_latest()
-                continue
-            if user_input.strip().lower() == "/vision sync-sprint":
-                _vision_sync_sprint()
-                continue
-            if user_input.strip().lower().startswith("/sprint plan"):
-                _sprint_plan(user_input.strip())
-                continue
-            # Word match, not ==: "/sprint execute --k 1" and "--allow-self-modify"
-            # used to fall through to run_synergy_pipeline as a chat prompt.
-            if user_input.strip().lower().split()[:2] == ["/sprint", "execute"]:
-                _sprint_execute(user_input.strip())
-                continue
-            if user_input.strip().lower() == "/sprint review":
-                _sprint_review()
-                continue
-            if user_input.strip().lower() in ("/ignite", "/metamorphosis"):
-                _ignite(user_input.strip())
+            if run_command(user_input):
                 continue
             if user_input.strip().startswith("/") and "\n" not in user_input.strip():
                 # A known first word with an unknown rest, e.g. "/sprint exectue".
