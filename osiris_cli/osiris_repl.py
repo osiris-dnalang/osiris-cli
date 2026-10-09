@@ -1021,6 +1021,12 @@ def execute_architecture() -> None:
     print("\n" + architecture.full(canvas, state, architecture.ledger_detail()) + "\n")
 
 
+def execute_welcome():
+    """The /welcome tour. It runs no command: its result is a summary the REPL only returns."""
+    from osiris_cli.welcome import WelcomeREPL
+    return WelcomeREPL(read=input, write=print).run()
+
+
 def execute_osiris_status() -> None:
     print("\n OSIRIS · living language model")
     for line in get_living().status_lines():
@@ -1268,6 +1274,7 @@ def display_help() -> None:
     print("    /check               Verify ledger, runs, and bench suite integrity")
     print()
     print("  \033[1;36mSession\033[0m")
+    print("    /welcome             Guided tour: three read-only commands to start with (runs none)")
     print("    /update              Upgrade osiris-cli from GitHub and restart REPL")
     print("    /help                Display this command manifest")
     print("    /exit, /quit         Terminate the sovereign REPL session")
@@ -1467,6 +1474,8 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
         execute_osiris_status()
     elif cmd in ("/architecture", "/arch", "/layers"):
         execute_architecture()
+    elif cmd == "/welcome":
+        execute_welcome()
     elif cmd == "/train":
         from osiris_cli import train as osiris_train
         sub = parts[1].lower() if len(parts) > 1 else "status"
