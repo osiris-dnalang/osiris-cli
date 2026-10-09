@@ -44,8 +44,8 @@ import time
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Optional
 
-from osiris_cli.living import (CHAT_MARKER, CHAT_QUIET_SECONDS, HELDOUT_EVERY, LIVING_HOME,
-                               OllamaMentor, Osiris)
+from osiris_cli.living import (CHAT_MARKER, CHAT_QUIET_SECONDS, HELDOUT_EVERY, LIVING_HOME, SCORER,
+                               OllamaMentor, Osiris, core_scorer)
 
 HOME = os.path.expanduser("~")
 RUNS_HOME = os.path.join(LIVING_HOME, "train_runs")
@@ -166,6 +166,11 @@ def code_provenance() -> dict:
     """Which model code this run actually imported, and from which commit."""
     import subprocess
     out = {}
+    try:
+        from osiris_cli import __version__
+        out["osiris_cli"] = __version__   # git_head is None on a wheel install
+    except Exception as e:  # noqa: BLE001
+        out["version_error"] = type(e).__name__
     try:
         import osiris.nclm.autograd as ag
         out["osiris.nclm"] = os.path.dirname(os.path.abspath(ag.__file__))
@@ -448,6 +453,8 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
     manifest = {
         "run_id": run_id, "started": time.strftime("%Y-%m-%dT%H:%M:%S"), "seed": seed,
         "code": code_provenance(),
+        "model": core.describe() if hasattr(core, "describe") else None,
+        "eval_windows": {"docs": len(ev_docs), "chat": len(ev_chat)},
         "hours": hours, "batch": batch, "seq": SEQ, "max_steps": max_steps, "core_step_start": start_step,
         "chat_share": CHAT_SHARE, "heldout_rule": "sha256(relative path) % 10 == 0; chat: every "
         f"{HELDOUT_EVERY}th exchange", "roots": roots or cfg["roots"],
@@ -496,6 +503,8 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
     # from 7.2 to 9.9 bits/byte -- worse than uniform -- while training loss fell;
     # rotation had already discarded the good weights). The best checkpoint is kept
     # and restored at the end; the run stops after `patience` evals without a gain.
+    # (Until v4.5.2 held-out scoring skipped the phase-conjugate corrector that
+    # training applies, which by itself produces that pattern; see RELEASE_NOTES_v4.5.2.md.)
     best = {"bpb": first["heldout_docs_bpb"], "step": first["step"], "since": 0}
     can_keep = hasattr(core, "save_best") and best["bpb"] is not None
     if can_keep:
@@ -570,7 +579,7 @@ def rescore_chat(core, living_home: str) -> int:
             rows = [json.loads(line) for line in f if line.strip()]
     except (OSError, ValueError):
         return 0
-    step = int(core.step())
+    step, scorer = int(core.step()), core_scorer(core)
     for r in rows:
         if not r.get("heldout") or not r.get("learnable") or r.get("voice") == "core":
             continue
@@ -578,10 +587,30 @@ def rescore_chat(core, living_home: str) -> int:
         if bpb is None:
             continue
         o.stats["heldout_scores"][r["hash"]] = [round(bpb, 4), round(o.unigram_bpb(r["reply"]), 4),
-                                                step, int(r.get("index", 0))]
+                                                step, int(r.get("index", 0)), scorer]
         n += 1
     o._save_stats()
     return n
+
+
+def rescore_only(core, living_home: str, warn_open_chat: bool = True) -> str:
+    """`osiris train --rescore-only` (`/train rescore`): rescore the gate's held-out exchanges, no training."""
+    scorer = core_scorer(core)
+    if scorer != SCORER:
+        where = getattr(sys.modules.get("osiris.nclm"), "__file__", None) or "unknown"
+        return (f"not rescored: the loaded osiris.nclm ({os.path.dirname(where)}) scores as version {scorer}, "
+                f"not {SCORER} -- an older copy of the model code (check PYTHONPATH); its scores would not "
+                "count toward the gate")
+    before = Osiris(core=core, home=living_home, out=lambda s: None, background=False).gate()
+    n = rescore_chat(core, living_home)
+    after = Osiris(core=core, home=living_home, out=lambda s: None, background=False)
+    g = after.gate()
+    left = (f" {g['stale']} older scores have no rescorable exchange in the ledger and stay uncounted."
+            if g["stale"] else "")
+    note = (" A console still open from before v4.5.2 can write old scores back: restart it."
+            if warn_open_chat and chat_active(living_home) else "")
+    return (f"rescored {n} held-out exchanges at step {core.step()} (scorer {scorer}); "
+            f"before: {Osiris.gate_note(before)}; now: {Osiris.gate_note(g)}.{left}{note}")
 
 
 # ---------------------------------------------------------------------------
@@ -685,6 +714,10 @@ def main(argv: Optional[List[str]] = None) -> None:
     ap.add_argument("--all", action="store_true",
                     help="also learn from the rest of your home directory as a de-duplicated archive "
                          "(sampled at archive_share; third-party code, venvs and backups excluded)")
+    ap.add_argument("--rescore-only", action="store_true",
+                    help="score every held-out exchange with the current weights for the speaking gate, "
+                         "without training (after upgrading to v4.5.2: older scores measured a different "
+                         "network and are not counted)")
     ap.add_argument("--detach", action="store_true", help="run in the background and return")
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--stop", action="store_true")
@@ -698,6 +731,9 @@ def main(argv: Optional[List[str]] = None) -> None:
         return
     if core.training_locked():
         print("OSIRIS train: a trainer is already running (osiris train --status)")
+        return
+    if args.rescore_only:
+        print(rescore_only(core, args.living_home))
         return
     if args.detach:
         print(detach(argv))

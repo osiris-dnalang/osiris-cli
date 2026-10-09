@@ -293,6 +293,30 @@ class TestPositions:
 # Transformer tests
 # ===========================================================================
 
+class TestStandardPositions:
+    def test_standard_table_is_the_closed_form(self):
+        from osiris.nclm.positions import standard_sinusoidal_positional_encoding
+        pe = standard_sinusoidal_positional_encoding(64, 16).data
+        np.testing.assert_allclose(pe[0], np.tile([0.0, 1.0], 8), atol=1e-7)
+        np.testing.assert_allclose(pe[:, 0], np.sin(np.arange(64)), atol=1e-6)
+        np.testing.assert_allclose(pe[5, 2], np.sin(5 / 10000 ** (2 / 16)), atol=1e-6)
+
+    def test_v2_positional_option(self):
+        from osiris.nclm.positions import (
+            phase_conjugate_positional_encoding,
+            standard_sinusoidal_positional_encoding,
+        )
+        from osiris.nclm.transformer import SovereignConfig, SovereignTransformerV2
+        base = dict(dim=32, n_layers=1, n_heads=2, ff_dim=64, max_seq_len=16, dropout=0.0)
+        assert SovereignConfig().positional == "phi"
+        phi = SovereignTransformerV2(SovereignConfig(**base))
+        np.testing.assert_array_equal(phi.pos_enc.data, phase_conjugate_positional_encoding(16, 32).data)
+        std = SovereignTransformerV2(SovereignConfig(positional="standard", **base))
+        np.testing.assert_array_equal(std.pos_enc.data, standard_sinusoidal_positional_encoding(16, 32).data)
+        with pytest.raises(ValueError):
+            SovereignTransformerV2(SovereignConfig(positional="golden", **base))
+
+
 class TestTransformer:
     def _small_config(self):
         from osiris.nclm.transformer import SovereignConfig
@@ -784,6 +808,89 @@ class TestSovereignMechanics:
         # Check at least some params got gradients
         params_with_grad = [p for p in model.parameters() if p.grad is not None]
         assert len(params_with_grad) > 0
+
+    # --- train/eval consistency (v4.5.2) ---
+    # The console scores and generates under no_grad and trains with gradients on. Before v4.5.2 the
+    # PhaseConjugateCorrector ran only with gradients on, so every bits/byte figure scored a different
+    # network from the one trained. These fail on that code.
+
+    @staticmethod
+    def _live_like_v2(seed):
+        from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig
+
+        np.random.seed(seed)
+        cfg = SovereignConfig(
+            vocab_size=256, dim=32, n_layers=2, n_heads=2, ff_dim=64, max_seq_len=32,
+            dropout=0.0, torsion_lock=True, phase_conjugate=True, fractal_embedding=False,
+        )
+        return SovereignTransformerV2(cfg)
+
+    @staticmethod
+    def _corrector_fired(monkeypatch):
+        from osiris.nclm.sovereign_mechanics import PhaseConjugateCorrector
+
+        fired = []
+        call = PhaseConjugateCorrector.__call__
+
+        def spy(self, x):
+            fired.append(self.decoherence_gamma(x) > self.gamma_critical)
+            return call(self, x)
+
+        monkeypatch.setattr(PhaseConjugateCorrector, "__call__", spy)
+        return fired
+
+    def test_v2_same_logits_with_and_without_grad(self, monkeypatch):
+        from osiris.nclm.autograd import no_grad
+
+        fired = self._corrector_fired(monkeypatch)
+        model = self._live_like_v2(seed=11)
+        x = (np.arange(24, dtype=np.int64) * 7 % 256).reshape(1, 24)
+        with_grad = model.forward(x).data
+        assert any(fired), "the corrector must fire for this test to mean anything"
+        with no_grad():
+            without_grad = model.forward(x).data
+        np.testing.assert_allclose(with_grad, without_grad, rtol=1e-5, atol=1e-5)
+
+    def test_v2_trained_loss_is_the_scored_loss(self, monkeypatch):
+        from osiris.nclm import AdamW
+        from osiris.nclm.autograd import clip_grad_norm, cross_entropy_loss, no_grad
+
+        fired = self._corrector_fired(monkeypatch)
+        model = self._live_like_v2(seed=12)
+        data = np.frombuffer(b"the core is scored on the network it trains. " * 2, dtype=np.uint8)
+        data = data.astype(np.int64)[:32]
+        x, y = data[:-1][None, :], data[1:][None, :]
+        opt = AdamW(params=model.parameters(), lr=3e-3, weight_decay=0.0)
+        for _ in range(30):
+            opt.zero_grad()
+            loss = cross_entropy_loss(model.forward(x), y)
+            loss.backward()
+            clip_grad_norm(model.parameters(), 1.0)
+            opt.step()
+        assert any(fired)
+        trained = float(cross_entropy_loss(model.forward(x), y).data)
+        with no_grad():
+            scored = float(cross_entropy_loss(model.forward(x), y).data)
+        assert abs(trained - scored) < 1e-4, (trained, scored)
+
+    def test_v2_no_grad_forward_leaves_no_reference_cycles(self, monkeypatch):
+        """Scoring and generation must not keep their graphs alive: the corrector's backward hook used to be
+        attached under no_grad, a self-referencing closure that held every forward until gc ran."""
+        import gc
+
+        from osiris.nclm.autograd import no_grad
+
+        fired = self._corrector_fired(monkeypatch)
+        model = self._live_like_v2(seed=13)
+        x = (np.arange(24, dtype=np.int64) * 5 % 256).reshape(1, 24)
+        gc.collect()
+        gc.disable()
+        try:
+            with no_grad():
+                model.forward(x)
+            assert any(fired) and gc.collect() == 0
+        finally:
+            gc.enable()
 
     def test_v2_state_dict_roundtrip(self):
         from osiris.nclm.transformer import SovereignTransformerV2, SovereignConfig

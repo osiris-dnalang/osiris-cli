@@ -116,6 +116,10 @@ def live_state(living=None, console=None) -> Dict[str, Tuple[str, str]]:
         c = verify_chain(living.log_path)
         if not c["intact"]:
             return "blocked", f"exchange log BROKEN at entry {c.get('broken_at', '?')}"
+        forks = c.get("forks") or []
+        if forks:
+            return "verified", (f"{c['entries']} exchanges, no entry altered; {len(forks)} fork(s) from concurrent "
+                                f"writers, first at entry {forks[0]}")
         return "verified", f"{c['entries']} exchanges, hash chain intact"
 
     def l1():

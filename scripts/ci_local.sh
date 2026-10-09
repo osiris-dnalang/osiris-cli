@@ -5,6 +5,10 @@
 #   scripts/ci_local.sh                 # all interpreters found
 #   PYTHONS="python3.12" scripts/ci_local.sh
 set -u
+# An inherited PYTHONPATH (e.g. one starting with ':', i.e. the current directory) puts the checkout's
+# osiris_cli on the smoke venv's path, so pip treats the wheel as already installed and skips it
+# (2026-10-08: "wheel smoke FAILED: wv/bin/osiris: No such file").
+unset PYTHONPATH
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT

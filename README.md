@@ -328,7 +328,7 @@ The proposed error suppression intervention T is formally declared falsified if 
 
 Adherence to this pre-registered execution and provenance framework guarantees publication-grade scientific validity.
 
-## What works today (v4.5.0)
+## What works today (v4.5.3)
 
 | Part | What it does | Where |
 |---|---|---|
@@ -347,6 +347,12 @@ on held-out documents against 5.03 for a unigram baseline — worse than the bas
 the starting point the gate exists to measure honestly; the pre-registered learning test
 (NCLM-1: gain over a memory-only baseline seven days after a restart) has not been run.
 
+**Every held-out figure before v4.5.2, that one included, scored a different network from the
+one trained:** scoring skipped a layer (the phase-conjugate corrector) that training applies in
+every block. v4.5.2 fixes that; old gate scores no longer count until `osiris train
+--rescore-only` replaces them, and whether the CRSM layers help at all is pre-registered as
+NCLM-ARCH-1 (`experiments/nclm_arch1/`). See `RELEASE_NOTES_v4.5.2.md`.
+
 ## Install and run
 
 ```bash
@@ -357,7 +363,7 @@ osiris                           # start talking
 ```
 
 In the console: `/osiris` (core status and gate) · `/check [trainer|git|ledger|system]` ·
-`/remember <fact>` · `/forget <words>` · `/train [start H|stop]` · `/mentor [model]` ·
+`/remember <fact>` · `/forget <words>` · `/train [start H|stop|rescore]` · `/mentor [model]` ·
 `/self <text>` (the core's raw voice, ungated) · `/help` for everything else.
 
 Optional sibling checkouts (`~/dnalang-core`, `~/bridge`, `~/organism_sim`, …) are found

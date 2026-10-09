@@ -78,6 +78,16 @@ GAMMA_COHERENCE_FLOOR = 0.0920                 # Fail-closed decoherence ceiling
 LAMBDA_PHI = 2.176435e-8                      # Universal Memory Constant (s^-1 / kg)
 PHI_CONSCIOUSNESS = 0.7734                    # Phase-conjugate threshold
 F_MAX_PREDICTED = 1.0 - (PHI_GOLDEN ** -8)      # F_max = 0.97871...
+
+
+def _claim_verdict(cid: str) -> str:
+    """A constant's claims-register verdict, for banners that print the constant."""
+    try:
+        from osiris_cli import claims as _claims
+        c = _claims.by_id(cid)
+        return c.verdict if c else "unregistered"
+    except Exception:  # noqa: BLE001 - a banner must render without the register
+        return "see /legit"
 TAU_0_US = PHI_GOLDEN ** 8                    # τ_0 = 46.9787... µs
 CHI_PC = 0.869                                # Phase-conjugate coupling coefficient
 
@@ -471,7 +481,7 @@ def execute_ignite(state: Optional[OsirisReplState] = None) -> Dict[str, Any]:
     print(f"  ├─ Locking Resonance: θ_lock = {THETA_LOCK_DEG}° (Pyramid face slope arctan(14/11))")
     print(f"  ├─ Coherence Floor:  Γ_floor = {GAMMA_COHERENCE_FLOOR:.4f} [ENFORCED FAIL-CLOSED]")
     print(f"  ├─ Memory Invariant: Λ_Φ     = {LAMBDA_PHI:.6e} kg")
-    print(f"  ├─ Peak Fidelity:    F_max   = {F_MAX_PREDICTED:.5f} (1 - φ^-8)")
+    print(f"  ├─ Peak Fidelity:    F_max   = {F_MAX_PREDICTED:.5f} (1 - φ^-8; claims register: {_claim_verdict('F_MAX')})")
     print("  └─ Substrate Status: \033[1;32m11D CRSM Substrate LOCKED & OPERATIONAL\033[0m")
 
     # 2. Cognitive 9-Agent Mesh
@@ -793,7 +803,7 @@ def execute_benchmark_flywheel(state: Optional[OsirisReplState] = None, output_p
 
     print(f"  Protocol ID     : {k8.EXPERIMENT_ID}")
     print(f"  Predicted Peak  : τ_0 = {k8.TAU_0_PREDICTED_US:.4f} µs (φ^8)")
-    print(f"  Predicted F_max : {k8.F_MAX_PREDICTED:.5f} (1 - φ^-8)")
+    print(f"  Predicted F_max : {k8.F_MAX_PREDICTED:.5f} (1 - φ^-8; claims register: {_claim_verdict('F_MAX')})")
     print(f"  Coherence Floor : {state.coherence_floor:.4f}")
     print("  Sweeping τ targets across NCLM Organism vs Static Baseline...\n")
 
@@ -879,7 +889,7 @@ def execute_benchmark_flywheel(state: Optional[OsirisReplState] = None, output_p
     print(f"\n  \033[1;32m[CRYPTOGRAPHIC PROOF GENERATED]\033[0m")
     print(f"  ├─ Merkle Root   : {merkle_root}")
     print(f"  ├─ Mean Gain ΔF  : {mean_gain:+.5f} (NCLM vs Static Baseline)")
-    print(f"  ├─ Peak Fidelity : {max_fidelity:.5f} (Target F_max = {k8.F_MAX_PREDICTED:.5f})")
+    print(f"  ├─ Peak Fidelity : {max_fidelity:.5f} (F_max = {k8.F_MAX_PREDICTED:.5f}, {_claim_verdict('F_MAX')})")
     print(f"  ├─ Coherence     : {'100% SATISFIED (Γ <= 0.092)' if report['coherence_verified'] else 'BREACH'}")
     print(f"  └─ Proof Report  : {out_file}\n")
 
@@ -1156,7 +1166,7 @@ def display_status(state: Optional[OsirisReplState] = None) -> None:
             c = _claims.by_id(cid)
             return c.verdict if c else "unregistered"
         print(f"  CRSM constants : historical, not established -- θ_lock {THETA_LOCK_DEG}° {_verdict('THETA_LOCK')}, "
-              f"Λ_Φ {LAMBDA_PHI:.6e} {_verdict('LAMBDA_PHI')}, F_max {F_MAX_PREDICTED:.5f} {_verdict('K8_REVIVAL')} (/legit list)")
+              f"Λ_Φ {LAMBDA_PHI:.6e} {_verdict('LAMBDA_PHI')}, F_max {F_MAX_PREDICTED:.5f} {_verdict('F_MAX')} (/legit list)")
     except Exception:  # noqa: BLE001 - status must render even without the register
         print("  CRSM constants : historical, not established (/legit list)")
     try:
@@ -1203,7 +1213,7 @@ def display_help() -> None:
     print("    /legit <text|ID|list> Is a claim legit? Verdicts from the claims register, with evidence")
     print("    /gemini [--dry] <q>  Ask Gemini directly (advisory; redacted, budgeted, ledgered)")
     print("    /physics <check> k=v  Physics bounds: thrust, rim, metric, chsh, efficiency, entropy, dd")
-    print("    /train [start H|stop] Overnight batch training (status by default)")
+    print("    /train [start H|stop|rescore] Overnight batch training (status by default)")
     print()
     print("  \033[1;36mCore Substrate\033[0m")
     print("    /ignite              Boot 11D CRSM Substrate, Cl(3,0) rotor & 9-Agent Cognitive Mesh")
@@ -1295,6 +1305,19 @@ def safe_dispatch(state: OsirisReplState, line: str) -> None:
             where = "traceback could not be written"
         print(f"\n[!] '{line[:60]}' failed: {type(exc).__name__}: {str(exc)[:200]}")
         print(f"    The session continues; {where}.\n")
+
+
+def dispatch_held(state: OsirisReplState, line: str) -> None:
+    """A message held while OSIRIS answered. A multi-line paste is content: it goes to the
+    conversation whole, never to the command router, where a first word such as /apply would
+    run a command and drop the rest. Typed lines and one-line pastes dispatch as usual."""
+    if getattr(line, "pasted", False) and "\n" in line.strip():
+        try:
+            handle_livlm_prompt(state, line.strip())
+        except Exception as exc:  # noqa: BLE001 - as safe_dispatch: the session continues
+            print(f"\n[!] the held paste failed: {type(exc).__name__}: {str(exc)[:200]}\n")
+        return
+    safe_dispatch(state, line)
 
 
 def dispatch_command(state: OsirisReplState, line: str) -> None:
@@ -1454,6 +1477,15 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
             print("[OSIRIS] " + osiris_train.detach(["--hours", hours]))
         elif sub == "stop":
             print("[OSIRIS] " + osiris_train.stop(lock) if lock else "[OSIRIS] core unavailable")
+        elif sub == "rescore":
+            living = get_living()
+            if living.core is None:
+                print("[OSIRIS] core unavailable")
+            elif living.core.training_locked():
+                print("[OSIRIS] a trainer is running; it rescores when it finishes")
+            else:
+                print("[OSIRIS] " + osiris_train.rescore_only(living.core, living.home, warn_open_chat=False))
+                living._save_stats()   # take the rescored entries into this session's gate
         else:
             print("\n OSIRIS · batch training")
             for ln in osiris_train.status_lines(lock_path=lock):
@@ -1541,8 +1573,14 @@ def boot_repl() -> None:
     while True:
         if _LIVING is not None and _LIVING.held:
             line = _LIVING.held.pop(0)
-            print(f"{prompt}{line}   \033[2m(typed while OSIRIS was answering)\033[0m")
-            safe_dispatch(SESSION, line)
+            pasted = bool(getattr(line, "pasted", False))
+            # The held message's own transport, not the previous prompt's (2026-10-08: a document
+            # pasted during a reply was dispatched as "typed" and trained on).
+            if otc is not None and hasattr(otc, "_last_input"):
+                otc._last_input["pasted"] = pasted
+            shown = line if len(line) <= 200 else f"{line[:200]}… ({len(line):,} characters)"
+            print(f"{prompt}{shown}   \033[2m({'pasted' if pasted else 'typed'} while OSIRIS was answering)\033[0m")
+            dispatch_held(SESSION, line)
             continue
         try:
             if otc is not None:

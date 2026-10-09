@@ -35,3 +35,12 @@ Procedural record, kept separate from the pre-registration (which is unchanged).
   caps; every run's manifest now records the imported `osiris.nclm` path and git commit
   (`code`), and the analysis carries it into `results.json`. Arms, seeds, mix, stopping rule,
   criterion and frozen inputs unchanged.
+- **2026-10-08 — scoring defect found (osiris-cli v4.5.2), recorded before any Mix-1 result is read in
+  this repository.** Every held-out score this experiment uses -- the primary (`heldout_docs_bpb`), the
+  guard (`heldout_chat_bpb`), early stopping and the best checkpoint it keeps -- came from a forward pass
+  under `no_grad`. Before v4.5.2 that pass skipped the phase-conjugate corrector, which training applies
+  in every block (`osiris/nclm/sovereign_mechanics.py`; Γ is 0.6-0.99, far above its 0.3 threshold).
+  Runs on v4.5.1 or earlier code therefore selected and scored a different network from the one they
+  trained, and a result from them does not answer the registered question. Arms, seeds, mix, stopping
+  rule and criterion are unchanged by this note. Whether to set those runs aside and re-run all six on
+  v4.5.2 (manifests record the code commit) is decided and recorded here before any result is opened.

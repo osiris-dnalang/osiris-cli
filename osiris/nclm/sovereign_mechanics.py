@@ -203,15 +203,22 @@ class PhaseConjugateCorrector(Module):
         mean_var = float(np.mean(var))
         gamma = np.clip(mean_var / (mean_var + 1.0), 0, 1)
 
-        if gamma <= self.gamma_critical or not _is_grad_enabled():
+        # The same rule with gradients on or off. Before v4.5.2 this also returned x under no_grad, so
+        # scoring and generation skipped a layer that training applied in every block (Gamma is 0.7-0.9):
+        # the gate measured a different network from the one trained.
+        if gamma <= self.gamma_critical:
             return x
 
         # 2. Phase-conjugate operator: Theta|Psi>*
         #    Time-reverse via negating odd-indexed dimensions
         x_conj_data = x.data.copy()
         x_conj_data[:, :, 1::2] *= -1.0
-        x_conjugated = Tensor(x_conj_data, requires_grad=x.requires_grad)
-        if x.requires_grad:
+        # The backward hook only when gradients are on (autograd.py's rule): the closure refers to
+        # x_conjugated itself, so attaching it under no_grad left a reference cycle that held every
+        # scoring and generation graph until the cycle collector ran (hundreds of MB).
+        track = _is_grad_enabled() and x.requires_grad
+        x_conjugated = Tensor(x_conj_data, requires_grad=track)
+        if track:
             x_conjugated._prev = [x]
 
             def _backward():

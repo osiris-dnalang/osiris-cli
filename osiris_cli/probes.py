@@ -47,24 +47,34 @@ def _run(args: List[str], timeout: float = 10.0) -> str:
 
 
 def verify_chain(path: str) -> Dict[str, object]:
-    """Recompute the exchange log's hash chain (the same rule Osiris._record writes)."""
+    """Recompute the exchange log's hash chain (the same rule Osiris._record writes).
+
+    Every entry must hash to its own content, and its `prev` must be the genesis hash or the hash of an earlier
+    entry; otherwise the chain is broken there (an edited, inserted-with-a-false-link or removed entry). A `prev`
+    that names an earlier entry other than the one just before is a fork: two writers appended from different heads
+    (2026-10-07, before the writer read the file's last entry). Forks are listed, never hidden; they are not breaks,
+    because no entry was altered and every link resolves."""
     import hashlib
-    n, prev, broken = 0, "0" * 64, None
+    genesis = "0" * 64
+    n, prev, broken, forks, seen = 0, genesis, None, [], {genesis}
     try:
         with open(path, encoding="utf-8") as f:
             for i, line in enumerate(f):
                 entry = json.loads(line)
                 h = entry.pop("hash", None)
                 body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
-                if entry.get("prev") != prev or hashlib.sha256(body.encode()).hexdigest() != h:
+                if hashlib.sha256(body.encode()).hexdigest() != h or entry.get("prev") not in seen:
                     broken = i
                     break
+                if entry.get("prev") != prev:
+                    forks.append(i)
+                seen.add(h)
                 prev, n = h, n + 1
     except FileNotFoundError:
         return {"entries": 0, "intact": True, "head": prev}
     except (OSError, ValueError) as e:
         return {"entries": n, "intact": False, "error": type(e).__name__}
-    return {"entries": n, "intact": broken is None, "broken_at": broken, "head": prev[:12]}
+    return {"entries": n, "intact": broken is None, "broken_at": broken, "forks": forks, "head": prev[:12]}
 
 
 def safe_path(raw: str, base: str = HOME) -> Optional[str]:

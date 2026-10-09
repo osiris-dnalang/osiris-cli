@@ -69,7 +69,7 @@ class FakeCore:
 
 
 def scores(o, n, core_bpb, uni=4.5):
-    o.stats["heldout_scores"] = {f"h{i}": [core_bpb, uni, 0, i] for i in range(n)}
+    o.stats["heldout_scores"] = {f"h{i}": [core_bpb, uni, 0, i, living.SCORER] for i in range(n)}
 
 
 def make(tmp_path, **kw):
@@ -165,6 +165,60 @@ def test_newer_rescoring_on_disk_wins_when_stats_are_saved(tmp_path):
     json.dump(disk, open(o.stats_path, "w"))
     o._save_stats()                                       # a stale in-memory copy must not win
     assert json.load(open(o.stats_path))["heldout_scores"]["a"][2] == 900
+
+
+def test_scores_from_before_the_scoring_fix_do_not_count_toward_the_gate(tmp_path):
+    o, _ = make(tmp_path)
+    # v4.5.1 scores (no 5th field) skipped the phase-conjugate corrector the core trains with
+    o.stats["heldout_scores"] = {f"h{i}": [1.5, 4.5, 0, i] for i in range(living.GATE_WINDOW)}
+    g = o.gate()
+    assert not g["open"] and g["n"] == 0 and g["stale"] == living.GATE_WINDOW
+    assert "--rescore-only" in o.gate_note(g) and "rescoring" in o.gate_brief(g)
+    assert any("not counted" in line for line in o.status_lines())
+    scores(o, living.GATE_WINDOW, 1.5)
+    assert o.gate()["open"] and o.gate()["stale"] == 0
+
+
+def test_a_rescore_by_the_fixed_scorer_wins_over_an_old_score_at_the_same_step(tmp_path):
+    o, _ = make(tmp_path)
+    o.stats["heldout_scores"] = {"a": [9.0, 8.0, 900, 0]}     # a session still holding a pre-fix score
+    o._save_stats()
+    disk = json.load(open(o.stats_path))
+    disk["heldout_scores"]["a"] = [4.9, 4.4, 900, 0, living.SCORER]   # rescored, same weights
+    json.dump(disk, open(o.stats_path, "w"))
+    o._save_stats()
+    assert json.load(open(o.stats_path))["heldout_scores"]["a"] == [4.9, 4.4, 900, 0, living.SCORER]
+
+
+def test_scores_from_a_stale_copy_of_the_model_code_do_not_count(tmp_path):
+    class StaleCore(FakeCore):
+        def scorer(self):            # an osiris.nclm without SCORING_FORWARD: the pre-v4.5.2 forward
+            return 1
+
+    o, _ = make(tmp_path, core=StaleCore(bpb=1.0))
+    for i in range(6):
+        o.converse(f"message {i}")
+    assert [r[4] for r in o.stats["heldout_scores"].values()] == [1, 1]
+    assert o.gate()["n"] == 0 and o.gate()["stale"] == 2
+
+
+def test_the_mentor_is_told_why_old_scores_do_not_count(tmp_path):
+    o, _ = make(tmp_path)
+    o.stats["heldout_scores"] = {"h0": [9.0, 4.5, 0, 0]}
+    assert "not counted until rescored" in o._state_note(o.gate())
+
+
+def test_the_package_and_the_console_agree_on_the_scorer():
+    import osiris.nclm
+    assert osiris.nclm.SCORING_FORWARD == living.SCORER
+
+
+def test_new_heldout_scores_carry_the_scorer_version(tmp_path):
+    o, _ = make(tmp_path)
+    for i in range(6):
+        o.converse(f"message {i}")
+    assert len(o.stats["heldout_scores"]) == 2
+    assert all(r[4] == living.SCORER for r in o.stats["heldout_scores"].values())
 
 
 def _knowledge(tmp_path):

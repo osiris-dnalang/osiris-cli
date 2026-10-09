@@ -31,7 +31,7 @@ import time
 import urllib.error
 import urllib.request
 from collections import Counter
-from typing import Callable, Dict, Iterator, List, Optional
+from typing import Any, Callable, Dict, Iterator, List, Optional
 
 LIVING_HOME = os.path.join(os.path.expanduser("~"), ".osiris", "living")
 OLLAMA_BASE = os.environ.get("OSIRIS_OLLAMA", "http://localhost:11434").rstrip("/")
@@ -45,6 +45,12 @@ OLLAMA_BASE = os.environ.get("OSIRIS_OLLAMA", "http://localhost:11434").rstrip("
 GATE_WINDOW = 30
 SPEAK_BPB = 2.0
 HELDOUT_EVERY = 5
+# Version of the forward pass that held-out scores come from, stored as a score's 5th field. Scores without
+# it (before v4.5.2) were computed with the phase-conjugate corrector skipped -- a layer the core trains with
+# in every block -- so they measure a different network: they do not count toward the gate, and
+# `osiris train --rescore-only` replaces them. A score is tagged with the SCORING_FORWARD of the osiris.nclm
+# actually loaded (NclmCore.scorer), so a stale copy of the model code cannot write a "current" score.
+SCORER = 2
 TRAIN_STEPS_PER_EXCHANGE = 3
 SCORE_WINDOWS = 2
 HISTORY_TURNS = 12
@@ -95,6 +101,81 @@ FIRST_WORD_SAMPLES = 10
 # after a question from OSIRIS they are answers, and a canned "Okay." would drop them.
 # Bracketed paste (DECSET 2004, turned on by the REPL): a paste arrives between these.
 PASTE_START, PASTE_END = "\x1b[200~", "\x1b[201~"
+# A paste still arriving when a reply ends is read to its end marker: input must go quiet for
+# PASTE_IDLE seconds (or PASTE_WAIT_MAX pass) before the rest is left for the prompt to read.
+PASTE_IDLE, PASTE_WAIT_MAX = 1.0, 15.0
+
+
+class Held(str):
+    """A message typed or pasted while OSIRIS was answering, sent next. `pasted` travels with
+    it so the REPL does not classify it by the previous prompt's input (2026-10-08: a document
+    pasted during a reply was dispatched as typed and trained on)."""
+    pasted: bool = False
+
+    def __new__(cls, text: str, pasted: bool = False):
+        s = super().__new__(cls, text)
+        s.pasted = pasted
+        return s
+
+
+# A long paste with no request in its first or last lines is acknowledged by code, not restated
+# by a model (2026-10-08: a pasted policy proposal was "restated" from an excerpt, cut off, and
+# a "potential overlap" came back as NUMERICAL_OVERLAP = OBSERVED).
+REQUEST = re.compile(r"\?|\b(?:review|summari[sz]e|rewrite|compare|check|critique|evaluate|assess|explain|"
+                     r"analy[sz]e|adopt|apply|translate|what do you think|thoughts|tell me|can you|could you|"
+                     r"please)\b", re.IGNORECASE)
+HEADING = re.compile(r"^\s{0,3}(?:#{1,6}\s+\S.*|(?:\d+(?:\.\d+)*[.)]|[A-Z]{1,4}-\d+[:.)]?)\s+\S.*)$")
+# Status-like labels (NUMERICAL_OVERLAP, "= OBSERVED") a reply uses that nothing it was sent contains.
+LABEL = re.compile(r"\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b|(?<==\s)[A-Z][A-Z_]{3,}\b")
+
+
+def asks_something(text: str) -> bool:
+    """Whether a pasted document carries a request: in its first two or last three non-empty lines."""
+    lines = [ln for ln in text.splitlines() if ln.strip()]
+    return any(REQUEST.search(ln) for ln in lines[:2] + lines[-3:])
+
+
+def headings(text: str, limit: int = 12) -> List[str]:
+    """Section headings of a pasted document, outside code blocks."""
+    out, fenced = [], False
+    for ln in text.splitlines():
+        if ln.lstrip().startswith("```"):
+            fenced = not fenced
+        elif not fenced and HEADING.match(ln):
+            out.append(ln.strip()[:70])
+    return out[:limit]
+
+
+def invented_labels(reply: str, sent: str) -> List[str]:
+    """Labels in a reply that appear nowhere in what the model was sent. Not a fact check: a
+    flag that the model introduced status names of its own."""
+    known = set(re.findall(r"[A-Za-z0-9_]+", sent))
+    return sorted({m.group(0) for m in LABEL.finditer(reply)} - known)
+
+
+def drain_input(read: Callable[[], bytes], ready: Callable[[float], bool], clock: Callable[[], float] = time.time,
+                idle: float = PASTE_IDLE, wait_max: float = PASTE_WAIT_MAX) -> bytes:
+    """Everything waiting on input now; and if a bracketed paste has started but not ended, keep
+    reading until its end marker, a quiet `idle`, or `wait_max` -- so one paste stays one message."""
+    data = b""
+    try:
+        while ready(0):
+            chunk = read()
+            if not chunk:
+                return data
+            data += chunk
+        start, end = PASTE_START.encode(), PASTE_END.encode()
+        t0 = clock()
+        while data.count(start) > data.count(end) and clock() - t0 < wait_max:
+            if not ready(idle):
+                break
+            chunk = read()
+            if not chunk:
+                break
+            data += chunk
+    except OSError:
+        pass                                    # keep what was read
+    return data
 SMALL_TALK = re.compile(r"^\s*(?:(?P<hello>hi|hello|hey|yo|gm|good (?:morning|afternoon|evening))|"
                         r"(?P<thanks>thanks|thank you))\b", re.IGNORECASE)
 
@@ -112,9 +193,10 @@ Honesty rules, which matter more than sounding impressive:
 If you do not know, say so and say how it could be checked.
 - Keep hypotheses and measured results clearly separate.
 - Don't say you have learned, remembered or kept up with Devin's work unless a note, a recall \
-line or a check in this message shows it. What is measured about your learning (pilot, \
-2026-10-01): training on conversations lowers the core's error on held-out replies by about \
-0.07 bits/byte, and the core is still worse than a simple letter-frequency model.
+line or a check in this message shows it. What was measured about your learning (pilot, \
+2026-10-01): training on conversations lowered the core's error on held-out replies by about \
+0.07 bits/byte, and the core was worse than a simple letter-frequency model -- but those scores \
+skipped a layer the core trains with (fixed in v4.5.2) and have not been re-measured.
 - Devin's own hardware audits refuted the tau-phase anomaly, theta_lock = 51.843 deg, \
 the 10^6 suppression and the CCCE "consciousness" metrics; do not present them as \
 established. His measured work (staggered dynamical decoupling, GHZ witnesses, the \
@@ -149,6 +231,9 @@ class OllamaMentor:
         self.base = base
         self.timeout = timeout
         self._model = model
+        # Ollama's final chunk of the last stream: done_reason ("stop" or "length") and its
+        # timings (load_duration, prompt_eval_count/_duration, eval_count/_duration, in ns).
+        self.last_done: Optional[Dict[str, Any]] = None
 
     def installed(self) -> List[str]:
         try:
@@ -211,6 +296,7 @@ class OllamaMentor:
                               "options": {"num_predict": MENTOR_MAX_TOKENS, "num_ctx": MENTOR_NUM_CTX}}).encode()
         req = urllib.request.Request(self.base + "/api/chat", data=payload,
                                      headers={"Content-Type": "application/json"})
+        self.last_done = None
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
             for line in resp:
                 if not line.strip():
@@ -222,6 +308,7 @@ class OllamaMentor:
                 if piece:
                     yield piece
                 if chunk.get("done"):
+                    self.last_done = {k: v for k, v in chunk.items() if k != "message"}
                     return
 
 
@@ -403,6 +490,24 @@ class NclmCore:
         sched = getattr(opt, "schedule", None)
         return sched.get_lr(opt.step_count, opt.base_lr) if sched else opt.base_lr
 
+    def scorer(self) -> int:
+        """SCORING_FORWARD of the osiris.nclm this core runs on (1 for code without the v4.5.2 fix)."""
+        with self._otc._organism_lock:
+            self._model()        # imports the model code from where the console finds it
+        return self._loaded_scorer()
+
+    @staticmethod
+    def _loaded_scorer() -> int:
+        return int(getattr(sys.modules.get("osiris.nclm"), "SCORING_FORWARD", 1))
+
+    def describe(self) -> dict:
+        """What a run trains: its architecture, configuration and size (recorded in run manifests)."""
+        with self._otc._organism_lock:   # not reentrant: nothing below may take it again
+            model = self._model()["model"]
+            return {"arch": getattr(model, "organism_arch", "crsm"), "config": model.config.to_dict(),
+                    "n_params": int(model.num_parameters()), "scorer": self._loaded_scorer(),
+                    "nclm_path": os.path.dirname(getattr(sys.modules.get("osiris.nclm"), "__file__", "") or "")}
+
     def draft(self, prompt: str, max_bytes: int = 160) -> str:
         with self._otc._organism_lock:
             model = self._model()["model"]
@@ -416,6 +521,61 @@ def printable_ratio(text: str) -> float:
         return 0.0
     ok = sum(1 for ch in text if ch.isprintable() or ch in "\n\t")
     return ok / len(text)
+
+
+def core_scorer(core) -> int:
+    """The scorer version a core's scores carry: its own report, or SCORER for a core without one."""
+    fn = getattr(core, "scorer", None)
+    return int(fn()) if callable(fn) else SCORER
+
+
+def scorer_of(score: list) -> int:
+    """The SCORER version a held-out score came from; scores written before v4.5.2 have none (1)."""
+    return int(score[4]) if len(score) > 4 else 1
+
+
+def score_rank(score: list) -> tuple:
+    """Which of two scores for one exchange to keep: the newer scorer, then the newer weights."""
+    return scorer_of(score), score[2]
+
+
+def _lock(f) -> None:
+    try:
+        import fcntl
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+    except (ImportError, OSError):     # no flock (e.g. Windows): single-writer behaviour as before
+        pass
+
+
+def _unlock(f) -> None:
+    try:
+        import fcntl
+        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+    except (ImportError, OSError):
+        pass
+
+
+def _last_hash(f, block: int = 65536) -> Optional[str]:
+    """The "hash" of the last non-empty line of an open binary file, read backwards in blocks (a line can be a
+    100k-character paste). None for an empty file; None also if the last line is not JSON (the caller falls back)."""
+    f.seek(0, os.SEEK_END)
+    end = f.tell()
+    buf, pos = b"", end
+    while pos > 0:
+        step = min(block, pos)
+        pos -= step
+        f.seek(pos)
+        buf = f.read(step) + buf
+        lines = buf.rstrip(b"\n").split(b"\n")
+        if len(lines) > 1 or pos == 0:
+            last = lines[-1].strip()
+            if not last:
+                return None
+            try:
+                return json.loads(last.decode("utf-8")).get("hash")
+            except ValueError:
+                return None
+    return None
 
 
 class TypeAhead:
@@ -446,18 +606,14 @@ class TypeAhead:
         import select
         import termios
         fd = sys.stdin.fileno()
-        chunks = []
+        data = b""
         try:
-            while select.select([fd], [], [], 0)[0]:
-                data = os.read(fd, 4096)
-                if not data:
-                    break
-                chunks.append(data)
+            data = drain_input(lambda: os.read(fd, 4096), lambda t: bool(select.select([fd], [], [], t)[0]))
         except OSError:
             pass
         finally:
             termios.tcsetattr(fd, termios.TCSANOW, self._saved)
-        self.text = keys_typed(b"".join(chunks).decode("utf-8", errors="replace"))
+        self.text = keys_typed(data.decode("utf-8", errors="replace"))
         return False
 
 
@@ -562,8 +718,8 @@ class Osiris:
             s = {}
         s.setdefault("exchanges", 0)
         s.setdefault("core_spoke", 0)
-        # exchange hash -> [core_bpb, unigram_bpb, core_step, exchange_index]; a
-        # batch trainer rescoring with newer weights replaces an entry (higher step).
+        # exchange hash -> [core_bpb, unigram_bpb, core_step, exchange_index, scorer]; a
+        # batch trainer rescoring with a newer scorer or newer weights replaces an entry.
         s.setdefault("heldout_scores", {})
         s.pop("heldout", None)
         s.setdefault("unigram", {})       # byte -> count, train text only
@@ -580,7 +736,7 @@ class Osiris:
                 disk = {}
             mine = self.stats["heldout_scores"]
             for key, val in disk.items():
-                if key not in mine or val[2] > mine[key][2]:
+                if key not in mine or score_rank(val) > score_rank(mine[key]):
                     mine[key] = val
             tmp = self.stats_path + ".tmp"
             with open(tmp, "w", encoding="utf-8") as f:
@@ -588,11 +744,20 @@ class Osiris:
             os.replace(tmp, self.stats_path)
 
     def _record(self, entry: dict) -> str:
-        entry["prev"] = self.stats["last_head"]
-        body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
-        entry["hash"] = hashlib.sha256(body.encode()).hexdigest()
-        with open(self.log_path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        """Append one exchange, chained to the ledger's actual last entry. The previous hash is read from the file
+        under an exclusive lock, not from this process's stats: on 2026-10-07 two consoles appended from their own
+        in-memory heads and the chain forked seven times (entries intact, links crossed)."""
+        with open(self.log_path, "ab+") as f:
+            _lock(f)
+            try:
+                entry["prev"] = _last_hash(f) or self.stats.get("last_head") or "0" * 64
+                body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
+                entry["hash"] = hashlib.sha256(body.encode()).hexdigest()
+                f.seek(0, os.SEEK_END)
+                f.write((json.dumps(entry, ensure_ascii=False) + "\n").encode("utf-8"))
+                f.flush()
+            finally:
+                _unlock(f)
         self.stats["last_head"] = entry["hash"]
         return entry["hash"]
 
@@ -608,18 +773,24 @@ class Osiris:
         return nats / len(data) / math.log(2)
 
     def gate(self) -> dict:
-        recent = sorted(self.stats["heldout_scores"].values(), key=lambda r: r[3])[-GATE_WINDOW:]
+        scores = self.stats["heldout_scores"].values()
+        current = [r for r in scores if scorer_of(r) == SCORER]
+        recent = sorted(current, key=lambda r: r[3])[-GATE_WINDOW:]
         n = len(recent)
         core = sum(r[0] for r in recent) / n if n else None
         uni = sum(r[1] for r in recent) / n if n else None
         open_ = n >= GATE_WINDOW and core is not None and core <= SPEAK_BPB and core < uni
-        return {"open": open_, "n": n, "core_bpb": core, "unigram_bpb": uni}
+        return {"open": open_, "n": n, "core_bpb": core, "unigram_bpb": uni,
+                "stale": sum(1 for r in scores if scorer_of(r) != SCORER)}
 
     @staticmethod
     def gate_note(gate: dict) -> str:
         """Why the core is or is not speaking, in one clause."""
         if gate["open"]:
             return "gate open"
+        if not gate["n"] and gate.get("stale"):
+            return (f"gate closed: {gate['stale']} held-out scores predate v4.5.2's scoring fix "
+                    "(osiris train --rescore-only)")
         if not gate["n"]:
             return "gate closed: not scored on held-out text yet"
         return (f"gate closed: {gate['core_bpb']:.2f} bits/byte on {gate['n']}/{GATE_WINDOW} held-out "
@@ -629,6 +800,8 @@ class Osiris:
     def gate_brief(gate: dict) -> str:
         if gate["open"]:
             return "gate open"
+        if not gate["n"] and gate.get("stale"):
+            return "gate closed, held-out scores need rescoring"
         if not gate["n"]:
             return "gate closed, not scored yet"
         return f"gate closed ({gate['core_bpb']:.2f} bits/byte held-out; speaks at <= {SPEAK_BPB})"
@@ -677,13 +850,59 @@ class Osiris:
                        for m in history)
 
     @staticmethod
+    def excerpt_sizes(text: str, budget: int = MESSAGE_BUDGET):
+        """(head, tail): how many characters of a message the model is given from each end."""
+        if len(text) <= budget:
+            return len(text), 0
+        return budget * 2 // 3, budget // 3
+
+    @staticmethod
     def excerpt(text: str, budget: int = MESSAGE_BUDGET) -> str:
         """Head and tail of a long message, with what was left out stated in it."""
         if len(text) <= budget:
             return text
-        head, tail = text[: budget * 2 // 3], text[-budget // 3:]
+        h, t = Osiris.excerpt_sizes(text, budget)
+        head, tail = text[:h], text[-t:]
         return (f"{head}\n\n[... {len(text) - len(head) - len(tail):,} characters of this {len(text):,}-character "
                 f"message omitted: too long for the local model ...]\n\n{tail}")
+
+    @staticmethod
+    def timing_detail(done: Dict[str, Any]) -> str:
+        """Where the time went, from Ollama's own final-chunk counters (absent: nothing said)."""
+        ns = 1e9
+        parts = []
+        if done.get("load_duration"):
+            parts.append(f"load {done['load_duration'] / ns:.0f} s")
+        if done.get("prompt_eval_duration"):
+            parts.append(f"read {done.get('prompt_eval_count', '?')} tokens in {done['prompt_eval_duration'] / ns:.0f} s")
+        if done.get("eval_duration"):
+            parts.append(f"wrote {done.get('eval_count', '?')} tokens in {done['eval_duration'] / ns:.0f} s")
+        return f" ({', '.join(parts)})" if parts else ""
+
+    def _document_reply(self, text: str, gate: dict) -> str:
+        """A long paste with no request: acknowledged by code, with nothing reviewed, restated,
+        adopted or learned. The excerpt stays in the conversation, so a follow-up request
+        ("review it") reaches the model with it."""
+        heads = headings(text)
+        shown = "".join(f"\n    {h}" for h in heads)
+        more = " (first 12)" if len(heads) == 12 else ""
+        reply = (f"I have your pasted document: {len(text):,} characters, {len(text.splitlines()):,} lines"
+                 + (f", sections{more}:{shown}\n" if heads else ".\n")
+                 + "You didn't say what to do with it, so I haven't reviewed, summarised or adopted any of it. "
+                   "Tell me which: review it, summarise it, compare it with something on record, or something "
+                   f"else. A local model reads at most {MESSAGE_BUDGET:,} characters of it at once "
+                   "(the beginning and the end); say if you want a particular section.")
+        self.out(f"\nOSIRIS › {reply}\n  · voice: code, no model · instant · recorded; pasted, not approved "
+                 f"for learning; not adopted as policy · core step {self._core_step()}, {self.gate_brief(gate)}\n")
+        user = {"role": "user", "content": "[Pasted document]\n" + self.excerpt(text)}
+        self.history.append({"role": "assistant", "content": reply})
+        self._sent += [user, {"role": "assistant", "content": reply}]
+        self._record({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "voice": "code", "heldout": False,
+                      "learnable": False, "user": text, "reply": reply, "index": None,
+                      "input_transport": "bracketed_paste", "source_type": "bracketed_paste", "pasted": True,
+                      "char_count": len(text), "line_count": len(text.splitlines())})
+        self._save_stats()
+        return reply
 
     def converse(self, text: str, learnable: bool = True,
                  source_type: Optional[str] = None,
@@ -730,7 +949,11 @@ class Osiris:
         else:
             effective_learnable = bool(learnable)
 
+        if resolved_transport == "bracketed_paste" and len(text) > LONG_MESSAGE and not asks_something(text):
+            return self._document_reply(text, gate)
+
         sent_user = None
+        incomplete = ""
         if gate["open"] and self.core is not None:
             self.out("\nOSIRIS › ")
             try:
@@ -792,11 +1015,25 @@ class Osiris:
             voice = "mentor:" + model
             if first_word is not None:
                 self._note_first_word(model, first_word)
+            done = getattr(self.mentor, "last_done", None) or {}
+            if not interrupted and done.get("done_reason") == "length":
+                incomplete = f"cut off at the {MENTOR_MAX_TOKENS}-token reply limit"
+            elif not interrupted and reply.count("```") % 2:
+                incomplete = "ends inside an unclosed code block"
+            if incomplete:
+                self.out(f" …[incomplete: {incomplete}]")
             self.out("\n")
+            idx = self.stats["exchanges"]
             if interrupted:
                 note = "not learned: interrupted"
+            elif incomplete:
+                note = "not learned: incomplete reply"
+            elif effective_learnable and self.core is None:
+                note = "recorded; no core is loaded, so nothing is learned"
+            elif effective_learnable and idx % HELDOUT_EVERY == 0:
+                note = "held out: the core is scored on this exchange, not trained on it"
             elif effective_learnable:
-                note = "learning from this"
+                note = "the core trains on this exchange (your words and this reply)"
             elif resolved_transport == "bracketed_paste" or not learnable:
                 note = "not learned: pasted transcript (ledger-only; use /learn last to propose)"
             elif resolved_transport == "unknown":
@@ -806,9 +1043,18 @@ class Osiris:
 
             cited = f" · used: {', '.join(sources)}" if sources else ""
             if len(text) > MESSAGE_BUDGET:
-                cited += f" · long message: an excerpt of {len(text):,} characters was sent"
+                head, tail = self.excerpt_sizes(text)
+                cited += (f" · long message: an excerpt was sent -- the first {head:,} and last {tail:,} of "
+                          f"{len(text):,} characters ({len(text) - head - tail:,} left out, not read)")
+            # sources are what OSIRIS and Devin sent, not earlier replies: a label the model made
+            # up once must not become "known" on the next turn
+            invented = invented_labels(reply, "\n".join(m["content"] for m in messages if m["role"] != "assistant"))
+            if invented:
+                cited += (f" · labels in the reply that nothing it was sent contains: {', '.join(invented)} "
+                          "(the model's own, not recorded states)")
             timing = (f"first word {first_word:.0f} s, done {time.time() - started:.0f} s"
                       if first_word is not None else f"{time.time() - started:.0f} s")
+            timing += self.timing_detail(done)
             self.out(f"  · voice: {model} speaking for OSIRIS{f' ({why})' if why else ''} · {timing} · "
                      f"core step {self._core_step()}, {self.gate_brief(gate)} · {note}{cited}\n")
             self._hold(typed.text)
@@ -829,7 +1075,8 @@ class Osiris:
             "t": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "voice": voice,
             "heldout": heldout,
-            "learnable": effective_learnable and not interrupted,
+            "learnable": effective_learnable and not interrupted and not incomplete,
+            "incomplete": incomplete or None,
             "user": text,
             "reply": reply,
             "index": idx,
@@ -844,7 +1091,7 @@ class Osiris:
         if (resolved_transport in ("bracketed_paste", "unknown")) or not effective_learnable:
             self.last_paste = dict(rec_data, hash=key)
         self._save_stats()
-        if effective_learnable and not interrupted and voice != "core" and self.core is not None:
+        if effective_learnable and not interrupted and not incomplete and voice != "core" and self.core is not None:
             self._after(lesson, reply, heldout, key, idx)
         return reply
 
@@ -919,7 +1166,9 @@ class Osiris:
                         "you use one]\n" + self.knowledge.format_notes(hits))
         if long_message:
             context += (f"\n\n[This message is {len(text):,} characters; you are given an excerpt. Say what "
-                        "you can from it, and that you saw only part of it.]")
+                        "you can from it, and that you saw only part of it. Do not describe the parts you "
+                        "were not given. Keep its own hedges (could, if, potential, not established): a "
+                        "possibility it describes is not a finding.]")
         last = {"role": "user", "content": context + "\n\n[Message]\n" + self.excerpt(text)}
         self._fit(len(system) + len(last["content"]))
         messages = [{"role": "system", "content": system}] + self._sent + [last]
@@ -1004,14 +1253,20 @@ class Osiris:
         reported as "you were typing" and dropped)."""
         if not typed:
             return
-        if PASTE_START in typed:
+        if PASTE_START in typed or PASTE_END in typed:
+            # A paste, whole -- or, with only its end marker here, the tail of a paste whose start
+            # was read before this reply. The markers are terminal syntax, never "typing".
+            whole = PASTE_START in typed and typed.count(PASTE_START) == typed.count(PASTE_END)
             message = typed.replace(PASTE_START, "").replace(PASTE_END, "").replace("\r", "\n").strip()
             if message:
-                self.held.append(message)
+                self.held.append(Held(message, pasted=True))
+                if not whole:
+                    self.out(f"  · part of a paste ({len(message):,} characters) arrived apart from the rest; held as "
+                             "its own pasted message (not learned)\n")
             return
         lines = typed.replace("\r", "\n").split("\n")
         partial = lines.pop().strip()
-        self.held.extend(line.strip() for line in lines if line.strip())
+        self.held.extend(Held(line.strip()) for line in lines if line.strip())
         if partial:
             self.out(f"  · you were typing {partial!r} while I answered -- not sent; retype it to send\n")
 
@@ -1029,6 +1284,9 @@ class Osiris:
             return who + (f"\nYour core's current state: {gate['n']} held-out exchanges scored, "
                     f"{gate['core_bpb']:.2f} bits/byte vs {gate['unigram_bpb']:.2f} for a unigram "
                     f"baseline; it speaks on its own at <= {SPEAK_BPB} bits/byte.")
+        if gate.get("stale"):
+            return who + (f"\nYour core's {gate['stale']} held-out scores were computed before a scoring fix "
+                          "(v4.5.2) and measured a different network; they are not counted until rescored.")
         return who + "\nYour core has not been scored on held-out conversation yet."
 
     def _after(self, lesson: str, reply: str, heldout: bool, key: str, idx: int) -> None:
@@ -1042,7 +1300,7 @@ class Osiris:
                 with self._lock:
                     if heldout and core_bpb is not None:
                         self.stats["heldout_scores"][key] = [round(core_bpb, 4), round(uni_bpb, 4),
-                                                             int(self.core.step()), idx]
+                                                             int(self.core.step()), idx, core_scorer(self.core)]
                     if trained:
                         for b, c in Counter(lesson.encode("utf-8", errors="ignore")).items():
                             self.stats["unigram"][str(b)] = self.stats["unigram"].get(str(b), 0) + c
@@ -1095,6 +1353,9 @@ class Osiris:
                          f"unigram {g['unigram_bpb']:.2f} bpb")
         else:
             lines.append(f"held-out      none scored yet (every {HELDOUT_EVERY}th exchange is held out)")
+        if g["stale"]:
+            lines.append(f"              {g['stale']} older scores predate the v4.5.2 scoring fix and are not "
+                         "counted; osiris train --rescore-only rescores them")
         lines.append("gate          " + ("OPEN: the core answers in its own voice" if g["open"] else
                      f"closed: needs {GATE_WINDOW} held-out exchanges at <= {SPEAK_BPB} bpb and below unigram"))
         return lines

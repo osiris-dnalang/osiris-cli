@@ -151,6 +151,15 @@ TELEMETRY_HOME = os.path.join(os.path.expanduser("~"), ".osiris", "telemetry")
 TELEMETRY_LOG = os.path.join(TELEMETRY_HOME, "nclm_loss.log")
 PROMPT_LIBRARY_PATH = os.path.join(os.path.expanduser("~"), ".osiris", "prompt_library.json")
 ORGANISM_GEOMETRY = dict(dim=128, n_layers=4, n_heads=4, ff_dim=256, max_seq_len=128)
+# Architectures a checkpoint folder can hold, named by an `arch.json` ({"arch": name}) in that folder. The live
+# core (~/.osiris/nclm_organism) has none and is "crsm". "standard" is the NCLM-ARCH-1 comparison arm: plain
+# pre-norm blocks and base-10000 positions, FFN widened to 384 so the parameter counts match (725,760 vs
+# 726,304); see experiments/nclm_arch1/PRE_REGISTRATION.md.
+ORGANISM_ARCHES = {
+    "crsm": dict(torsion_lock=True, phase_conjugate=True, fractal_embedding=False, positional="phi"),
+    "standard": dict(torsion_lock=False, phase_conjugate=False, fractal_embedding=False,
+                     pilot_wave=False, golden_scale=False, positional="standard", ff_dim=384),
+}
 ORGANISM_MAX_BACKUPS = 5
 OLLAMA_STARTUP_TIMEOUT = 2.5
 _organism_lock = threading.Lock()
@@ -3511,14 +3520,29 @@ def _organism_telemetry(line: str):
     threading.Thread(target=_sync_telemetry_to_db, args=(line,), daemon=True).start()
 
 
-def _organism_build():
+def _organism_arch(home=None):
+    """The architecture a checkpoint folder holds: its arch.json, or "crsm" (the live core) without one.
+    An unreadable or unknown arch.json is an error, never a silent fallback to another architecture."""
+    path = os.path.join(home or ORGANISM_HOME, "arch.json")
+    if not os.path.exists(path):
+        return "crsm"
+    with open(path, encoding="utf-8") as f:
+        arch = json.load(f)["arch"]
+    if arch not in ORGANISM_ARCHES:
+        raise ValueError(f"{path}: unknown architecture {arch!r} (known: {', '.join(ORGANISM_ARCHES)})")
+    return arch
+
+
+def _organism_build(arch=None):
     if ORGANISM_SRC not in sys.path:
         sys.path.insert(0, ORGANISM_SRC)
     from osiris.nclm import AdamW, LRSchedule, SovereignConfig, SovereignTransformerV2
-    cfg = SovereignConfig(vocab_size=256, dropout=0.0, torsion_lock=True,
-                           phase_conjugate=True, fractal_embedding=False,
-                           **ORGANISM_GEOMETRY)
+    arch = arch or _organism_arch()
+    flags = dict(ORGANISM_ARCHES[arch])
+    geometry = dict(ORGANISM_GEOMETRY, ff_dim=flags.pop("ff_dim", ORGANISM_GEOMETRY["ff_dim"]))
+    cfg = SovereignConfig(vocab_size=256, dropout=0.0, **flags, **geometry)
     model = SovereignTransformerV2(cfg)
+    model.organism_arch = arch
     optimizer = AdamW(params=model.parameters(), lr=3e-4, weight_decay=0.01,
                        schedule=LRSchedule(warmup_steps=50, total_steps=10000))
     return model, optimizer
@@ -3533,7 +3557,14 @@ def _organism_load(model, optimizer):
         with open(meta, encoding="utf-8") as f:
             m = json.load(f)
         with np.load(ckpt) as blob:
-            for i, p in enumerate(model.parameters()):
+            params = model.parameters()
+            # Check every shape first: copying by index into another architecture used to overwrite the
+            # leading tensors before failing, leaving a half-loaded model behind "starting fresh".
+            if (f"p{len(params)}" in blob.files
+                    or any(f"p{i}" not in blob.files or blob[f"p{i}"].shape != p.data.shape
+                           for i, p in enumerate(params))):
+                raise ValueError("the checkpoint holds a different architecture")
+            for i, p in enumerate(params):
                 p.data[...] = blob[f"p{i}"]
                 optimizer._m[i][...] = blob[f"m{i}"]
                 optimizer._v[i][...] = blob[f"v{i}"]

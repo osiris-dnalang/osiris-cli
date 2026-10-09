@@ -94,7 +94,7 @@ REGISTER: Tuple[Claim, ...] = (
           "on it moved GHZ fidelity by +0.002 ± 0.006 against sign-flipped and random-angle controls "
           "(N = 12). The angle is arctan(14/11), the slope of the Great Pyramid of Khufu (computed below).",
           (SELFTEST, ("doi", "10.5281/zenodo.22855102", "controlled RZ-correction test, ibm_fez (job dannuhgpqrnc73991ntg)"), DNALANG),
-          (r"51\.84", r"θ[\s_]*lock|theta[\s_-]*lock", r"torsion[\s-]*lock", r"lock angle"),
+          (r"51\.84", r"θ[\s_-]*lock|theta[\s_-]*lock", r"torsion[\s-]*lock", r"lock angle"),
           checks=(("arctan_degrees", (14, 11)),)),
     Claim("ERROR_SUPPRESSION_1E6", "10⁶× error suppression and 0.99999 logical fidelity from a 40-qubit "
           "'tesseract' circuit on ibm_torino", "REFUTED",
@@ -134,6 +134,40 @@ REGISTER: Tuple[Claim, ...] = (
     Claim("CHI_PC", "χ_PC = 0.946 is a universal phase-conjugation constant", "REFUTED",
           "Feb 2026 self-test: 0.946 works as a software parameter, not as a privileged physical constant.",
           (SELFTEST,), (r"chi[\s_-]*pc|χ[\s_]*pc", r"phase[- ]conjugat\w* (constant|coupling)")),
+    Claim("F_MAX", "F_max = 1 - φ⁻⁸ ≈ 0.9787 is a fundamental upper bound on Bell-state fidelity ('validated': 0/189 "
+          "violations on IBM hardware)", "REFUTED",
+          "Published experiments exceed it: a two-ion Bell state at 0.993 (2008), and two-qubit gates at 0.999 and "
+          "0.9992 inferred from prepared Bell states (2016) -- the document's own rule, 'ANY experiment achieving "
+          "F > 0.98 falsifies the prediction', was met before it was written. IBM's own CNOT reached 0.9977 (a gate "
+          "fidelity by interleaved benchmarking, not a Bell-state fidelity). '0/189 violations' is a one-sided test "
+          "on hardware whose best Bell fidelity was 0.9773: data that never reach a ceiling cannot test it, and "
+          "F ≤ 1 passes the same test. The document also predicts 0.985 and 0.982 for ibm_fez and ibm_torino, above "
+          "its own bound, and reports r = 0.90, p = 0.006 over three backends -- three points need r = 0.99996 for "
+          "that p (its tabulated values give r = 0.95, p = 0.20).",
+          (("doi", "10.1038/nphys961", "Benhelm et al., Nat. Phys. 4, 463 (2008): entangling gate, Bell state 99.3(1) %"),
+           ("doi", "10.1103/PhysRevLett.117.060504", "Ballance et al., PRL 117, 060504 (2016): gate 99.9(1) %"),
+           ("doi", "10.1103/PhysRevLett.117.060505", "Gaebler et al., PRL 117, 060505 (2016): gate error 8(4)e-4"),
+           ("doi", "10.1103/PhysRevLett.127.130501", "Kandala et al. (IBM), PRL 127, 130501 (2021): CNOT 99.77(2) %"),
+           ("file", "osiris-cli/falsifiable_predictions.md", "Prediction 2, its falsification rule, the 0/189 table")),
+          (r"bell[\s-]*(state[\s-]*)?fidelity[\s-]*(upper[\s-]*)?(bound|ceiling|limit)",
+           r"\bf[\s_]*\{?max\}?\s*[=≈~]\s*0\.97", r"(?<![\d.])0\.9787", r"1\s*-\s*(φ|phi)\s*(\^\s*\{?\s*[-−]\s*8|⁻⁸)"),
+          checks=(("one_minus_phi_power", (8, (0.993, 0.999, 0.9992))),)),
+    Claim("COHERENCE_QUANTIZATION", "Coherence times quantize: T2 clusters at integer multiples of τ_base ≈ 46 µs "
+          "('validated', 8 % error on three IBM backends)", "OVERCLAIM",
+          "The record is three round backend T2 values, 150, 200 and 250 µs, set against 3, 4 and 5 × 46 µs: each "
+          "is exactly 0.92 of its prediction because all three are multiples of 50 µs, which a 50 µs base fits "
+          "exactly. The stated protocol -- T2 histograms from 1,000 runs per backend and a chi-squared test -- was "
+          "not run, and τ_base was fitted to the same hardware. Its success criterion, T2 within ±10 % of a "
+          "multiple, can barely fail: the bands overlap from n = 5, so every T2 above 207 µs passes and 79 % of "
+          "100-300 µs is covered (computed below); its other tolerance, δ < 0.15 τ_base = 6.9 µs, rejects all "
+          "three points. Its τ_mem = 1/Λ_Φ is 4.6×10⁷ s, as it notes; 46 µs keeps the digits, not the value.",
+          (("file", "osiris-cli/falsifiable_predictions.md", "Prediction 1 and the validation tables"),),
+          (r"coherence[\s-]*(times?[\s-]*)?quantiz\w*", r"τ[\s_]*(base|mem)\b|\btau[\s_-]*(base|mem)\b",
+           r"\bt\s*_?2\b[^.\n]{0,30}?(clusters?|quantiz\w*)[^.\n]{0,20}?multiples?"),
+          testable="Fix the base in advance (φ⁸ = 46.98 µs, not fitted), take per-qubit T2 from calibration "
+                   "snapshots of three or more backends, and compare the share within ±5 % of a multiple with the "
+                   "share a smooth fit to the same histogram predicts.",
+          checks=(("multiple_coverage", (46.0, 0.10, 100.0, 300.0)),)),
     Claim("PENTERACT_COSMOLOGY", "Zero-parameter predictions of Ω_Λ, w, n_s and r = 0.00298 from seven geometric "
           "constants (P = 10⁻⁹)", "OVERCLAIM",
           "The author's own concordance analysis: four effective parameters for four independent "
@@ -155,7 +189,7 @@ REGISTER: Tuple[Claim, ...] = (
     Claim("CHSH_TEST", "A Bell (CHSH) violation on IBM hardware (Feb 2026 test)", "REFUTED",
           "The test reached max |S| = 0.106, far below even the local bound of 2 (computed below); a working "
           "CHSH experiment lands between 2 and 2√2.",
-          (SELFTEST,), (r"\bchsh\b", r"bell (inequality|violation)"),
+          (SELFTEST,), (r"\bchsh(?![a-z0-9])(?!\s+-[a-z])", r"bell (inequality|violation)"),
           checks=(("chsh", (0.106,)),)),
     Claim("ZZ_UNIVERSAL", "The ZZ coupling period is universal across qubit pairs", "REFUTED",
           "Feb 2026 self-test: periods range 6.7-333 µs (coefficient of variation 123 %) -- pair-specific.",
@@ -173,6 +207,45 @@ REGISTER: Tuple[Claim, ...] = (
           "needs a task, the best known classical method for it, and a separation. The project's claim-"
           "language guide forbids the term without that.",
           (GUIDE,), (r"quantum (advantage|supremacy)",)),
+
+    # ── the quantum-LLM roadmap (pasted, not from the corpus) ────────────────
+    Claim("QUANTUM_LM", "Quantum states can steer a language model: phase coherence guiding attention, a hybrid "
+          "pilot-wave + transformer, quantum-aided in-context learning saving 20-40 % of tokens, a non-causal "
+          "quantum memory", "NO_EVIDENCE",
+          "Nothing on record: no model, run or token count. A gate computed from a simulated quantum state is a "
+          "classical computation -- a fixed function a classical layer can compute directly -- and one sampled from "
+          "hardware must beat a classical sampler with the same statistics; a benefit is quantum only if it "
+          "survives that control. Attention already connects every position, so 'non-local' adds nothing, and the "
+          "core's own 'pilot-wave' attention is a fixed classical multiplier (NCLM_MECHANICS). An advantage needs "
+          "what QUANTUM_ADVANTAGE lists.",
+          (GUIDE,),
+          (r"quantum[\s-]*(guided|aided|assisted|enhanced)\s+(attention|in[\s-]*context|icl|transformers?|llms?)",
+           r"quantum[\w\s-]{0,30}?\b(guid\w*|steer\w*|modulat\w*|bias\w*|shap\w*|drives?|advantage in)\b"
+           r"[^.\n]{0,20}?\battention",
+           r"quantum[^.\n]{0,40}?\bin[\s-]*context learning|\bin[\s-]*context learning\b[^.\n]{0,40}?quantum",
+           r"quantum\b[^.\n]{0,30}?\b(saves?|reduc\w*|cuts?)\b[^.\n]{0,30}?\btokens?\b",
+           r"hybrid[\s-]*(pilot[\s-]*wave|quantum)[^.\n]{0,30}?(transformer|attention|llm|language model)|"
+           r"\bhybrid attention\b[^.\n]{0,60}?quantum|quantum[^.\n]{0,60}?\bhybrid attention\b",
+           r"\bncqm\b|non[\s-]*causal[^.\n]{0,30}?quantum memory"),
+          testable="Pre-registered: one model and dataset with the quantum-derived gate, the same gate computed "
+                   "classically, and a shuffled gate; held-out tasks, tokens to a fixed accuracy, several seeds, "
+                   "the run as the unit."),
+    Claim("QEC_LLM_SAFETY", "Encoding each output token in a 3-qubit GHZ state (quantum error correction) detects "
+          "adversarial prompts and makes LLM outputs safe", "RULED_OUT",
+          "A 3-qubit GHZ or repetition code flags bit flips that hit the qubits after encoding; it cannot tell which "
+          "token was encoded. An adversarial prompt acts before encoding: the model picks a different token, the "
+          "encoder writes that token's valid codeword, and every valid codeword has the all-zero syndrome (computed "
+          "below). Recognising a harmful output needs a reference for the right one -- a classifier or a policy, "
+          "which is the safety problem itself. For the integrity of stored or sent tokens, a classical checksum or "
+          "signature does the same job without qubits.",
+          (), (r"(quantum|entanglement[\s-]*assisted)\s+error[\s-]*correct\w*[^.\n]{0,40}?\b(llms?|language[\s-]*"
+               r"models?)\b|\bqec\b[^.\n]{0,40}?\b(llms?|language[\s-]*models?)\b",
+               r"\b(llms?|language[\s-]*models?)\b[^.\n]{0,40}?(quantum error[\s-]*correct\w*|\bqec\b)",
+               r"encod\w*[^.\n]{0,20}?\btokens?\b[^.\n]{0,30}?(\bghz\b|qubits?\b)",
+               r"\btokens?\b[^.\n]{0,30}?(\bghz\b|\d[\s-]*qubits?\b|repetition code)",
+               r"(\bqec\b|quantum error[\s-]*correct\w*|\bghz\b)[^.\n]{0,60}?adversarial|adversarial[^.\n]{0,60}?"
+               r"(\bqec\b|quantum error|\bghz\b)"),
+          checks=(("repetition_code", (3,)),)),
 
     # ── propulsion and metric-engineering claims ─────────────────────────────
     Claim("POYNTING_PROPULSION", "A net Poynting-flux asymmetry from a resonant toroid gives thrust or lift without "
@@ -279,29 +352,68 @@ REGISTER: Tuple[Claim, ...] = (
           "5 replay seeds, 79 lessons): +0.067 bits/byte, positive on 20/20 items -- but about 86 % of the "
           "variance is the training run (seed means 0.030-0.101), and the trained core (5.56 bits/byte) is "
           "still worse than a unigram model of the same replies (4.68) on every item. Learning is "
-          "measurable and small; the core is far from its speaking gate.",
+          "measurable and small; the core is far from its speaking gate. Both pilots were scored before v4.5.2. "
+          "If they were scored with osiris_cli.prepost (which runs without gradients; the pilot runner is not in "
+          "this repository), they skipped a layer training used in every block (NCLM_PC_CORRECTOR) and describe a "
+          "different network from the one trained. They have not been re-scored.",
           (("doi", "10.5281/zenodo.23075229", "NCLM-GATE-PILOT-0"),
            ("file", "experiments/nclm_gate_pilot1/analysis/REPORT.md", "NCLM-GATE-PILOT-1 report")),
           (r"\bnclm\b", r"(core|osiris)[^.\n]{0,30}\blearn\w*", r"living (language )?model"),
           testable="A confirmatory run that replicates the training run (about 4 runs for a 0.05 "
                    "bits/byte minimum effect), not only held-out items."),
-    Claim("RQC_XEB_PIPELINE", "The OSIRIS IBM execution pipeline (osiris_ibm_execution, the RQC/RCS stages) measured "
-          "cross-entropy benchmark (XEB) scores on IBM hardware", "NOT_MEASURED",
-          "No circuit was ever submitted: _submit_job built a job id from a hash of its label and set "
-          "result_xeb = 0.90 - noise + random.uniform(-0.03, 0.03), marking the job 'completed'; "
-          "osiris_tournament_evo labelled those numbers as hardware results. Quarantined 2026-10-08: jobs are now "
-          "recorded as not executed with no XEB. Real XEB measurement lives in the rqc package.",
-          (("file", "osiris-cli/osiris_ibm_execution.py", "the quarantined path"),
-           ("file", "osiris-cli/docs/rqc/SCOPE.md", "the 2026-10-08 finding")),
-          (r"rqc.{0,40}\bxeb\b|\bxeb\b.{0,40}(ibm|hardware|stage)", r"execute_all_stages|osiris_ibm_execution")),
-    Claim("TESSERACT_DECODER", "The Tesseract decoder organism (osiris.decoders) decodes quantum error-correction "
-          "syndromes", "REFUTED",
-          "It never uses a code's parity checks, an error model or a logical observable: its 'correction' is a "
-          "bit vector as long as the syndrome, and the search stops when syndrome XOR correction is zero, so it "
-          "returns the syndrome itself. That predicts nothing about whether a logical qubit flipped, so it cannot "
-          "be compared with a matching or tensor-network decoder.",
-          (("file", "osiris-cli/osiris/decoders/tesseract.py", "the module"),),
-          (r"tesseract (decoder|organism)", r"osiris\.decoders")),
+    Claim("NCLM_MECHANICS", "The NCLM core is a non-causal, physics-based model: pilot-wave non-local attention, "
+          "torsion-locked attention and phase-conjugate positional encoding", "NOT_MEASURED",
+          "Ordinary transformer parts under physics names (osiris/nclm). The core is a causal decoder: it masks "
+          "future positions like any autoregressive model (one exception: the corrector's on/off switch, Γ, is "
+          "pooled over the whole window and batch, but it has never been seen near its threshold). 'Pilot-wave' attention multiplies the logits by a fixed "
+          "1 + exp(-|i-j|/T) -- a position-dependent temperature between about 1.37 and 2 with no parameter, which "
+          "shifts with context length (distance 5: 1.54 at T = 8, 1.96 at T = 128). 'Torsion-locked' attention is a "
+          "learnable per-head scale (initially sin 51.843° = 0.786) plus a bonus on each position's own score "
+          "(initially cos 51.843° × 0.946 = 0.584) read from a detached copy, so no gradient reaches q and k "
+          "through it; nothing is diagonalised. The positional table is a sinusoid with base φ instead of 10000 "
+          "(computed below), sine and cosine at different frequencies; its 'phase-conjugate' minus sign changes "
+          "nothing because cos is even. No physical quantity is measured.",
+          (("file", "osiris-cli/osiris/nclm/sovereign_mechanics.py", "TorsionLockedAttention, _pilot_wave_factor"),
+           ("file", "osiris-cli/osiris/nclm/positions.py", "phase_conjugate_positional_encoding"),
+           ("file", "osiris-cli/osiris/nclm/transformer.py", "_build_causal_mask, SovereignConfig")),
+          (r"pilot[\s-]*wave[^.\n]{0,30}?(attention|transformer|modulation)|"
+           r"(attention|transformer)[^.\n]{0,30}?pilot[\s-]*wave",
+           r"torsion[\s-]*lock\w*[\s-]+attention|\bt-lock\b[^.\n]{0,40}?(attention|stabili\w*|torsion|θ|theta)|"
+           r"(attention|torsion)[^.\n]{0,40}?\bt-lock\b", r"phase[\s-]*conjugat\w*[\s-]+positional",
+           r"non[\s-]*local[\s,]+non[\s-]*causal|non[\s-]*causal[\s-]+living|\bncllm\b|\bnc-lm\b",
+           r"information[\s-]*manifold collapse|non[\s-]*local correlation factor"),
+          testable="Whether these parts help as architecture is CRSM_ARCH (NCLM-ARCH-1, pre-registered); the "
+                   "physics names would need a measured physical quantity, which none of them has.",
+          checks=(("phi_positional", (128, 51.843, 0.946)),)),
+    Claim("NCLM_PC_CORRECTOR", "The core's phase-conjugate error correction detects decoherence (Γ > 0.3) and "
+          "restores hidden states to F_purified = 1 - 10⁻⁵", "NOT_MEASURED",
+          "Γ is v/(v + 1), v the residual stream's mean per-position variance over the whole batch -- a scale "
+          "statistic, not decoherence -- and it exceeds 0.3 in all four blocks from initialisation, so the layer is "
+          "always on. The 'correction' is a gated linear map, gate ⊙ W(x with odd dimensions negated) + (1 - gate) "
+          "⊙ x; the sign flip folds into the learned W. F_purified is a constant that nothing computes or reads, "
+          "and the 'zero-point integrity' vector is never used (it gets no gradient). Until v4.5.2 the layer ran "
+          "only with gradients on: training used it in every block, scoring and generation (no_grad) skipped it, "
+          "so 131,584 trained parameters (18 % of the core) never took part in a score. v4.5.2 runs it in both; "
+          "scores from earlier versions describe a different network from the one trained.",
+          (("file", "osiris-cli/osiris/nclm/sovereign_mechanics.py", "PhaseConjugateCorrector"),
+           ("file", "osiris-cli/tests/test_sovereign_transformer.py", "v4.5.2 regression: same logits with and "
+            "without gradients"), ("file", "osiris-cli/RELEASE_NOTES_v4.5.2.md", "the train/eval fix")),
+          (r"phase[\s-]*conjugat\w*[\s-]+(error[\s-]*correct\w*|corrector)", r"(?<![a-z])f[\s_]*\{?purified|purified fidelity",
+           r"zero[\s-]*point integrity"),
+          testable="Whether the layer helps the model is part of CRSM_ARCH (NCLM-ARCH-1, pre-registered, with "
+                   "the rest of the CRSM block); alone it needs a leave-one-out follow-up."),
+    Claim("CRSM_ARCH", "The CRSM components (torsion-locked attention, pilot-wave factor, phase-conjugate corrector, "
+          "1/φ FFN scale, φ position table) make the core a better byte model than a standard transformer of "
+          "the same size", "UNTESTED",
+          "Pre-registered 2026-10-08 as NCLM-ARCH-1, not run: the live core against pre-norm blocks with base-10000 "
+          "positions and the FFN widened to 384 (725,760 vs 726,304 parameters), 8 paired seeds, best held-out "
+          "documents bits/byte, minimum effect 0.05, PASS / FAIL / NO-DIFFERENCE fixed in advance. It compares the "
+          "bundle, not single components. One-seed checks made before registration (in the pre-registration) "
+          "hint that the corrector may not help; they are not a result.",
+          (("file", "osiris-cli/experiments/nclm_arch1/PRE_REGISTRATION.md", "NCLM-ARCH-1 pre-registration"),),
+          (r"\bcrsm[\s-]+(architecture|components?|blocks?|mechanics)\b", r"\bnclm[\s-]*arch[\s-]*1\b",
+           r"sovereign[\s-]*(block|mechanics)\b[^.\n]{0,40}?(better|improv\w*|helps?|beats?|outperform\w*)"),
+          testable="Run NCLM-ARCH-1 as registered: experiments/nclm_arch1/run.py."),
     Claim("RQC_ADVANTAGE", "Recursive Quantum Circuits with adaptive feedback outperform random circuit sampling "
           "(p < 0.05); research-grade and ready for peer review", "UNTESTED",
           "RQC_RESEARCH_METHODOLOGY.md is a proposal: its p-values (0.024, 0.018, 0.009) are listed under "
@@ -376,6 +488,32 @@ def _check_lines(name: str, args: Sequence) -> List[str]:
     if name == "planck_compare":
         m = pc.planck_mass()
         return m.lines()[:2] + pc.same_number(args[0], math.sqrt(pc.HBAR * pc.C / pc.G), "Planck mass (kg)").lines()
+    if name == "one_minus_phi_power":
+        n, published = args
+        bound = 1 - ((1 + math.sqrt(5)) / 2) ** -n
+        above = [f for f in published if f > bound]
+        return [f"1 - phi^-{n} = {bound:.6f}",
+                f"{len(above)} of the {len(published)} cited Bell-state or Bell-derived gate fidelities exceed it: "
+                + ", ".join(f"{f:g}" for f in above)]
+    if name == "multiple_coverage":
+        base, tol, lo, hi = args
+        covered, end, n = 0.0, lo, 1
+        while n * base * (1 - tol) < hi:
+            a, b = max(end, n * base * (1 - tol)), min(hi, n * base * (1 + tol))
+            if b > a:
+                covered, end = covered + b - a, b
+            n += 1
+        n0 = math.ceil((1 - tol) / (2 * tol))
+        return [f"T2 within ±{tol:.0%} of some n × {base:g} µs: {covered / (hi - lo):.0%} of {lo:g}-{hi:g} µs",
+                f"the bands overlap from n = {n0}: every T2 above {n0 * base * (1 - tol):.1f} µs passes"]
+    if name == "phi_positional":
+        dim, theta_deg, chi = args
+        span = ((1 + math.sqrt(5)) / 2) ** (2 * (dim - 2) / dim)
+        s, c = math.sin(math.radians(theta_deg)), math.cos(math.radians(theta_deg)) * chi
+        return [f"base-phi positional table, dim {dim}: sine {s / span:.3f}-{s:.3f}, cosine {c / span:.3f}-{c:.3f} "
+                "rad/position",
+                f"longest period {2 * math.pi * span / c:.1f} positions; frequency span {span:.2f}x "
+                f"(base 10000: {10000 ** ((dim - 2) / dim):,.0f}x)"]
     return getattr(pc, name)(*args).lines()
 
 
