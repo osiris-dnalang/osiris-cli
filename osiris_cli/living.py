@@ -539,6 +539,45 @@ def score_rank(score: list) -> tuple:
     return scorer_of(score), score[2]
 
 
+def _lock(f) -> None:
+    try:
+        import fcntl
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+    except (ImportError, OSError):     # no flock (e.g. Windows): single-writer behaviour as before
+        pass
+
+
+def _unlock(f) -> None:
+    try:
+        import fcntl
+        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+    except (ImportError, OSError):
+        pass
+
+
+def _last_hash(f, block: int = 65536) -> Optional[str]:
+    """The "hash" of the last non-empty line of an open binary file, read backwards in blocks (a line can be a
+    100k-character paste). None for an empty file; None also if the last line is not JSON (the caller falls back)."""
+    f.seek(0, os.SEEK_END)
+    end = f.tell()
+    buf, pos = b"", end
+    while pos > 0:
+        step = min(block, pos)
+        pos -= step
+        f.seek(pos)
+        buf = f.read(step) + buf
+        lines = buf.rstrip(b"\n").split(b"\n")
+        if len(lines) > 1 or pos == 0:
+            last = lines[-1].strip()
+            if not last:
+                return None
+            try:
+                return json.loads(last.decode("utf-8")).get("hash")
+            except ValueError:
+                return None
+    return None
+
+
 class TypeAhead:
     """While a reply streams, keys typed are captured instead of echoed into the
     reply (2026-09-29: questions typed during a slow reply appeared after
@@ -705,11 +744,20 @@ class Osiris:
             os.replace(tmp, self.stats_path)
 
     def _record(self, entry: dict) -> str:
-        entry["prev"] = self.stats["last_head"]
-        body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
-        entry["hash"] = hashlib.sha256(body.encode()).hexdigest()
-        with open(self.log_path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        """Append one exchange, chained to the ledger's actual last entry. The previous hash is read from the file
+        under an exclusive lock, not from this process's stats: on 2026-10-07 two consoles appended from their own
+        in-memory heads and the chain forked seven times (entries intact, links crossed)."""
+        with open(self.log_path, "ab+") as f:
+            _lock(f)
+            try:
+                entry["prev"] = _last_hash(f) or self.stats.get("last_head") or "0" * 64
+                body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
+                entry["hash"] = hashlib.sha256(body.encode()).hexdigest()
+                f.seek(0, os.SEEK_END)
+                f.write((json.dumps(entry, ensure_ascii=False) + "\n").encode("utf-8"))
+                f.flush()
+            finally:
+                _unlock(f)
         self.stats["last_head"] = entry["hash"]
         return entry["hash"]
 
