@@ -17,12 +17,13 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Iterator, List, Sequence, Tuple, Union
 
 import numpy as np
+
+from osiris_cli.journal import OperationalMerkleLedger
 
 
 @dataclass
@@ -139,76 +140,6 @@ class ExperimentMappingReceipt:
             "hypothesis_verdict": self.hypothesis_verdict,
             "receipt_digest": self.receipt_digest,
         }
-
-
-class OperationalMerkleLedger:
-    """
-    Append-only Merkle hash-chained ledger for operational quantum and agent executions.
-    Preserves cryptographic provenance: hash_i = SHA256(prev_hash || canonical(entry)).
-    """
-    GENESIS = "0" * 64
-
-    def __init__(self, path: Union[str, Path]):
-        self.path = Path(path)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        if not self.path.exists():
-            self.path.touch()
-
-    @staticmethod
-    def _canon(d: Dict[str, Any]) -> str:
-        return json.dumps(d, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-
-    def _last_hash(self) -> str:
-        last = self.GENESIS
-        if self.path.stat().st_size == 0:
-            return last
-        with self.path.open("r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line:
-                    try:
-                        entry = json.loads(line)
-                        last = entry.get("hash", last)
-                    except json.JSONDecodeError:
-                        continue
-        return last
-
-    def append(self, kind: str, payload: Dict[str, Any]) -> Dict[str, Any]:
-        prev = self._last_hash()
-        ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        entry = {
-            "prev": prev,
-            "ts": ts,
-            "kind": kind,
-            **payload
-        }
-        body_to_hash = {k: v for k, v in entry.items() if k != "prev"}
-        raw_to_hash = (prev + self._canon(body_to_hash)).encode("utf-8")
-        entry["hash"] = hashlib.sha256(raw_to_hash).hexdigest()
-
-        with self.path.open("a", encoding="utf-8") as f:
-            f.write(self._canon(entry) + "\n")
-        return entry
-
-    def verify(self) -> Optional[str]:
-        """Verify entire cryptographic chain from genesis."""
-        prev = self.GENESIS
-        if not self.path.exists() or self.path.stat().st_size == 0:
-            return None
-        with self.path.open("r", encoding="utf-8") as f:
-            for i, line in enumerate(f):
-                line = line.strip()
-                if not line:
-                    continue
-                e = json.loads(line)
-                if e.get("prev") != prev:
-                    return f"Entry {i}: prev-hash mismatch (expected {prev}, got {e.get('prev')})"
-                body = {k: v for k, v in e.items() if k not in ("prev", "hash")}
-                want = hashlib.sha256((prev + self._canon(body)).encode("utf-8")).hexdigest()
-                if e.get("hash") != want:
-                    return f"Entry {i}: hash mismatch (expected {want}, got {e.get('hash')})"
-                prev = e["hash"]
-        return None
 
 
 class IBMPubMapper:
