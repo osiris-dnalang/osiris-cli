@@ -1,0 +1,95 @@
+{
+  "timestamp": 1792423941.036223,
+  "corpus_file": "C:\\Users\\Ron\\Desktop\\3d-model-training-and-customizing-for-osiris.zip",
+  "corpus_sha256": "ad26b17c0d2d1bad9ba944b21a1d9b8644f445cd49424dabb48ee1a9e1971d60",
+  "total_3mf_archives": 892,
+  "sampled_models_trained": 122,
+  "categories": {
+    "ARTICULATED_KINEMATICS": 12,
+    "FOLDABLE_ENCLOSURES": 0,
+    "FLEET_FIXTURES": 17,
+    "MULTI_MATERIAL_INLAYS": 3,
+    "MECHANICAL_ASSEMBLIES": 3,
+    "GENERAL_PROTOTYPES": 85
+  },
+  "mean_layer_height_mm": 0.193,
+  "mean_wall_loops": 2.1,
+  "beam_interlocking_samples": 1,
+  "active_invariants": {
+    "articulated_trout": {
+      "total_shells": 10,
+      "axial_joints_count": 7,
+      "nominal_axial_clearance_mm": 0.7931,
+      "dorsal_scale_overlap_clearance_mm": 0.4421,
+      "registration_pin_lateral_clearance_mm": 0.1,
+      "registration_pin_axial_clearance_mm": 1.1,
+      "medial_plane_z_bed_mm": 0.0,
+      "scale_crown_relief_baseline_mm": 0.2835,
+      "scale_crown_relief_target_mm": 0.5282,
+      "eye_corneal_dome_relief_mm": 0.32,
+      "eye_iris_sulcus_relief_mm": -0.08
+    },
+    "foldable_case": {
+      "hinge_spine_clearance_min_mm": 0.4,
+      "hinge_spine_clearance_max_mm": 0.8,
+      "snap_fit_lip_overhang_min_mm": 0.5,
+      "snap_fit_lip_overhang_max_mm": 0.8,
+      "button_port_radial_clearance_mm": 0.3,
+      "rigid_wall_thickness_min_mm": 1.2,
+      "rigid_wall_thickness_max_mm": 1.6,
+      "tpu_bumper_thickness_min_mm": 1.8,
+      "tpu_bumper_thickness_max_mm": 2.0,
+      "bottom_inlay_depth_max_mm": 0.64
+    },
+    "beam_interlocking": {
+      "enabled": true,
+      "beam_width_mm": 0.8,
+      "orientation_deg": 22.5,
+      "beam_layers": 2,
+      "interlocking_depth": 2,
+      "boundary_avoidance_mm": 2.0
+    }
+  },
+  "pixel_fold_customization_rules": {
+    "chassis_dimensions_folded_mm": [
+      155.2,
+      76.3,
+      10.8
+    ],
+    "chassis_dimensions_unfolded_mm": [
+      155.2,
+      150.4,
+      5.2
+    ],
+    "case_bounding_box_mm": [
+      76.6,
+      158.2,
+      7.55
+    ],
+    "hinge_spine_clearance_min_mm": 0.4,
+    "snap_fit_lip_overhang_mm": [
+      0.5,
+      0.8
+    ],
+    "woodgrain_inlay_depth_mm": 0.64,
+    "woodgrain_inlay_layers": 4,
+    "bottom_surface_pattern": "Aligned Rectilinear",
+    "petg_tpu_flush_matrix_mm3": {
+      "petg_to_tpu": 420,
+      "tpu_to_petg": 450
+    }
+  },
+  "trout_refinement_rules": {
+    "pipeline": "AURA_AIDEN_QIF_5_PASS",
+    "transformation_equation": "x' = s_global * x + sum_k w_k(x)*A_k*(x - p_k) + m_inv(x)*h_micro(x)*n(x)",
+    "protection_mask": "C2 quintic smoothstep: m_inv(x) = 6u^5 - 15u^4 + 10u^3",
+    "protected_interfaces": [
+      "medial_plane_z0",
+      "registration_pin_socket",
+      "axial_hinges_J1_to_J7"
+    ],
+    "scale_relief_target_mm": 0.5282,
+    "corneal_dome_relief_mm": 0.32,
+    "iris_sulcus_relief_mm": -0.08
+  }
+}
