@@ -3,6 +3,7 @@ DNA-Lang Intermediate Representation — AST to executable quantum circuit IR.
 """
 
 import hashlib
+import math
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
 from enum import Enum
@@ -39,16 +40,46 @@ class IROperation:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_qasm(self) -> str:
-        qubit_str = ", ".join(f"q[{q}]" for q in self.qubits)
+        """OpenQASM statement(s) for this operation, valid in versions 2 and 3.
+
+        Qubits and bits index the circuit's flat registers ``q`` and ``c``.
+        """
         if self.op_type == IROpType.MEASURE:
-            if self.classical_bits:
-                cb_str = ", ".join(f"c[{cb}]" for cb in self.classical_bits)
-                return f"measure {qubit_str} -> {cb_str};"
-            return f"measure {qubit_str};"
+            # OpenQASM measures one qubit per statement. A qubit with no bit
+            # given lands in the bit of the same index, as in the Qiskit adapter.
+            bits = self.classical_bits or []
+            return "\n".join(
+                f"measure q[{q}] -> c[{bits[i] if i < len(bits) else q}];"
+                for i, q in enumerate(self.qubits)
+            )
+        if self.op_type == IROpType.RESET:
+            return "\n".join(f"reset q[{q}];" for q in self.qubits)
+        qubit_str = ", ".join(f"q[{q}]" for q in self.qubits)
+        if self.op_type == IROpType.BARRIER and not self.qubits:
+            qubit_str = "q"
         if self.params:
-            param_str = ", ".join(f"{p:.6f}" for p in self.params)
+            param_str = ", ".join(_qasm_real(p) for p in self.params)
             return f"{self.op_type.value}({param_str}) {qubit_str};"
         return f"{self.op_type.value} {qubit_str};"
+
+
+def _qasm_real(value: float) -> str:
+    """Shortest literal that reads back as exactly ``value``.
+
+    OpenQASM 2 needs a decimal point before any exponent, so 1e-05 becomes 1.0e-05.
+    """
+    value = float(value)
+    if not math.isfinite(value):
+        raise ValueError(f"Gate parameter must be finite, got {value}")
+    text = repr(value)
+    return text.replace("e", ".0e", 1) if "e" in text and "." not in text else text
+
+
+# Gates OpenQASM 2's qelib1.inc lacks, defined in the program when it uses them.
+_QASM2_GATE_DEFS = {
+    IROpType.SWAP: "gate swap a, b { cx a, b; cx b, a; cx a, b; }",
+    IROpType.CSWAP: "gate cswap a, b, c { cx c, b; ccx a, b, c; cx c, b; }",
+}
 
 
 @dataclass
@@ -100,17 +131,30 @@ class QuantumCircuitIR:
         return max_time
 
     def to_qasm(self, version: str = "2.0") -> str:
+        """OpenQASM 2 or 3 source for this circuit.
+
+        Operations index qubits and bits across all registers, so the program
+        declares one flat register of each: ``q`` and ``c``.
+        """
+        major = version.split(".")[0]
+        if major not in ("2", "3"):
+            raise ValueError(f"OpenQASM version must be 2.x or 3.x, got {version!r}")
+        v3 = major == "3"
         lines = [
             f"// DNA-Lang Quantum Circuit: {self.name}",
             f"// Lineage: {self.lineage_hash}",
             f"OPENQASM {version};",
-            'include "qelib1.inc";',
-            "",
+            'include "stdgates.inc";' if v3 else 'include "qelib1.inc";',
         ]
-        for qr in self.quantum_registers:
-            lines.append(f"qreg {qr.name}[{qr.size}];")
-        for cr in self.classical_registers:
-            lines.append(f"creg {cr.name}[{cr.size}];")
+        if not v3:
+            used = {op.op_type for op in self.operations}
+            lines += [d for op_type, d in _QASM2_GATE_DEFS.items() if op_type in used]
+        lines.append("")
+        nq = sum(r.size for r in self.quantum_registers)
+        nc = sum(r.size for r in self.classical_registers)
+        lines.append(f"qubit[{nq}] q;" if v3 else f"qreg q[{nq}];")
+        if nc:
+            lines.append(f"bit[{nc}] c;" if v3 else f"creg c[{nc}];")
         lines.append("")
         for op in self.operations:
             lines.append(op.to_qasm())
