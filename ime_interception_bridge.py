@@ -39,7 +39,7 @@ def detect_substrate() -> SubstrateProfile:
     """Dynamically probe hardware context without hardcoded paths."""
     machine = platform.machine().lower()
     uname_release = platform.uname().release.lower()
-    env_home = Path(os.environ.get("HOME", os.path.expanduser("~")))
+    repo_root = Path(__file__).resolve().parent
 
     # Probe osiris_hardware_mesh if present in checkout
     try:
@@ -50,7 +50,7 @@ def detect_substrate() -> SubstrateProfile:
                 node_id=hw_profile.node_type.value,
                 arch=hw_profile.machine_arch,
                 timeout_s=float(hw_profile.execution_timeout_s),
-                workspace_root=env_home / "osiris-cli",
+                workspace_root=repo_root,
             )
         elif hasattr(osiris_hardware_mesh, "get_active_substrate"):
             mesh_info = osiris_hardware_mesh.get_active_substrate()
@@ -58,7 +58,7 @@ def detect_substrate() -> SubstrateProfile:
                 node_id=mesh_info.get("node_id", "NODE_ALPHA"),
                 arch=machine,
                 timeout_s=float(mesh_info.get("timeout_s", 300.0)),
-                workspace_root=Path(mesh_info.get("workspace_root", env_home)),
+                workspace_root=Path(mesh_info.get("workspace_root", repo_root)),
             )
     except Exception:
         pass
@@ -69,13 +69,13 @@ def detect_substrate() -> SubstrateProfile:
             node_id="NODE_ALPHA_EDGE",
             arch=machine,
             timeout_s=300.0,
-            workspace_root=env_home / "osiris-cli",
+            workspace_root=repo_root,
         )
     return SubstrateProfile(
         node_id="NODE_BETA_WORKSTATION",
         arch=machine,
         timeout_s=1800.0,
-        workspace_root=env_home / "osiris-cli",
+        workspace_root=repo_root,
     )
 
 
