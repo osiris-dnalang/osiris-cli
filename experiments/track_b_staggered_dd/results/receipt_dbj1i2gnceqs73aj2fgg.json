@@ -1,0 +1,19 @@
+{
+  "job_id": "dbj1i2gnceqs73aj2fgg",
+  "backend": "ibm_kingston",
+  "payload_hash": "0d7bc20586c6bcf8be6c66e2e03f40be87ad57d1c934a6112476e3d3ffbb2587",
+  "permit_nonce": "440c9e0ad09b54f715a8d79b7d1a38ff",
+  "timestamp": 1793464586.8026402,
+  "n_pubs": 9,
+  "shots_per_pub": 1024,
+  "physical_qubits": [
+    14,
+    15,
+    19,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

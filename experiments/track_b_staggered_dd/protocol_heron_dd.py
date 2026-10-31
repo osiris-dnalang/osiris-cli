@@ -127,8 +127,9 @@ def run_aer_preflight_gate(circuits: List[QuantumCircuit], shots: int = 1024) ->
 def main():
     parser = argparse.ArgumentParser(description="Track B Bipartite DD Protocol")
     parser.add_argument("--qpu", action="store_true", help="Dispatch to live IBM Quantum Heron QPU")
-    parser.add_argument("--backend", default="ibm_fez", help="IBM Quantum backend name")
+    parser.add_argument("--backend", default="ibm_kingston", help="IBM Quantum backend name")
     parser.add_argument("--shots", type=int, default=1024, help="Shots per PUB")
+    parser.add_argument("--wait", action="store_true", default=True, help="Wait for job completion")
     args = parser.parse_args()
 
     print("=" * 70)
@@ -199,9 +200,9 @@ def main():
     backend = service.backend(args.backend)
     print(f"Target QPU Status: {backend.status().status_msg} | Pending Jobs: {backend.status().pending_jobs}")
 
-    # Transpile circuits for backend
+    # Transpile circuits for backend with explicit physical qubit mapping
     from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
-    pm = generate_preset_pass_manager(optimization_level=1, backend=backend)
+    pm = generate_preset_pass_manager(optimization_level=1, backend=backend, initial_layout=HERON_KINGSTON_QUBITS)
     transpiled = pm.run(circuits)
 
     print(f"Submitting {len(transpiled)} PUBs to {args.backend}...")
@@ -214,14 +215,66 @@ def main():
         "job_id": job_id,
         "backend": args.backend,
         "payload_hash": payload_hash,
-        "permit_id": permit.permit_id,
+        "permit_nonce": permit.nonce,
         "timestamp": time.time(),
         "n_pubs": len(circuits),
         "shots_per_pub": args.shots,
+        "physical_qubits": HERON_KINGSTON_QUBITS,
     }
     with open(out_dir / f"receipt_{job_id}.json", "w") as f:
         json.dump(receipt, f, indent=2)
     print(f"Operational receipt committed to results/receipt_{job_id}.json")
+
+    if args.wait:
+        print("\n[AWAITING QPU EXECUTION] Polling job status...")
+        poll_interval = 5
+        max_wait = 300
+        start_t = time.time()
+        status = job.status()
+        while status not in ("DONE", "CANCELLED", "ERROR"):
+            if time.time() - start_t > max_wait:
+                print(f"[TIMEOUT] Job still queued/running after {max_wait}s. Leaving async.")
+                break
+            print(f"Status: {status} (elapsed: {int(time.time() - start_t)}s)...")
+            time.sleep(poll_interval)
+            status = job.status()
+
+        if status == "DONE":
+            print("[QPU SUCCESS] Job finished! Fetching results...")
+            result = job.result()
+            q_to_idx = {q: idx for idx, q in enumerate(HERON_KINGSTON_QUBITS)}
+            analysis = {}
+            for idx, qc in enumerate(circuits):
+                pub_res = result[idx]
+                counts = {}
+                data = pub_res.data
+                for key in dir(data):
+                    if not key.startswith("_"):
+                        reg = getattr(data, key)
+                        if hasattr(reg, "get_counts"):
+                            counts = reg.get_counts()
+                            break
+                # Compute correlations across the 7 physical edges
+                edge_corrs = {}
+                for u, v in HERON_KINGSTON_EDGES:
+                    u_i, v_i = q_to_idx[u], q_to_idx[v]
+                    p_even = sum(cnt for b, cnt in counts.items() if (int(b[-(u_i+1)]) ^ int(b[-(v_i+1)])) == 0)
+                    p_odd = sum(counts.values()) - p_even
+                    corr = (p_even - p_odd) / max(1, sum(counts.values()))
+                    edge_corrs[f"({u},{v})"] = round(corr, 4)
+                analysis[qc.name] = {
+                    "counts": counts,
+                    "edge_correlations": edge_corrs,
+                    "mean_abs_corr": round(float(np.mean([abs(c) for c in edge_corrs.values()])), 4),
+                }
+
+            with open(out_dir / f"results_{job_id}.json", "w") as f:
+                json.dump(analysis, f, indent=2)
+            print(f"[RESULTS SAVED] Analysis committed to results/results_{job_id}.json")
+            print("\nSummary of Mean Edge Correlations across conditions:")
+            for name, d in analysis.items():
+                print(f"  {name:20s}: Mean |Corr| = {d['mean_abs_corr']}")
+
 
 
 if __name__ == "__main__":

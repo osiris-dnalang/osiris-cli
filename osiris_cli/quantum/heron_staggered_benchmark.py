@@ -35,7 +35,7 @@ from osiris_cli.quantum.bidirectional_dd import (
 # Canonical 8-qubit heavy-hex spectator cluster from IBM Heron r2 (e.g. ibm_kingston / ibm_fez)
 HERON_KINGSTON_QUBITS: List[int] = [14, 15, 19, 31, 32, 33, 34, 35]
 HERON_KINGSTON_EDGES: List[Tuple[int, int]] = [
-    (14, 15), (15, 19), (19, 33), (31, 32), (32, 33), (33, 34), (34, 35)
+    (14, 15), (15, 19), (19, 35), (35, 34), (34, 33), (33, 32), (32, 31)
 ]
 
 
