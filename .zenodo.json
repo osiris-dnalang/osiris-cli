@@ -1,9 +1,9 @@
 {
-  "title": "OSIRIS v4.6.0: a governed, local-first console for testing whether a small language model learns from conversation",
+  "title": "OSIRIS v4.7.0: The Sovereign Dual-Substrate Architecture, Epistemic Self-Correction, and Quantum Hardware Control",
   "upload_type": "software",
-  "version": "4.6.0",
-  "publication_date": "2026-10-26",
-  "description": "<p><strong>v4.6.0</strong> integrates the unified model gateway (Gemma 2B edge streaming over Ollama and Gemini-2.5-flash cloud bursting via Vertex Express), expands the mentor token ceiling to 2,048 tokens to eliminate reply truncation penalties, implements O(1) incremental tail verification (verify_chain_tail) to eliminate large-ledger I/O bottlenecks, incorporates the 1,000-interaction advanced technical curriculum (curriculum_1000.json), and anchors Block 1 execution telemetry into the Merkle exchange ledger. See RELEASE_NOTES_v4.6.0.md.</p><p><strong>v4.5.4</strong> enforces the sovereign prompt interface <code>osiris::}{&gt; </code>, introduces dual-substrate hardware execution with dynamic architecture detection (Node Alpha: Fold7/Termux with 300s temporal lock vs Node Beta: PC/WSL with 1800s horizon), eliminates hardcoded root paths across all tools and scripts, lands the RQC S2 12-job multi-PUB batching harness with S2 Amendment 5 cryptographic bundle verification (10.5281/zenodo.23256344), integrates the Willow QVM sampler, adds the <code>/welcome</code> guided tour, and binds telemetry to the newly minted Phase-Conjugate Recalibration Telemetry Ledger (10.5281/zenodo.23213288). See RELEASE_NOTES_v4.5.4.md.</p><p><strong>v4.5.3</strong> is a repair release. The exchange ledger's writer now chains each entry to the ledger file's last entry under a lock, so two consoles can no longer fork the hash chain; the chain check reports forks separately from damage (the author's ledger: 123 entries intact, seven forks from 2026-10-07, nothing rewritten). The Gemini gateway and its tests are restored to v4.5.2 after a merge of a superseded branch left them broken. See RELEASE_NOTES_v4.5.3.md.</p><p><strong>v4.5.2</strong> corrects how the core is scored. Until this release a layer of the core (the phase-conjugate corrector) ran during training in every block but was skipped whenever gradients were off -- in every held-out score, in early stopping and in generation -- so every held-out figure on record, including those below, describes a different network from the one trained. The layer now runs the same way in both; held-out scores carry the version of the scorer that produced them, older ones no longer count toward the speaking gate, and <code>osiris train --rescore-only</code> replaces them. The release also pre-registers NCLM-ARCH-1, which asks whether the CRSM layers help the core at all against a standard transformer of the same size, and adds claims-register verdicts for the premises of a proposed quantum-LLM roadmap. Details and upgrade steps: RELEASE_NOTES_v4.5.2.md.</p><p>OSIRIS is a local-first console in which deterministic code mediates every interaction with language models: models propose; code decides, measures and records. Its subject is a small transformer, the <em>core</em> (osiris.nclm), trained online on conversations with a locally hosted mentor model. The core may answer in its own voice only after it passes a held-out speaking gate: 30 held-out exchanges at &le; 2.0 bits/byte and below a unigram baseline. Until then the mentor answers, labelled as speaking for OSIRIS.</p><p>Evidence to date: in two pilots, training on conversation lowered the core's loss on held-out replies (mean +0.043 bits/byte on 3 items, 10.5281/zenodo.23075229; +0.067 bits/byte on 20 items, positive on every item, 10.5281/zenodo.23102693). The core nonetheless remained worse than a unigram model of the same replies (5.56 vs 4.68 bits/byte) and has not passed its gate. About 86 % of the variance in the learning signal came from the training run, so a confirmatory test must replicate training runs. The pre-registered confirmatory test (NCLM-1) has not been run. This release claims no successful learning.</p><p>v4.3.1 is a packaging and repository-hygiene release: modules and scripts the console needs are now packaged (a clean install previously reported 'bench evidence unreadable (ModuleNotFoundError)'), hard-coded home-directory paths are gone, and private conversation transcripts and third-party contact details were removed from the repository. The files of the two previous versions are restricted for that reason. The attached note describes the software, its measurement design and its limitations.</p>",
+  "version": "4.7.0",
+  "publication_date": "2026-10-31",
+  "description": "<p><strong>OSIRIS v4.7.0 Monograph & Governed Release Package</strong></p><p>This release delivers the complete sovereign architecture, operational history, and automated self-correction framework of the <strong>OSIRIS</strong> and <strong>dna::}{::lang</strong> project. Developed across severely constrained consumer silicon\u2014a handheld Google Pixel Fold (<strong>Node Alpha</strong>, running Termux with ARM64 NEON SIMD kernels and a 300s thermal horizon; retired post-campaign) and a GPU-less HP laptop powered by an Intel Core i7 CPU (<strong>Node Beta</strong>, executing local quantized mentor models and NCLM continual training within WSL2)\u2014OSIRIS proves that sovereign, verifiable scientific agency can be achieved without enterprise server clusters.</p><p><strong>Key Empirical & Architectural Contributions:</strong></p><ul><li><strong>Governed Execution (SYS-021):</strong> Enforces the foundational axiom <em>'Cognition may be distributed; authority is not.'</em> Unverified generative models propose; deterministic AST firewalls constrain; cryptographic receipts authorize (H_payload = SHA-256(code)); and immutable Merkle DAGs record.</li><li><strong>Automated Falsification of the &tau;-Phase Anomaly:</strong> Under strict budget limits on the IBM Quantum Open Plan (Job <code>dbiobimne4hc73bf2am0</code> on IBM Heron r2 <code>ibm_fez</code>), OSIRIS autonomously audited and conclusively refuted the historical December 2025 hypothesis (&tau;0 = 46 &mu;s, &theta;_lock = 51.843&deg;). Using 3-basis Pauli tomography (ZZ, XX, YY), OSIRIS proved that apparent 'entanglement revivals' were classical T1 relaxation artifacts to |00&gt; (P_Bell drops to a minimum at T1*ln(2) and rebounds as qubits decay to ground; transverse coherence C_perp measures dead zero: +0.0029 &plusmn; 0.0221; &theta;_lock p = 0.3537). The erratum is permanently anchored under Merkle Root <code>7e8f20c2e0ce...</code>.</li><li><strong>Genuine Quantum Advantage in Multi-Qubit Crosstalk Refocusing:</strong> On 156-qubit heavy-hex architecture (<code>ibm_kingston</code>, Job <code>dbb4ppk24mrc73bo8ntg</code>), OSIRIS evolved bipartite sublattice pulse-timing staggering (<code>xy4x2_stag</code> and <code>osiris_evolved_g1</code>) that crushes standard unstaggered dynamical decoupling (retaining 0.9602 and 0.9373 vs 0.8625 ground state probability) by canceling static spectator ZZ crosstalk.</li><li><strong>Continual Living Intelligence (osiris.nclm):</strong> Operates an online, byte-level transformer core governed by a permanently held-out speaking gate (&le; 2.0 bits/byte vs unigram baseline), actively distilling mentor lessons from verified writing.</li><li><strong>Systems Engineering & Pure L4&rarr;L5 Analyzer:</strong> Integrates the Capability Gap Analyzer, CUSUM process control suite, and Sprint 3 Adversarial Falsification Engine.</li></ul><p>Accompanied by the foundational research monograph: <code>docs/SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.md</code>.</p>",
   "creators": [
     {
       "name": "Davis, Devin Phillip",
@@ -13,26 +13,41 @@
   "license": "other-closed",
   "access_right": "open",
   "keywords": [
-    "language model",
-    "continual learning",
-    "local-first AI",
-    "held-out evaluation",
-    "provenance",
-    "hash chain",
-    "pre-registration",
+    "sovereign AI",
+    "governed execution",
     "dual-substrate",
     "quantum computing",
-    "random quantum circuits"
+    "dynamical decoupling",
+    "spectator crosstalk",
+    "automated falsification",
+    "epistemic quarantine",
+    "local-first AI",
+    "ARM64 NEON",
+    "IBM Quantum Heron",
+    "SYS-021",
+    "Merkle ledger",
+    "continual learning",
+    "non-causal language model"
   ],
   "related_identifiers": [
     {
-      "identifier": "https://github.com/osiris-dnalang/osiris-cli/tree/v4.5.4",
+      "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v4.7.0",
       "relation": "isSupplementTo",
       "scheme": "url"
     },
     {
-      "identifier": "10.5281/zenodo.23257201",
+      "identifier": "10.5281/zenodo.23832085",
       "relation": "isNewVersionOf",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.23300258",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.23658893",
+      "relation": "references",
       "scheme": "doi"
     },
     {
