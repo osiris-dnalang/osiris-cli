@@ -39,6 +39,11 @@ try:
 except (ImportError, ModuleNotFoundError):
     from pub_mapper import CircuitSpec, PubResult
 
+try:
+    from dnalang.qc_ir import Circuit, Op
+except (ImportError, ModuleNotFoundError):
+    Circuit, Op = None, None
+
 
 @dataclass
 class StaggeredDDSchedule:
@@ -60,6 +65,55 @@ class StaggeredDDSchedule:
     def schedule_hash(self) -> str:
         raw = json.dumps(self.to_dict(), sort_keys=True).encode("utf-8")
         return hashlib.sha256(raw).hexdigest()
+
+    def to_circuit(self, state_prep: str = "plus", measure: bool = True) -> Any:
+        """Lower the schedule directly to a flat dnalang.qc_ir.Circuit representation."""
+        if Circuit is not None and hasattr(Circuit, "from_staggered_schedule"):
+            return Circuit.from_staggered_schedule(self, state_prep=state_prep, measure=measure)
+        
+        # Fallback minimal Circuit-like object if dnalang is not in environment
+        class _Op:
+            def __init__(self, name, qubits, params=(), duration_s=None, cbit=None):
+                self.name = name
+                self.qubits = qubits
+                self.params = params
+                self.duration_s = duration_s
+                self.cbit = cbit
+        class _Circuit:
+            def __init__(self, n_qubits, n_cbits, name):
+                self.n_qubits = n_qubits
+                self.n_cbits = n_cbits
+                self.name = name
+                self.ops = []
+        circ = _Circuit(max(self.qubits) + 1 if self.qubits else 0, len(self.qubits) if measure else 0, self.schedule_id)
+        if state_prep == "plus":
+            for q in self.qubits:
+                circ.ops.append(_Op("h", (q,)))
+        if self.qubits:
+            circ.ops.append(_Op("barrier", tuple(self.qubits)))
+        pulse_names = ["x", "y", "x", "y"] if self.num_pulses == 4 else ["x", "y", "x", "y", "y", "x", "y", "x"]
+        t_total_s = self.total_delay_us * 1e-6
+        for q in self.qubits:
+            offsets = self.pulse_offsets_ns.get(q, [])
+            last_t = 0.0
+            for idx, t_ns in enumerate(offsets):
+                d_s = max(0.0, (t_ns - last_t) * 1e-9)
+                if d_s > 0:
+                    circ.ops.append(_Op("delay", (q,), duration_s=d_s))
+                circ.ops.append(_Op(pulse_names[idx % len(pulse_names)], (q,)))
+                last_t = t_ns
+            rem_s = max(0.0, t_total_s - last_t * 1e-9)
+            if rem_s > 0:
+                circ.ops.append(_Op("delay", (q,), duration_s=rem_s))
+        if self.qubits:
+            circ.ops.append(_Op("barrier", tuple(self.qubits)))
+        if measure:
+            if state_prep == "plus":
+                for q in self.qubits:
+                    circ.ops.append(_Op("h", (q,)))
+            for idx, q in enumerate(self.qubits):
+                circ.ops.append(_Op("measure", (q,), cbit=idx))
+        return circ
 
 
 class BidirectionalDDCompiler:
@@ -179,6 +233,52 @@ class BidirectionalDDCompiler:
         }
         self.history.append(record)
         return updated
+
+    def compile_circuit(
+        self,
+        qubits: Sequence[int],
+        total_delay_us: float,
+        sequence_type: str = "xy4_stag",
+        stagger_offset_ns: float = 160.0,
+        state_prep: str = "plus",
+        measure: bool = True,
+    ) -> Any:
+        """Compile a staggered dynamical decoupling sequence directly to a Circuit IR."""
+        sched = self.compile_staggered_schedule(qubits, total_delay_us, sequence_type, stagger_offset_ns)
+        return sched.to_circuit(state_prep=state_prep, measure=measure)
+
+    def compile_qiskit(
+        self,
+        qubits: Sequence[int],
+        total_delay_us: float,
+        sequence_type: str = "xy4_stag",
+        stagger_offset_ns: float = 160.0,
+        state_prep: str = "plus",
+        measure: bool = True,
+        dt: Optional[float] = None,
+    ) -> Any:
+        """Compile directly to a qiskit.QuantumCircuit object."""
+        circ = self.compile_circuit(qubits, total_delay_us, sequence_type, stagger_offset_ns, state_prep, measure)
+        if hasattr(circ, "to_qiskit"):
+            return circ.to_qiskit(dt=dt)
+        try:
+            from qiskit import QuantumCircuit
+        except (ImportError, ModuleNotFoundError) as err:
+            raise ImportError("qiskit is required for compile_qiskit()") from err
+        qc = QuantumCircuit(circ.n_qubits, circ.n_cbits, name=circ.name)
+        for o in circ.ops:
+            if o.name == "delay":
+                if dt is not None:
+                    qc.delay(int(round(o.duration_s / dt)), o.qubits[0], unit="dt")
+                else:
+                    qc.delay(o.duration_s, o.qubits[0], unit="s")
+            elif o.name == "barrier":
+                qc.barrier(*o.qubits)
+            elif o.name == "measure":
+                qc.measure(o.qubits[0], o.cbit)
+            else:
+                getattr(qc, o.name)(*o.qubits)
+        return qc
 
 
 if __name__ == "__main__":

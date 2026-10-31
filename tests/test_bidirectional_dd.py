@@ -108,5 +108,20 @@ class TestBidirectionalDDCompiler(unittest.TestCase):
         self.assertEqual(d["stagger_offset_ns"], 100.0)
 
 
+
+    def test_compile_circuit_ir(self):
+        """Test compilation of staggered schedule directly into flat Circuit IR."""
+        circ = self.compiler.compile_circuit([0, 1], 16.0, "xy4_stag", 100.0, state_prep="plus", measure=True)
+        self.assertEqual(circ.n_qubits, 2)
+        self.assertEqual(circ.n_cbits, 2)
+        op_names = [o.name for o in circ.ops]
+        self.assertIn("h", op_names)
+        self.assertIn("barrier", op_names)
+        self.assertIn("delay", op_names)
+        self.assertIn("measure", op_names)
+        # XY4 has 4 pulses per qubit = 8 pulses total across 2 qubits
+        pulse_count = sum(1 for o in circ.ops if o.name in ("x", "y"))
+        self.assertEqual(pulse_count, 8)
+
 if __name__ == "__main__":
     unittest.main()
