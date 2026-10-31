@@ -86,10 +86,11 @@ REGISTER: Tuple[Claim, ...] = (
           testable="A pre-registered τ-sweep with controlled idle delays (K₈), as written in "
                    "10.5281/zenodo.22863245 -- not yet run."),
     Claim("K8_REVIVAL", "Bell-fidelity revival near τ ≈ 47 µs (the K₈ causality discriminator)", "REFUTED",
-          "Tested on hardware in February 2026: the 'revival' is T1 amplitude damping (R² = 0.976), "
-          "not a coherent oscillation.",
-          (SELFTEST,), (r"\bK\s*_?\s*8\b|K₈", r"(fidelity|coherence) revival", r"causality discriminator"),
-          testable="The K₈ sweep as pre-registered (10.5281/zenodo.22863245), with a 5σ-powered null."),
+          "Tested on hardware in February and October 2026: the 'revival' is T1 amplitude damping (R² = 0.971–0.976), "
+          "not a coherent oscillation. Full 3-basis tomography (ZZ, XX, YY) on ibm_fez (job dbiobimne4hc73bf2am0) "
+          "proved F_Bell = 0.3438 < 0.50 and transverse coherence C_perp = +0.0029 ± 0.0221 at 46 µs.",
+          (SELFTEST, ("doi", "10.5281/zenodo.23832283", "Oct 31, 2026 59-circuit 3-basis tomography, ibm_fez (job dbiobimne4hc73bf2am0): F_Bell(46us) = 0.3438, C_perp = +0.0029, theta_lock p = 0.3537")), (r"\bK\s*_?\s*8\b|K₈", r"(fidelity|coherence) revival", r"causality discriminator"),
+          testable="Completed on ibm_fez (Job dbiobimne4hc73bf2am0, Oct 2026): 3-basis tomography proved F_Bell = 0.3438, C_perp = 0.0029, definitively refuting revival (10.5281/zenodo.23832283)."),
     Claim("THETA_LOCK", "θ_lock = 51.843° is a resonance or lock angle", "REFUTED",
           "No resonance on hardware: z = -1.0 at 51.843° (Feb 2026 self-test). The RZ 'correction' built "
           "on it moved GHZ fidelity by +0.002 ± 0.006 against sign-flipped and random-angle controls "

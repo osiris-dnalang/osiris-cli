@@ -1,6 +1,8 @@
 # OSIRIS
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23063462.svg)](https://doi.org/10.5281/zenodo.23063462)
+[![DOI: 10.5281/zenodo.23832283](https://zenodo.org/badge/DOI/10.5281/zenodo.23832283.svg)](https://doi.org/10.5281/zenodo.23832283)
+[![Monograph](https://img.shields.io/badge/Monograph-v4.7.0-blueviolet)](docs/SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.md)
+[![DOI: Core Archive](https://zenodo.org/badge/DOI/10.5281/zenodo.23063462.svg)](https://doi.org/10.5281/zenodo.23063462)
 
 # OSIRIS
 
@@ -20,7 +22,7 @@ trains on what it says. Models propose; deterministic code decides, measures and
 | **What it is** | A governed, local-first console whose subject is a small transformer trained online on conversations with a locally hosted mentor model |
 | **The rule** | Models propose; deterministic code decides, measures and records |
 | **Gate status** | Speaking gate **closed** — the core has not earned its voice (see [current measured state](#current-measured-state)) |
-| **Version** | 4.6.0 (see [RELEASE_NOTES_v4.6.0.md](RELEASE_NOTES_v4.6.0.md)) |
+| **Version** | 4.7.0 (see [SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.md](docs/SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.md) & [DOI: 10.5281/zenodo.23832283](https://doi.org/10.5281/zenodo.23832283)) |
 | **Author** | Devin Phillip Davis (Agile Defense Systems LLC) |
 | **License** | OSIRIS Source-Available Dual License v1.0 (see `LICENSE`) — source-available, not open source |
 
