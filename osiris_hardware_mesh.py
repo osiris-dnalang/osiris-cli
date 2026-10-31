@@ -27,6 +27,7 @@ import subprocess
 import sys
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
@@ -176,6 +177,32 @@ CURRENT_PROFILE: HardwareProfile = HardwareMeshDetector.detect()
 def get_current_profile() -> HardwareProfile:
     """Returns the cached singleton hardware profile."""
     return CURRENT_PROFILE
+
+
+def detect_hardware() -> HardwareProfile:
+    """Alias for HardwareMeshDetector.detect() for cross-module orchestrator compatibility."""
+    return HardwareMeshDetector.detect()
+
+
+def get_substrate_context() -> Dict[str, Any]:
+    """
+    Returns dynamic workspace & hardware context without hardcoded paths.
+    Enforces unbuffered UTF-8 output on Node Alpha (Termux/ARM64).
+    """
+    profile = get_current_profile()
+    workspace_root = Path(__file__).resolve().parent
+    if profile.node_type == NodeType.ALPHA_MOBILE:
+        os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    return {
+        "workspace_root": str(workspace_root),
+        "home_dir": str(Path.home()),
+        "node_type": profile.node_type.value,
+        "machine_arch": profile.machine_arch,
+        "cpu_cores": profile.cpu_cores,
+        "execution_timeout_s": profile.execution_timeout_s,
+        "coherence_floor": profile.coherence_floor,
+        "resonance_angle_deg": profile.resonance_angle_deg,
+    }
 
 
 def is_node_alpha() -> bool:

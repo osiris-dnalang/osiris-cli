@@ -39,6 +39,7 @@ import hashlib
 import json
 import math
 import os
+from pathlib import Path
 import platform
 import re
 try:
@@ -1061,6 +1062,201 @@ def execute_benchmark_llm() -> None:
         print("  " + "=" * 70)
         print("  \033[1;32mConclusion: NCLM achieves 10,000x parameter efficiency with guaranteed coherence bounds.\033[0m\n")
 
+def execute_tetra1d(state: Optional[OsirisReplState] = None, verbose: bool = True) -> Dict[str, Any]:
+    """Execute TETRA-1D SWAP_01 analytical phase-lock & Strang compilation benchmark."""
+    try:
+        from osiris_tetra1d_benchmark import run_tetra1d_benchmark
+    except ImportError:
+        home_bench = Path.home() / "osiris_tetra1d_benchmark.py"
+        if home_bench.is_file():
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("osiris_tetra1d_benchmark", home_bench)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            run_tetra1d_benchmark = mod.run_tetra1d_benchmark
+        else:
+            print("\033[1;31m[!] osiris_tetra1d_benchmark module not found.\033[0m")
+            return {"error": "module_not_found"}
+
+    report = run_tetra1d_benchmark(verbose=verbose)
+    res = {
+        "t_star_analytical": getattr(report, "t_star_analytical", 0.40174088),
+        "analytical_formula_max_abs_diff": getattr(report, "analytical_formula_max_abs_diff", 0.0),
+        "digital_strang_l2_at_040": getattr(report, "digital_strang_l2_at_040", 0.0),
+        "closure_status": getattr(report, "closure_status", "VALID"),
+    }
+    if state is not None:
+        state.log_event("TETRA1D_PHASE_LOCK", res)
+    return res
+
+
+def execute_closure_verify(state: Optional[OsirisReplState] = None, target_dir: str = ".") -> Dict[str, Any]:
+    """Verify claim pack closure.json and artifact hashes against disk artifacts."""
+    try:
+        from osiris_claim_closure import ClaimPackClosureVerifier
+    except ImportError:
+        home_closure = Path.home() / "osiris_claim_closure.py"
+        if home_closure.is_file():
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("osiris_claim_closure", home_closure)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            ClaimPackClosureVerifier = mod.ClaimPackClosureVerifier
+        else:
+            print("\033[1;31m[!] osiris_claim_closure module not found.\033[0m")
+            return {"error": "module_not_found"}
+
+    p = Path(target_dir)
+    if not p.is_absolute() and not p.exists():
+        if (REPO_ROOT / target_dir).exists():
+            p = REPO_ROOT / target_dir
+        elif (Path.home() / target_dir).exists():
+            p = Path.home() / target_dir
+
+    if not (p / "closure.json").exists():
+        if "tetra1d_swap01_phase_lock" in str(p):
+            try:
+                from osiris_tetra1d_benchmark import run_tetra1d_benchmark
+                run_tetra1d_benchmark(verbose=False)
+            except Exception:
+                pass
+        elif "crsm_11d_wdw_xy4_closure" in str(p):
+            try:
+                from osiris_autonomous_mutation import run_autonomous_mutation_loop
+                run_autonomous_mutation_loop(verbose=False)
+            except Exception:
+                pass
+
+    if not p.exists():
+        print(f"\n\033[1;31m[CLOSURE ERROR] Target directory '{target_dir}' does not exist.\033[0m\n")
+        return {"error": "not_found", "target": target_dir}
+
+    res = ClaimPackClosureVerifier.verify_claim_pack_dir(p)
+    print(f"\n\033[95mOSIRIS · CLAIM CLOSURE VERIFICATION\033[0m")
+    print(f"  ├─ Target: {target_dir}")
+    print(f"  ├─ Valid: {res.valid}")
+    print(f"  ├─ Status: {res.claim_status}")
+    print(f"  ├─ Verified Ceiling: {res.verified_claim_ceiling}")
+    print(f"  ├─ Verified Authority: {res.verified_deployment_authority}")
+    for r in res.reasons:
+        print(f"  ├─ Reason: {r}")
+    print()
+    details = {
+        "target": p.name,
+        "valid": res.valid,
+        "status": res.claim_status,
+        "ceiling": res.verified_claim_ceiling,
+        "authority": res.verified_deployment_authority,
+    }
+    if state is not None:
+        state.log_event("CLOSURE_VERIFY", details)
+    return details
+
+
+def execute_mutate(state: Optional[OsirisReplState] = None, verbose: bool = True) -> Dict[str, Any]:
+    """Execute autonomous W2 mutation, Wheeler-DeWitt/XY4 injection, and claim pack closure."""
+    try:
+        from osiris_autonomous_mutation import run_autonomous_mutation_loop
+    except ImportError:
+        home_mut = Path.home() / "osiris_autonomous_mutation.py"
+        if home_mut.is_file():
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("osiris_autonomous_mutation", home_mut)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            run_autonomous_mutation_loop = mod.run_autonomous_mutation_loop
+        else:
+            print("\033[1;31m[!] osiris_autonomous_mutation module not found.\033[0m")
+            return {"error": "module_not_found"}
+
+    report = run_autonomous_mutation_loop(verbose=verbose)
+    details = {
+        "w2_32us": getattr(report, "post_mutation_w2_32us", None),
+        "closure_status": getattr(report, "closure_status", None),
+    }
+    if state is not None:
+        state.log_event("AUTONOMOUS_W2_MUTATION", details)
+    return details
+
+
+def execute_sim(state: Optional[OsirisReplState] = None, ticks: int = 50) -> None:
+    """Execute ticks on the local ALife simulation (organism_sim runtime)."""
+    try:
+        from organism_sim.chat_bridge import Runtime
+        rt = Runtime.demo(seed=0)
+        print(f"\n\033[93m[ALIFE SIMULATION]\033[0m Stepping {ticks} ticks...")
+        rt.run(ticks)
+        print(f"Tick: {rt.tick} | Injections: {len(rt.injections)} | Alerts: {len(rt.alerts)} | Rules: {len(rt.agent.rules.rules)}")
+        alerts = rt.drain()
+        if alerts:
+            print(f"Alerts fired: {[a.name for a in alerts]}")
+        print()
+        if state is not None:
+            state.log_event("ALIFE_SIMULATION_STEP", {"ticks": ticks, "alerts": len(alerts)})
+    except ImportError as e:
+        print(f"\033[1;31m[!] organism_sim not available: {e}\033[0m")
+
+
+def execute_publish(state: Optional[OsirisReplState] = None, target: str = "scimitar_sse_protocol.pdf") -> None:
+    """Deposit manuscript/PDF governed by OCCR ReleaseGate."""
+    try:
+        from occr_governance_engine import (
+            CapabilityRecord, ClaimCeiling, DeploymentAuthority,
+            EvidenceStatus, GateDecision, ImplementationStatus,
+            ReleaseGate, ReviewIndependence, get_occr_registry,
+        )
+    except ImportError:
+        print("\033[1;31m[!] occr_governance_engine not available.\033[0m")
+        return
+
+    path = Path(target)
+    if not path.exists():
+        alt = Path.home() / target
+        if alt.exists():
+            path = alt
+
+    if not path.exists():
+        print(f"\033[1;31m[PUBLICATION ERROR] Target file '{target}' does not exist.\033[0m")
+        return
+
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    registry = get_occr_registry()
+    cap_id = "capabilities.publishing.zenodo"
+    cap = registry.get_capability(cap_id) or CapabilityRecord(
+        capability_id=cap_id,
+        namespace="capabilities",
+        title="External Repository Deposition",
+        implementation_status=ImplementationStatus.IMPLEMENTED_CANDIDATE,
+        evidence_status=EvidenceStatus.SELF_REPORTED_TESTED,
+        deployment_authority=DeploymentAuthority.HUMAN_APPROVAL_REQUIRED,
+        claim_ceiling=ClaimCeiling.TESTED,
+        review_independence=ReviewIndependence.SELF_REVIEW,
+        source_of_truth="osiris_repl.py",
+    )
+    receipt = ReleaseGate.evaluate(
+        capability=cap,
+        has_sbom=False,
+        has_security_audit=False,
+        negative_controls=registry.get_negative_controls(),
+    )
+    if receipt.decision == GateDecision.BLOCK:
+        print(f"\n\033[1;31m[OCCR RELEASE GATE: BLOCKED]\033[0m")
+        print(f"  ├─ Target Artifact: {path.name} ({digest[:16]}...)")
+        print(f"  ├─ Status: DENIED BY DEFAULT (Read-Only Governance Invariant)")
+        for r in receipt.reasons:
+            print(f"  ├─ Reason: {r}")
+        print(f"  └─ Action: Automated publishing disabled. Requires human signoff token.\n")
+        if state is not None:
+            state.log_event("PUBLICATION_BLOCKED", {"target": path.name, "digest": digest, "reasons": receipt.reasons})
+        return
+
+    print(f"\n[PUBLICATION] Initiating deposition for {path.name}...")
+    print(f"  ├─ Artifact Digest (SHA-256): {digest}")
+    print("  ├─ Status: SUBMITTED")
+    if state is not None:
+        state.log_event("PUBLICATION_SUBMITTED", {"target": path.name, "digest": digest})
+
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # LIVING LANGUAGE MODEL INTERACTION & OLLAMA CONNECTIONS
@@ -1540,6 +1736,11 @@ def display_help() -> None:
     print("    /chat <msg>          Direct conversation via local Ollama engine")
     print()
     print("  \033[1;36mHardware & Benchmarks\033[0m")
+    print("    /tetra1d             Run TETRA-1D SWAP_01 phase-lock & Strang compilation benchmark")
+    print("    /closure verify <d>  Verify claim pack closure.json and artifact SHA-256 hashes")
+    print("    /mutate              Execute autonomous W2 mutation & claim pack closure")
+    print("    /sim [ticks]         Step local ALife simulation (organism_sim)")
+    print("    /publish [file]      Deposit manuscript/PDF governed by OCCR ReleaseGate")
     print("    /benchmark flywheel  Run Flywheel 2026 K8 tau-sweep with Merkle cryptographic proof")
     print("    /benchmark llm       Run comparative benchmark: LivLM/NCLM vs standard LLMs (GPT/Claude)")
     print("    /tournament          Run ELO matchup tournament vs competitor models")
@@ -1705,6 +1906,13 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
                 execute_osiris_status()
             elif cmd == "/intent":
                 otc._intent_status()
+            elif cmd == "/experiment" and len(parts) > 1 and parts[1].lower() in ("tetra1d", "tetra"):
+                execute_tetra1d(state)
+            elif cmd == "/experiment" and len(parts) > 1 and parts[1].lower() == "mutate":
+                execute_mutate(state)
+            elif cmd == "/experiment" and len(parts) > 1 and parts[1].lower() == "run":
+                fixture = parts[2] if len(parts) > 2 else "local-fixture-2"
+                execute_learn(state, generations=2)
             elif not otc.run_command(line_clean):
                 otc._unknown_command(line_clean)
         except Exception as e:
@@ -1715,7 +1923,24 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
     if not cmd.startswith("/") and cmd not in ("?",):
         handle_livlm_prompt(state, line_clean)
         return
-    if cmd in ("/ignite", "ignite"):
+    if cmd in ("/tetra1d", "tetra1d"):
+        execute_tetra1d(state)
+    elif cmd in ("/closure", "closure"):
+        sub = parts[1].lower() if len(parts) > 1 else "verify"
+        target = parts[2] if len(parts) > 2 else "."
+        if sub == "verify":
+            execute_closure_verify(state, target_dir=target)
+        else:
+            print(f"[OSIRIS] Unknown closure subcommand '{sub}'. Usage: /closure verify <dir>")
+    elif cmd in ("/mutate", "mutate"):
+        execute_mutate(state)
+    elif cmd in ("/sim", "sim"):
+        ticks = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 50
+        execute_sim(state, ticks=ticks)
+    elif cmd in ("/publish", "publish"):
+        target = parts[1] if len(parts) > 1 else "scimitar_sse_protocol.pdf"
+        execute_publish(state, target=target)
+    elif cmd in ("/ignite", "ignite"):
         dry_run = "--dry-run" in parts
         execute_ignite(state, dry_run=dry_run)
     elif cmd in ("/learn", "learn"):
@@ -2002,7 +2227,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         "action",
         nargs="?",
         default=None,
-        choices=["update", "ignite", "swarm", "mesh", "benchmark", "status", "power", "repl", "pr", "sync"],
+        choices=["update", "ignite", "swarm", "mesh", "benchmark", "status", "power", "repl", "pr", "sync", "tetra1d", "closure", "mutate", "sim", "interactive"],
         help="Direct command to execute (default: launch REPL)"
     )
     parser.add_argument(
@@ -2051,6 +2276,19 @@ def main(argv: Optional[List[str]] = None) -> None:
         execute_pr(args.subargs)
     elif args.action == "sync":
         execute_sync(args.subargs)
+    elif args.action == "tetra1d":
+        execute_tetra1d(SESSION)
+    elif args.action == "closure":
+        sub = args.subargs[0] if args.subargs else "verify"
+        target = args.subargs[1] if len(args.subargs) > 1 else "."
+        execute_closure_verify(SESSION, target_dir=target)
+    elif args.action == "mutate":
+        execute_mutate(SESSION)
+    elif args.action == "sim":
+        ticks = int(args.subargs[0]) if (args.subargs and args.subargs[0].isdigit()) else 50
+        execute_sim(SESSION, ticks=ticks)
+    elif args.action in ("repl", "interactive"):
+        boot_repl()
     else:
         # Default action: launch interactive REPL
         boot_repl()

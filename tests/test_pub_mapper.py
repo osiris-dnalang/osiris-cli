@@ -18,7 +18,7 @@ from osiris_cli.quantum.pub_mapper import (
     PubResult,
 )
 
-EXPERIMENT_DIR = Path("/root/repos/osiris-cli/experiments/osiris_advantage_marrakesh")
+EXPERIMENT_DIR = Path(__file__).resolve().parent.parent / "experiments" / "osiris_advantage_marrakesh"
 META_PATH = EXPERIMENT_DIR / "dau0q3qhcrkc73durtgg.meta.json"
 COUNTS_PATH = EXPERIMENT_DIR / "dau0q3qhcrkc73durtgg.counts.json"
 ANALYSIS_PATH = EXPERIMENT_DIR / "dau0q3qhcrkc73durtgg.analysis.json"

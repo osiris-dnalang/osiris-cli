@@ -431,16 +431,21 @@ class IBMPubMapper:
             },
         }
 
+    REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+    DEFAULT_JOURNAL_PATH = REPO_ROOT / "provenance" / "osiris_operational_journal.jsonl"
+
     @classmethod
     def lock_to_journal(
         cls,
         receipt: ExperimentMappingReceipt,
-        journal_path: Union[str, Path] = "/root/repos/osiris-cli/provenance/osiris_operational_journal.jsonl",
+        journal_path: Optional[Union[str, Path]] = None,
         grant_id: str = "GRANT-IBM-MAPPER-001",
     ) -> Dict[str, Any]:
         """
         Anchor the mapped experiment receipt into the append-only operational journal.
         """
+        if journal_path is None:
+            journal_path = cls.DEFAULT_JOURNAL_PATH
         ledger = OperationalMerkleLedger(journal_path)
         payload = {
             "grant_id": grant_id,
