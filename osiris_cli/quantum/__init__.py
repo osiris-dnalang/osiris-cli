@@ -19,6 +19,10 @@ from .calibration_spc import (
     TimeOrderedSPCValidator,
     verify_subsystem_calibrations,
 )
+from .bidirectional_dd import (
+    StaggeredDDSchedule,
+    BidirectionalDDCompiler,
+)
 
 __all__ = [
     "CircuitSpec",
@@ -33,4 +37,6 @@ __all__ = [
     "CalibrationDriftReport",
     "TimeOrderedSPCValidator",
     "verify_subsystem_calibrations",
+    "StaggeredDDSchedule",
+    "BidirectionalDDCompiler",
 ]
