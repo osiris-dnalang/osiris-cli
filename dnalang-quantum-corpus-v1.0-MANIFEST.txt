@@ -1,0 +1,6 @@
+# DNA-Lang Quantum Execution Corpus v1.0 Manifest
+# Timestamp: 2026-10-31
+# Total QPU Shots: 490,596
+# Backends: IBM Heron r2 (ibm_fez: 98 jobs, ibm_torino: 11 jobs)
+
+e36529bd1bdfb580b52b904b3ec850bcdce8f541a25073327e31e6cb56640062  dnalang-quantum-corpus-v1.0.zip
