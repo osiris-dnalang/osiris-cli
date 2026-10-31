@@ -38,6 +38,7 @@ dependencies = [
     "requests>=2.31.0",
     "PyYAML>=6.0",
     "rich>=13.0.0",
+    "networkx>=2.6.3",
 ]
 
 [project.optional-dependencies]
@@ -82,6 +83,7 @@ dev = [
 
 [project.scripts]
 osiris = "osiris_cli.osiris_repl:main"
+osiris-nclm = "osiris_nclm_cli:main"
 
 [project.urls]
 Homepage = "https://github.com/osiris-dnalang/osiris-cli"
@@ -91,6 +93,7 @@ Issues = "https://github.com/osiris-dnalang/osiris-cli/issues"
 [tool.setuptools]
 py-modules = [
     "osiris_launcher",
+    "osiris_nclm_cli",
     "osiris_livlm",
     "osiris_ncllm_swarm",
     "osiris_ultra_coder",

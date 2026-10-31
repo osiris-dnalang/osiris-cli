@@ -44,3 +44,11 @@ Procedural record, kept separate from the pre-registration (which is unchanged).
   trained, and a result from them does not answer the registered question. Arms, seeds, mix, stopping
   rule and criterion are unchanged by this note. Whether to set those runs aside and re-run all six on
   v4.5.2 (manifests record the code commit) is decided and recorded here before any result is opened.
+- **2026-10-26 — decision on the 2026-10-08 note, recorded before any run is launched or any result
+  opened.** No Mix-1 run has ever finished: the four launches above were aborted and set aside unread
+  (`~/.osiris/experiments/nclm_mix1/aborted_*`), so there is nothing scored on pre-v4.5.2 code to keep.
+  All six runs (2 arms × 3 seeds) are run fresh on `main` at `e988a669`, which contains the v4.5.2 scoring
+  fix (`4ac93db1`). The frozen inputs are reused unchanged; their sha256 matches the 2026-10-01
+  `driver.log` (`corpus.json` f12372cb…, `distill.jsonl` c461bbf8…, `exchanges.jsonl` 255da383…,
+  `frozen_corpus.json` 5fda6ea5…). Arms, seeds, mix, stopping rule, 12,000-step cap (Amendment 1) and
+  criterion are unchanged. Owner approved the re-run in session.

@@ -57,9 +57,7 @@ class DeepUnderstandingProcessor:
     """Advanced processor for developing deep understanding of complex topics"""
 
     def __init__(self, quantum_processor: QuantumCognitiveProcessor):
-        from nclm.quantum_processing import QuantumProcessor
-        self.quantum_processor = QuantumProcessor()
-        # removed bad assignment
+        self.quantum_processor = quantum_processor
         self.understanding_layers = []
         self.concept_graph = nx.Graph()
         self.current_depth = 0
