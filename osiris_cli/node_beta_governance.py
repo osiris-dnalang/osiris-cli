@@ -77,6 +77,24 @@ class NodeBetaGovernor:
         return (reason is None), reason
 
 
+def sign_payload_grant(target_digest: str, scope: str = PROMOTION_SCOPE, ttl_seconds: int = 86400) -> Optional[AuthorityPermit]:
+    """Convenience helper to issue an AuthorityPermit using local Node Beta keystore."""
+    gov = NodeBetaGovernor()
+    return gov.issue_grant(target_digest=target_digest, scope=scope, ttl_seconds=ttl_seconds)
+
+
+def verify_payload_grant(permit: AuthorityPermit, expected_digest: Optional[str] = None) -> bool:
+    """Convenience helper to verify an AuthorityPermit."""
+    gov = NodeBetaGovernor()
+    valid, reason = gov.verify_grant(permit)
+    if not valid:
+        return False
+    if expected_digest is not None and permit.target_digest != expected_digest:
+        return False
+    return True
+
+
+
 if __name__ == "__main__":
     gov = NodeBetaGovernor()
     test_hash = "e21d8231cf3c53efcebb76391104cd6b67193527"
