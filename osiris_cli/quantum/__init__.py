@@ -23,6 +23,14 @@ from .bidirectional_dd import (
     StaggeredDDSchedule,
     BidirectionalDDCompiler,
 )
+from .heron_staggered_benchmark import (
+    HERON_KINGSTON_QUBITS,
+    HERON_KINGSTON_EDGES,
+    BenchmarkTrialResult,
+    ClosedLoopBenchmarkReport,
+    HeronBenchmarkEngine,
+    run_heron_refocuser_benchmark,
+)
 
 __all__ = [
     "CircuitSpec",
@@ -39,4 +47,10 @@ __all__ = [
     "verify_subsystem_calibrations",
     "StaggeredDDSchedule",
     "BidirectionalDDCompiler",
+    "HERON_KINGSTON_QUBITS",
+    "HERON_KINGSTON_EDGES",
+    "BenchmarkTrialResult",
+    "ClosedLoopBenchmarkReport",
+    "HeronBenchmarkEngine",
+    "run_heron_refocuser_benchmark",
 ]
