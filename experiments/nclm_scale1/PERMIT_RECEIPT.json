@@ -1,0 +1,13 @@
+{
+  "experiment": "NCLM-SCALE-1",
+  "scope": "NCLM_SCALE1_EXPERIMENT",
+  "issuer": "Devin Phillip Davis / Node Beta (Standalone)",
+  "payload_sha256": "0287b1067229c87eeaf1d94aac9852ab681457392fb79e6c72aa0410193f8cf4",
+  "nonce": "ac3fcc66e4f05921d7b9e7abe40c38d7",
+  "timestamp": "2026-10-31T22:13:38-04:00",
+  "verified": true,
+  "invariants": {
+    "SYS_021": "Zero Self-Supplied Authorization - Verified",
+    "SYS_026": "Speaking Gate Target <= 2.000 BPB"
+  }
+}
