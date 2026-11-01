@@ -1,0 +1,34 @@
+{
+  "standard_scale512_s300": {
+    "arm": "standard_scale512",
+    "seed": 300,
+    "best_chat_bpb": 3.6214461103018674,
+    "best_docs_bpb": 3.6736906022710913,
+    "eval_count": 32,
+    "speaks_autonomously": false
+  },
+  "standard_scale512_s301": {
+    "arm": "standard_scale512",
+    "seed": 301,
+    "best_chat_bpb": 3.5086574944408135,
+    "best_docs_bpb": 3.594079041349909,
+    "eval_count": 32,
+    "speaks_autonomously": false
+  },
+  "crsm_scale512_s300": {
+    "arm": "crsm_scale512",
+    "seed": 300,
+    "best_chat_bpb": 4.801950884057785,
+    "best_docs_bpb": 5.161076126823544,
+    "eval_count": 10,
+    "speaks_autonomously": false
+  },
+  "crsm_scale512_s301": {
+    "arm": "crsm_scale512",
+    "seed": 301,
+    "best_chat_bpb": 4.8037546524319215,
+    "best_docs_bpb": 5.172038666452672,
+    "eval_count": 13,
+    "speaks_autonomously": false
+  }
+}

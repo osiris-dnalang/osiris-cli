@@ -174,8 +174,9 @@ def analyse():
                 }
 
     res_path = os.path.join(HERE, "results.json")
+    res_rows = {f"{k[0]}_s{k[1]}": v for k, v in rows.items()}
     with open(res_path, "w", encoding="utf-8") as f:
-        json.dump(rows, f, indent=2, default=str)
+        json.dump(res_rows, f, indent=2, default=str)
 
     md_lines = [
         "# NCLM-SCALE-1 Results (< 2.0 BPB Target)",
