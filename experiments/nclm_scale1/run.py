@@ -2,7 +2,7 @@
 """NCLM-SCALE-1 driver and analysis. See PRE_REGISTRATION.md.
 
   python experiments/nclm_scale1/run.py --check      # preflight only: shapes, parameter counts, seeds
-  python experiments/nclm_scale1/run.py              # launch the 9 runs (one at a time) and wait
+  python experiments/nclm_scale1/run.py              # launch the scaling runs and wait
   python experiments/nclm_scale1/run.py --analyse    # verdict -> results.json, RESULT.md
 """
 
@@ -22,25 +22,15 @@ REPO = os.path.dirname(os.path.dirname(HERE))
 WORK = os.path.join(os.path.expanduser("~"), ".osiris", "experiments", "nclm_scale1")
 INPUTS_SOURCE = os.path.join(os.path.expanduser("~"), ".osiris", "experiments", "nclm_arch1", "inputs")
 
-ARMS = ("arm_base", "arm_ctx512", "arm_scale3m")
-SEEDS = [300, 301, 302]
-MAX_STEPS = 8000
+ARMS = ("standard_scale512", "crsm_scale512")
+SEEDS = [300, 301]
+MAX_STEPS = 6000
 QUIET_LOAD = 3.0
 SPEAK_GATE_BPB = 2.000
 
-CONFIGS = {
-    "arm_base": dict(vocab_size=256, dim=128, n_layers=4, n_heads=4, ff_dim=256, max_seq_len=128,
-                     torsion_lock=True, phase_conjugate=True, positional="phi", dropout=0.0),
-    "arm_ctx512": dict(vocab_size=256, dim=128, n_layers=4, n_heads=4, ff_dim=256, max_seq_len=512,
-                       torsion_lock=True, phase_conjugate=True, positional="phi", dropout=0.0),
-    "arm_scale3m": dict(vocab_size=256, dim=256, n_layers=6, n_heads=4, ff_dim=512, max_seq_len=512,
-                        torsion_lock=True, phase_conjugate=True, positional="phi", dropout=0.0),
-}
-
 N_PARAMS = {
-    "arm_base": 726304,
-    "arm_ctx512": 726304,
-    "arm_scale3m": 4079152,
+    "standard_scale512": 4077568,
+    "crsm_scale512": 4079152,
 }
 
 
@@ -56,16 +46,16 @@ def run_dirs(arm, seed):
 def preflight():
     """Verify parameters, configuration integrity, and seed freshness."""
     sys.path.insert(0, REPO)
-    import numpy as np
-    from osiris.nclm import SovereignConfig, SovereignTransformerV2
+    import osiris_termux_console as otc
 
     params = {}
     for arm in ARMS:
-        cfg = SovereignConfig(**CONFIGS[arm])
-        model = SovereignTransformerV2(cfg)
+        model, _ = otc._organism_build(arm)
         params[arm] = model.num_parameters()
         if params[arm] != N_PARAMS[arm]:
             raise SystemExit(f"{arm}: {params[arm]} parameters, expected {N_PARAMS[arm]}")
+        if model.config.max_seq_len != 512:
+            raise SystemExit(f"{arm}: max_seq_len is {model.config.max_seq_len}, expected 512")
 
     home = os.path.join(os.path.expanduser("~"), ".osiris")
     used = set()
@@ -80,7 +70,7 @@ def preflight():
     if used & set(SEEDS):
         raise SystemExit(f"seeds already used by earlier runs: {sorted(used & set(SEEDS))}")
 
-    info = {"status": "preflight_ok", "params": params, "seeds": SEEDS, "max_steps": MAX_STEPS}
+    info = {"status": "preflight_ok", "params": params, "seeds": SEEDS, "max_steps": MAX_STEPS, "seq": 512}
     print("preflight", json.dumps(info), flush=True)
     return info
 
@@ -112,31 +102,31 @@ def launch():
     jobs = [(a, s) for s in SEEDS for a in ARMS if not finished(a, s)]
     running = []
 
-    print(f"NCLM-SCALE-1 starting: {len(jobs)} runs remaining.")
+    print(f"NCLM-SCALE-1 starting: {len(jobs)} runs queued.", flush=True)
     while jobs or running:
         while jobs and len(running) < 1:
             waited = 0
             while os.getloadavg()[0] > QUIET_LOAD:
                 if waited % 600 == 0:
                     print(time.strftime("%H:%M:%S"), f"waiting for quiet load: {os.getloadavg()[0]:.2f} > {QUIET_LOAD}", flush=True)
-                time.sleep(30)
-                waited += 30
+                time.sleep(15)
+                waited += 15
 
             arm, seed = jobs.pop(0)
             ckpt, runs, log = run_dirs(arm, seed)
             for d in (ckpt, runs, os.path.dirname(log)):
                 os.makedirs(d, exist_ok=True)
 
-            with open(os.path.join(ckpt, "config.json"), "w", encoding="utf-8") as f:
-                json.dump(CONFIGS[arm], f, indent=2)
+            with open(os.path.join(ckpt, "arch.json"), "w", encoding="utf-8") as f:
+                json.dump({"arch": arm}, f, indent=2)
 
             env = {k: v for k, v in os.environ.items() if k not in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS")}
             env.update(OSIRIS_ORGANISM_HOME=ckpt, PYTHONPATH=REPO)
 
-            # Driver command invokes osiris_cli.train with arm parameters
             cmd = [
                 sys.executable, "-m", "osiris_cli.train",
                 "--hours", "72.0",
+                "--seq", "512",
                 "--max-steps", str(MAX_STEPS),
                 "--all", "--distill", "0",
                 "--seed", str(seed),
@@ -158,7 +148,7 @@ def launch():
                 f_log.close()
                 running.remove(item)
                 print(time.strftime("%H:%M:%S"), "done", arm, seed, "exit", p.returncode, flush=True)
-        time.sleep(20)
+        time.sleep(15)
 
 
 def analyse():
@@ -187,7 +177,7 @@ def analyse():
         json.dump(rows, f, indent=2, default=str)
 
     md_lines = [
-        "# NCLM-SCALE-1 Results",
+        "# NCLM-SCALE-1 Results (< 2.0 BPB Target)",
         "",
         "| Arm | Seed | Best Held-Out Chat BPB | Best Held-Out Docs BPB | Speaking Gate (< 2.0 BPB) |",
         "| :--- | :---: | :---: | :---: | :---: |",

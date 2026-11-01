@@ -33,17 +33,14 @@ enabling held-out conversational cross-entropy to cross the **$< 2.0\text{ BPB}$
 
 ## 2. Experimental Arms
 
-Three arms are evaluated under identical training data, optimizer schedules, and loss evaluation:
+Two scaled arms are evaluated under matched parameter parity (~4.08M parameters) and identical 512-byte receptive fields:
 
-| Arm | Description | Hidden Dim ($d$) | Layers ($L$) | Heads ($H$) | Intermediate ($d_{ff}$) | Context ($T$) | Total Parameters |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| `arm_base` | Baseline Termux Core | 128 | 4 | 4 | 256 | 128 bytes | **726,304** |
-| `arm_ctx512` | Context-Expanded Core | 128 | 4 | 4 | 256 | 512 bytes | **726,304** |
-| `arm_scale3m` | Fully Scaled v5.1 Core | 256 | 6 | 4 | 512 | 512 bytes | **4,079,152** |
+| Arm | Description | Hidden Dim ($d$) | Layers ($L$) | Heads ($H$) | Intermediate ($d_{ff}$) | Context ($T$) | Total Parameters | Primary Hypothesis |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **`standard_scale512`** | Scaled Standard Transformer | 256 | 6 | 4 | 768 | 512 bytes | **4,077,568** | **Crosses $< 2.000\text{ BPB}$ Speaking Gate** |
+| **`crsm_scale512`** | Scaled CRSM Transformer | 256 | 6 | 4 | 512 | 512 bytes | **4,079,152** | Scaled CRSM Comparison Arm |
 
-*Note on Parameter Parity*: Because sinusoidal and phi-harmonic positional tables are non-parametric (zero learnable
-weights), extending `max_seq_len` from 128 to 512 bytes in `arm_ctx512` adds exactly **0 additional parameters**,
-isolating the pure effect of receptive field expansion.
+*Note on Parameter Parity*: Parameter counts are matched within 0.038% (4,077,568 vs 4,079,152). Both arms operate with `max_seq_len = 512` bytes, enabling full conditioning across conversation prompt history.
 
 ---
 

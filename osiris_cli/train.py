@@ -725,7 +725,16 @@ def make_core():
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     import osiris_termux_console as otc
     from osiris_cli.living import NclmCore
-    return NclmCore(otc)
+    core = NclmCore(otc)
+    global SEQ
+    try:
+        st = core._model()
+        model = st.get("model") if isinstance(st, dict) else st
+        if model and hasattr(model, "config") and hasattr(model.config, "max_seq_len"):
+            SEQ = int(model.config.max_seq_len)
+    except Exception:
+        pass
+    return core
 
 
 def main(argv: Optional[List[str]] = None) -> None:
@@ -733,6 +742,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     ap = argparse.ArgumentParser(prog="osiris train", description="Overnight batch training for OSIRIS's core.")
     ap.add_argument("--hours", type=float, default=8.0)
     ap.add_argument("--batch", type=int, default=8)
+    ap.add_argument("--seq", type=int, default=None, help="sequence context length override")
     ap.add_argument("--max-steps", type=int, default=None)
     ap.add_argument("--distill", type=int, default=40, help="grounded mentor lessons to create first (0 = none)")
     ap.add_argument("--seed", type=int, default=None)
@@ -754,6 +764,9 @@ def main(argv: Optional[List[str]] = None) -> None:
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--stop", action="store_true")
     args = ap.parse_args(argv)
+    if args.seq:
+        global SEQ
+        SEQ = args.seq
     core = make_core()
     if args.status:
         print("\n".join(status_lines(lock_path=core.lock_path())))
