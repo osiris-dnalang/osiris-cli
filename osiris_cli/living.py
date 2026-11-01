@@ -469,6 +469,7 @@ class NclmCore:
                                       total_steps=opt.step_count + max(total_steps, warmup_steps + 1))
 
     def train_batch(self, x, y) -> float:
+        import gc
         from osiris.nclm import cross_entropy_loss
         from osiris.nclm.autograd import clip_grad_norm
         with self._otc._organism_lock:
@@ -479,9 +480,11 @@ class NclmCore:
             out.backward()
             clip_grad_norm(model.parameters(), 1.0)
             opt.step()
+            loss_val = float(out.data)
             st["step"] += 1
-            st["history"].append(float(out.data))
-            return float(out.data)
+            st["history"].append(loss_val)
+            gc.collect()
+            return loss_val
 
     def eval_batch(self, x, y) -> float:
         """Mean loss in nats per byte, no training."""

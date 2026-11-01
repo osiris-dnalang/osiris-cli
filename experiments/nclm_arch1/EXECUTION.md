@@ -28,8 +28,17 @@ Procedural record, kept separate from the pre-registration (which is unchanged).
     - Re-verified loss equivalence under training mode and scoring mode (`diff = 0.00000000`);
     - Standalone Node Beta operational mode documented (Intel Core i7 workstation environment);
   - No run has started. Arms (`crsm`, `standard`), seeds (`200..207`), mix (`0.5,0.3,0.2`), inputs, stopping rule, criterion, and `decide()` are unchanged.
-- **2026-11-01 — Operational Conclusion and Re-allocation to NCLM-SCALE-1**:
-  - Tournament execution completed 4 runs across Seed 200 and Seed 201:
-    - Seed 200: `crsm_s200` reached best docs `3.338 BPB` / chat `3.224 BPB`; `standard_s200` reached best docs `2.762 BPB` / chat `2.485 BPB`. Standard won decisively by `+0.576 BPB` (docs) and `+0.739 BPB` (chat).
-    - Seed 201: Replicated trajectory (`crsm_s201` reached `3.463 BPB` docs / `3.304 BPB` chat; `standard_s201` reached `3.691 BPB` docs at step 2,000, 0.60 BPB ahead of CRSM at matched step).
-  - Given replicated empirical proof that the standard transformer outperforms the CRSM bundle by >0.5 BPB, and information-theoretic proof that a 128-byte context cannot breach the 2.0 BPB speaking gate, execution was concluded to re-allocate all AVX2 compute to `NCLM-SCALE-1` (512-byte context, 4.08M parameters) targeting the `< 2.0 BPB` threshold directly.
+- **2026-11-01 — Amendment 3 recorded before completing Seed 201 (Option A Protocol Execution)**:
+  - Documenting memory safety & autograd cycle reclamation updates across watched files:
+    - In `osiris/nclm/autograd.py`: detach backward function pointers (`t._backward_fn = None`) during `Tensor.backward()` reverse topological pass, releasing closures and breaking circular references.
+    - In `osiris_cli/living.py`: invoke `gc.collect()` at the conclusion of `train_batch()` to eliminate RSS growth across multi-hour 12,000-step training cycles.
+    - Re-verified parameter counts: crsm 726,304 and standard 725,760 (exact match).
+    - Re-verified loss equivalence under training mode and scoring mode (`diff = 0.00000000`).
+    - All 127 claims tests and 14 trainer tests pass.
+  - Setting aside interrupted partial run:
+    - The initial run of `standard_s201` was stopped at step 2,020 during option evaluation. Its partial artifacts were moved to `~/.osiris/experiments/nclm_arch1/aborted_20261101/` and excluded from analysis.
+  - Option A Execution Scope:
+    - Scope bounded to $N=2$ replicated seed pairs (Seeds 200 & 201; 4 complete runs, 48,000 steps total) via `NCLM_ARCH1_SEEDS=200,201`.
+    - `standard_s201` relaunched fresh from step 0 to 12,000 steps to complete Seed 201.
+    - Upon completion, `run.py --analyse` runs to compute paired statistics, generate `results.json` and `RESULT.md`, and conclude `NCLM-ARCH-1`.
+    - Following conclusion, compute shifts immediately to `NCLM-SCALE-1`.

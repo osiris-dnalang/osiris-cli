@@ -126,6 +126,7 @@ def launch():
             cmd = [
                 sys.executable, "-m", "osiris_cli.train",
                 "--hours", "72.0",
+                "--batch", "2",
                 "--seq", "512",
                 "--max-steps", str(MAX_STEPS),
                 "--all", "--distill", "0",

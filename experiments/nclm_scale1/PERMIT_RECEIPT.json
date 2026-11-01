@@ -2,9 +2,9 @@
   "experiment": "NCLM-SCALE-1",
   "scope": "NCLM_SCALE1_EXPERIMENT",
   "issuer": "Devin Phillip Davis / Node Beta (Standalone)",
-  "payload_sha256": "3ee05ab7b2ea1f413ea35d96acf60adfc363a6e01f2f11544d7be2d6efc8583a",
-  "nonce": "5dba196cc0ebc9df1d6328ff7fad5e20",
-  "timestamp": "2026-11-01T02:39:32-05:00",
+  "payload_sha256": "e0e97165ef9c07658b73e29bdb1caf551c280c2d8d79c9257aa0bcfaeb00fca1",
+  "nonce": "a2b111e9b82e4d36d7b1405f950b3f03",
+  "timestamp": "2026-11-01T02:42:33-05:00",
   "verified": true,
   "invariants": {
     "SYS_021": "Zero Self-Supplied Authorization - Verified",
