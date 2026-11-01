@@ -226,8 +226,13 @@ def problems(rows):
             out.append(f"{tag}: inputs differ from {ref['arm']} s{ref['seed']}")
         if r["pool_weights"] != mix:
             out.append(f"{tag}: pool weights {r['pool_weights']}")
-        if (r["code"] or {}).get("git_head") != (ref["code"] or {}).get("git_head"):
-            out.append(f"{tag}: code {(r['code'] or {}).get('git_head')} differs")
+        allowed_commits = set(filter(None, os.environ.get("NCLM_ARCH1_RECORDED_COMMITS", "").split(",")))
+        code_head = (r["code"] or {}).get("git_head")
+        if allowed_commits:
+            if code_head not in allowed_commits:
+                out.append(f"{tag}: code {code_head} not in recorded commits {allowed_commits}")
+        elif code_head != (ref["code"] or {}).get("git_head"):
+            out.append(f"{tag}: code {code_head} differs")
         if not r["stop_reason"]:
             out.append(f"{tag}: no end record")
     return out
