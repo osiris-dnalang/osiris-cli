@@ -92,7 +92,7 @@ MESSAGE_BUDGET = 6000
 # qwen2.5:7b timed out (180 s) on two of the three and took 140 s on the third. The 3B adds
 # new prompt tokens at ~30/s against the 7B's ~14/s. Both misstate recorded results at
 # times, which is why named verdicts and the claims register are printed by code first.
-MENTOR_PREFERENCE = ("qwen2.5:3b", "gemma2:2b", "gemma:2b", "qwen2.5:7b", "qwen2.5:1.5b", "llama3.2:3b", "llama3.2:1b", "smollm2:360m")
+MENTOR_PREFERENCE = ("qwen2.5:1.5b", "qwen2.5:3b", "smollm2:360m", "gemma2:2b", "gemma:2b", "qwen2.5:7b", "llama3.2:3b", "llama3.2:1b")
 # Measured 2026-10-02 on the 8-core WSL desktop: qwen2.5:7b reads a prompt at ~26 tokens/s
 # after a 17 s cold load; qwen2.5:1.5b at ~146 tokens/s. With the system prompt a long
 # message is ~14k characters (~4k tokens): ~170 s before the 7B says anything, so both

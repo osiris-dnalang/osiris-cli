@@ -566,6 +566,22 @@ def get_terminal_width() -> int:
 
 
 def print_banner():
+    compact = os.environ.get("OSIRIS_COMPACT", "1") in ("1", "true", "True") or getattr(SESSION, "compact_mode", False)
+    if compact:
+        print("\033[96m╔══════════════════════════════════════════════════════════════════════════════╗")
+        print("║                     OSIRIS Sovereign Living Console                          ║")
+        print("╚══════════════════════════════════════════════════════════════════════════════╝\033[0m")
+        try:
+            living = get_living()
+            mentor = living.mentor.model() or "offline"
+            gate = living.gate()
+            gate_note = living.gate_note(gate)
+        except Exception:
+            mentor, gate_note = "offline", "unknown"
+        print(f"  \033[92m● Voice:\033[0m {mentor}  |  \033[93m● Gate:\033[0m {gate_note}")
+        print("  \033[90mAsk a question directly · /fast for speed · /c for full menu · ? for help\033[0m\n")
+        return
+
     cols = get_terminal_width()
     print("\033[96m" + BANNER.strip() + "\033[0m\n")
     if cols >= 100:
@@ -2029,7 +2045,40 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
         if msg:
             handle_livlm_prompt(state, msg)
     elif cmd == "/osiris":
-        execute_osiris_status()
+        trailing = line_clean[len(parts[0]):].strip()
+        if trailing:
+            handle_livlm_prompt(state, trailing)
+        else:
+            execute_osiris_status()
+    elif cmd in ("/fast", "/f"):
+        living = get_living()
+        current = living.mentor.model()
+        if current and "1.5b" in current:
+            target = "gemma2:2b"
+            living.mentor.set_model(target)
+            print(f"[OSIRIS] Voice toggled to deep mentor: {target}")
+        else:
+            target = "qwen2.5:1.5b"
+            living.mentor.set_model(target)
+            print(f"[OSIRIS] Voice toggled to ultra-fast mentor: {target} (<1s latency on CPU)")
+    elif cmd in ("/clean", "/c", "/compact"):
+        state.compact_mode = not getattr(state, "compact_mode", False)
+        status = "ENABLED (minimalist view)" if state.compact_mode else "DISABLED (full telemetry view)"
+        print(f"[OSIRIS] Compact mode: {status}")
+    elif cmd in ("?", "/h"):
+        print("""
+ OSIRIS Quick Reference:
+  [natural text]       Talk directly to OSIRIS
+  /osiris <question>   Ask OSIRIS or inspect core status
+  /fast, /f            Toggle ultra-fast voice (qwen2.5:1.5b) vs deep voice
+  /clean, /c           Toggle minimalist compact view
+  /mentor [name]       Select specific mentor model
+  /status              Full system & hardware telemetry
+  /q, /quit            Exit session cleanly
+""")
+    elif cmd in ("/q", "/quit", "/exit", "exit", "quit"):
+        print("[OSIRIS] Session closed.")
+        sys.exit(0)
     elif cmd in ("/architecture", "/arch", "/layers"):
         execute_architecture()
     elif cmd == "/welcome":
@@ -2248,12 +2297,27 @@ def main(argv: Optional[List[str]] = None) -> None:
         help="Simulate ignition or execution without state mutations or ledger writes"
     )
     parser.add_argument(
+        "--compact", "-c",
+        action="store_true",
+        help="Launch REPL in streamlined compact view"
+    )
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="Launch REPL with full telemetry and menu display"
+    )
+    parser.add_argument(
         "subargs",
         nargs="*",
         help="Optional subarguments for the action"
     )
 
     args = parser.parse_args(argv)
+
+    if args.compact:
+        os.environ["OSIRIS_COMPACT"] = "1"
+    elif args.full:
+        os.environ["OSIRIS_COMPACT"] = "0"
 
     if args.action == "update":
         execute_update()
