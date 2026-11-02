@@ -148,6 +148,7 @@ def launch():
         "--all", "--distill", "0",
         "--seed", str(SEED),
         "--mix", MIX,
+        "--patience", "0",
         "--runs-home", runs_dir,
         "--no-rescore",
         "--living-home", snap,
