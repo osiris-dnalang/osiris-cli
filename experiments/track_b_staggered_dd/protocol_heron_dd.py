@@ -185,18 +185,13 @@ def main():
     # Step 4: Physical QPU Dispatch (IBM Quantum Cloud)
     print(f"\n[QPU DISPATCH] Connecting to backend {args.backend}...")
     from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
-    env_vars = {}
-    with open(os.path.expanduser("~/.env"), encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                k, v = line.split("=", 1)
-                env_vars[k.strip()] = v.strip().strip('"').strip("'")
+    try:
+        service = QiskitRuntimeService()
+    except Exception as e:
+        print(f"[QPU AUTH] Loading from environment/token fallback ({e})...")
+        token = os.environ.get("IBM_QUANTUM_TOKEN")
+        service = QiskitRuntimeService(channel="ibm_quantum_platform", token=token)
 
-    token = env_vars.get("IBM_QUANTUM_TOKEN")
-    crn = env_vars.get("IBM_QUANTUM_CRN")
-
-    service = QiskitRuntimeService(channel="ibm_cloud", token=token, instance=crn)
     backend = service.backend(args.backend)
     print(f"Target QPU Status: {backend.status().status_msg} | Pending Jobs: {backend.status().pending_jobs}")
 
