@@ -44,6 +44,13 @@ try:
 except (ImportError, ModuleNotFoundError):
     Circuit, Op = None, None
 
+from osiris.quantum.bidirectional_dd import (
+    SpectatorTomography,
+    ClosedLoopRefocuser,
+    CrosstalkResidual,
+    ClosedLoopResult,
+)
+
 
 @dataclass
 class StaggeredDDSchedule:
