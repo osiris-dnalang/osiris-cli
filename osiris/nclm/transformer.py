@@ -280,7 +280,13 @@ class SovereignTransformer(Module):
         temperature: float = 0.8,
         top_k: int = 40,
     ) -> str:
-        """Autoregressive byte-level text generation."""
+        """Autoregressive byte-level text generation with fast C-SIMD KV acceleration."""
+        try:
+            from .fast_inference import fast_generate
+            return fast_generate(self, prompt, max_new_tokens=max_new_tokens, temperature=temperature, top_k=top_k)
+        except Exception:
+            pass
+
         # Encode prompt as bytes
         ids = list(prompt.encode("utf-8", errors="replace"))
         if not ids:
@@ -533,7 +539,13 @@ class SovereignTransformerV2(Module):
         temperature: float = 0.8,
         top_k: int = 40,
     ) -> str:
-        """Autoregressive byte-level text generation."""
+        """Autoregressive byte-level text generation with fast C-SIMD KV acceleration."""
+        try:
+            from .fast_inference import fast_generate
+            return fast_generate(self, prompt, max_new_tokens=max_new_tokens, temperature=temperature, top_k=top_k)
+        except Exception:
+            pass
+
         ids = list(prompt.encode("utf-8", errors="replace"))
         if not ids:
             ids = [0]
