@@ -92,7 +92,7 @@ MESSAGE_BUDGET = 6000
 # qwen2.5:7b timed out (180 s) on two of the three and took 140 s on the third. The 3B adds
 # new prompt tokens at ~30/s against the 7B's ~14/s. Both misstate recorded results at
 # times, which is why named verdicts and the claims register are printed by code first.
-MENTOR_PREFERENCE = ("qwen2.5:3b", "gemma2:2b", "gemma:2b", "qwen2.5:7b", "qwen2.5:1.5b", "llama3.2:3b", "llama3.2:1b", "smollm2:360m")
+MENTOR_PREFERENCE = ("qwen2.5:1.5b", "qwen2.5:3b", "smollm2:360m", "gemma2:2b", "gemma:2b", "qwen2.5:7b", "llama3.2:3b", "llama3.2:1b")
 # Measured 2026-10-02 on the 8-core WSL desktop: qwen2.5:7b reads a prompt at ~26 tokens/s
 # after a 17 s cold load; qwen2.5:1.5b at ~146 tokens/s. With the system prompt a long
 # message is ~14k characters (~4k tokens): ~170 s before the 7B says anything, so both
@@ -469,6 +469,7 @@ class NclmCore:
                                       total_steps=opt.step_count + max(total_steps, warmup_steps + 1))
 
     def train_batch(self, x, y) -> float:
+        import gc
         from osiris.nclm import cross_entropy_loss
         from osiris.nclm.autograd import clip_grad_norm
         with self._otc._organism_lock:
@@ -479,9 +480,11 @@ class NclmCore:
             out.backward()
             clip_grad_norm(model.parameters(), 1.0)
             opt.step()
+            loss_val = float(out.data)
             st["step"] += 1
-            st["history"].append(float(out.data))
-            return float(out.data)
+            st["history"].append(loss_val)
+            gc.collect()
+            return loss_val
 
     def eval_batch(self, x, y) -> float:
         """Mean loss in nats per byte, no training."""
@@ -550,11 +553,14 @@ class NclmCore:
                     "nclm_path": os.path.dirname(getattr(sys.modules.get("osiris.nclm"), "__file__", "") or "")}
 
     def draft(self, prompt: str, max_bytes: int = 160) -> str:
-        with self._otc._organism_lock:
-            model = self._model()["model"]
-            text = model.generate(prompt, max_new_tokens=max_bytes, temperature=0.7, top_k=40)
-        reply = text[len(prompt):] if text.startswith(prompt) else text
-        return reply.split("\nUser:")[0].strip()
+        try:
+            with self._otc._organism_lock:
+                model = self._model()["model"]
+                text = model.generate(prompt, max_new_tokens=max_bytes, temperature=0.7, top_k=40)
+            reply = text[len(prompt):] if text.startswith(prompt) else text
+            return reply.split("\nUser:")[0].strip()
+        except (KeyboardInterrupt, Exception):
+            return ""
 
 
 def printable_ratio(text: str) -> float:
@@ -1060,13 +1066,14 @@ class Osiris:
 
         sent_user = None
         incomplete = ""
-        if gate["open"] and self.core is not None:
+        use_core_voice = os.environ.get("OSIRIS_CORE_VOICE", "1") != "0" or getattr(self, "force_core_voice", False)
+        if gate["open"] and self.core is not None and use_core_voice:
             self.out("\nOSIRIS › ")
             try:
-                draft = self.core.draft(self._transcript(self.history[-6:]) + "OSIRIS:")
-            except Exception as e:  # noqa: BLE001 - any core failure falls back to a mentor
+                draft = self.core.draft(self._transcript(self.history[-6:]) + "OSIRIS:", max_bytes=96)
+            except (Exception, KeyboardInterrupt) as e:  # noqa: BLE001 - any core failure falls back to a mentor
                 draft = ""
-                self.out(f"(core failed: {type(e).__name__}) ")
+                self.out(f"(core interrupted or failed: {type(e).__name__}) ")
             if draft and printable_ratio(draft) >= 0.95:
                 voice, reply = "core", draft
                 self.out(draft + "\n")

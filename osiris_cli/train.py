@@ -508,7 +508,7 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
     # and restored at the end; the run stops after `patience` evals without a gain.
     # (Until v4.5.2 held-out scoring skipped the phase-conjugate corrector that
     # training applies, which by itself produces that pattern; see RELEASE_NOTES_v4.5.2.md.)
-    best = {"bpb": first["heldout_docs_bpb"], "step": first["step"], "since": 0}
+    best = {"bpb": first["heldout_docs_bpb"], "chat_bpb": first.get("heldout_chat_bpb"), "step": first["step"], "since": 0}
     can_keep = hasattr(core, "save_best") and best["bpb"] is not None
     if can_keep:
         core.save_best()
@@ -539,12 +539,21 @@ def run(core, *, hours: float, batch: int = 8, max_steps: Optional[int] = None, 
             if steps % save_every == 0:
                 core.save(rotate=(steps % (save_every * 20) == 0))
             if steps % eval_every == 0:
-                d = evaluate("periodic")["heldout_docs_bpb"]
-                if d is not None and best["bpb"] is not None and d < best["bpb"] - MIN_GAIN_BPB:
-                    best.update(bpb=d, step=core.step(), since=0)
+                ev = evaluate("periodic")
+                d = ev.get("heldout_docs_bpb")
+                c = ev.get("heldout_chat_bpb")
+                gain_docs = (d is not None and best["bpb"] is not None and d < best["bpb"] - MIN_GAIN_BPB)
+                gain_chat = (c is not None and best.get("chat_bpb") is not None and c < best["chat_bpb"] - MIN_GAIN_BPB)
+                if gain_docs or gain_chat:
+                    if gain_docs:
+                        best["bpb"] = d
+                    if gain_chat:
+                        best["chat_bpb"] = c
+                    best["step"] = core.step()
+                    best["since"] = 0
                     if can_keep:
                         core.save_best()
-                elif d is not None:
+                else:
                     best["since"] += 1
                     if patience and best["since"] >= patience:
                         reason = f"held-out stopped improving (best {best['bpb']:.3f} bpb at step {best['step']})"
@@ -725,7 +734,16 @@ def make_core():
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     import osiris_termux_console as otc
     from osiris_cli.living import NclmCore
-    return NclmCore(otc)
+    core = NclmCore(otc)
+    global SEQ
+    try:
+        st = core._model()
+        model = st.get("model") if isinstance(st, dict) else st
+        if model and hasattr(model, "config") and hasattr(model.config, "max_seq_len"):
+            SEQ = int(model.config.max_seq_len)
+    except Exception:
+        pass
+    return core
 
 
 def main(argv: Optional[List[str]] = None) -> None:
@@ -733,7 +751,9 @@ def main(argv: Optional[List[str]] = None) -> None:
     ap = argparse.ArgumentParser(prog="osiris train", description="Overnight batch training for OSIRIS's core.")
     ap.add_argument("--hours", type=float, default=8.0)
     ap.add_argument("--batch", type=int, default=8)
+    ap.add_argument("--seq", type=int, default=None, help="sequence context length override")
     ap.add_argument("--max-steps", type=int, default=None)
+    ap.add_argument("--patience", type=int, default=PATIENCE, help="early stopping patience (0 to disable)")
     ap.add_argument("--distill", type=int, default=40, help="grounded mentor lessons to create first (0 = none)")
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--mix", default=None, help="docs,lessons,archive pool weights, e.g. 0.8,0.15,0.05")
@@ -754,6 +774,9 @@ def main(argv: Optional[List[str]] = None) -> None:
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--stop", action="store_true")
     args = ap.parse_args(argv)
+    if args.seq:
+        global SEQ
+        SEQ = args.seq
     core = make_core()
     if args.status:
         print("\n".join(status_lines(lock_path=core.lock_path())))
@@ -774,7 +797,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         seed=args.seed, mentor=OllamaMentor() if args.distill else None,
         log=lambda s: print(s, flush=True), archive_roots=["."] if args.all else None,
         mix=[float(x) for x in args.mix.split(",")] if args.mix else None,
-        runs_home=args.runs_home, rescore=not args.no_rescore, living_home=args.living_home,
+        patience=args.patience, runs_home=args.runs_home, rescore=not args.no_rescore, living_home=args.living_home,
         frozen_corpus=args.frozen_corpus)
 
 

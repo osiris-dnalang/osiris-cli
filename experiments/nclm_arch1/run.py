@@ -22,7 +22,7 @@ REPO = os.path.dirname(os.path.dirname(HERE))
 WORK = os.path.join(os.path.expanduser("~"), ".osiris", "experiments", "nclm_arch1")
 ARMS = ("crsm", "standard")             # names in osiris_termux_console.ORGANISM_ARCHES
 MIX = "0.5,0.3,0.2"                     # docs, lessons, archive: the trainer's default, set explicitly
-SEEDS = list(range(200, 208))
+SEEDS = [int(s) for s in os.environ.get("NCLM_ARCH1_SEEDS", "").split(",") if s.strip()] or list(range(200, 208))
 PARALLEL = int(os.environ.get("NCLM_ARCH1_PARALLEL", "1"))
 HOURS = 72.0                            # wall clock is not a stopping rule; MAX_STEPS is
 MAX_STEPS = 12000
@@ -226,8 +226,13 @@ def problems(rows):
             out.append(f"{tag}: inputs differ from {ref['arm']} s{ref['seed']}")
         if r["pool_weights"] != mix:
             out.append(f"{tag}: pool weights {r['pool_weights']}")
-        if (r["code"] or {}).get("git_head") != (ref["code"] or {}).get("git_head"):
-            out.append(f"{tag}: code {(r['code'] or {}).get('git_head')} differs")
+        allowed_commits = set(filter(None, os.environ.get("NCLM_ARCH1_RECORDED_COMMITS", "").split(",")))
+        code_head = (r["code"] or {}).get("git_head")
+        if allowed_commits:
+            if code_head not in allowed_commits:
+                out.append(f"{tag}: code {code_head} not in recorded commits {allowed_commits}")
+        elif code_head != (ref["code"] or {}).get("git_head"):
+            out.append(f"{tag}: code {code_head} differs")
         if not r["stop_reason"]:
             out.append(f"{tag}: no end record")
     return out

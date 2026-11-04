@@ -31,6 +31,13 @@ from .heron_staggered_benchmark import (
     HeronBenchmarkEngine,
     run_heron_refocuser_benchmark,
 )
+from .neural_qldpc import (
+    CSSCode,
+    DecodingResult,
+    NeuralSyndromeDecoder,
+    PauliFrameTracker,
+    gf2_rank,
+)
 
 __all__ = [
     "CircuitSpec",
@@ -53,4 +60,9 @@ __all__ = [
     "ClosedLoopBenchmarkReport",
     "HeronBenchmarkEngine",
     "run_heron_refocuser_benchmark",
+    "CSSCode",
+    "DecodingResult",
+    "NeuralSyndromeDecoder",
+    "PauliFrameTracker",
+    "gf2_rank",
 ]

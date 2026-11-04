@@ -141,6 +141,7 @@ class Tensor:
         for t in reversed(topo):
             if t._backward_fn is not None:
                 t._backward_fn()
+                t._backward_fn = None
 
     # -- Constructors -------------------------------------------------------
 

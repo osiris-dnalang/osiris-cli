@@ -1,0 +1,14 @@
+{
+  "experiment": "NCLM-GATE-1",
+  "scope": "SPEAKING_GATE_CROSSING",
+  "issuer": "Devin Phillip Davis / Node Beta (Standalone)",
+  "payload_sha256": "e86cc4f009908c8dc08ad410ef46f206483b705281a4eda9fa5f69e81a539a7d",
+  "nonce": "7d9b23f81e3a47818c4e0952b11fc273",
+  "timestamp": "2026-11-02T00:41:45-05:00",
+  "verified": true,
+  "invariants": {
+    "SYS_021": "Zero Self-Supplied Authorization - Verified",
+    "SYS_023": "Merkle Ledger Block Sequence Verified",
+    "SYS_026": "Speaking Gate Target <= 2.0000 BPB"
+  }
+}
