@@ -240,7 +240,7 @@ class TestPackageLevel:
 
     def test_version(self):
         import osiris
-        assert osiris.__version__ == "4.0.0"
+        assert osiris.__version__ == "5.0.0"
 
     def test_constants(self):
         import osiris
