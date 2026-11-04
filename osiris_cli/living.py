@@ -1066,12 +1066,11 @@ class Osiris:
 
         sent_user = None
         incomplete = ""
-        use_core_voice = os.environ.get("OSIRIS_CORE_VOICE", "0") == "1" or getattr(self, "force_core_voice", False)
+        use_core_voice = os.environ.get("OSIRIS_CORE_VOICE", "1") != "0" or getattr(self, "force_core_voice", False)
         if gate["open"] and self.core is not None and use_core_voice:
             self.out("\nOSIRIS › ")
             try:
-                self.out("\033[2m(consulting living core...)\033[0m ")
-                draft = self.core.draft(self._transcript(self.history[-6:]) + "OSIRIS:")
+                draft = self.core.draft(self._transcript(self.history[-6:]) + "OSIRIS:", max_bytes=96)
             except (Exception, KeyboardInterrupt) as e:  # noqa: BLE001 - any core failure falls back to a mentor
                 draft = ""
                 self.out(f"(core interrupted or failed: {type(e).__name__}) ")
