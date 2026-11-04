@@ -566,7 +566,7 @@ def get_terminal_width() -> int:
 
 
 def print_banner():
-    compact = os.environ.get("OSIRIS_COMPACT", "1") in ("1", "true", "True") or getattr(SESSION, "compact_mode", False)
+    compact = os.environ.get("OSIRIS_COMPACT", "0") in ("1", "true", "True") or getattr(SESSION, "compact_mode", False)
     if compact:
         print("\033[96m╔══════════════════════════════════════════════════════════════════════════════╗")
         print("║                     OSIRIS Sovereign Living Console                          ║")
@@ -1349,11 +1349,16 @@ def get_living():
             pass
         mentor = None
         try:
-            from osiris_cli.providers.mentor_adapter import ProviderMentorAdapter
-            from osiris_cli.providers.registry import get_active_provider
-            mentor = ProviderMentorAdapter(provider=get_active_provider())
-        except Exception as e:
-            print(f"[OSIRIS] provider mentor unavailable ({type(e).__name__}); mentor voice defaults to Ollama.")
+            voice = os.environ.get("OSIRIS_VOICE", "qwen2.5:1.5b")
+            from osiris_cli.living import OllamaMentor
+            mentor = OllamaMentor(model=voice)
+        except Exception:
+            try:
+                from osiris_cli.providers.mentor_adapter import ProviderMentorAdapter
+                from osiris_cli.providers.registry import get_active_provider
+                mentor = ProviderMentorAdapter(provider=get_active_provider())
+            except Exception as e:
+                print(f"[OSIRIS] provider mentor unavailable ({type(e).__name__}); mentor voice defaults to Ollama.")
 
         _LIVING = Osiris(core=core, mentor=mentor, knowledge=knowledge, probes=Probes(LIVING_HOME, trainer_status=trainer_status),
                          small_talk=small_talk)
@@ -2065,6 +2070,33 @@ def dispatch_command(state: OsirisReplState, line: str) -> None:
         state.compact_mode = not getattr(state, "compact_mode", False)
         status = "ENABLED (minimalist view)" if state.compact_mode else "DISABLED (full telemetry view)"
         print(f"[OSIRIS] Compact mode: {status}")
+    elif cmd == "/core":
+        living = get_living()
+        trailing = line_clean[len(parts[0]):].strip() or "hello"
+        print("\nOSIRIS (living core) › ", end="", flush=True)
+        try:
+            draft = living.core.draft("User: " + trailing + "\nOSIRIS:")
+            print(draft)
+            print(f"  · voice: OSIRIS core ({living.core.name}, own weights)\n")
+        except Exception as e:
+            print(f"(core unavailable: {e})\n")
+    elif cmd == "/voice":
+        living = get_living()
+        target = parts[1] if len(parts) > 1 else None
+        if target == "core":
+            living.force_core_voice = True
+            print("[OSIRIS] Active voice set to living core (osiris.nclm)")
+        elif target in ("mentor", "fast"):
+            living.force_core_voice = False
+            living.mentor.set_model("qwen2.5:1.5b")
+            print("[OSIRIS] Active voice set to fast mentor (qwen2.5:1.5b)")
+        elif target:
+            living.force_core_voice = False
+            living.mentor.set_model(target)
+            print(f"[OSIRIS] Active voice set to: {living.mentor.model()}")
+        else:
+            current_voice = "living core" if getattr(living, "force_core_voice", False) else living.mentor.model()
+            print(f"[OSIRIS] Current voice: {current_voice} (Use: /voice fast | /voice gemma2:2b | /voice core)")
     elif cmd in ("?", "/h"):
         print("""
  OSIRIS Quick Reference:
@@ -2246,7 +2278,12 @@ def boot_repl() -> None:
             print("[OSIRIS] Session closed.")
             break
 
-        dispatch_capturing(SESSION, line)
+        try:
+            dispatch_capturing(SESSION, line)
+        except KeyboardInterrupt:
+            print("\n  …(interrupted)\n")
+        except Exception as e:
+            print(f"\n[OSIRIS::ERROR] {e}\n")
 
     if _LIVING is not None:
         _LIVING.finish()

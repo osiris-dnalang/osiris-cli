@@ -553,11 +553,14 @@ class NclmCore:
                     "nclm_path": os.path.dirname(getattr(sys.modules.get("osiris.nclm"), "__file__", "") or "")}
 
     def draft(self, prompt: str, max_bytes: int = 160) -> str:
-        with self._otc._organism_lock:
-            model = self._model()["model"]
-            text = model.generate(prompt, max_new_tokens=max_bytes, temperature=0.7, top_k=40)
-        reply = text[len(prompt):] if text.startswith(prompt) else text
-        return reply.split("\nUser:")[0].strip()
+        try:
+            with self._otc._organism_lock:
+                model = self._model()["model"]
+                text = model.generate(prompt, max_new_tokens=max_bytes, temperature=0.7, top_k=40)
+            reply = text[len(prompt):] if text.startswith(prompt) else text
+            return reply.split("\nUser:")[0].strip()
+        except (KeyboardInterrupt, Exception):
+            return ""
 
 
 def printable_ratio(text: str) -> float:
@@ -1063,13 +1066,15 @@ class Osiris:
 
         sent_user = None
         incomplete = ""
-        if gate["open"] and self.core is not None:
+        use_core_voice = os.environ.get("OSIRIS_CORE_VOICE", "0") == "1" or getattr(self, "force_core_voice", False)
+        if gate["open"] and self.core is not None and use_core_voice:
             self.out("\nOSIRIS › ")
             try:
+                self.out("\033[2m(consulting living core...)\033[0m ")
                 draft = self.core.draft(self._transcript(self.history[-6:]) + "OSIRIS:")
-            except Exception as e:  # noqa: BLE001 - any core failure falls back to a mentor
+            except (Exception, KeyboardInterrupt) as e:  # noqa: BLE001 - any core failure falls back to a mentor
                 draft = ""
-                self.out(f"(core failed: {type(e).__name__}) ")
+                self.out(f"(core interrupted or failed: {type(e).__name__}) ")
             if draft and printable_ratio(draft) >= 0.95:
                 voice, reply = "core", draft
                 self.out(draft + "\n")
