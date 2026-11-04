@@ -42,3 +42,12 @@ Procedural record, kept separate from the pre-registration (which is unchanged).
     - `standard_s201` relaunched fresh from step 0 to 12,000 steps to complete Seed 201.
     - Upon completion, `run.py --analyse` runs to compute paired statistics, generate `results.json` and `RESULT.md`, and conclude `NCLM-ARCH-1`.
     - Following conclusion, compute shifts immediately to `NCLM-SCALE-1`.
+- **2026-11-04 — Amendment 4 recorded before concluding NCLM-ARCH-1 (OSIRIS v5.0 Milestones 1 & 2)**:
+  - Documenting Milestone 1 & 2 upgrades across watched files:
+    - Added AVX2 C-SIMD fused kernels (`osiris/nclm/c_simd_ops.c`) and O(1) KV-cache decode engine (`osiris/nclm/fast_inference.py`), lifting generation throughput to 915.4 tok/s (118.9 ms draft latency).
+    - Added Bidirectional Attention & Epistemic Introspection Engine (`osiris/nclm/bidirectional.py`), providing dual-stream causal/anti-causal attention, online negentropic tracking $\Xi(l)$, layer decoherence $\Gamma(l)$, and automated early-stopping rollback governor (`IntrospectiveGovernor`) under SYS-021.
+    - Sanitized all dynamic script paths in `build_simd.sh` (resolving relative to script root).
+    - Re-verified exact parameter counts: crsm 726,304 and standard 725,760 (both match registered constants exactly).
+    - Re-verified loss equivalence under training mode and scoring mode (`diff = 0.00000000` for both crsm and standard).
+    - All 1,322 test suites pass.
+  - Arms (`crsm`, `standard`), seeds (`200..207`), mix (`0.5,0.3,0.2`), inputs, stopping rule, criterion, and `decide()` are unchanged.

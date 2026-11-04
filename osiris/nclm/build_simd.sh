@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
-cd /home/enki/osiris-cli-v431-governed/osiris/nclm
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$DIR"
 PY_INC=$(python3 -c "import sysconfig; print(sysconfig.get_path('include'))")
 NUMPY_INC=$(python3 -c "import numpy; print(numpy.get_include())")
 
