@@ -1,0 +1,27 @@
+{
+  "job_id": "dbltkdd8ft8s738toef0",
+  "backend": "ibm_marrakesh",
+  "circuits": 144,
+  "shots": 1024,
+  "edges": [
+    [
+      14,
+      15
+    ],
+    [
+      33,
+      32
+    ],
+    [
+      19,
+      35
+    ]
+  ],
+  "protocols": [
+    "IDLE",
+    "SYNC_XY8",
+    "STAG_XY8",
+    "SHIFT_XY8"
+  ],
+  "reps": 4
+}

@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "title": "Experimental Validation of Staggered Dynamical Decoupling on a 156-Qubit Superconducting Quantum Processor: 663,552 IBM Heron r2 Shots, Matched Controls, and Governed Execution",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "publication_date": "2026-11-04",
+    "version": "1.0.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC / OSIRIS Sovereign Architecture Project"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "quantum computing",
+      "dynamical decoupling",
+      "IBM Quantum Heron",
+      "ibm_marrakesh",
+      "staggered XY8",
+      "spectator crosstalk",
+      "quantum tomography",
+      "Bell state fidelity",
+      "SYS-021",
+      "governed execution",
+      "Merkle ledger",
+      "hardware benchmarking",
+      "bootstrap confidence intervals"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>OSIRIS Physical QPU Validation Campaign Deliverable (v1.0)</strong></p><p>This deposition contains the complete empirical evidence, raw shot count dictionaries, instruction-set architecture (ISA) compiled circuits, physical schedule audits, analysis scripts, publication figures, and LaTeX manuscript for the <strong>OSIRIS Staggered Dynamical Decoupling (STAG_XY8) Validation Campaign</strong> executed on <code>ibm_marrakesh</code>, a 156-qubit IBM Quantum Heron r2 processor.</p><p>Across four independent hardware acquisition jobs comprising <strong>648 ISA circuits</strong>, <strong>663,552 physical shots</strong>, and <strong>192 seconds of real QPU compute</strong>, this campaign provides rigorous hardware validation of staggered dynamical decoupling in preserving two-qubit Bell state entanglement (|&Phi;+&gt; = (|00&gt; + |11&gt;)/&radic;2) against multi-qubit crosstalk and environmental dephasing.</p><p><strong>Definitive Scientific & Hardware Findings:</strong></p><ul><li><strong>Resolution of Historical Pulse Omission:</strong> Byte-level forensic audit of historical job <code>dblr6lhkbkrc73co9h30</code> proved that prior 'YY suppression' claims arose because unspaced consecutive pulses collapsed algebraically during transpilation, executing zero physical DD pulses. All present circuits enforce calibrated 4.0 ns dt physical scheduling with explicit delay instructions.</li><li><strong>Massive Entanglement Protection over Bare Idle:</strong> Across all seven heavy-hex coupling edges, dynamical decoupling dramatically outperforms natural decoherence. Under 4.0 &mu;s evolution on Edge (14, 15), Bell state coherence collapsed to &lang;XX&rang; = +0.5059 under IDLE, whereas STAG_XY8 preserved &lang;XX&rang; = +0.9419 &plusmn; 0.0104 (Fidelity F = 0.9492), an entanglement advantage of +0.4360.</li><li><strong>Statistically Significant Preservation Gain on Edge (14, 15):</strong> Across 10 independent paired hardware acquisition blocks, STAG_XY8 achieved a statistically significant correlation preservation gain over standard synchronous decoupling (SYNC_XY8): &Delta;&lang;XX&rang; = +0.0186, with a 95% bootstrap confidence interval of [+0.0107, +0.0250] strictly excluding zero (p &lt; 0.0001, 100% probability of superiority).</li><li><strong>Rigorous Non-Inferiority Verification Across 42 Paired Observations:</strong> Synthesizing all 42 paired hardware observations across all 7 physical edges, STAG_XY8 demonstrated strict statistical non-inferiority to standard synchronous decoupling (p = 0.00000 against a prespecified margin &delta; = -0.0200), achieving an overall mean &Delta;&lang;XX&rang; = +0.0051 &plusmn; 0.0298 and an 86.0% global probability of superiority.</li><li><strong>Coupler-Dependent Stagger Landscape (Experiment C):</strong> An 8-offset sweep (&Delta; &in; [0, 800] ns under 8.0 &mu;s evolution) demonstrated that staggering does not rely on a singular delta-function resonance at 160 ns, but operates across an optimal physical protective band between 80 ns and 240 ns.</li><li><strong>SYS-021 Governed Execution:</strong> Every operational dispatch was authorized via immutable Ed25519 payload-bound grants signed by operator Devin Phillip Davis / Enki, anchored in a 5-block cryptographic ledger (evidence_ledger.db) and a 20-entry write-ahead hash ledger (ledger.jsonl).</li></ul><p>The deposition package includes the standalone LaTeX paper (OSIRIS_QPU_STAG_XY8_VALIDATION.tex), publication-ready vector figures, raw count dictionaries for all 648 circuits, compiled QPY binaries, and reproducible analysis evaluation code.</p>",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v5.1.0",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5281/zenodo.23840584",
+        "relation": "references",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23834057",
+        "relation": "references",
+        "scheme": "doi"
+      }
+    ]
+  }
+}
