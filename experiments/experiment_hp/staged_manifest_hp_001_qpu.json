@@ -1,0 +1,135 @@
+{
+  "benchmark": "OSIRIS-HP-001",
+  "backend": "ibm_marrakesh",
+  "created_at": "2026-11-05T14:18:15Z",
+  "physical_layout": {
+    "R": 14,
+    "M": 15,
+    "B1": 19,
+    "B2": 35,
+    "E1": 13,
+    "E2": 34
+  },
+  "n_circuits": 9,
+  "qpy_bytes": 90696,
+  "qpy_sha256": "08f194c2999f68d52111a308ec432a6b3b26d1c4f5e951c7d36482ccb6fda78c",
+  "circuits": [
+    {
+      "index": 0,
+      "name": "HP_ARM_A_REVERSIBLE_XX",
+      "depth": 20,
+      "cz_count": 9,
+      "single_qubit_gates": 45,
+      "ops": {
+        "sx": 24,
+        "rz": 21,
+        "cz": 9,
+        "measure": 2
+      }
+    },
+    {
+      "index": 1,
+      "name": "HP_ARM_A_REVERSIBLE_YY",
+      "depth": 20,
+      "cz_count": 9,
+      "single_qubit_gates": 44,
+      "ops": {
+        "sx": 24,
+        "rz": 20,
+        "cz": 9,
+        "measure": 2
+      }
+    },
+    {
+      "index": 2,
+      "name": "HP_ARM_A_REVERSIBLE_ZZ",
+      "depth": 19,
+      "cz_count": 9,
+      "single_qubit_gates": 44,
+      "ops": {
+        "sx": 24,
+        "rz": 20,
+        "cz": 9,
+        "measure": 2
+      }
+    },
+    {
+      "index": 3,
+      "name": "HP_ARM_B_RESTRICTED_XX",
+      "depth": 46,
+      "cz_count": 21,
+      "single_qubit_gates": 74,
+      "ops": {
+        "sx": 42,
+        "rz": 32,
+        "cz": 21,
+        "measure": 2
+      }
+    },
+    {
+      "index": 4,
+      "name": "HP_ARM_B_RESTRICTED_YY",
+      "depth": 46,
+      "cz_count": 21,
+      "single_qubit_gates": 73,
+      "ops": {
+        "sx": 42,
+        "rz": 31,
+        "cz": 21,
+        "measure": 2
+      }
+    },
+    {
+      "index": 5,
+      "name": "HP_ARM_B_RESTRICTED_ZZ",
+      "depth": 44,
+      "cz_count": 21,
+      "single_qubit_gates": 71,
+      "ops": {
+        "sx": 41,
+        "rz": 30,
+        "cz": 21,
+        "measure": 2
+      }
+    },
+    {
+      "index": 6,
+      "name": "HP_ARM_B_UNENTANGLED_XX",
+      "depth": 32,
+      "cz_count": 16,
+      "single_qubit_gates": 60,
+      "ops": {
+        "sx": 34,
+        "rz": 26,
+        "cz": 16,
+        "measure": 2
+      }
+    },
+    {
+      "index": 7,
+      "name": "HP_ARM_B_UNENTANGLED_YY",
+      "depth": 31,
+      "cz_count": 16,
+      "single_qubit_gates": 58,
+      "ops": {
+        "sx": 34,
+        "rz": 24,
+        "cz": 16,
+        "measure": 2
+      }
+    },
+    {
+      "index": 8,
+      "name": "HP_ARM_B_UNENTANGLED_ZZ",
+      "depth": 30,
+      "cz_count": 16,
+      "single_qubit_gates": 56,
+      "ops": {
+        "sx": 33,
+        "rz": 23,
+        "cz": 16,
+        "measure": 2
+      }
+    }
+  ]
+}
