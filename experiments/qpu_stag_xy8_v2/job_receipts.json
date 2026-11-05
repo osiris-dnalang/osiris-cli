@@ -1,0 +1,1091 @@
+{
+  "job_id": "dblrpnt8ft8s738tlgcg",
+  "backend": "ibm_marrakesh",
+  "submission_time_utc": "2026-11-04T23:16:47Z",
+  "shots_per_circuit": 1024,
+  "total_circuits": 108,
+  "total_shots": 110592,
+  "specs": [
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q14_q15_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q33_q32_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q19_q35_r0"
+    },
+    {
+      "rep": 0,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q19_q35_r0"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q19_q35_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q33_q32_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q14_q15_r1"
+    },
+    {
+      "rep": 1,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q19_q35_r1"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "XX",
+      "name": "STAG_XY8_XX_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "IDLE",
+      "basis": "YY",
+      "name": "IDLE_YY_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "YY",
+      "name": "SHIFT_XY8_YY_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "ZZ",
+      "name": "IDLE_ZZ_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "ZZ",
+      "name": "SHIFT_XY8_ZZ_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "name": "SYNC_XY8_ZZ_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "YY",
+      "name": "STAG_XY8_YY_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "name": "SYNC_XY8_YY_q19_q35_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "IDLE",
+      "basis": "XX",
+      "name": "IDLE_XX_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        14,
+        15
+      ],
+      "protocol": "STAG_XY8",
+      "basis": "ZZ",
+      "name": "STAG_XY8_ZZ_q14_q15_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        33,
+        32
+      ],
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "name": "SYNC_XY8_XX_q33_q32_r2"
+    },
+    {
+      "rep": 2,
+      "edge": [
+        19,
+        35
+      ],
+      "protocol": "SHIFT_XY8",
+      "basis": "XX",
+      "name": "SHIFT_XY8_XX_q19_q35_r2"
+    }
+  ],
+  "ledger_entry_hash": "eac5c00299c33a1830fd8b5928d0d6df3d67ea24a6ded616198bd242483b03df"
+}

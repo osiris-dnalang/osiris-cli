@@ -1,0 +1,20 @@
+{
+  "deposition_id": 23967473,
+  "record_id": 23967473,
+  "doi": "10.5281/zenodo.23967473",
+  "url": "https://zenodo.org/record/23967473",
+  "title": "Experimental Validation of Staggered Dynamical Decoupling on a 156-Qubit Superconducting Quantum Processor: 663,552 IBM Heron r2 Shots, Matched Controls, and Governed Execution",
+  "files_uploaded": [
+    "osiris_qpu_stag_xy8_v1.0_evidence_package.tar.gz",
+    "osiris_qpu_stag_xy8_v1.0_evidence_package.zip",
+    "SHA256SUMS.txt",
+    "OSIRIS_QPU_STAG_XY8_VALIDATION.tex",
+    "EXPERIMENT_REPORT.md",
+    "final_synthesis.json",
+    "fig1_pulse_schedules.png",
+    "fig2_7edge_correlation_matched.png",
+    "fig3_stagger_offset_sweep.png",
+    "fig4_bootstrap_synthesis_forest.png"
+  ],
+  "status": "published"
+}
