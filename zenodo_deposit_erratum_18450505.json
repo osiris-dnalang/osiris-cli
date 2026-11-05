@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "title": "Formal Erratum & Forensic Audit: Statistical Validation of W₂ Geometry in Quantum Circuits (Zenodo Record 18450505)",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "publication_date": "2026-11-05",
+    "version": "1.0.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "quantum information",
+      "erratum",
+      "forensic audit",
+      "Wasserstein distance",
+      "quantum Hellinger distance",
+      "metric inversion",
+      "Hayden-Preskill protocol",
+      "scrambling",
+      "black hole information paradox",
+      "SYS-021",
+      "epistemic governance",
+      "NISQ benchmarking"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>Formal Erratum &amp; Forensic Audit for Zenodo Record 18450505</strong></p><p>This document provides a comprehensive, dispassionate forensic audit and formal mathematical erratum for the February 2026 manuscript <em>\"Statistical Validation of W₂ Geometry in Quantum Circuits: Evidence for Black Hole Information Preservation\"</em> (originally archived under Zenodo Record <a href=\"https://doi.org/10.5281/zenodo.18450505\">10.5281/zenodo.18450505</a>).</p><p><strong>Summary of Confirmed Findings:</strong></p><ul><li><strong>Metric Misidentification:</strong> The expression <code>W₂(ρ₁, ρ₂) = √(Tr[(√ρ₁ - √ρ₂)²])</code> is the quantum Hellinger metric (Hilbert-Schmidt difference on matrix square roots), not the quantum Wasserstein-2 distance. It lacks an underlying transport cost matrix and coupling optimization.</li><li><strong>Metric Inversion Error:</strong> Information preservation was defined as <code>I_pres = W₂(ρ_in, ρ_out) / W₂_max</code>. Under any positive-definite metric, <code>D(ρ, ρ) = 0</code>. Consequently, identity evolution evaluates to 0% preservation while orthogonal states evaluate to 100%. The metric was literally inverted, measuring state dissimilarity rather than information retention.</li><li><strong>Ungrounded Null Hypothesis:</strong> The one-sample t-test against an assumed 50% null baseline (t = 8.73, p &lt; 0.001) has no physical justification. In an 8-qubit space (d = 256), Haar-random state fidelity is 1/d ≈ 0.39%.</li><li><strong>Physical Overreach:</strong> An 8-qubit unitary circuit is reversible by definition. Unitary propagation through parameterized gates on IBM hardware measures hardware gate fidelity and decoherence, but provides no empirical evidence resolving the astrophysical black hole information paradox or ruling out firewalls.</li></ul><p><strong>Remediation:</strong> In accordance with SYS-021 Dispassionate Forensic Incident Documentation, the original record is preserved as an empirical artifact. The research is reconstructed as a rigorous 3-arm Hayden-Preskill quantum information scrambling and recovery benchmark.</p>",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.18450505",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.18450505",
+        "relation": "isDerivedFrom",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/blob/feature/governed-gateway/docs/research/ERRATUM_AND_FORENSIC_AUDIT_ZENODO_18450505_W2_BLACK_HOLE.md",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ]
+  }
+}
