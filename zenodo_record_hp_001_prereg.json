@@ -1,0 +1,128 @@
+{
+  "created": "2026-11-05T14:16:02.713446+00:00",
+  "modified": "2026-11-05T14:16:03.356227+00:00",
+  "id": 23982138,
+  "conceptrecid": "23982137",
+  "doi": "10.5281/zenodo.23982138",
+  "conceptdoi": "10.5281/zenodo.23982137",
+  "doi_url": "https://doi.org/10.5281/zenodo.23982138",
+  "metadata": {
+    "title": "OSIRIS-HP-001: Hayden\u2013Preskill Quantum Information Recovery Benchmark (Preregistration Protocol v1.0)",
+    "doi": "10.5281/zenodo.23982138",
+    "publication_date": "2026-11-05",
+    "description": "<p><strong>OSIRIS-HP-001 Preregistration Protocol v1.0</strong></p><p>This protocol establishes a formal, pre-registered, and falsifiable quantum information recovery benchmark based on the Hayden-Preskill thought experiment (Hayden &amp; Preskill 2007; Yoshida &amp; Kitaev 2017). Designed for execution on IBM Quantum Heron r2 processors (<code>ibm_marrakesh</code>) following deterministic Stage 1 CPU simulation.</p><p><strong>Core Thesis:</strong> Investigates whether an unknown quantum state can be reconstructed by a restricted-access decoder operating strictly on early radiation and newly emitted late radiation after scrambling across an entangled register, and quantifies recovery degradation under calibrated physical noise.</p><p><strong>Three Controlled Experimental Arms:</strong></p><ul><li><strong>Arm A (Identity Recovery Control):</strong> Full-access reversible control establishing the SPAM ceiling and hardware noise baseline (unit fidelity prediction).</li><li><strong>Arm B (Restricted-Access Recovery):</strong> Message entangled with reference R; black hole B entangled with early radiation E. Scrambler U acts on M + B. Remnant C and Reference R are strictly quarantined. Decoder V_ED operates exclusively on E + D, outputting decoded message M'. Evaluates entanglement fidelity F_rec = &lt;Phi+| rho_RM' |Phi+&gt; reconstructed via XX, YY, and ZZ tomography.</li><li><strong>Arm C (Noise Degradation Sweep):</strong> Calibrated physical noise sweep (depolarizing, dephasing, relaxation) evaluating recovery resilience.</li></ul><p><strong>Formal Pre-Registered Hypotheses:</strong></p><ul><li><strong>H1 (Reversible Control):</strong> Full-access inverse achieves F &gt;= 0.999 in noiseless simulation.</li><li><strong>H2 (Restricted Recovery):</strong> Decoder on E + D achieves F_rec &gt; 0.50 (quantum entanglement witness) with &gt;10 pp advantage over unentangled controls.</li><li><strong>H3 (Page Transition):</strong> Monotonic fidelity scaling as late radiation size crosses the Page threshold (kD = 1 &lt; kD = 2 &lt; kD = 3 = 1.0).</li><li><strong>H4 (Noise Sensitivity):</strong> Monotonic degradation under physical noise channels.</li></ul><p>Stage 1 CPU simulation passed all acceptance criteria across N = 20 Haar-random trials (Arm B F = 0.9097 vs. unentangled control F = 0.7223, advantage +18.74 pp, p = 9.05e-12).</p>",
+    "access_right": "open",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "keywords": [
+      "quantum information",
+      "Hayden-Preskill protocol",
+      "quantum scrambling",
+      "quantum recovery",
+      "entanglement witness",
+      "preregistration",
+      "IBM Quantum",
+      "ibm_marrakesh",
+      "Heron r2",
+      "SYS-021",
+      "Page transition",
+      "epistemic governance"
+    ],
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23969941",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23977106",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/blob/feature/governed-gateway/docs/research/OSIRIS_HP_001_PREREGISTRATION.md",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ],
+    "version": "1.0.0",
+    "license": "cc-by-4.0",
+    "imprint_publisher": "Zenodo",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "prereserve_doi": {
+      "doi": "10.5281/zenodo.23982138",
+      "recid": 23982138
+    }
+  },
+  "title": "OSIRIS-HP-001: Hayden\u2013Preskill Quantum Information Recovery Benchmark (Preregistration Protocol v1.0)",
+  "links": {
+    "self": "https://zenodo.org/api/records/23982138",
+    "html": "https://zenodo.org/records/23982138",
+    "doi": "https://doi.org/10.5281/zenodo.23982138",
+    "parent_doi": "https://doi.org/10.5281/zenodo.23982137",
+    "badge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23982138.svg",
+    "conceptbadge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23982137.svg",
+    "files": "https://zenodo.org/api/records/23982138/files",
+    "bucket": "https://zenodo.org/api/files/b34d1f13-5e97-43c9-9af3-c0de468fc105",
+    "thumb250": "https://zenodo.org/record/23982138/thumb250",
+    "thumbs": {
+      "10": "https://zenodo.org/record/23982138/thumb10",
+      "50": "https://zenodo.org/record/23982138/thumb50",
+      "100": "https://zenodo.org/record/23982138/thumb100",
+      "250": "https://zenodo.org/record/23982138/thumb250",
+      "750": "https://zenodo.org/record/23982138/thumb750",
+      "1200": "https://zenodo.org/record/23982138/thumb1200"
+    },
+    "latest_draft": "https://zenodo.org/api/deposit/depositions/23982138",
+    "latest_draft_html": "https://zenodo.org/deposit/23982138",
+    "publish": "https://zenodo.org/api/deposit/depositions/23982138/actions/publish",
+    "edit": "https://zenodo.org/api/deposit/depositions/23982138/actions/edit",
+    "discard": "https://zenodo.org/api/deposit/depositions/23982138/actions/discard",
+    "newversion": "https://zenodo.org/api/deposit/depositions/23982138/actions/newversion",
+    "record": "https://zenodo.org/api/records/23982138",
+    "record_html": "https://zenodo.org/record/23982138",
+    "latest": "https://zenodo.org/api/records/23982138/versions/latest",
+    "latest_html": "https://zenodo.org/records/23982138/latest"
+  },
+  "record_id": 23982138,
+  "owner": 1593545,
+  "files": [
+    {
+      "id": "b7fcb3f1-e5e2-491b-9500-3497fdaf92f8",
+      "filename": "OSIRIS_HP_001_PREREGISTRATION.md",
+      "filesize": 10491,
+      "checksum": "ee4637752acce31895dca97184b8c461",
+      "links": {
+        "self": "https://zenodo.org/api/records/23982138/files/b7fcb3f1-e5e2-491b-9500-3497fdaf92f8",
+        "download": "https://zenodo.org/api/records/23982138/draft/files/OSIRIS_HP_001_PREREGISTRATION.md/content"
+      }
+    },
+    {
+      "id": "23bef42d-6076-422a-b40b-8202b6d2118f",
+      "filename": "OSIRIS_HP_001_PREREGISTRATION.pdf",
+      "filesize": 230801,
+      "checksum": "3767fc40d157aafae9fd1b80a0169b1a",
+      "links": {
+        "self": "https://zenodo.org/api/records/23982138/files/23bef42d-6076-422a-b40b-8202b6d2118f",
+        "download": "https://zenodo.org/api/records/23982138/draft/files/OSIRIS_HP_001_PREREGISTRATION.pdf/content"
+      }
+    },
+    {
+      "id": "1d87c015-e6de-4d33-a06d-058a664d9eef",
+      "filename": "results_hp_001_benchmark.json",
+      "filesize": 9322,
+      "checksum": "e44cf12c0cc8c810c2bccefc8e373bde",
+      "links": {
+        "self": "https://zenodo.org/api/records/23982138/files/1d87c015-e6de-4d33-a06d-058a664d9eef",
+        "download": "https://zenodo.org/api/records/23982138/draft/files/results_hp_001_benchmark.json/content"
+      }
+    }
+  ],
+  "state": "done",
+  "submitted": true
+}
