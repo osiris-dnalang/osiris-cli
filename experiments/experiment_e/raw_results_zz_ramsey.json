@@ -1,0 +1,484 @@
+{
+  "job_id": "dbm8ni674qds73drr68g",
+  "backend": "ibm_marrakesh",
+  "qpu_seconds": 0,
+  "payload_sha256": "14cbb4af5647b28cd320a3a7aaeb0d058f6a3d28afbc28c9c00d69a9a8c64d1c",
+  "qpy_sha256": "171e7f3ec3948c2c3d0cba8eb430e7e8e2651d9dac833e66d60607a6d4828d35",
+  "records": [
+    {
+      "circuit_index": 0,
+      "name": "ZZ_RAMSEY_A_0dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 0,
+      "delay_ns": 0.0,
+      "counts": {
+        "01": 989,
+        "00": 22,
+        "11": 13
+      },
+      "p0_target": 0.021484375
+    },
+    {
+      "circuit_index": 1,
+      "name": "ZZ_RAMSEY_B_0dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 0,
+      "delay_ns": 0.0,
+      "counts": {
+        "11": 942,
+        "01": 53,
+        "10": 28,
+        "00": 1
+      },
+      "p0_target": 0.0283203125
+    },
+    {
+      "circuit_index": 2,
+      "name": "ZZ_RAMSEY_A_32dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 32,
+      "delay_ns": 128.0,
+      "counts": {
+        "01": 937,
+        "11": 10,
+        "00": 77
+      },
+      "p0_target": 0.0751953125
+    },
+    {
+      "circuit_index": 3,
+      "name": "ZZ_RAMSEY_B_32dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 32,
+      "delay_ns": 128.0,
+      "counts": {
+        "11": 880,
+        "10": 82,
+        "01": 57,
+        "00": 5
+      },
+      "p0_target": 0.0849609375
+    },
+    {
+      "circuit_index": 4,
+      "name": "ZZ_RAMSEY_A_64dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 64,
+      "delay_ns": 256.0,
+      "counts": {
+        "01": 855,
+        "00": 160,
+        "11": 8,
+        "10": 1
+      },
+      "p0_target": 0.1572265625
+    },
+    {
+      "circuit_index": 5,
+      "name": "ZZ_RAMSEY_B_64dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 64,
+      "delay_ns": 256.0,
+      "counts": {
+        "10": 187,
+        "11": 764,
+        "01": 57,
+        "00": 16
+      },
+      "p0_target": 0.1982421875
+    },
+    {
+      "circuit_index": 6,
+      "name": "ZZ_RAMSEY_A_96dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 96,
+      "delay_ns": 384.0,
+      "counts": {
+        "00": 344,
+        "01": 676,
+        "11": 1,
+        "10": 3
+      },
+      "p0_target": 0.3388671875
+    },
+    {
+      "circuit_index": 7,
+      "name": "ZZ_RAMSEY_B_96dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 96,
+      "delay_ns": 384.0,
+      "counts": {
+        "11": 644,
+        "10": 314,
+        "00": 22,
+        "01": 44
+      },
+      "p0_target": 0.328125
+    },
+    {
+      "circuit_index": 8,
+      "name": "ZZ_RAMSEY_A_128dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 128,
+      "delay_ns": 512.0,
+      "counts": {
+        "00": 541,
+        "01": 473,
+        "11": 4,
+        "10": 6
+      },
+      "p0_target": 0.5341796875
+    },
+    {
+      "circuit_index": 9,
+      "name": "ZZ_RAMSEY_B_128dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 128,
+      "delay_ns": 512.0,
+      "counts": {
+        "10": 504,
+        "11": 452,
+        "01": 39,
+        "00": 29
+      },
+      "p0_target": 0.5205078125
+    },
+    {
+      "circuit_index": 10,
+      "name": "ZZ_RAMSEY_A_160dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 160,
+      "delay_ns": 640.0,
+      "counts": {
+        "01": 334,
+        "00": 683,
+        "11": 2,
+        "10": 5
+      },
+      "p0_target": 0.671875
+    },
+    {
+      "circuit_index": 11,
+      "name": "ZZ_RAMSEY_B_160dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 160,
+      "delay_ns": 640.0,
+      "counts": {
+        "11": 323,
+        "10": 642,
+        "00": 42,
+        "01": 17
+      },
+      "p0_target": 0.66796875
+    },
+    {
+      "circuit_index": 12,
+      "name": "ZZ_RAMSEY_A_192dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 192,
+      "delay_ns": 768.0,
+      "counts": {
+        "00": 829,
+        "01": 188,
+        "10": 7
+      },
+      "p0_target": 0.81640625
+    },
+    {
+      "circuit_index": 13,
+      "name": "ZZ_RAMSEY_B_192dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 192,
+      "delay_ns": 768.0,
+      "counts": {
+        "10": 767,
+        "11": 176,
+        "00": 68,
+        "01": 13
+      },
+      "p0_target": 0.8154296875
+    },
+    {
+      "circuit_index": 14,
+      "name": "ZZ_RAMSEY_A_224dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 224,
+      "delay_ns": 896.0,
+      "counts": {
+        "00": 919,
+        "01": 101,
+        "10": 4
+      },
+      "p0_target": 0.9013671875
+    },
+    {
+      "circuit_index": 15,
+      "name": "ZZ_RAMSEY_B_224dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 224,
+      "delay_ns": 896.0,
+      "counts": {
+        "10": 827,
+        "00": 79,
+        "11": 106,
+        "01": 12
+      },
+      "p0_target": 0.884765625
+    },
+    {
+      "circuit_index": 16,
+      "name": "ZZ_RAMSEY_A_256dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 256,
+      "delay_ns": 1024.0,
+      "counts": {
+        "00": 934,
+        "01": 82,
+        "10": 6,
+        "11": 2
+      },
+      "p0_target": 0.91796875
+    },
+    {
+      "circuit_index": 17,
+      "name": "ZZ_RAMSEY_B_256dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 256,
+      "delay_ns": 1024.0,
+      "counts": {
+        "11": 76,
+        "10": 873,
+        "00": 67,
+        "01": 8
+      },
+      "p0_target": 0.91796875
+    },
+    {
+      "circuit_index": 18,
+      "name": "ZZ_RAMSEY_A_288dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 288,
+      "delay_ns": 1152.0,
+      "counts": {
+        "00": 870,
+        "01": 146,
+        "10": 8
+      },
+      "p0_target": 0.857421875
+    },
+    {
+      "circuit_index": 19,
+      "name": "ZZ_RAMSEY_B_288dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 288,
+      "delay_ns": 1152.0,
+      "counts": {
+        "10": 848,
+        "00": 63,
+        "11": 103,
+        "01": 10
+      },
+      "p0_target": 0.8896484375
+    },
+    {
+      "circuit_index": 20,
+      "name": "ZZ_RAMSEY_A_320dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 320,
+      "delay_ns": 1280.0,
+      "counts": {
+        "00": 779,
+        "11": 1,
+        "01": 236,
+        "10": 8
+      },
+      "p0_target": 0.7685546875
+    },
+    {
+      "circuit_index": 21,
+      "name": "ZZ_RAMSEY_B_320dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 320,
+      "delay_ns": 1280.0,
+      "counts": {
+        "10": 730,
+        "01": 17,
+        "00": 72,
+        "11": 205
+      },
+      "p0_target": 0.783203125
+    },
+    {
+      "circuit_index": 22,
+      "name": "ZZ_RAMSEY_A_352dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 352,
+      "delay_ns": 1408.0,
+      "counts": {
+        "00": 613,
+        "01": 408,
+        "11": 1,
+        "10": 2
+      },
+      "p0_target": 0.6005859375
+    },
+    {
+      "circuit_index": 23,
+      "name": "ZZ_RAMSEY_B_352dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 352,
+      "delay_ns": 1408.0,
+      "counts": {
+        "10": 568,
+        "11": 362,
+        "00": 55,
+        "01": 39
+      },
+      "p0_target": 0.6083984375
+    },
+    {
+      "circuit_index": 24,
+      "name": "ZZ_RAMSEY_A_384dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 384,
+      "delay_ns": 1536.0,
+      "counts": {
+        "00": 432,
+        "01": 587,
+        "11": 1,
+        "10": 4
+      },
+      "p0_target": 0.42578125
+    },
+    {
+      "circuit_index": 25,
+      "name": "ZZ_RAMSEY_B_384dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 384,
+      "delay_ns": 1536.0,
+      "counts": {
+        "10": 408,
+        "11": 529,
+        "00": 29,
+        "01": 58
+      },
+      "p0_target": 0.4267578125
+    },
+    {
+      "circuit_index": 26,
+      "name": "ZZ_RAMSEY_A_416dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 416,
+      "delay_ns": 1664.0,
+      "counts": {
+        "01": 749,
+        "00": 267,
+        "10": 2,
+        "11": 6
+      },
+      "p0_target": 0.2626953125
+    },
+    {
+      "circuit_index": 27,
+      "name": "ZZ_RAMSEY_B_416dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 416,
+      "delay_ns": 1664.0,
+      "counts": {
+        "11": 690,
+        "10": 240,
+        "01": 70,
+        "00": 24
+      },
+      "p0_target": 0.2578125
+    },
+    {
+      "circuit_index": 28,
+      "name": "ZZ_RAMSEY_A_448dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 448,
+      "delay_ns": 1792.0,
+      "counts": {
+        "01": 881,
+        "00": 137,
+        "11": 5,
+        "10": 1
+      },
+      "p0_target": 0.134765625
+    },
+    {
+      "circuit_index": 29,
+      "name": "ZZ_RAMSEY_B_448dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 448,
+      "delay_ns": 1792.0,
+      "counts": {
+        "11": 781,
+        "01": 93,
+        "10": 135,
+        "00": 15
+      },
+      "p0_target": 0.146484375
+    },
+    {
+      "circuit_index": 30,
+      "name": "ZZ_RAMSEY_A_500dt",
+      "arm": "A",
+      "control_state": 0,
+      "delay_dt": 500,
+      "delay_ns": 2000.0,
+      "counts": {
+        "01": 951,
+        "11": 7,
+        "00": 63,
+        "10": 3
+      },
+      "p0_target": 0.064453125
+    },
+    {
+      "circuit_index": 31,
+      "name": "ZZ_RAMSEY_B_500dt",
+      "arm": "B",
+      "control_state": 1,
+      "delay_dt": 500,
+      "delay_ns": 2000.0,
+      "counts": {
+        "11": 880,
+        "10": 56,
+        "01": 84,
+        "00": 4
+      },
+      "p0_target": 0.05859375
+    }
+  ]
+}
