@@ -1,8 +1,8 @@
-# OSIRIS Frontier Campaign (Experiments E0–E2): Coupler-Aware Dynamical Decoupling & Prospective Held-Out Validation on `ibm_marrakesh`
+# OSIRIS Frontier Campaign (Experiments E0–E3): Coupler-Aware Dynamical Decoupling & Prospective Held-Out Validation on `ibm_marrakesh`
 
 **Backend:** `ibm_marrakesh` (156-qubit IBM Heron r2, $dt = 4.0\text{ ns}$)  
-**Authority Chain:** [`evidence_ledger.db`](file:///C:/Users/Ron/evidence_ledger.db) (Blocks #6–#11)  
-**Total Campaign Compute:** $485\text{ s}$ across 8 IBM Quantum Runtime jobs ($115\text{ s}$ remaining of $600\text{ s}$ allocation)
+**Authority Chain:** [`evidence_ledger.db`](file:///C:/Users/Ron/evidence_ledger.db) (Blocks #6–#15)  
+**Total Campaign Compute:** $549\text{ s}$ across 9 IBM Quantum Runtime jobs ($51\text{ s}$ remaining of $600\text{ s}$ allocation)
 
 ---
 
@@ -136,3 +136,48 @@ Frozen in [`preregistered_predictions_exp_e3.json`](file:///C:/Users/Ron/experim
 | **`(45,46)`** | $8\,\mu\mathrm{s}$ | $68.0$ (Fast) | $0.1131$ | $0.1651$ | $-0.03 \pm 0.59$ | $+0.266 \ge 0$ | `STAG_XY8_80` (Retain) |
 | **`(52,53)`** | $4\,\mu\mathrm{s}$ | $68.0$ (Fast) | $0.0434$ | $0.1235$ | $+0.58 \pm 0.56$ | $+0.861 \ge 0$ | `STAG_XY8_80` (Retain) |
 | **`(52,53)`** | $8\,\mu\mathrm{s}$ | $68.0$ (Fast) | $0.0868$ | $0.2470$ | $+0.39 \pm 0.56$ | $+0.674 \ge 0$ | `STAG_XY8_80` (Retain) |
+
+---
+
+## 6. Experiment E3 Pilot: Prospective Physical Hardware Validation (`dbm00gd8mdtc73d6vjcg`, $64\text{ s}$)
+
+**Job ID:** `dbm00gd8mdtc73d6vjcg` ($64\text{ s}$ real QPU compute on `ibm_marrakesh`, 216 circuits, 221,184 physical shots, $K = 3$ randomized acquisition blocks)  
+**SYS-021 Authority:** Ledger Block **#15** (`10783352e8a035c4...`), Payload SHA-256 `cffbcd6670c5b00998e81d4fb50b20cdb96e69dff096e6774ce5f06d8e031487`, QPY SHA-256 `3f33a55645defdd4a3bc59f3871ad238e10c34166435d38dff02c71c211f3c70`
+
+### 6.1 Unseen E3 Cell-by-Cell Physical Hardware Results (`analysis_exp_e3_pilot.json`)
+
+| Unseen E3 Edge | Duration $T$ | `OSIRIS v2` Offset $\Delta^*$ | Arm C `QISKIT_SYNC_XY8` ($0\text{ ns}$) | Arm D `QISKIT_OPT_STAG` ($\tau/2$) | Arm E `FIXED_STAG_80` ($80\text{ ns}$) | Arm F `OSIRIS_COMPILER_V2` | **`OSIRIS v2 - FIXED_80` (pp)** | **`OSIRIS v2 - SYNC_XY8` (pp)** |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`(12,13)` Slow ($84\text{ ns}$)** | $4\,\mu\mathrm{s}$ | **$0\text{ ns}$** | $91.10\%$ | $91.11\%$ | $90.98\%$ | **$91.80\%$** | **$+0.81 \pm 0.27\text{ pp}$** ($3/3$) | **$+0.70\text{ pp}$** ($2/3$) |
+| **`(12,13)` Slow ($84\text{ ns}$)** | $8\,\mu\mathrm{s}$ | **$0\text{ ns}$** | $88.48\%$ | $89.16\%$ | $88.70\%$ | **$89.57\%$** | **$+0.86 \pm 0.43\text{ pp}$** ($3/3$) | **$+1.09\text{ pp}$** ($3/3$) |
+| **`(24,25)` High-$\eta_{\phi,\min}$** | $4\,\mu\mathrm{s}$ | **$40\text{ ns}$** | $69.78\%$ | **$71.00\%$** | $67.82\%$ | **$70.38\%$** | **$+2.56 \pm 0.86\text{ pp}$** ($3/3$) | **$+0.60\text{ pp}$** ($2/3$) |
+| **`(24,25)` High-$\eta_{\phi,\min}$** | $8\,\mu\mathrm{s}$ | **$0\text{ ns}$** | **$58.41\%$** | $58.11\%$ | $58.07\%$ | $57.78\%$ | $-0.29 \pm 0.79\text{ pp}$ ($1/3$) | $-0.63\text{ pp}$ ($1/3$) |
+| **`(44,45)` Clean Fast ($68\text{ ns}$)** | $4\,\mu\mathrm{s}$ | **$120\text{ ns}$** | $82.19\%$ | **$83.84\%$** | $83.38\%$ | **$83.50\%$** | **$+0.11 \pm 0.29\text{ pp}$** ($1/3$) | **$+1.30\text{ pp}$** ($3/3$) |
+| **`(44,45)` Clean Fast ($68\text{ ns}$)** | $8\,\mu\mathrm{s}$ | **$80\text{ ns}$** | $78.06\%$ | **$78.56\%$** | $78.30\%$ | $78.16\%$ | $-0.15 \pm 0.07\text{ pp}$ ($0/3$) | **$+0.10\text{ pp}$** ($2/3$) |
+| **6-Cell Portfolio Mean** | — | — | **$78.003\%$** | **$78.630\%$** | **$77.878\%$** | **$78.529\%$** | **$+0.651\text{ pp}$** | **$+0.526\text{ pp}$** |
+
+### 6.2 Cluster-Robust Portfolio Contrasts in Experiment E3 Pilot
+
+| Contrast | Clustering Unit | Clusters ($df$) | Mean Difference (pp) | Cluster SE (pp) | Exact $df=2$ 95% CI (pp) | $t$-Stat | $p_{\text{2-sided}}$ ($p_{\text{1-sided}}$) | Positive Clusters |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`OSIRIS_V2 - FIXED_STAG_80` (Primary)** | **Acquisition Block** | $K = 3$ ($df = 2$) | **$+0.651\text{ pp}$** | $0.182\text{ pp}$ | `[-0.130, +1.432]` | $+3.587$ | $0.0697$ (**$0.0348$**) | **$3 / 3$** (`+0.99, +0.59, +0.37`) |
+| **`OSIRIS_V2 - FIXED_STAG_80` (Primary)** | **Physical Coupler** | $G = 3$ ($df = 2$) | **$+0.651\text{ pp}$** | $0.344\text{ pp}$ | `[-0.830, +2.132]` | $+1.891$ | $0.1991$ ($0.0996$) | $2 / 3$ (`+0.84, +1.13, -0.02`) |
+| **`OSIRIS_V2 - QISKIT_SYNC_XY8`** | **Acquisition Block** | $K = 3$ ($df = 2$) | **$+0.526\text{ pp}$** | $0.116\text{ pp}$ | **`[+0.027, +1.026]`** | $+4.534$ | **$0.0454$** (**$0.0227$**) | **$3 / 3$** (`+0.50, +0.74, +0.34`) |
+| **`OSIRIS_V2 - QISKIT_SYNC_XY8`** | **Physical Coupler** | $G = 3$ ($df = 2$) | **$+0.526\text{ pp}$** | $0.277\text{ pp}$ | `[-0.666, +1.718]` | $+1.899$ | $0.1979$ ($0.0990$) | $2 / 3$ (`+0.90, -0.02, +0.70`) |
+| **`OSIRIS_V2 - QISKIT_OPT_STAG`** | **Physical Coupler** | $G = 3$ ($df = 2$) | $-0.100\text{ pp}$ | $0.324\text{ pp}$ | `[-1.495, +1.294]` | $-0.310$ | $0.7860$ ($0.6070$) | $1 / 3$ (`+0.55` on slow `(12,13)`) |
+| **`FIXED_STAG_80 - QISKIT_SYNC_XY8`** | **Physical Coupler** | $G = 3$ ($df = 2$) | $-0.125\text{ pp}$ | $0.546\text{ pp}$ | `[-2.472, +2.223]` | $-0.229$ | $0.8404$ ($0.5798$) | $2 / 3$ (`-1.15` on `(24,25)`) |
+
+---
+
+## 7. Separate Compiler Performance Benchmark ([`bench_compiler_performance.py`](file:///C:/Users/Ron/experiments/experiment_e/bench_compiler_performance.py))
+
+Evaluated over $R = 15$ repetitions across 5 heavy-hex workloads ($n = 2, 4, 5, 8, 12$ qubits, SHA-256 `c2f3e971acff9d5b7dee40ffcdee823b6a66f7987d26969130cbf00bd72f60ef`):
+
+| Workload ID | Qubits ($n$) | `QISKIT_OPT1_PAD_DD_SYNC` (ms / KB) | `QISKIT_OPT3_PAD_DD_STAG` (ms / KB) | `OSIRIS_COMPILER_V2` (ms / KB) | **Speedup vs Opt-1 / Opt-3** | **Memory Reduction vs Opt-3** | **Unitary $\|1 - \mathcal{F}\|$** |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`W1_2Q_BELL_DD_4US`** | $2$ | $5.91\text{ ms}$ / $191.9\text{ KB}$ | $12.69\text{ ms}$ / $276.7\text{ KB}$ | **$0.53\text{ ms}$ / $80.7\text{ KB}$** | **$11.1\times$ / $23.9\times$** | **$3.43\times$** | $8.9 \times 10^{-16}$ |
+| **`W2_4Q_GHZ_CHAIN_DD_4US`** | $4$ | $7.40\text{ ms}$ / $244.6\text{ KB}$ | $14.56\text{ ms}$ / $359.4\text{ KB}$ | **$1.01\text{ ms}$ / $96.5\text{ KB}$** | **$7.3\times$ / $14.4\times$** | **$3.72\times$** | $1.6 \times 10^{-15}$ |
+| **`W3_5Q_CLUSTER_CHAIN_DD_8US`** | $5$ | $7.98\text{ ms}$ / $304.2\text{ KB}$ | $15.92\text{ ms}$ / $424.4\text{ KB}$ | **$1.22\text{ ms}$ / $99.9\text{ KB}$** | **$6.5\times$ / $13.0\times$** | **$4.25\times$** | $1.8 \times 10^{-15}$ |
+| **`W4_8Q_HEAVY_HEX_DD_8US`** | $8$ | $9.85\text{ ms}$ / $418.5\text{ KB}$ | $18.94\text{ ms}$ / $600.3\text{ KB}$ | **$1.99\text{ ms}$ / $146.9\text{ KB}$** | **$5.0\times$ / $9.5\times$** | **$4.09\times$** | $3.3 \times 10^{-15}$ |
+| **`W5_12Q_BRICKWALL_DD_8US`** | $12$ | $11.83\text{ ms}$ / $573.4\text{ KB}$ | $24.58\text{ ms}$ / $811.4\text{ KB}$ | **$2.90\text{ ms}$ / $266.8\text{ KB}$** | **$4.1\times$ / $8.5\times$** | **$3.04\times$** | $6.7 \times 10^{-16}$ |
+| **5-Workload Portfolio Mean** | — | $8.59\text{ ms}$ / $346.5\text{ KB}$ | $17.34\text{ ms}$ / $494.4\text{ KB}$ | **$1.53\text{ ms}$ / $138.2\text{ KB}$** | **$6.80\times$ / $13.87\times$** | **$3.71\times$** | **$\le 3.3 \times 10^{-15}$** |

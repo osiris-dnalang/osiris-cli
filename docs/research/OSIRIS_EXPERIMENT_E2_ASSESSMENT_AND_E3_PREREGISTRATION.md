@@ -244,6 +244,42 @@ Frozen in [`preregistered_hardware_benchmark_v2_216circ.json`](file:///C:/Users/
 - **4 Protocol Arms**: `QISKIT_SYNC_XY8` (Arm C), `QISKIT_OPTIMIZED_STAG_XY8` (Arm D), `FIXED_STAG_XY8_80` (Arm E), `OSIRIS_CONTROL_COMPILER_V2` (Arm F).
 - **3 Pauli Bases $\times$ 3 Randomized Pilot Blocks**: $3 \times 2 \times 4 \times 3 \times 3 = \mathbf{216\text{ circuit executions}}$, $216 \times 1,024 = \mathbf{221,184\text{ physical shots}}$.
 
+### 7.1 Prospective Physical Hardware Execution Results (`dbm00gd8mdtc73d6vjcg`, $64\text{ s}$ QPU Compute)
+Following pre-registration lock verification (`047f277b...` and `d5868e4b...`) and commitment of **Ledger Block #15** (`10783352e8a035c4...`) to [`evidence_ledger.db`](file:///C:/Users/Ron/evidence_ledger.db), [`execute_experiment_e3_pilot_216circ.py`](file:///C:/Users/Ron/experiments/experiment_e/execute_experiment_e3_pilot_216circ.py) (`cffbcd66...`) executed all 216 randomized ISA circuits ($221,184\text{ shots}$) on `ibm_marrakesh` under **Job ID `dbm00gd8mdtc73d6vjcg`** ($64\text{ s}$ real QPU compute consumed; $51\text{ s}$ remaining of $600\text{ s}$ allocation).
+
+| Unseen E3 Coupler | Duration $T$ | `OSIRIS v2` Offset $\Delta^*$ | Arm C `QISKIT_SYNC_XY8` ($0\text{ ns}$) | Arm D `QISKIT_OPT_STAG` ($\tau/2$) | Arm E `FIXED_STAG_80` ($80\text{ ns}$) | Arm F `OSIRIS_COMPILER_V2` | **`OSIRIS v2 - FIXED_80` (pp)** | **`OSIRIS v2 - SYNC_XY8` (pp)** |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`(12,13)` Slow ($84\text{ ns}$)** | $4\,\mu\mathrm{s}$ | **$0\text{ ns}$** | $91.10\%$ | $91.11\%$ | $90.98\%$ | **$91.80\%$** | **$+0.81 \pm 0.27\text{ pp}$** ($3/3$) | **$+0.70\text{ pp}$** ($2/3$) |
+| **`(12,13)` Slow ($84\text{ ns}$)** | $8\,\mu\mathrm{s}$ | **$0\text{ ns}$** | $88.48\%$ | $89.16\%$ | $88.70\%$ | **$89.57\%$** | **$+0.86 \pm 0.43\text{ pp}$** ($3/3$) | **$+1.09\text{ pp}$** ($3/3$) |
+| **`(24,25)` High-$\eta_{\phi,\min}$** | $4\,\mu\mathrm{s}$ | **$40\text{ ns}$** | $69.78\%$ | **$71.00\%$** | $67.82\%$ | **$70.38\%$** | **$+2.56 \pm 0.86\text{ pp}$** ($3/3$) | **$+0.60\text{ pp}$** ($2/3$) |
+| **`(24,25)` High-$\eta_{\phi,\min}$** | $8\,\mu\mathrm{s}$ | **$0\text{ ns}$** | **$58.41\%$** | $58.11\%$ | $58.07\%$ | $57.78\%$ | $-0.29 \pm 0.79\text{ pp}$ ($1/3$) | $-0.63\text{ pp}$ ($1/3$) |
+| **`(44,45)` Clean Fast ($68\text{ ns}$)** | $4\,\mu\mathrm{s}$ | **$120\text{ ns}$** | $82.19\%$ | **$83.84\%$** | $83.38\%$ | **$83.50\%$** | **$+0.11 \pm 0.29\text{ pp}$** ($1/3$) | **$+1.30\text{ pp}$** ($3/3$) |
+| **`(44,45)` Clean Fast ($68\text{ ns}$)** | $8\,\mu\mathrm{s}$ | **$80\text{ ns}$** | $78.06\%$ | **$78.56\%$** | $78.30\%$ | $78.16\%$ | $-0.15 \pm 0.07\text{ pp}$ ($0/3$) | **$+0.10\text{ pp}$** ($2/3$) |
+| **6-Cell Portfolio Mean** | — | — | **$78.003\%$** | **$78.630\%$** | **$77.878\%$** | **$78.529\%$** | **$+0.651\text{ pp}$** | **$+0.526\text{ pp}$** |
+
+#### Cluster-Robust Portfolio Contrasts in Physical E3 Pilot ([`analysis_exp_e3_pilot.json`](file:///C:/Users/Ron/experiments/experiment_e/analysis_exp_e3_pilot.json))
+
+| Contrast | Clustering Unit | Clusters ($df$) | Mean Difference (pp) | Cluster SE (pp) | Exact $df=2$ 95% CI (pp) | $t$-Stat | $p_{\text{2-sided}}$ ($p_{\text{1-sided}}$) | Positive Clusters |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`OSIRIS_V2 - FIXED_STAG_80` (Primary)** | **Acquisition Block** | $K = 3$ ($df = 2$) | **$+0.651\text{ pp}$** | $0.182\text{ pp}$ | `[-0.130, +1.432]` | $+3.587$ | $0.0697$ (**$0.0348$**) | **$3 / 3$** (`+0.99, +0.59, +0.37`) |
+| **`OSIRIS_V2 - FIXED_STAG_80` (Primary)** | **Physical Coupler** | $G = 3$ ($df = 2$) | **$+0.651\text{ pp}$** | $0.344\text{ pp}$ | `[-0.830, +2.132]` | $+1.891$ | $0.1991$ ($0.0996$) | $2 / 3$ (`+0.84, +1.13, -0.02`) |
+| **`OSIRIS_V2 - QISKIT_SYNC_XY8`** | **Acquisition Block** | $K = 3$ ($df = 2$) | **$+0.526\text{ pp}$** | $0.116\text{ pp}$ | **`[+0.027, +1.026]`** | $+4.534$ | **$0.0454$** (**$0.0227$**) | **$3 / 3$** (`+0.50, +0.74, +0.34`) |
+| **`OSIRIS_V2 - QISKIT_SYNC_XY8`** | **Physical Coupler** | $G = 3$ ($df = 2$) | **$+0.526\text{ pp}$** | $0.277\text{ pp}$ | `[-0.666, +1.718]` | $+1.899$ | $0.1979$ ($0.0990$) | $2 / 3$ (`+0.90, -0.02, +0.70`) |
+| **`OSIRIS_V2 - QISKIT_OPT_STAG`** | **Physical Coupler** | $G = 3$ ($df = 2$) | $-0.100\text{ pp}$ | $0.324\text{ pp}$ | `[-1.495, +1.294]` | $-0.310$ | $0.7860$ ($0.6070$) | $1 / 3$ (`+0.55` on slow `(12,13)`) |
+| **`FIXED_STAG_80 - QISKIT_SYNC_XY8`** | **Physical Coupler** | $G = 3$ ($df = 2$) | $-0.125\text{ pp}$ | $0.546\text{ pp}$ | `[-2.472, +2.223]` | $-0.229$ | $0.8404$ ($0.5798$) | $2 / 3$ (`-1.15` on `(24,25)`) |
+
+### 7.2 Separate Compiler Performance Benchmark ([`bench_compiler_performance.py`](file:///C:/Users/Ron/experiments/experiment_e/bench_compiler_performance.py))
+Evaluated independently over $R = 15$ repetitions across 5 standardized heavy-hex workloads ($n = 2, 4, 5, 8, 12$ qubits, [`results_compiler_performance.json`](file:///C:/Users/Ron/experiments/experiment_e/results_compiler_performance.json)):
+
+| Workload ID | Qubits ($n$) | `QISKIT_OPT1_PAD_DD_SYNC` (ms / KB) | `QISKIT_OPT3_PAD_DD_STAG` (ms / KB) | `OSIRIS_COMPILER_V2` (ms / KB) | **Speedup vs Opt-1 / Opt-3** | **Memory Reduction vs Opt-3** | **Unitary $\|1 - \mathcal{F}\|$** |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`W1_2Q_BELL_DD_4US`** | $2$ | $5.91\text{ ms}$ / $191.9\text{ KB}$ | $12.69\text{ ms}$ / $276.7\text{ KB}$ | **$0.53\text{ ms}$ / $80.7\text{ KB}$** | **$11.1\times$ / $23.9\times$** | **$3.43\times$** | $8.9 \times 10^{-16}$ |
+| **`W2_4Q_GHZ_CHAIN_DD_4US`** | $4$ | $7.40\text{ ms}$ / $244.6\text{ KB}$ | $14.56\text{ ms}$ / $359.4\text{ KB}$ | **$1.01\text{ ms}$ / $96.5\text{ KB}$** | **$7.3\times$ / $14.4\times$** | **$3.72\times$** | $1.6 \times 10^{-15}$ |
+| **`W3_5Q_CLUSTER_CHAIN_DD_8US`** | $5$ | $7.98\text{ ms}$ / $304.2\text{ KB}$ | $15.92\text{ ms}$ / $424.4\text{ KB}$ | **$1.22\text{ ms}$ / $99.9\text{ KB}$** | **$6.5\times$ / $13.0\times$** | **$4.25\times$** | $1.8 \times 10^{-15}$ |
+| **`W4_8Q_HEAVY_HEX_DD_8US`** | $8$ | $9.85\text{ ms}$ / $418.5\text{ KB}$ | $18.94\text{ ms}$ / $600.3\text{ KB}$ | **$1.99\text{ ms}$ / $146.9\text{ KB}$** | **$5.0\times$ / $9.5\times$** | **$4.09\times$** | $3.3 \times 10^{-15}$ |
+| **`W5_12Q_BRICKWALL_DD_8US`** | $12$ | $11.83\text{ ms}$ / $573.4\text{ KB}$ | $24.58\text{ ms}$ / $811.4\text{ KB}$ | **$2.90\text{ ms}$ / $266.8\text{ KB}$** | **$4.1\times$ / $8.5\times$** | **$3.04\times$** | $6.7 \times 10^{-16}$ |
+| **5-Workload Portfolio Mean** | — | $8.59\text{ ms}$ / $346.5\text{ KB}$ | $17.34\text{ ms}$ / $494.4\text{ KB}$ | **$1.53\text{ ms}$ / $138.2\text{ KB}$** | **$6.80\times$ / $13.87\times$** | **$3.71\times$** | **$\le 3.3 \times 10^{-15}$** |
+
 ---
 
 ## 8. Cryptographic Verification Manifest
@@ -252,11 +288,14 @@ Frozen in [`preregistered_hardware_benchmark_v2_216circ.json`](file:///C:/Users/
 | :--- | :--- | :--- |
 | [`osiris_adaptive_scheduler_v2.py`](file:///C:/Users/Ron/experiments/experiment_e/osiris_adaptive_scheduler_v2.py) | `a2f260b074f02fa5143ec35a423b7cef5300462a1df43ad2944aeec44253b4ca` | Executable cluster-robust E2 analyzer, LOEO-CV verifier, and E3 pre-registration generator |
 | [`analysis_exp_e2_clustered.json`](file:///C:/Users/Ron/experiments/experiment_e/analysis_exp_e2_clustered.json) | `ce26e234c36c9c651b23f05275881c5984244cb0ed1a15a353f83f24b5b803e7` | Coupler-clustered ($G=4, df=3$) and block-clustered ($K=4, df=3$) E2 reanalysis |
-| [`preregistered_predictions_exp_e3.json`](file:///C:/Users/Ron/experiments/experiment_e/preregistered_predictions_exp_e3.json) | `1890ed5d8185195ff554962a94d6b7f1e70571f784bc7f10fcc0c0c04e301c6f` | Frozen prospective predictions for Experiment E3 across 7 unseen heavy-hex couplers |
+| [`preregistered_predictions_exp_e3.json`](file:///C:/Users/Ron/experiments/experiment_e/preregistered_predictions_exp_e3.json) | `d5868e4b8c8927a9a0f44661722438f3a95b3d26d605099a761d96b624aff103` | Frozen prospective predictions for Experiment E3 (internal payload SHA-256 `1890ed5d...`) |
 | [`bench_open_system_control_compiler_v2.py`](file:///C:/Users/Ron/experiments/experiment_e/bench_open_system_control_compiler_v2.py) | `4b654abd8e2fe18230c7123f41be50656b18eb979fa4f53bbdc1ec517a8716f3` | 3-engine ideal-limit & 6-arm open-system finite-pulse Lindblad + 5-qubit graph benchmark |
 | [`results_open_system_control_compiler_v2.json`](file:///C:/Users/Ron/experiments/experiment_e/results_open_system_control_compiler_v2.json) | `4b8e9699cea28193ef7ced3862028db05b28f2d367b58a74f44a9caeb26dc582` | Complete 28-cell open-system results, clustered contrasts, and 5-qubit chain results |
-| [`preregistered_hardware_benchmark_v2_216circ.json`](file:///C:/Users/Ron/experiments/experiment_e/preregistered_hardware_benchmark_v2_216circ.json) | `047f277b5bcf1859277eb32f7887fec086aaab192a4c454addb0ee13ba675b8d` | Frozen 216-circuit, 221,184-shot hardware benchmark specification (0 QPU seconds consumed) |
-| [`stage_experiment_e3_pilot_216circ.py`](file:///C:/Users/Ron/experiments/experiment_e/stage_experiment_e3_pilot_216circ.py) | `8794a1a4ec664f50f90c11abfc74f6babb730824a135bc72682602ddd1aa1327` | Dry-run 216-circuit QPY builder & pre-flight `Statevector` gate (`F_Bell = 1.00000000`) |
-| [`staged_circuits_exp_e3_pilot_216circ.qpy`](file:///C:/Users/Ron/experiments/experiment_e/staged_circuits_exp_e3_pilot_216circ.qpy) | `9d45cd8c688c3182d2d3e1ab04f454cdad7076793d233be87e26ed32d270eed7` | Frozen 216-circuit QPY archive ready for payload-bound SYS-021 grant |
-| [`staged_manifest_exp_e3_pilot_216circ.json`](file:///C:/Users/Ron/experiments/experiment_e/staged_manifest_exp_e3_pilot_216circ.json) | `e0032d188fc8d79804be178a46e8c974812f913c708d12904d833e5861f70ab3` | Randomized block circuit manifest for the 216-circuit E3 pilot |
-| [`EXPERIMENT_E_FRONTIER_REPORT.md`](file:///C:/Users/Ron/experiments/experiment_e/EXPERIMENT_E_FRONTIER_REPORT.md) | Updated with Sections 4 & 5 | Master Experiment E0–E3 campaign ledger |
+| [`bench_compiler_performance.py`](file:///C:/Users/Ron/experiments/experiment_e/bench_compiler_performance.py) | `c873dd86ecbb0e2fe1489ba30dea1fc957a0889bdba1905e7210680122f91014` | Separate compiler wall-clock speed, memory, depth, and unitary correctness benchmark |
+| [`results_compiler_performance.json`](file:///C:/Users/Ron/experiments/experiment_e/results_compiler_performance.json) | `c2f3e971acff9d5b7dee40ffcdee823b6a66f7987d26969130cbf00bd72f60ef` | 5-workload compiler benchmark output ($6.80\times$ / $13.87\times$ speedup, $3.71\times$ lower memory) |
+| [`preregistered_hardware_benchmark_v2_216circ.json`](file:///C:/Users/Ron/experiments/experiment_e/preregistered_hardware_benchmark_v2_216circ.json) | `047f277b5bcf1859277eb32f7887fec086aaab192a4c454addb0ee13ba675b8d` | Frozen 216-circuit, 221,184-shot hardware benchmark specification |
+| [`execute_experiment_e3_pilot_216circ.py`](file:///C:/Users/Ron/experiments/experiment_e/execute_experiment_e3_pilot_216circ.py) | `cffbcd6670c5b00998e81d4fb50b20cdb96e69dff096e6774ce5f06d8e031487` | Governed E3 Pilot execution script on `ibm_marrakesh` (Job `dbm00gd8mdtc73d6vjcg`, Block #15) |
+| [`submitted_circuits_exp_e3_pilot.qpy`](file:///C:/Users/Ron/experiments/experiment_e/submitted_circuits_exp_e3_pilot.qpy) | `3f33a55645defdd4a3bc59f3871ad238e10c34166435d38dff02c71c211f3c70` | Server-verified 216-circuit ISA QPY archive for Job `dbm00gd8mdtc73d6vjcg` |
+| [`raw_results_exp_e3_pilot.json`](file:///C:/Users/Ron/experiments/experiment_e/raw_results_exp_e3_pilot.json) | `9047d18c3cb6c3e6c63476e9134417e0895f25db44c45eb003ac8a065fad885d` | Raw bitstring count dictionaries for E3 Pilot (216 circuits, 221,184 shots) |
+| [`analysis_exp_e3_pilot.json`](file:///C:/Users/Ron/experiments/experiment_e/analysis_exp_e3_pilot.json) | `54cebb6782941ef0d37c2be0849186645973212b62080dc0f5a8c94a4ead835e` | Prospective cluster-robust evaluation of Job `dbm00gd8mdtc73d6vjcg` (`+0.651 pp` vs Fixed 80) |
+| [`EXPERIMENT_E_FRONTIER_REPORT.md`](file:///C:/Users/Ron/experiments/experiment_e/EXPERIMENT_E_FRONTIER_REPORT.md) | Updated with Sections 4–7 | Master Experiment E0–E3 campaign ledger |

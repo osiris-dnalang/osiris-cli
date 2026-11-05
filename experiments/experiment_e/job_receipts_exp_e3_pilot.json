@@ -1,0 +1,2606 @@
+{
+  "job_id": "dbm00gd8mdtc73d6vjcg",
+  "backend": "ibm_marrakesh",
+  "circuit_count": 216,
+  "shots_per_circuit": 1024,
+  "blocks": 3,
+  "qpy_sha256": "3f33a55645defdd4a3bc59f3871ad238e10c34166435d38dff02c71c211f3c70",
+  "prereg_216_sha256": "047f277b5bcf1859277eb32f7887fec086aaab192a4c454addb0ee13ba675b8d",
+  "prereg_e3_sha256": "d5868e4b8c8927a9a0f44661722438f3a95b3d26d605099a761d96b624aff103",
+  "payload_sha256": "cffbcd6670c5b00998e81d4fb50b20cdb96e69dff096e6774ce5f06d8e031487",
+  "ledger_sequence": 15,
+  "metadata": [
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "YY",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "XX",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "XX",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "ZZ",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "YY",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "ZZ",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b0_C_QISKIT_SYNC_XY8_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b0_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b0_E_FIXED_STAG_XY8_80_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 0,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b0_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "XX",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "ZZ",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "XX",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "ZZ",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "YY",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "YY",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b1_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b1_E_FIXED_STAG_XY8_80_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b1_C_QISKIT_SYNC_XY8_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 1,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 1,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b1_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "XX",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "YY",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "ZZ",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 40,
+      "basis": "YY",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "XX",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_YY_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "ZZ",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "XX",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "YY",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 120,
+      "basis": "ZZ",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_ZZ_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_YY_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 8000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_8000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_XX_q44_q45"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "ZZ",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "YY",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_YY_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_8000ns_XX_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "YY",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_YY_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        24,
+        25
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "ZZ",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_ZZ_q24_q25"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "E_FIXED_STAG_XY8_80",
+      "offset_ns": 80,
+      "basis": "XX",
+      "name": "expE3_b2_E_FIXED_STAG_XY8_80_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 8000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 496,
+      "basis": "XX",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_8000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "offset_ns": 0,
+      "basis": "XX",
+      "name": "expE3_b2_F_OSIRIS_CONTROL_COMPILER_V2_4000ns_XX_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        12,
+        13
+      ],
+      "duration_ns": 4000,
+      "protocol": "C_QISKIT_SYNC_XY8",
+      "offset_ns": 0,
+      "basis": "ZZ",
+      "name": "expE3_b2_C_QISKIT_SYNC_XY8_4000ns_ZZ_q12_q13"
+    },
+    {
+      "block": 2,
+      "edge": [
+        44,
+        45
+      ],
+      "duration_ns": 4000,
+      "protocol": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "offset_ns": 248,
+      "basis": "YY",
+      "name": "expE3_b2_D_QISKIT_OPTIMIZED_STAG_XY8_4000ns_YY_q44_q45"
+    }
+  ]
+}
