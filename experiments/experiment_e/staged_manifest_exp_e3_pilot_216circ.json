@@ -1,0 +1,2175 @@
+{
+  "specification_id": "OSIRIS_V2_PREREGISTERED_HARDWARE_PILOT_216CIRC",
+  "preflight_gate": {
+    "preflight_statevector_status": "PASSED",
+    "verified_f_bell": 1.0
+  },
+  "total_circuits": 216,
+  "shots_per_circuit": 1024,
+  "total_physical_shots": 221184,
+  "qpy_archive": "staged_circuits_exp_e3_pilot_216circ.qpy",
+  "qpy_sha256": "9d45cd8c688c3182d2d3e1ab04f454cdad7076793d233be87e26ed32d270eed7",
+  "qpu_seconds_consumed": 0,
+  "circuits": [
+    {
+      "circuit_index": 0,
+      "name": "e3pilot_b0_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 1,
+      "name": "e3pilot_b0_12_13_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 2,
+      "name": "e3pilot_b0_44_45_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 3,
+      "name": "e3pilot_b0_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 4,
+      "name": "e3pilot_b0_44_45_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 5,
+      "name": "e3pilot_b0_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 6,
+      "name": "e3pilot_b0_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 7,
+      "name": "e3pilot_b0_24_25_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 8,
+      "name": "e3pilot_b0_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 9,
+      "name": "e3pilot_b0_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 10,
+      "name": "e3pilot_b0_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 11,
+      "name": "e3pilot_b0_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 12,
+      "name": "e3pilot_b0_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 13,
+      "name": "e3pilot_b0_44_45_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 14,
+      "name": "e3pilot_b0_24_25_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 15,
+      "name": "e3pilot_b0_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 16,
+      "name": "e3pilot_b0_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 17,
+      "name": "e3pilot_b0_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 18,
+      "name": "e3pilot_b0_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 19,
+      "name": "e3pilot_b0_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 20,
+      "name": "e3pilot_b0_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 21,
+      "name": "e3pilot_b0_12_13_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 22,
+      "name": "e3pilot_b0_12_13_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 23,
+      "name": "e3pilot_b0_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 24,
+      "name": "e3pilot_b0_44_45_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 25,
+      "name": "e3pilot_b0_12_13_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 26,
+      "name": "e3pilot_b0_24_25_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 27,
+      "name": "e3pilot_b0_12_13_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 28,
+      "name": "e3pilot_b0_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 29,
+      "name": "e3pilot_b0_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 30,
+      "name": "e3pilot_b0_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 31,
+      "name": "e3pilot_b0_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 32,
+      "name": "e3pilot_b0_44_45_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 33,
+      "name": "e3pilot_b0_12_13_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 34,
+      "name": "e3pilot_b0_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 35,
+      "name": "e3pilot_b0_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 36,
+      "name": "e3pilot_b0_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 37,
+      "name": "e3pilot_b0_12_13_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 38,
+      "name": "e3pilot_b0_24_25_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 39,
+      "name": "e3pilot_b0_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 40,
+      "name": "e3pilot_b0_12_13_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 41,
+      "name": "e3pilot_b0_44_45_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 42,
+      "name": "e3pilot_b0_24_25_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 43,
+      "name": "e3pilot_b0_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 44,
+      "name": "e3pilot_b0_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 45,
+      "name": "e3pilot_b0_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 46,
+      "name": "e3pilot_b0_24_25_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 47,
+      "name": "e3pilot_b0_12_13_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 48,
+      "name": "e3pilot_b0_24_25_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 49,
+      "name": "e3pilot_b0_44_45_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 50,
+      "name": "e3pilot_b0_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 51,
+      "name": "e3pilot_b0_24_25_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 52,
+      "name": "e3pilot_b0_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 53,
+      "name": "e3pilot_b0_12_13_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 54,
+      "name": "e3pilot_b0_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 55,
+      "name": "e3pilot_b0_44_45_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 56,
+      "name": "e3pilot_b0_44_45_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 57,
+      "name": "e3pilot_b0_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 58,
+      "name": "e3pilot_b0_24_25_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 59,
+      "name": "e3pilot_b0_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 60,
+      "name": "e3pilot_b0_12_13_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 61,
+      "name": "e3pilot_b0_24_25_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 62,
+      "name": "e3pilot_b0_24_25_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 63,
+      "name": "e3pilot_b0_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 64,
+      "name": "e3pilot_b0_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 65,
+      "name": "e3pilot_b0_24_25_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 66,
+      "name": "e3pilot_b0_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 67,
+      "name": "e3pilot_b0_12_13_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 68,
+      "name": "e3pilot_b0_44_45_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 69,
+      "name": "e3pilot_b0_44_45_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 70,
+      "name": "e3pilot_b0_44_45_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 71,
+      "name": "e3pilot_b0_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 0,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 72,
+      "name": "e3pilot_b1_12_13_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 73,
+      "name": "e3pilot_b1_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 74,
+      "name": "e3pilot_b1_44_45_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 75,
+      "name": "e3pilot_b1_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 76,
+      "name": "e3pilot_b1_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 77,
+      "name": "e3pilot_b1_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 78,
+      "name": "e3pilot_b1_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 79,
+      "name": "e3pilot_b1_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 80,
+      "name": "e3pilot_b1_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 81,
+      "name": "e3pilot_b1_24_25_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 82,
+      "name": "e3pilot_b1_44_45_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 83,
+      "name": "e3pilot_b1_12_13_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 84,
+      "name": "e3pilot_b1_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 85,
+      "name": "e3pilot_b1_24_25_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 86,
+      "name": "e3pilot_b1_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 87,
+      "name": "e3pilot_b1_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 88,
+      "name": "e3pilot_b1_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 89,
+      "name": "e3pilot_b1_24_25_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 90,
+      "name": "e3pilot_b1_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 91,
+      "name": "e3pilot_b1_12_13_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 92,
+      "name": "e3pilot_b1_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 93,
+      "name": "e3pilot_b1_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 94,
+      "name": "e3pilot_b1_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 95,
+      "name": "e3pilot_b1_24_25_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 96,
+      "name": "e3pilot_b1_44_45_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 97,
+      "name": "e3pilot_b1_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 98,
+      "name": "e3pilot_b1_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 99,
+      "name": "e3pilot_b1_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 100,
+      "name": "e3pilot_b1_44_45_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 101,
+      "name": "e3pilot_b1_12_13_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 102,
+      "name": "e3pilot_b1_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 103,
+      "name": "e3pilot_b1_44_45_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 104,
+      "name": "e3pilot_b1_12_13_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 105,
+      "name": "e3pilot_b1_44_45_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 106,
+      "name": "e3pilot_b1_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 107,
+      "name": "e3pilot_b1_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 108,
+      "name": "e3pilot_b1_24_25_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 109,
+      "name": "e3pilot_b1_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 110,
+      "name": "e3pilot_b1_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 111,
+      "name": "e3pilot_b1_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 112,
+      "name": "e3pilot_b1_44_45_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 113,
+      "name": "e3pilot_b1_12_13_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 114,
+      "name": "e3pilot_b1_12_13_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 115,
+      "name": "e3pilot_b1_44_45_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 116,
+      "name": "e3pilot_b1_24_25_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 117,
+      "name": "e3pilot_b1_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 118,
+      "name": "e3pilot_b1_44_45_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 119,
+      "name": "e3pilot_b1_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 120,
+      "name": "e3pilot_b1_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 121,
+      "name": "e3pilot_b1_12_13_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 122,
+      "name": "e3pilot_b1_44_45_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 123,
+      "name": "e3pilot_b1_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 124,
+      "name": "e3pilot_b1_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 125,
+      "name": "e3pilot_b1_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 126,
+      "name": "e3pilot_b1_24_25_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 127,
+      "name": "e3pilot_b1_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 128,
+      "name": "e3pilot_b1_24_25_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 129,
+      "name": "e3pilot_b1_24_25_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 130,
+      "name": "e3pilot_b1_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 131,
+      "name": "e3pilot_b1_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 132,
+      "name": "e3pilot_b1_12_13_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 133,
+      "name": "e3pilot_b1_44_45_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 134,
+      "name": "e3pilot_b1_12_13_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 135,
+      "name": "e3pilot_b1_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 136,
+      "name": "e3pilot_b1_12_13_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 137,
+      "name": "e3pilot_b1_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 138,
+      "name": "e3pilot_b1_12_13_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 139,
+      "name": "e3pilot_b1_24_25_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 140,
+      "name": "e3pilot_b1_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 141,
+      "name": "e3pilot_b1_24_25_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 142,
+      "name": "e3pilot_b1_44_45_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 143,
+      "name": "e3pilot_b1_24_25_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 144,
+      "name": "e3pilot_b2_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 145,
+      "name": "e3pilot_b2_24_25_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 146,
+      "name": "e3pilot_b2_24_25_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 147,
+      "name": "e3pilot_b2_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 148,
+      "name": "e3pilot_b2_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 149,
+      "name": "e3pilot_b2_44_45_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 150,
+      "name": "e3pilot_b2_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 151,
+      "name": "e3pilot_b2_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 152,
+      "name": "e3pilot_b2_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 153,
+      "name": "e3pilot_b2_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 154,
+      "name": "e3pilot_b2_24_25_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 155,
+      "name": "e3pilot_b2_44_45_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 156,
+      "name": "e3pilot_b2_24_25_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 157,
+      "name": "e3pilot_b2_44_45_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 158,
+      "name": "e3pilot_b2_24_25_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 159,
+      "name": "e3pilot_b2_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 160,
+      "name": "e3pilot_b2_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 161,
+      "name": "e3pilot_b2_12_13_8000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 162,
+      "name": "e3pilot_b2_44_45_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 163,
+      "name": "e3pilot_b2_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 164,
+      "name": "e3pilot_b2_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 165,
+      "name": "e3pilot_b2_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 166,
+      "name": "e3pilot_b2_44_45_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 167,
+      "name": "e3pilot_b2_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 168,
+      "name": "e3pilot_b2_24_25_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 169,
+      "name": "e3pilot_b2_44_45_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 170,
+      "name": "e3pilot_b2_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 171,
+      "name": "e3pilot_b2_12_13_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 172,
+      "name": "e3pilot_b2_12_13_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 173,
+      "name": "e3pilot_b2_12_13_8000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 174,
+      "name": "e3pilot_b2_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 175,
+      "name": "e3pilot_b2_12_13_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 176,
+      "name": "e3pilot_b2_44_45_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 177,
+      "name": "e3pilot_b2_44_45_4000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 178,
+      "name": "e3pilot_b2_44_45_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 179,
+      "name": "e3pilot_b2_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 180,
+      "name": "e3pilot_b2_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 181,
+      "name": "e3pilot_b2_44_45_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 182,
+      "name": "e3pilot_b2_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 183,
+      "name": "e3pilot_b2_12_13_8000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 184,
+      "name": "e3pilot_b2_12_13_4000ns_E_FIXED_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 185,
+      "name": "e3pilot_b2_24_25_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 186,
+      "name": "e3pilot_b2_24_25_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 187,
+      "name": "e3pilot_b2_44_45_4000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 188,
+      "name": "e3pilot_b2_12_13_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 189,
+      "name": "e3pilot_b2_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 190,
+      "name": "e3pilot_b2_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 191,
+      "name": "e3pilot_b2_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 192,
+      "name": "e3pilot_b2_12_13_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 193,
+      "name": "e3pilot_b2_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 194,
+      "name": "e3pilot_b2_24_25_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 195,
+      "name": "e3pilot_b2_44_45_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 196,
+      "name": "e3pilot_b2_12_13_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 197,
+      "name": "e3pilot_b2_24_25_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 198,
+      "name": "e3pilot_b2_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 199,
+      "name": "e3pilot_b2_12_13_8000ns_D_QISKIT_OPTIMIZED_STAG_XY8_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 496.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 200,
+      "name": "e3pilot_b2_24_25_8000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 201,
+      "name": "e3pilot_b2_12_13_4000ns_D_QISKIT_OPTIMIZED_STAG_XY8_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "D_QISKIT_OPTIMIZED_STAG_XY8",
+      "delta_ns": 248.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 202,
+      "name": "e3pilot_b2_12_13_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 203,
+      "name": "e3pilot_b2_44_45_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 204,
+      "name": "e3pilot_b2_44_45_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_XX",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 205,
+      "name": "e3pilot_b2_44_45_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 206,
+      "name": "e3pilot_b2_12_13_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 207,
+      "name": "e3pilot_b2_12_13_4000ns_C_QISKIT_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 208,
+      "name": "e3pilot_b2_12_13_8000ns_E_FIXED_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "XX"
+    },
+    {
+      "circuit_index": 209,
+      "name": "e3pilot_b2_24_25_4000ns_C_QISKIT_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 210,
+      "name": "e3pilot_b2_24_25_8000ns_E_FIXED_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "E_FIXED_STAG_XY8_80",
+      "delta_ns": 80.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 211,
+      "name": "e3pilot_b2_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_ZZ",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "ZZ"
+    },
+    {
+      "circuit_index": 212,
+      "name": "e3pilot_b2_24_25_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 40.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 213,
+      "name": "e3pilot_b2_44_45_4000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 2,
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 120.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 214,
+      "name": "e3pilot_b2_24_25_8000ns_F_OSIRIS_CONTROL_COMPILER_V2_YY",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "arm": "F_OSIRIS_CONTROL_COMPILER_V2",
+      "delta_ns": 0.0,
+      "basis": "YY"
+    },
+    {
+      "circuit_index": 215,
+      "name": "e3pilot_b2_24_25_4000ns_C_QISKIT_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "arm": "C_QISKIT_SYNC_XY8",
+      "delta_ns": 0.0,
+      "basis": "XX"
+    }
+  ]
+}

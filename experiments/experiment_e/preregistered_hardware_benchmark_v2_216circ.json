@@ -1,0 +1,195 @@
+{
+  "specification_id": "OSIRIS_V2_PREREGISTERED_HARDWARE_PILOT_216CIRC",
+  "target_backend": "ibm_marrakesh",
+  "pilot_unseen_edges": [
+    "(12,13)",
+    "(24,25)",
+    "(44,45)"
+  ],
+  "durations_ns": [
+    4000,
+    8000
+  ],
+  "protocol_arms": [
+    "C_QISKIT_SYNC_XY8",
+    "D_QISKIT_OPTIMIZED_STAG_XY8",
+    "E_FIXED_STAG_XY8_80",
+    "F_OSIRIS_CONTROL_COMPILER_V2"
+  ],
+  "pauli_bases": [
+    "XX",
+    "YY",
+    "ZZ"
+  ],
+  "acquisition_blocks": 3,
+  "shots_per_circuit": 1024,
+  "total_circuit_executions": 216,
+  "total_physical_shots": 221184,
+  "estimated_qpu_seconds": 62,
+  "remaining_allocation_seconds": 115,
+  "sys021_governance_status": "STAGED_DRY_RUN_ONLY_ZERO_QPU_CONSUMED",
+  "preregistered_cell_predictions": [
+    {
+      "dataset": "E3",
+      "edge": "(12,13)",
+      "duration_ns": 4000,
+      "cz_len_ns": 84.0,
+      "eta_phi_min": 0.0644,
+      "eta_phi_max": 0.0719,
+      "osiris_v2_selected_delta_ns": 0,
+      "osiris_v2_surrogate": {
+        "delta_ns": 0.0,
+        "J_score": 0.86489,
+        "f_hat": 0.865415,
+        "sigma_f": 0.0015,
+        "A_uv_ns": 3712.0,
+        "zz_loss": 0.002174,
+        "echo_leak_loss": 0.0
+      },
+      "arms": {
+        "A_IDLE": 0.754008,
+        "B_QISKIT_STANDARD_DD": 0.868434,
+        "C_QISKIT_SYNC_XY8": 0.878631,
+        "D_QISKIT_OPTIMIZED_STAG_XY8": 0.835042,
+        "E_FIXED_STAG_XY8_80": 0.873702,
+        "F_OSIRIS_CONTROL_COMPILER_V2": 0.878631
+      },
+      "engine1_vs_engine2_abs_diff": 8.86e-08
+    },
+    {
+      "dataset": "E3",
+      "edge": "(12,13)",
+      "duration_ns": 8000,
+      "cz_len_ns": 84.0,
+      "eta_phi_min": 0.1288,
+      "eta_phi_max": 0.1438,
+      "osiris_v2_selected_delta_ns": 0,
+      "osiris_v2_surrogate": {
+        "delta_ns": 0.0,
+        "J_score": 0.779292,
+        "f_hat": 0.779817,
+        "sigma_f": 0.0015,
+        "A_uv_ns": 7712.0,
+        "zz_loss": 0.009363,
+        "echo_leak_loss": 0.0
+      },
+      "arms": {
+        "A_IDLE": 0.502219,
+        "B_QISKIT_STANDARD_DD": 0.785696,
+        "C_QISKIT_SYNC_XY8": 0.803367,
+        "D_QISKIT_OPTIMIZED_STAG_XY8": 0.393252,
+        "E_FIXED_STAG_XY8_80": 0.76548,
+        "F_OSIRIS_CONTROL_COMPILER_V2": 0.803367
+      },
+      "engine1_vs_engine2_abs_diff": 3.664e-07
+    },
+    {
+      "dataset": "E3",
+      "edge": "(24,25)",
+      "duration_ns": 4000,
+      "cz_len_ns": 68.0,
+      "eta_phi_min": 0.1025,
+      "eta_phi_max": 0.106,
+      "osiris_v2_selected_delta_ns": 40,
+      "osiris_v2_surrogate": {
+        "delta_ns": 40.0,
+        "J_score": 0.786557,
+        "f_hat": 0.787877,
+        "sigma_f": 0.002344,
+        "A_uv_ns": 3118.08,
+        "zz_loss": 0.037894,
+        "echo_leak_loss": 0.010099
+      },
+      "arms": {
+        "A_IDLE": 0.65925,
+        "B_QISKIT_STANDARD_DD": 0.789999,
+        "C_QISKIT_SYNC_XY8": 0.806338,
+        "D_QISKIT_OPTIMIZED_STAG_XY8": 0.721971,
+        "E_FIXED_STAG_XY8_80": 0.806741,
+        "F_OSIRIS_CONTROL_COMPILER_V2": 0.808357
+      },
+      "engine1_vs_engine2_abs_diff": 1.029e-07
+    },
+    {
+      "dataset": "E3",
+      "edge": "(24,25)",
+      "duration_ns": 8000,
+      "cz_len_ns": 68.0,
+      "eta_phi_min": 0.205,
+      "eta_phi_max": 0.212,
+      "osiris_v2_selected_delta_ns": 0,
+      "osiris_v2_surrogate": {
+        "delta_ns": 0.0,
+        "J_score": 0.502228,
+        "f_hat": 0.502753,
+        "sigma_f": 0.0015,
+        "A_uv_ns": 7712.0,
+        "zz_loss": 0.216987,
+        "echo_leak_loss": 0.0
+      },
+      "arms": {
+        "A_IDLE": 0.3578,
+        "B_QISKIT_STANDARD_DD": 0.576475,
+        "C_QISKIT_SYNC_XY8": 0.598576,
+        "D_QISKIT_OPTIMIZED_STAG_XY8": 0.26648,
+        "E_FIXED_STAG_XY8_80": 0.55505,
+        "F_OSIRIS_CONTROL_COMPILER_V2": 0.598576
+      },
+      "engine1_vs_engine2_abs_diff": 3.463e-07
+    },
+    {
+      "dataset": "E3",
+      "edge": "(44,45)",
+      "duration_ns": 4000,
+      "cz_len_ns": 68.0,
+      "eta_phi_min": 0.0556,
+      "eta_phi_max": 0.0697,
+      "osiris_v2_selected_delta_ns": 120,
+      "osiris_v2_surrogate": {
+        "delta_ns": 120.0,
+        "J_score": 0.85111,
+        "f_hat": 0.852965,
+        "sigma_f": 0.0033,
+        "A_uv_ns": 1930.24,
+        "zz_loss": 0.014637,
+        "echo_leak_loss": 0.013284
+      },
+      "arms": {
+        "A_IDLE": 0.723848,
+        "B_QISKIT_STANDARD_DD": 0.832137,
+        "C_QISKIT_SYNC_XY8": 0.8438,
+        "D_QISKIT_OPTIMIZED_STAG_XY8": 0.849436,
+        "E_FIXED_STAG_XY8_80": 0.861579,
+        "F_OSIRIS_CONTROL_COMPILER_V2": 0.866486
+      },
+      "engine1_vs_engine2_abs_diff": 1.164e-07
+    },
+    {
+      "dataset": "E3",
+      "edge": "(44,45)",
+      "duration_ns": 8000,
+      "cz_len_ns": 68.0,
+      "eta_phi_min": 0.1113,
+      "eta_phi_max": 0.1395,
+      "osiris_v2_selected_delta_ns": 80,
+      "osiris_v2_surrogate": {
+        "delta_ns": 80.0,
+        "J_score": 0.611482,
+        "f_hat": 0.612643,
+        "sigma_f": 0.003319,
+        "A_uv_ns": 6478.08,
+        "zz_loss": 0.156724,
+        "echo_leak_loss": 0.040406
+      },
+      "arms": {
+        "A_IDLE": 0.416887,
+        "B_QISKIT_STANDARD_DD": 0.633213,
+        "C_QISKIT_SYNC_XY8": 0.650499,
+        "D_QISKIT_OPTIMIZED_STAG_XY8": 0.453314,
+        "E_FIXED_STAG_XY8_80": 0.668641,
+        "F_OSIRIS_CONTROL_COMPILER_V2": 0.668641
+      },
+      "engine1_vs_engine2_abs_diff": 2.926e-07
+    }
+  ]
+}
