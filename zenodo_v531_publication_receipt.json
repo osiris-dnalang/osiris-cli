@@ -1,0 +1,34 @@
+{
+  "deposition_id": 23986321,
+  "record_id": 23986321,
+  "doi": "10.5281/zenodo.23986321",
+  "url": "https://zenodo.org/record/23986321",
+  "title": "OSIRIS v5.3.1: Pre-Registered Held-Out Dynamical Decoupling Validation, Empirical Noise Floor Bounds, and Statistical Rescoring on 156-Qubit IBM Heron r2",
+  "version": "v5.3.1",
+  "files_uploaded": [
+    "osiris_research_evidence_v5.3.1.zip",
+    "osiris_research_evidence_v5.3.1.tar.gz",
+    "SHA256SUMS.txt",
+    "OSIRIS_RESEARCH_TO_EVIDENCE_ROADMAP.md",
+    "EXPERIMENT_E_FRONTIER_REPORT.md",
+    "manuscript_dual_component_quantum_control.tex",
+    "analysis_exp_e4.json",
+    "analysis_zz_ramsey_14_15.json",
+    "OSIRIS_GOV_BENCH_1_REPORT.md",
+    "OSIRIS_SCI_BENCH_1_REPORT.md"
+  ],
+  "file_hashes": {
+    "osiris_research_evidence_v5.3.1.zip": "650715b78dfc9d782c4602682c4f0dc6be6fd463b33d57516a8730cf8acc621f",
+    "osiris_research_evidence_v5.3.1.tar.gz": "2b5d33764df7c92fb4246f100a5c70de0a29bd77693e991ebc8e4b8cd9c71acb",
+    "SHA256SUMS.txt": "0c0f958c348951d72431baed0c4f9f0c7d87bcd9011f52b0537b50d26c470cd1",
+    "OSIRIS_RESEARCH_TO_EVIDENCE_ROADMAP.md": "5ec6cc81b06678d02c4d036ca7fdca04a87d210540731b997462e36c14e444f1",
+    "EXPERIMENT_E_FRONTIER_REPORT.md": "08b61ee2f2830428d8d1f16dc431eb06647249f81f965404bdd2f754890e8192",
+    "manuscript_dual_component_quantum_control.tex": "50ff19c747a6b8891655912dcc67846fa7622c551bddcda4e07add6b31acf56b",
+    "analysis_exp_e4.json": "39c3fdbb799d91eecec9fc636931a21175eb79e9613a45db028a1fae3744d146",
+    "analysis_zz_ramsey_14_15.json": "9199feb04608fe292af21801d489d3ea3b7e2152007cc352d9c970b0f7441cca",
+    "OSIRIS_GOV_BENCH_1_REPORT.md": "670bc8281f7164d81ea708de29d225d1e4c9eec71064d18ea97db8e8e7266a5f",
+    "OSIRIS_SCI_BENCH_1_REPORT.md": "edc1ecfd603f83768e6627e8686284aa07722f9b968f86cea0944cdb67e00db9"
+  },
+  "published_at": "2026-11-05T17:47:56Z",
+  "status": "published"
+}

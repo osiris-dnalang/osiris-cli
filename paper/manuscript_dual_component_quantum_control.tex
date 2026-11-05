@@ -8,105 +8,176 @@
 
 \begin{document}
 
-\title{Resolution of Harmonic Aliasing in Spectator Crosstalk: A Dual-Component Model for Staggered Dynamical Decoupling on Superconducting Processors}
+\title{A Pre-Registered, Held-Out Test of Coupler-Adaptive Staggered Dynamical Decoupling on IBM Heron r2: Null Results and an Arm-to-Arm Noise Floor}
 
 \author{Devin Phillip Davis}
 \email{devin@agiledefensesystems.com}
 \affiliation{Agile Defense Systems, LLC, Lexington, KY 40517, USA}
-\affiliation{OSIRIS Research Collective, Autonomous Science Division}
 
 \date{November 5, 2026}
 
 \begin{abstract}
-We present a definitive mechanistic resolution governing multi-qubit dynamical decoupling (DD) optimizations on fixed-frequency superconducting transmon architectures. By executing multi-regime pulse-stagger sweeps ($\Delta$) across 73,728 physical shots on the 156-qubit IBM Heron r2 processor (\texttt{ibm\_marrakesh}), we show that the widely hypothesized model of pure Microwave Pulse Collision Avoidance (MPCA) accounts for less than 10\% of the observed fidelity recovery ($74.83 \pm 0.71\%$ at boundary contact $\Delta = 32$~ns vs $74.73 \pm 0.71\%$ at simultaneous drive $\Delta = 0$~ns). By correcting a persistent non-linear harmonic fitting alias through explicit phase inversion validation ($\phi = \pi$), we expose a true latent static crosstalk rate of $\zeta_{14,15} = 3.170 \pm 5.169$~kHz on the primary discovery coupler. We formulate a unified dual-component error model demonstrating that optimal phase-conjugate pulse staggering ($\Delta = 160$~ns) co-dependently mitigates active drive-induced state hybridization while deterministically unwinding coherent phase accumulation driven by the underlying static Hamiltonian crosstalk.
+Dynamical decoupling (DD) sequences are widely deployed to suppress environmental dephasing, and temporal staggering of microwave $\pi$-pulses between adjacent coupled qubits has recently emerged as a technique to mitigate inter-qubit crosstalk and pulse collisions. Here, we present a pre-registered, held-out empirical evaluation of coupler-adaptive staggered DD across 17 distinct coupler-duration cells on 156-qubit IBM Heron r2 processors (\texttt{ibm\_marrakesh} and \texttt{ibm\_fez}). Across held-out test couplers, an adaptive policy parameterized by single-qubit dephasing saturation ratios $\eta_\phi$ failed to demonstrate a statistically significant transfer advantage over uniform staggering or synchronous XY8 ($\Delta \mathcal{F}_{\text{transfer}} = -0.80 \pm 0.60$~pp on \texttt{ibm\_fez}). Crucially, analysis of accidental A/A test cells---where distinct execution arms executed identical physical pulse schedules---reveals an empirical inter-arm noise floor of $1.03$~pp RMS ($\chi^2 = 13.1, df = 7, p = 0.07$). This baseline hardware drift equals or exceeds the headline gains reported across the campaign. Across all runs, uniform 80~ns staggering exhibits a pooled contrast of $+0.25 \pm 0.16$~pp ($1.6\sigma$) over synchronous XY8, indicating a potential physical benefit that remains unconfirmed at current shot budgets. Power analysis proves that resolving sub-percentage-point DD improvements at $2\sigma$ significance requires $\ge 33,000$ shots per basis per arm, establishing essential methodological benchmarks for quantum error mitigation.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-Scaling fixed-frequency superconducting quantum processors to fault-tolerant thresholds requires suppressing multi-qubit coherent crosstalk and spectator-induced dephasing. While dynamical decoupling (DD) sequences such as CPMG and XY8 are widely deployed to extend single-qubit coherence, their multi-qubit implementations on heavy-hex lattices frequently exhibit anomalous behavior. 
+As superconducting quantum processors scale toward fault-tolerant thresholds, spectator dephasing and coherent inter-qubit crosstalk ($ZZ$ interactions) represent dominant bottlenecks to multi-qubit gate and memory fidelity~\cite{Krantz2019, Gambetta2012}. Dynamical decoupling (DD) sequences, such as Carr-Purcell-Meiboom-Gill (CPMG) and XY8~\cite{Viola1998, Viola1999, Pokharel2023, Ezzell2023}, effectively filter low-frequency flux and charge noise. However, when applied simultaneously across coupled qubits on heavy-hex planar lattices, overlapping microwave control pulses can produce unwanted driven crosstalk, state hybridization, and ac-Stark shifts~\cite{Mundada2019}.
 
-In particular, bilateral pulse staggering---introducing a temporal offset $\Delta$ between microwave $\pi$-pulses on adjacent coupled qubits---has demonstrated significant fidelity gains ($+2.28$~pp on physical edge $(14, 15)$ on \texttt{ibm\_marrakesh}). However, the fundamental physical mechanism underpinning this advantage has remained contested: does staggering act as an echo refocusing residual static $ZZ$ interaction ($\zeta_{ij} Z_i Z_j$), or does it function as Microwave Pulse Collision Avoidance (MPCA) by separating physical microwave control envelopes?
+To combat these effects, asynchronous or staggered pulse scheduling---introducing a relative temporal offset $\Delta$ between microwave $\pi$-pulses applied to coupled qubit pairs---has been proposed and demonstrated on transmon architectures~\cite{Niu2024, Tripathi2022}. By staggering the control pulses, simultaneous single-qubit rotations leave inter-qubit $ZZ$ evolution unrefocused, whereas macroscopic staggering allows the toggling frame to partially unwind coherent phase accumulation~\cite{Niu2024}. 
 
-In this Letter, we present the empirical resolution of this debate through two prospective hardware experiments and an audited Hamiltonian characterization executed under cryptographic governance (SYS-021).
+Despite promising initial demonstrations, assessing whether staggered DD yields a reproducible advantage across complex processor topologies requires addressing three critical methodological challenges:
+\begin{enumerate}
+    \item \textbf{Generalizability across unseen couplers:} Do calibration models trained on subset edges predict optimal timing on held-out topological couplers?
+    \item \textbf{Cross-chip parameter transferability:} Do dimensionless single-qubit coherence metrics transfer across physically distinct fabrication runs?
+    \item \textbf{Statistical noise floor:} What is the physical shot-noise floor and inter-arm drift rate on commercial cloud quantum hardware, and does it constrain the observability of sub-percentage DD gains?
+\end{enumerate}
 
-\section{Cross-Chip Transfer Breakdown (Experiment E3)}
-Prior heuristic models parameterized optimal stagger timing via single-qubit dephasing saturation ratios $\eta_\phi = \Gamma_\phi / (\Gamma_1 + \Gamma_\phi)$. To test the portability of $\eta_\phi$, Experiment E3 was pre-registered and dispatched to \texttt{ibm\_fez} (Heron r2, Job ID \texttt{dbm86158ft8s738ucqi0}, 81 circuits, 82,944 shots). Across three disjoint physical couplers spanning calibrated low, intermediate, and high dephasing regimes:
-\begin{align}
-\Delta \mathcal{F}_{\text{transfer}} &= \mathcal{F}_{\text{OSIRIS}} - \mathcal{F}_{\text{STAG\_80}} = -0.803 \pm 0.601\text{ pp} \\
-\Delta \mathcal{F}_{\text{stag}} &= \mathcal{F}_{\text{STAG\_80}} - \mathcal{F}_{\text{SYNC}} = +0.109 \pm 0.461\text{ pp}
-\end{align}
-Fixed 80~ns staggering and synchronous XY8 performed identically ($p = 0.820$), while the adaptive model failed to achieve transfer advantage ($p = 0.218$). This empirical failure decisively falsified single-qubit scalar parameter portability, proving that multi-qubit DD performance is governed by hardware-specific Hamiltonian coupling matrices $\mathcal{H}_{\text{crosstalk}}$.
+In this Letter, we present the results of a multi-stage prospective experimental campaign (Experiments E0--E4) executed on IBM Heron r2 processors (\texttt{ibm\_marrakesh} and \texttt{ibm\_fez}) under immutable cryptographic ledger logging. We report prospective held-out tests, document a decisive cross-chip transfer null, establish the empirical arm-to-arm noise floor via accidental A/A comparisons, and derive exact shot-noise power constraints for future multi-qubit DD evaluations.
 
-\section{Harmonic Alias Resolution \& Hamiltonian Tomography}
-To isolate the true Hamiltonian coupling, conditional ZZ-Ramsey parity oscillation experiments were conducted on \texttt{ibm\_marrakesh} across 16 delay steps ($\tau \in [0, 2000]$~ns) with an artificial detuning frequency $f_{\text{det}} = 500$~kHz:
+\section{Experimental Architecture \& Pre-Flight State Certification}
+Measurements were performed on 156-qubit IBM Heron r2 processors with a tunable-coupler heavy-hex architecture, single-qubit pulse duration $T_{\text{pulse}} = 32.0$~ns ($8\times dt$, $dt = 4.0$~ns), and typical two-qubit gate duration $\tau_{CZ} \in [68, 84]$~ns. 
+
+Two-qubit entangled Bell states $|\Phi^+\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$ were prepared across physical nearest-neighbor couplers $(u, v)$. True two-qubit entanglement was verified using the standard Bell-fidelity witness:
 \begin{equation}
-\mathcal{H} = \frac{\omega_0}{2} Z_u + \frac{\omega_v}{2} Z_v + \zeta_{uv} Z_u Z_v
+\mathcal{F}_{\text{Bell}} = \frac{1}{4}\left(1 + \langle XX \rangle - \langle YY \rangle + \langle ZZ \rangle\right)
+\label{eq:bell_witness}
 \end{equation}
-The target qubit $u$ transition probability $P_0(\tau)$ was measured conditioned on spectator qubit $v \in \{\lvert 0 \rangle, \lvert 1 \rangle\}$.
+where each two-qubit Pauli expectation value $\langle P \rangle \in \{\langle XX \rangle, \langle YY \rangle, \langle ZZ \rangle\}$ was reconstructed from $N = 1{,}024$ shots per basis per acquisition block. Entanglement requires $\mathcal{F}_{\text{Bell}} > 0.50$.
 
-Initial non-linear least squares fits reported an apparent oscillation frequency $f \approx 1,166$~kHz. However, visual audit revealed a complete half-period oscillation at $\tau = 1,024$~ns ($P_0 = 0.9883$) and full cycle at $\tau = 2,000$~ns ($P_0 = 0.0215$), corresponding to $f \approx 488$~kHz. 
+In pre-campaign staging (Experiment E Pilot), an algebraic state-preparation defect was detected and corrected: omitting a Hadamard rotation prior to $CZ(u,v)$ initially prepared the product state $|++\rangle$ ($\mathcal{F}_{\text{Bell}} \approx 0.465$). To guarantee execution integrity, an automated pre-flight statevector verification gate was enforced for all subsequent circuits. Experiment E0 certified true Bell entanglement at $t = 0\,\mu$s across multiple edges: $\mathcal{F}_{\text{Bell}} = 97.30\%$ on $(14, 15)$, $93.55\%$ on $(19, 35)$, and $94.07\%$ on $(33, 32)$, with all separable product-state controls remaining strictly at or below $0.50$. Under $4\,\mu$s unprotected idle dephasing, fidelities decayed to $80.57\text{--}87.81\%$, and standard XY8 dynamical decoupling restored fidelity by $+15.55$~pp.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig_ramsey_alias.pdf}
-\caption{Conditional ZZ-Ramsey oscillations on Edge $(14, 15)$. The initial solver guess ($A > 0, \phi = 0$) trapped in a harmonic alias ($1,166$~kHz), whereas the phase-inverted fundamental ($\phi = \pi, A \approx -0.49$) captures the exact oscillation ($f_A = 482.89$~kHz, $f_B = 476.55$~kHz, $\zeta = 3.170$~kHz).}
-\label{fig:ramsey}
-\end{figure}
+\section{Prospective Held-Out Scheduler Validation (Experiment E2)}
+In Experiment E1, bilateral antisymmetric staggered XY8 ($\delta_u = -\Delta/2, \delta_v = +\Delta/2$, $\Delta \in \{80, 160, 240\}$~ns) was mapped against synchronous XY8 ($\Delta = 0$) at $4\,\mu$s and $8\,\mu$s. Observations suggested that stagger sensitivity scaled with the dimensionless Single-Qubit Dephasing Saturation Ratio:
+\begin{equation}
+\eta_\phi(e, T) = T \cdot \max\big(\Gamma_\phi(u),\, \Gamma_\phi(v)\big)
+\label{eq:eta}
+\end{equation}
+where $\Gamma_\phi(q) = \max(0, 1/T_2(q) - 1/2T_1(q))$. A prospective model (\texttt{v1.0}) was frozen and pre-registered to classify couplers into Regime I ($\eta_\phi < 0.15 \to \text{SYNC}$), Regime II ($0.15 \le \eta_\phi \le 0.35 \to \text{STAG}_{80}$), and Regime III ($\eta_\phi > 0.35 \to \text{SYNC}$).
 
-The discrepancy arose because the initial parameter vector assumed $p_0 = [A=+0.4, \phi=0]$, predicting $P_0(0) = 0.9$, while the physical circuit inverted the phase to $P_0(0) \approx 0.0$. The optimizer trapped in an artificial harmonic alias to invert the sign. Re-fitting with the fundamental physical phase ($\phi = \pi$) yielded the true Hamiltonian parameters:
-\begin{itemize}
-\item \textbf{Edge $(14, 15)$:} $f_A = 482.885 \pm 5.169$~kHz, $f_B = 476.545 \pm 4.620$~kHz, yielding $\Delta f = 6.340$~kHz and static coupling $\zeta_{14,15} = 3.170 \pm 5.169$~kHz ($19.92$~krad/s). Over an $8\,\mu$s sequence, this accumulates $9.13^\circ$ ($0.159$~rad) of uncorrected phase drift.
-\item \textbf{Edge $(61, 62)$:} $f_A = 497.476 \pm 3.840$~kHz, $f_B = 496.895 \pm 3.910$~kHz, yielding $\Delta f = 0.580$~kHz and $\zeta_{61,62} = 0.290$~kHz ($1.82$~krad/s, $0.83^\circ$ drift).
-\end{itemize}
-
-\section{Experiment E4: Pulse-Overlap Fingerprinting}
-Single-qubit microwave drive envelopes on \texttt{ibm\_marrakesh} have physical duration $T_{\text{pulse}} = 8\text{ dt} = 32.0$~ns. If microwave pulse collisions during simultaneous driving dominate error accumulation, Bell state fidelity $\mathcal{F}_{\text{Bell}}(\Delta)$ must exhibit a sharp step transition across $\Delta \in [16, 32]$~ns, followed by an immediate plateau for non-overlapping pulses ($\Delta \ge 32$~ns).
-
-Experiment E4 evaluated this hypothesis using 72 ISA circuits and 73,728 shots (Job ID \texttt{dbm9ctu74qds73drs9j0}) on \texttt{ibm\_marrakesh} across offsets $\Delta \in \{0, 16, 32, 48, 80, 160\}$~ns.
+Experiment E2 dispatched this frozen policy across 4 unseen held-out couplers on \texttt{ibm\_marrakesh} ($(15, 19)$, $(32, 31)$, $(34, 33)$, $(35, 34)$) over $K = 4$ randomized acquisition blocks ($N = 294{,}912$ physical shots).
 
 \begin{table}[h]
-\caption{Empirical Bell fidelity $\mathcal{F}_{\text{Bell}}$ across pulse stagger offsets $\Delta$ on Edge $(14, 15)$ under $8\,\mu$s XY8 evolution.}
-\label{tab:e4}
+\caption{Portfolio policy comparison across all 8 held-out coupler-duration cells in Experiment E2 (32 paired block evaluations).}
+\label{tab:e2}
 \begin{ruledtabular}
-\begin{tabular}{rccc}
-$\Delta$ (ns) & Overlap State & $\mathcal{F}_{\text{Bell}} \pm \text{SEM}$ (\%) & $\Delta \mathcal{F}_{\text{Bell}}$ (pp) \\
+\begin{tabular}{lccc}
+Control Policy & Mean $\mathcal{F}_{\text{Bell}}$ (\%) & vs. Idle (pp) & vs. SYNC (pp) \\
 \colrule
-0 & 100\% (Simultaneous) & $74.73 \pm 0.71$ & Reference \\
-16 & 50\% Overlap & $75.10 \pm 0.71$ & $+0.37$ \\
-32 & 0\% (Boundary Contact) & $74.83 \pm 0.71$ & $\mathbf{+0.10}$ \\
-48 & Non-overlapping ($16$~ns gap) & $74.85 \pm 0.71$ & $+0.12$ \\
-80 & Non-overlapping ($48$~ns gap) & $74.51 \pm 0.72$ & $-0.22$ \\
-160 & Non-overlapping ($128$~ns gap) & $75.76 \pm 0.70$ & $\mathbf{+1.03}$ \\
+1. Unprotected Idle & $68.56$ & --- & $-15.55$ \\
+2. Fixed Universal SYNC & $84.11$ & $+15.55$ & $0.00$ \\
+3. Frozen Adaptive v1.0 & $84.27$ & $+15.72$ & $+0.17$ \\
+4. Fixed Universal $\text{STAG}_{80}$ & $84.55$ & $+15.99$ & $\mathbf{+0.45}$ \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
 
-The pre-registered mathematical criterion for pure MPCA required that at least 75\% of total fidelity recovery occur at the boundary contact:
+While Fixed $\text{STAG}_{80}$ achieved the highest nominal mean ($84.55\%$, $+0.446$~pp over SYNC), frozen Adaptive v1.0 trailed by $-0.276$~pp. Cluster-robust variance estimators with $G = 4$ coupler clusters ($df = 3$) produced sample standard errors of $0.090\text{--}0.113$~pp. However, analytical propagation of multinomial shot noise on Eq.~(\ref{eq:bell_witness}) imposes a strict theoretical lower bound of:
 \begin{equation}
-\mathcal{R}_{\text{step}} = \frac{\mathcal{F}_{\text{Bell}}(32\text{ ns}) - \mathcal{F}_{\text{Bell}}(0\text{ ns})}{\mathcal{F}_{\text{Bell}}(160\text{ ns}) - \mathcal{F}_{\text{Bell}}(0\text{ ns})} \ge 0.75
+\sigma_{\text{floor}} = \frac{\sqrt{2} \cdot \sigma_{\mathcal{F}}}{\sqrt{N_{\text{blocks}}}} \approx \frac{1.45\text{ pp}}{\sqrt{32}} \approx \mathbf{0.256\text{ pp}}
 \end{equation}
-The empirical outcome was $\mathcal{R}_{\text{step}} = 9.5\%$, failing the hypothesis by nearly an order of magnitude. Furthermore, the fidelity from $\Delta = 0$~ns to $\Delta = 48$~ns was completely invariant ($74.73\% \to 74.85\%$, within $\pm 0.12$~pp).
+The reported sample cluster errors swung low due to small degrees of freedom ($df = 3$). Applying a Bonferroni-corrected significance threshold across the 8 tested cells ($\alpha = 0.05 / 8 = 0.00625$), no single cell or portfolio contrast achieved statistical significance.
 
-\section{The Unified Dual-Component Model}
-The empirical invalidation of both single-parameter dephasing transfer (E3) and pure pulse collision avoidance (E4) mandates a unified dual-component Lindbladian model:
+\section{Cross-Chip Transfer Falsification (Experiment E3 on \texttt{ibm\_fez})}
+To test whether the scalar dephasing model transfers across physical processors, Experiment E3 was pre-registered and executed on \texttt{ibm\_fez} (Heron r2, Job ID \texttt{dbm86158ft8s738ucqi0}, 81 circuits, 82,944 shots, $K = 3$ blocks). Three couplers were mapped to the three theoretical regimes: $(87, 88)$ (Regime I, $\eta_\phi = 0.0103$), $(61, 62)$ (Regime II, $\eta_\phi = 0.2126$), and $(100, 101)$ (Regime III, $\eta_\phi = 0.3705$).
+
+\begin{table}[h]
+\caption{Cross-chip evaluation of pre-registered adaptive scheduling on \texttt{ibm\_fez} at $T = 8\,\mu$s.}
+\label{tab:fez}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+Physical Coupler & $\mathcal{F}_{\text{SYNC}}$ & $\mathcal{F}_{\text{STAG80}}$ & $\mathcal{F}_{\text{Adaptive}}$ & $\Delta \mathcal{F}_{\text{transfer}}$ (pp) \\
+\colrule
+$(87, 88)$ (Reg. I) & $76.40\%$ & $77.31\%$ & $77.18\%$ & $-0.13 \pm 0.82$ \\
+$(61, 62)$ (Reg. II) & $72.95\%$ & $72.53\%$ & $72.25\%$ & $-0.28 \pm 1.43$ \\
+$(100, 101)$ (Reg. III) & $72.44\%$ & $72.28\%$ & $70.28\%$ & $-2.00 \pm 0.73$ \\
+\colrule
+\textbf{Portfolio Mean} & $\mathbf{73.93\%}$ & $\mathbf{74.04\%}$ & $\mathbf{73.24\%}$ & $\mathbf{-0.80 \pm 0.60}$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The primary pre-registered estimand yielded:
 \begin{equation}
-\dot{\rho} = -i[\mathcal{H}(t), \rho] + \sum_k \mathcal{D}[L_k]\rho
+\Delta \mathcal{F}_{\text{transfer}} = \mathcal{F}_{\text{Adaptive}} - \mathcal{F}_{\text{STAG80}} = -0.80 \pm 0.60\text{ pp}
 \end{equation}
-where the time-dependent Hamiltonian partitions into:
+($t_8 = -1.335, p = 0.218, 95\%\text{ CI: } [-2.19, +0.58]\text{ pp}$). Fixed 80~ns staggering and synchronous XY8 performed identically ($+0.109 \pm 0.461$~pp, $p = 0.820$). 
+
+This empirical finding decisive falsifies scalar cross-chip transferability: single-qubit coherence metrics calibrated on one chip do not predict multi-qubit crosstalk dynamics on another.
+
+\section{The Empirical Arm-to-Arm Noise Floor}
+Across the campaign, seven experimental cell pairs executed identical stagger timing in distinct execution arms. Because the applied microwave schedules were identical, differences between these paired arms measure physical hardware drift and inter-arm experimental noise:
+
+\begin{table}[h]
+\caption{Accidental A/A tests: observed differences between identical physical pulse schedules executed in separate arms.}
+\label{tab:aa}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+Run & Coupler & Delay & Identical Arm Comparison & $\Delta \mathcal{F}$ (pp) \\
+\colrule
+E3 Pilot & $(12, 13)$ & $4\,\mu$s & Arm F ($0$~ns) vs. Arm C ($0$~ns) & $+0.70$ \\
+E3 Pilot & $(12, 13)$ & $8\,\mu$s & Arm F ($0$~ns) vs. Arm C ($0$~ns) & $+1.09$ \\
+E3 Pilot & $(24, 25)$ & $8\,\mu$s & Arm F ($0$~ns) vs. Arm C ($0$~ns) & $-0.63$ \\
+Fez E3 & $(87, 88)$ & $8\,\mu$s & OSIRIS ($0$~ns) vs. SYNC ($0$~ns) & $+0.78$ \\
+Fez E3 & $(61, 62)$ & $8\,\mu$s & OSIRIS ($80$~ns) vs. STAG ($80$~ns) & $-0.28$ \\
+Fez E3 & $(100, 101)$ & $8\,\mu$s & OSIRIS ($0$~ns) vs. SYNC ($0$~ns) & $-2.16$ \\
+\colrule
+\textbf{RMS Noise} & --- & --- & $\chi^2 = 11.09, df = 6, p = 0.086$ & $\mathbf{1.11\text{ pp}}$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The empirical root-mean-square difference across these identical schedules is $\mathbf{1.03\text{--}1.11\text{ pp}}$. This provides direct evidence of slow calibration drift and environmental fluctuations during multi-circuit execution blocks. Crucially, every claimed adaptive advantage in the campaign ($0.1\text{--}0.6$~pp) is smaller than this empirical noise floor.
+
+Furthermore, rescoring the E3 pilot using strictly the pre-registered binary policy (Arms C and E) yields a policy gain of only $\mathbf{+0.038\text{ pp}}$, rather than the originally reported $+0.651$~pp which was inflated by un-preregistered continuous offsets.
+
+\section{Mechanistic Bounds: Overlap Sweeps \& Static ZZ Limits}
+To isolate the physical driver of staggering, two focused experiments were conducted on \texttt{ibm\_marrakesh}:
+
+\textbf{1. Overlap Stagger Fingerprinting (Experiment E4):} We swept stagger offsets $\Delta \in \{0, 16, 32, 48, 80, 160\}$~ns on coupler $(14, 15)$ under $8\,\mu$s XY8 evolution ($73,728$ shots, $K = 2$). While $T_{\text{pulse}} = 32.0$~ns represents the boundary between overlapping and non-overlapping drive envelopes, $\mathcal{F}_{\text{Bell}}$ remained completely flat: $74.73 \pm 0.71\%$ ($0$~ns), $75.10 \pm 0.71\%$ ($16$~ns), $74.83 \pm 0.71\%$ ($32$~ns), $74.85 \pm 0.71\%$ ($48$~ns), $74.51 \pm 0.72\%$ ($80$~ns), and $75.76 \pm 0.70\%$ ($160$~ns). 
+
+A goodness-of-fit test against a constant flat response yields:
+\begin{align}
+\text{Coupler }(14, 15): &\quad \chi^2 = 1.87, \quad df = 5, \quad p = 0.866 \\
+\text{Coupler }(61, 62): &\quad \chi^2 = 1.96, \quad df = 5, \quad p = 0.854
+\end{align}
+Both couplers are statistically indistinguishable from a flat response. At $N = 2,048$ shots per point, neither microwave pulse collision avoidance nor continuous filter-function refocusing is statistically resolvable above shot noise.
+
+\textbf{2. Conditional ZZ-Ramsey Measurements:} Target qubit Ramsey oscillations were measured conditioned on spectator states $|0\rangle$ and $|1\rangle$ across $\tau \in [0, 2000]$~ns with detuning $f_{\text{det}} = 500$~kHz. Non-linear least-squares fitting of the fundamental oscillation yielded:
 \begin{equation}
-\mathcal{H}(t) = \mathcal{H}_{\text{drive}}(t) + \zeta_{uv} Z_u Z_v + \Omega_{\text{cross}}(t)(X_u X_v + Y_u Y_v)
+f_A = 482.89 \pm 5.17\text{ kHz}, \quad f_B = 476.55 \pm 4.62\text{ kHz}
 \end{equation}
+giving $\Delta f = 6.34 \pm 6.93$~kHz and $\zeta_{14,15} = 3.17 \pm 3.47$~kHz ($0.91\sigma$, $p = 0.36$). Over the $2\,\mu$s delay window, this frequency shift accumulates only $\sim 4.6^\circ$ of phase. These data bound residual static $ZZ$ coupling to $\le 10$~kHz, but do not resolve a non-zero shift.
 
-\begin{enumerate}
-\item \textbf{High-Frequency Drive Hybridization:} When microwave envelopes overlap ($\Delta < 32$~ns), stray line spillover drives transient dressed-state hybridization ($\Omega_{\text{cross}} \neq 0$). However, this accounts for $\le 10\%$ of the observable infidelity on well-tuned Heron r2 hardware.
-\item \textbf{Coherent Phase Accumulation \& Refocusing:} During the inter-pulse intervals, the non-zero static coupling ($\zeta_{14,15} = 3.17$~kHz) accumulates coherent phase. At macroscopic stagger offsets ($\Delta \approx 160$~ns), the asymmetry between the forward and backward propagation windows acts as a phase-conjugate cancellation knob, unwinding the accumulated $ZZ$ phase and yielding the observed $+1.03$~pp gain.
-\end{enumerate}
+\section{Discussion \& Sample Size Requirements}
+Pooling the fixed $80$~ns staggering contrast across all 17 distinct coupler-duration cells in E2, E2-Pilot, and Fez gives:
+\begin{equation}
+\Delta \mathcal{F}_{\text{pooled}} = +0.22 \pm 0.18\text{ pp} \quad (Z = 1.19\sigma, \quad p = 0.233)
+\end{equation}
+with an unweighted mean of $+0.25 \pm 0.16$~pp ($1.6\sigma$). This represents a plausible physical hint that temporal pulse staggering provides a modest dephasing mitigation on Heron r2 processors, consistent with findings in Niu et al.~\cite{Niu2024}.
 
-\section{Conclusion \& Data Availability}
-By combining prospective hardware experiments with rigorous mathematical pre-registration and cryptographic ledger governance, we have resolved the physical origin of staggered dynamical decoupling into a dual-component mechanism.
+However, resolving a true $0.50$~pp advantage at $2\sigma$ ($95\%$ confidence) against multinomial shot noise requires:
+\begin{equation}
+N_{\text{req}} \ge 2 \cdot \left(\frac{1.43\text{ pp}}{0.25\text{ pp}}\right)^2 \times 1024 \approx \mathbf{33,500\text{ shots per basis per arm}}
+\end{equation}
+Exploratory allocations of $1{,}024\text{--}3{,}072$ shots per basis are fundamentally underpowered to discriminate sub-percentage-point DD policies from background drift. Furthermore, future benchmarking protocols must interleave control arms within single execution jobs and include explicit, deliberate A/A arms to quantify drift.
 
-All raw shot counts, circuit manifests, QPY archives, and analysis scripts supporting this work are permanently archived on Zenodo at DOI: \href{https://doi.org/10.5281/zenodo.23976303}{10.5281/zenodo.23976303} and released in OSIRIS v5.3.0 under cryptographic Ledger Block Sequence \#24.
+\section{Conclusion}
+By subjecting a multi-stage quantum control campaign to strict pre-registered rescoring and shot-noise modeling, we show that coupler-adaptive staggering yields null transfer advantages at $0.3\text{--}0.5$~pp resolution, while disclosing an empirical inter-arm noise floor of $1.03$~pp RMS on IBM Heron r2. These findings establish rigorous statistical boundaries for multi-qubit error mitigation and provide an open-source, pre-registered framework for future high-shot evaluations.
 
-\bibliography{references}
+All raw circuit execution counts, QPY archives, analysis scripts, and ledger receipts are openly accessible on Zenodo at DOI: \href{https://doi.org/10.5281/zenodo.23983003}{10.5281/zenodo.23983003} and released under OSIRIS v5.3.0.
+
+\begin{thebibliography}{99}
+\bibitem{Krantz2019} P. Krantz, M. Kjaergaard, F. Yan, T. P. Orlando, S. Gustavsson, and W. D. Oliver, A quantum engineer's guide to superconducting qubits, \textit{Appl. Phys. Rev.} \textbf{6}, 021318 (2019).
+\bibitem{Gambetta2012} J. M. Gambetta, A. D. C\'orcoles, S. T. Merkel, B. R. Johnson, J. A. Smolin, and J. M. Chow, Characterization of addressability by simultaneous randomized benchmarking, \textit{Phys. Rev. Lett.} \textbf{109}, 240504 (2012).
+\bibitem{Viola1998} L. Viola and S. Lloyd, Dynamical suppression of decoherence in two-state quantum systems, \textit{Phys. Rev. A} \textbf{58}, 2733 (1998).
+\bibitem{Viola1999} L. Viola, E. Knill, and S. Lloyd, Dynamical decoupling of open quantum systems, \textit{Phys. Rev. Lett.} \textbf{82}, 2417 (1999).
+\bibitem{Pokharel2023} B. Pokharel and D. A. Lidar, Demonstration of algorithmic quantum speedup for an open system, \textit{Phys. Rev. Lett.} \textbf{130}, 210602 (2023).
+\bibitem{Ezzell2023} N. Ezzell, B. Pokharel, L. Tewala, G. Quiroz, and D. A. Lidar, Dynamical decoupling for superconducting qubits: a tutorial, \textit{arXiv:2207.03670} (2023).
+\bibitem{Mundada2019} P. Mundada, G. Zhang, T. Hazard, and A. A. Houck, Suppression of conditional parasitic transitions in superconducting qubits, \textit{Phys. Rev. Appl.} \textbf{12}, 054023 (2019).
+\bibitem{Niu2024} S. Niu, A. Todri-Sanial, and N. T. Bronn, Multi-qubit Dynamical Decoupling for Enhanced Crosstalk Suppression, \textit{arXiv:2403.05391} (2024).
+\bibitem{Tripathi2022} V. Tripathi, H. Chen, M. Khezri, K. Yip, E. M. Levenson-Falk, and D. A. Lidar, Suppression of crosstalk in superconducting qubits using dynamical decoupling, \textit{Phys. Rev. Appl.} \textbf{18}, 024068 (2022).
+\end{thebibliography}
+
 \end{document}
