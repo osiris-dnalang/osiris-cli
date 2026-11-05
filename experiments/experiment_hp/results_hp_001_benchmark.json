@@ -1,0 +1,321 @@
+{
+  "protocol": "OSIRIS-HP-001",
+  "timestamp": "2026-11-05T14:11:21Z",
+  "n_trials": 20,
+  "summary": {
+    "mean_arm_a_reversible": 0.9999999999999993,
+    "mean_arm_b_entangled": 0.9096913870131745,
+    "mean_arm_b_unentangled": 0.722295436448029,
+    "mean_entanglement_advantage": 0.1873959505651458,
+    "t_statistic": 14.013106058118014,
+    "p_value_1s": 9.054209845684446e-12
+  },
+  "radiation_sweep": {
+    "1": {
+      "mean": 0.6328383752786453,
+      "ci_95": [
+        0.6159492598566184,
+        0.6513900467498354
+      ]
+    },
+    "2": {
+      "mean": 0.9096913870131745,
+      "ci_95": [
+        0.8932402088533192,
+        0.9258824970095567
+      ]
+    },
+    "3": {
+      "mean": 0.9999999999999998,
+      "ci_95": [
+        0.9999999999999998,
+        0.9999999999999998
+      ]
+    }
+  },
+  "noise_sweep": {
+    "0.0": {
+      "mean": 0.9096913870131745,
+      "ci_95": [
+        0.8929477556505816,
+        0.9257653601445138
+      ]
+    },
+    "0.05": {
+      "mean": 0.8767068176625161,
+      "ci_95": [
+        0.8611230278944251,
+        0.8926231735342823
+      ]
+    },
+    "0.1": {
+      "mean": 0.8437222483118572,
+      "ci_95": [
+        0.8287526390130449,
+        0.8573305959378904
+      ]
+    },
+    "0.2": {
+      "mean": 0.7777531096105397,
+      "ci_95": [
+        0.7643529034574207,
+        0.7914870469052409
+      ]
+    }
+  },
+  "hypotheses_verdicts": {
+    "H1_reversible_control": {
+      "prediction": "F_ArmA >= 0.999",
+      "observed": 0.9999999999999993,
+      "passed": true
+    },
+    "H2_restricted_recovery": {
+      "prediction": "F_ArmB > 0.50 and Advantage > 0 (p < 0.05)",
+      "observed_fidelity": 0.9096913870131745,
+      "observed_advantage": 0.1873959505651458,
+      "p_value_1s": 9.054209845684446e-12,
+      "passed": true
+    },
+    "H3_page_transition": {
+      "prediction": "F(kD=1) < F(kD=2) < F(kD=3)",
+      "observed_fidelities": [
+        0.6328383752786453,
+        0.9096913870131745,
+        0.9999999999999998
+      ],
+      "passed": true
+    },
+    "H4_noise_sensitivity": {
+      "prediction": "Monotonic degradation under increasing noise",
+      "observed_fidelities": [
+        0.9096913870131745,
+        0.8767068176625161,
+        0.8437222483118572,
+        0.7777531096105397
+      ],
+      "passed": true
+    }
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "seed": 1000,
+      "arm_a_reversible": 0.9999999999999991,
+      "arm_b_entangled": 0.9160266815160925,
+      "arm_b_unentangled": 0.8153378418726382,
+      "entanglement_advantage": 0.10068883964345421,
+      "exp_XX": 0.928802941079141,
+      "exp_YY": -0.842803446872201,
+      "exp_ZZ": 0.8925003381130288
+    },
+    {
+      "trial": 2,
+      "seed": 1037,
+      "arm_a_reversible": 0.9999999999999996,
+      "arm_b_entangled": 0.9197613444113957,
+      "arm_b_unentangled": 0.8490495940507934,
+      "entanglement_advantage": 0.07071175036060229,
+      "exp_XX": 0.8735156545572986,
+      "exp_YY": -0.9286617825366652,
+      "exp_ZZ": 0.87686794055162
+    },
+    {
+      "trial": 3,
+      "seed": 1074,
+      "arm_a_reversible": 0.9999999999999993,
+      "arm_b_entangled": 0.9103478555681157,
+      "arm_b_unentangled": 0.6510590308792685,
+      "entanglement_advantage": 0.2592888246888472,
+      "exp_XX": 0.8338466941322787,
+      "exp_YY": -0.8341665000162842,
+      "exp_ZZ": 0.9733782281239007
+    },
+    {
+      "trial": 4,
+      "seed": 1111,
+      "arm_a_reversible": 0.9999999999999993,
+      "arm_b_entangled": 0.9355791594128328,
+      "arm_b_unentangled": 0.7112789399998445,
+      "entanglement_advantage": 0.22430021941298828,
+      "exp_XX": 0.8988111488793753,
+      "exp_YY": -0.967521965142291,
+      "exp_ZZ": 0.8759835236296654
+    },
+    {
+      "trial": 5,
+      "seed": 1148,
+      "arm_a_reversible": 0.9999999999999993,
+      "arm_b_entangled": 0.8490892127018198,
+      "arm_b_unentangled": 0.651252044129681,
+      "entanglement_advantage": 0.19783716857213884,
+      "exp_XX": 0.716951232675038,
+      "exp_YY": -0.8933504468093092,
+      "exp_ZZ": 0.7860551713229327
+    },
+    {
+      "trial": 6,
+      "seed": 1185,
+      "arm_a_reversible": 0.9999999999999994,
+      "arm_b_entangled": 0.9649996029454184,
+      "arm_b_unentangled": 0.8044203404899124,
+      "entanglement_advantage": 0.16057926245550602,
+      "exp_XX": 0.9344395658379104,
+      "exp_YY": -0.9360069389390459,
+      "exp_ZZ": 0.9895519070047187
+    },
+    {
+      "trial": 7,
+      "seed": 1222,
+      "arm_a_reversible": 0.9999999999999989,
+      "arm_b_entangled": 0.9016388911029611,
+      "arm_b_unentangled": 0.703245587996417,
+      "entanglement_advantage": 0.19839330310654413,
+      "exp_XX": 0.8633613321385578,
+      "exp_YY": -0.8487445321548186,
+      "exp_ZZ": 0.894449700118469
+    },
+    {
+      "trial": 8,
+      "seed": 1259,
+      "arm_a_reversible": 0.9999999999999988,
+      "arm_b_entangled": 0.9757449423232674,
+      "arm_b_unentangled": 0.7188893553361508,
+      "entanglement_advantage": 0.2568555869871165,
+      "exp_XX": 0.9838030750992239,
+      "exp_YY": -0.9639366788064205,
+      "exp_ZZ": 0.9552400153874254
+    },
+    {
+      "trial": 9,
+      "seed": 1296,
+      "arm_a_reversible": 0.9999999999999988,
+      "arm_b_entangled": 0.9198201046618375,
+      "arm_b_unentangled": 0.6877337447046996,
+      "entanglement_advantage": 0.2320863599571379,
+      "exp_XX": 0.8585198833684655,
+      "exp_YY": -0.9176146690743061,
+      "exp_ZZ": 0.9031458662045789
+    },
+    {
+      "trial": 10,
+      "seed": 1333,
+      "arm_a_reversible": 0.9999999999999989,
+      "arm_b_entangled": 0.9198989282826959,
+      "arm_b_unentangled": 0.7106124711843138,
+      "entanglement_advantage": 0.20928645709838212,
+      "exp_XX": 0.8642769080293826,
+      "exp_YY": -0.8952803479655356,
+      "exp_ZZ": 0.9200384571358662
+    },
+    {
+      "trial": 11,
+      "seed": 1370,
+      "arm_a_reversible": 0.9999999999999989,
+      "arm_b_entangled": 0.8312450621015847,
+      "arm_b_unentangled": 0.6393642768945595,
+      "entanglement_advantage": 0.19188078520702512,
+      "exp_XX": 0.8777772972781062,
+      "exp_YY": -0.6828039648159703,
+      "exp_ZZ": 0.764398986312263
+    },
+    {
+      "trial": 12,
+      "seed": 1407,
+      "arm_a_reversible": 0.9999999999999989,
+      "arm_b_entangled": 0.9133817350742359,
+      "arm_b_unentangled": 0.8221370985524146,
+      "entanglement_advantage": 0.09124463652182135,
+      "exp_XX": 0.8408910624310104,
+      "exp_YY": -0.9819771106525701,
+      "exp_ZZ": 0.8306587672133636
+    },
+    {
+      "trial": 13,
+      "seed": 1444,
+      "arm_a_reversible": 0.9999999999999991,
+      "arm_b_entangled": 0.8603509549514623,
+      "arm_b_unentangled": 0.668517301394196,
+      "entanglement_advantage": 0.19183365355726634,
+      "exp_XX": 0.7644924816467081,
+      "exp_YY": -0.8165398181475235,
+      "exp_ZZ": 0.8603715200116184
+    },
+    {
+      "trial": 14,
+      "seed": 1481,
+      "arm_a_reversible": 0.9999999999999993,
+      "arm_b_entangled": 0.9390774863460435,
+      "arm_b_unentangled": 0.7443545241239893,
+      "entanglement_advantage": 0.1947229622220542,
+      "exp_XX": 0.9488601102335125,
+      "exp_YY": -0.9239400945911015,
+      "exp_ZZ": 0.8835097405595604
+    },
+    {
+      "trial": 15,
+      "seed": 1518,
+      "arm_a_reversible": 0.9999999999999993,
+      "arm_b_entangled": 0.909824650716742,
+      "arm_b_unentangled": 0.6748369323808596,
+      "entanglement_advantage": 0.2349877183358824,
+      "exp_XX": 0.8679369104074636,
+      "exp_YY": -0.8832448434426982,
+      "exp_ZZ": 0.8881168490168072
+    },
+    {
+      "trial": 16,
+      "seed": 1555,
+      "arm_a_reversible": 0.9999999999999987,
+      "arm_b_entangled": 0.8772942012197715,
+      "arm_b_unentangled": 0.6756464840817171,
+      "entanglement_advantage": 0.2016477171380544,
+      "exp_XX": 0.8266718745671355,
+      "exp_YY": -0.8749170235677466,
+      "exp_ZZ": 0.8075879067442049
+    },
+    {
+      "trial": 17,
+      "seed": 1592,
+      "arm_a_reversible": 0.9999999999999991,
+      "arm_b_entangled": 0.8579690504944149,
+      "arm_b_unentangled": 0.6917183053690016,
+      "entanglement_advantage": 0.16625074512541327,
+      "exp_XX": 0.7443568259061154,
+      "exp_YY": -0.7680966867344617,
+      "exp_ZZ": 0.9194226893370827
+    },
+    {
+      "trial": 18,
+      "seed": 1629,
+      "arm_a_reversible": 0.9999999999999996,
+      "arm_b_entangled": 0.9036746103582036,
+      "arm_b_unentangled": 0.8178927045532072,
+      "entanglement_advantage": 0.08578190580499645,
+      "exp_XX": 0.8192575361103951,
+      "exp_YY": -0.8627445136368106,
+      "exp_ZZ": 0.9326963916856095
+    },
+    {
+      "trial": 19,
+      "seed": 1666,
+      "arm_a_reversible": 0.9999999999999991,
+      "arm_b_entangled": 0.9593029471682799,
+      "arm_b_unentangled": 0.7641292793376286,
+      "entanglement_advantage": 0.19517366783065127,
+      "exp_XX": 0.9319992523606706,
+      "exp_YY": -0.9321953543673234,
+      "exp_ZZ": 0.9730171819451263
+    },
+    {
+      "trial": 20,
+      "seed": 1703,
+      "arm_a_reversible": 0.9999999999999989,
+      "arm_b_entangled": 0.9288003189063178,
+      "arm_b_unentangled": 0.6444328716292842,
+      "entanglement_advantage": 0.28436744727703356,
+      "exp_XX": 0.8896654877424505,
+      "exp_YY": -0.9328438535040025,
+      "exp_ZZ": 0.8926919343788189
+    }
+  ]
+}

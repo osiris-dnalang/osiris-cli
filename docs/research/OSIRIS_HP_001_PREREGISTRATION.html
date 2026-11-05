@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>OSIRIS-HP-001: Hayden-Preskill Quantum Information Recovery Benchmark - Preregistration Protocol</title>
+    <style>
+@page {
+    size: letter portrait;
+    margin: 20mm 18mm 20mm 18mm;
+    @bottom-right {
+        content: counter(page);
+    }
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a202c;
+    line-height: 1.6;
+    font-size: 10.5pt;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    font-size: 19pt;
+    color: #0f2942;
+    border-bottom: 2px solid #0f2942;
+    padding-bottom: 6px;
+    margin-top: 15px;
+    margin-bottom: 12px;
+}
+h2 {
+    font-size: 14pt;
+    color: #1a365d;
+    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 4px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+}
+h3 {
+    font-size: 12pt;
+    color: #2b6cb0;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+}
+h4 {
+    font-size: 11pt;
+    color: #2d3748;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+p {
+    margin-top: 0;
+    margin-bottom: 8px;
+    text-align: justify;
+}
+hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 16px 0;
+}
+code {
+    font-family: "Cascadia Code", "Consolas", monospace;
+    background-color: #f1f5f9;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 9.5pt;
+    color: #0f172a;
+}
+.math-block {
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #3b82f6;
+    padding: 8px 12px;
+    margin: 10px 0;
+    font-family: "Cambria Math", "Times New Roman", serif;
+    font-size: 11pt;
+}
+.quote-callout {
+    text-align: center;
+    font-style: italic;
+    font-size: 11.5pt;
+    color: #1e3a8a;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    padding: 10px;
+    margin: 12px 0;
+    border-radius: 4px;
+}
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+}
+.styled-table th {
+    background-color: #0f2942;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 7px 10px;
+    border: 1px solid #0f2942;
+    text-align: left;
+}
+.styled-table td {
+    padding: 6px 10px;
+    border: 1px solid #cbd5e1;
+    vertical-align: top;
+}
+.styled-table tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+ul {
+    margin-top: 4px;
+    margin-bottom: 8px;
+    padding-left: 20px;
+}
+li {
+    margin-bottom: 4px;
+}
+.num-item {
+    margin-bottom: 6px;
+    padding-left: 6px;
+}
+.num-badge {
+    font-weight: bold;
+    color: #1a365d;
+}
+a {
+    color: #2563eb;
+    text-decoration: none;
+}
+.header-box {
+    background: #f1f5f9;
+    border-left: 5px solid #0f2942;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+}
+.header-box p {
+    margin-bottom: 4px;
+    font-size: 10pt;
+}
+.header-box strong {
+    color: #0f2942;
+}
+</style>
+</head>
+<body>
+<h1>OSIRIS-HP-001: Hayden–Preskill Quantum Information Recovery Benchmark</h1>
+<h2>Research Protocol v1.0 · CPU-First · QPU-Ready · Preregistration Candidate</h2>
+<p><strong>Document ID:</strong> <code>OSIRIS-HP-001-PREREG-v1</code></p>
+<p><strong>Date:</strong> November 5, 2026</p>
+<p><strong>Lead Author / PI:</strong> Devin Phillip Davis (<code>research@dnalang.dev</code>), Agile Defense Systems LLC</p>
+<p><strong>Protocol Standard:</strong> SYS-021 Epistemic Governance & Pre-Registered Quantum Falsification</p>
+<p><strong>Target Repository:</strong> <code>https://github.com/osiris-dnalang/osiris-cli</code></p>
+<hr/>
+<h2>1. Executive Summary & Epistemic Scope</h2>
+<p>This protocol establishes a rigorous, falsifiable quantum information benchmark designed to investigate state reconstruction from scrambled quantum systems under restricted access and decoherence.</p>
+<h3>Core Scientific Thesis:</h3>
+<p>> <strong>Can a quantum recovery decoder reconstruct an unknown input quantum state after it has been scrambled into an entangled system, and how does recovery degrade under noise and restricted access to the output degrees of freedom?</strong></p>
+<h3>Explicit Boundary & Non-Claims:</h3>
+<div class='num-item'><span class='num-badge'>1.</span> <strong>Operational Quantum Information Research</strong>: This experiment evaluates finite-dimensional unitary scrambling and quantum state decoding across physical and simulated qubits.</div>
+<div class='num-item'><span class='num-badge'>2.</span> <strong>Quarantine of Gravitational Claims</strong>: This protocol does <strong>not</strong> claim to simulate physical spacetime curvature, create event horizons, or resolve the astrophysical black hole information paradox. References to "black holes", "horizons", and "Hawking radiation" serve strictly as conceptual thought-experiment analogies connecting the protocol to the literature of Hayden & Preskill (2007) and Yoshida & Kitaev (2017).</div>
+<hr/>
+<h2>2. Quantum Registers & Information Architecture</h2>
+<p><div class='math-block' style='text-align:left; font-family:sans-serif;'></p>
+<p><strong>Hayden-Preskill Quantum Information Flow Architecture:</strong><br/></p>
+<p>• <strong>Preparation:</strong> EPR pair |Φ<sup>+</sup>⟩<sub>RM</sub> (Reference R + Message M) and |Φ<sup>+</sup>⟩<sub>BE</sub> (Black Hole B + Early Radiation E).<br/></p>
+<p>• <strong>Scrambling:</strong> Scrambler U<sub>MB</sub> couples message M with black hole interior B.<br/></p>
+<p>• <strong>Partitioning:</strong> Output splits into Inaccessible Remnant C (quarantined) and Emitted Late Radiation D.<br/></p>
+<p>• <strong>Decoder V<sub>dec</sub>:</strong> Strictly operates on E ⊗ D only. Outputs decoded message M'.<br/></p>
+<p>• <strong>Verification:</strong> 2-qubit Pauli witness ⟨Φ<sup>+</sup>| ρ<sub>RM'</sub> |Φ<sup>+</sup>⟩ = (1 + ⟨XX⟩ - ⟨YY⟩ + ⟨ZZ⟩) / 4.</p>
+<p></div></p>
+<h3>Register Mapping ($n = 6$ Qubits Baseline)</h3>
+<table class='styled-table'><thead><tr>
+<th>Register</th>
+<th>Notation</th>
+<th>Qubits</th>
+<th>Role in Protocol</th>
+<th>Access Policy</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Reference</strong></td>
+<td>$R$</td>
+<td>$1$</td>
+<td>Entangled with message $M$ via $</td>
+<td>\Phi^+\rangle_{RM}$. Holds reference entanglement.</td>
+<td><strong>Quarantined</strong>: Strictly untouched by $U$ and $V_{\text{dec}}$.</td>
+</tr>
+<tr>
+<td><strong>Message</strong></td>
+<td>$M$</td>
+<td>$1$</td>
+<td>Input state to be scrambled into the black hole interior.</td>
+<td>Ingested by scrambler $U_{MB}$.</td>
+</tr>
+<tr>
+<td><strong>Black Hole Interior</strong></td>
+<td>$B$</td>
+<td>$k = 2$</td>
+<td>Interior degrees of freedom, initially maximally entangled with $E$.</td>
+<td>Ingested by scrambler $U_{MB}$.</td>
+</tr>
+<tr>
+<td><strong>Early Radiation</strong></td>
+<td>$E$</td>
+<td>$k = 2$</td>
+<td>Pre-existing entanglement reservoir ($</td>
+<td>E</td>
+<td>=</td>
+<td>B</td>
+<td>$).</td>
+<td><strong>Accessible</strong>: Routed directly to decoder $V_{\text{dec}}$.</td>
+</tr>
+<tr>
+<td><strong>Remnant</strong></td>
+<td>$C$</td>
+<td>$k_C = 1$</td>
+<td>Subsystem remaining beyond the horizon after late emission.</td>
+<td><strong>Inaccessible</strong>: Discarded / traced out.</td>
+</tr>
+<tr>
+<td><strong>Late Radiation</strong></td>
+<td>$D$</td>
+<td>$k_D = 2$</td>
+<td>Newly emitted radiation carrying scrambled quantum information.</td>
+<td><strong>Accessible</strong>: Routed directly to decoder $V_{\text{dec}}$.</td>
+</tr>
+<tr>
+<td><strong>Decoded Output</strong></td>
+<td>$M'$</td>
+<td>$1$</td>
+<td>Reconstructed output state produced by $V_{\text{dec}}$.</td>
+<td>Evaluated against $R$.</td>
+</tr>
+</tbody></table>
+<hr/>
+<h2>3. The Three Experimental Benchmark Arms</h2>
+<h3>Arm A: Reversible Identity Recovery Control (Positive Reference)</h3>
+<ul>
+<li><strong>Protocol</strong>:</li>
+</ul>
+<div class='num-item'><span class='num-badge'>1.</span> Prepare $|\Phi^+\rangle_{RM} \otimes |\Phi^+\rangle_{BE}$.</div>
+<div class='num-item'><span class='num-badge'>2.</span> Apply a known reversible unitary $U_{MB}$ across $M \cup B$.</div>
+<div class='num-item'><span class='num-badge'>3.</span> Apply the <strong>full-access inverse</strong> $U^\dagger_{MB}$ across $M \cup B$.</div>
+<div class='num-item'><span class='num-badge'>4.</span> Measure joint state $\rho_{RM}$.</div>
+<ul>
+<li><strong>Purpose</strong>: Establishes the ideal state-preparation and measurement (SPAM) ceiling and calibrates the hardware noise floor.</li>
+<li><strong>Expected Ideal Result</strong>: Unit entanglement recovery fidelity:</li>
+</ul>
+<p>$$F_{\text{rec}}^{\text{Arm A}} = \langle \Phi^+ | \rho_{RM} | \Phi^+ \rangle = 1.000000$$</p>
+<h3>Arm B: Scrambling with Restricted-Access Recovery (Scientific Core)</h3>
+<ul>
+<li><strong>Protocol</strong>:</li>
+</ul>
+<div class='num-item'><span class='num-badge'>1.</span> Prepare $|\Phi^+\rangle_{RM} \otimes |\Phi^+\rangle_{BE}$.</div>
+<div class='num-item'><span class='num-badge'>2.</span> Scramble $M \cup B$ using a Haar-random / Clifford 2-design unitary $U_{MB}$.</div>
+<div class='num-item'><span class='num-badge'>3.</span> Output register partitioned into inaccessible remnant $C$ ($1$ qubit) and late radiation $D$ ($2$ qubits).</div>
+<div class='num-item'><span class='num-badge'>4.</span> <strong>Strict Epistemic Isolation</strong>: Remnant $C$ and Reference $R$ are physically quarantined.</div>
+<div class='num-item'><span class='num-badge'>5.</span> The restricted decoder $V_{\text{dec}}$ operates <strong>exclusively</strong> on $E \cup D$ (plus local ancillae).</div>
+<div class='num-item'><span class='num-badge'>6.</span> Output decoded qubit $M'$ is measured jointly with reference $R$.</div>
+<ul>
+<li><strong>Purpose</strong>: Tests whether information can be reconstructed when $k_D \ge n_M + k_C$ without access to the remnant.</li>
+<li><strong>Theoretical Prediction</strong>: For $k_D = 2 > k_C = 1$, Hayden-Preskill decoupling guarantees that mutual information $I(R : C) \approx 0$ and recovery fidelity exceeds the classical threshold:</li>
+</ul>
+<p>$$F_{\text{rec}}^{\text{Arm B}} > 0.50$$</p>
+<h3>Arm C: Scrambling and Recovery Under Physical Noise (Engineering Stress-Test)</h3>
+<ul>
+<li><strong>Protocol</strong>:</li>
+</ul>
+<div class='num-item'><span class='num-badge'>1.</span> Execute Arm B circuit under calibrated open-system noise channels:</div>
+<ul>
+<li>Amplitude damping ($T_1$ relaxation)</li>
+<li>Phase damping ($T_2$ dephasing)</li>
+<li>Single-qubit and two-qubit depolarizing gate noise</li>
+<li>Readout measurement assignment error.</li>
+</ul>
+<div class='num-item'><span class='num-badge'>2.</span> Sweep noise rates $\Gamma / \Gamma_0 \in [0.1, 2.0]$.</div>
+<ul>
+<li><strong>Purpose</strong>: Quantifies the physical decay rate of quantum recovery under realistic NISQ noise and determines whether the Hayden-Preskill mechanism survives on noisy superconducting QPUs.</li>
+</ul>
+<hr/>
+<h2>4. Operational Observable: Entanglement Recovery Witness</h2>
+<p>The primary metric of success is the <strong>Entanglement Recovery Fidelity</strong> between Reference $R$ and Decoded Output $M'$:</p>
+<p>$$F_{\text{rec}} = \langle \Phi^+ | \rho_{RM'} | \Phi^+ \rangle = \operatorname{Tr}\left[ |\Phi^+\rangle\langle\Phi^+| \, \rho_{RM'} \right]$$</p>
+<h3>2-Qubit Pauli Tomography Reconstruction:</h3>
+<p>Because $|\Phi^+\rangle = \frac{|00\rangle + |11\rangle}{\sqrt{2}}$, the projection operator expands into Pauli components:</p>
+<p>$$|\Phi^+\rangle\langle\Phi^+| = \frac{I \otimes I + X \otimes X - Y \otimes Y + Z \otimes Z}{4}$$</p>
+<p>Thus, on physical hardware, $F_{\text{rec}}$ is reconstructed from three standard 2-qubit measurement bases:</p>
+<p>$$F_{\text{rec}} = \frac{1 + \langle X_R X_{M'} \rangle - \langle Y_R Y_{M'} \rangle + \langle Z_R Z_{M'} \rangle}{4}$$</p>
+<h3>Decision Thresholds:</h3>
+<ul>
+<li><strong>Classical / Separable Limit</strong>: Any separable state $\rho_{\text{sep}} = \sum_i p_i \rho_R^{(i)} \otimes \rho_{M'}^{(i)}$ satisfies:</li>
+</ul>
+<p>$$F_{\text{rec}} \le 0.5000$$</p>
+<ul>
+<li><strong>Entanglement Verification</strong>: An observed $F_{\text{rec}} > 0.5000$ (with $95\%$ bootstrap confidence interval strictly above $0.50$) serves as an unambiguous quantum witness that entanglement between $R$ and $M$ was successfully recovered through the radiation.</li>
+<li><strong>Matched Negative Control Baseline</strong>: In every trial, Arm B is compared against an unentangled baseline where $B$ and $E$ are prepared in product states $|00\rangle \otimes |00\rangle$. Under the unentangled baseline, recovery must fail ($F_{\text{rec}} \le 0.50$).</li>
+</ul>
+<hr/>
+<h2>5. Formal Pre-Registered Hypotheses & Falsification Conditions</h2>
+<table class='styled-table'><thead><tr>
+<th>Hypothesis</th>
+<th>Formal Prediction</th>
+<th>Empirical Falsification Condition</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>H1: Reversible Control</strong></td>
+<td>Full-access inverse recovers message with unit fidelity: $\mathcal{F}_{\text{Arm A}} \ge 0.999$ in noiseless simulation.</td>
+<td>$\mathcal{F}_{\text{Arm A}} < 0.999$ in noiseless execution.</td>
+</tr>
+<tr>
+<td><strong>H2: Restricted Recovery</strong></td>
+<td>For scramblers with $k_D \ge n_M + k_C$, decoder on $E \cup D$ recovers entanglement: $F_{\text{rec}} > 0.50$.</td>
+<td>$F_{\text{rec}} \le 0.50$ or no statistically significant advantage over matched unentangled control ($p > 0.05$).</td>
+</tr>
+<tr>
+<td><strong>H3: Page-Threshold Transition</strong></td>
+<td>When accessible radiation size sweeps from $k_D < n_M$ to $k_D \ge n_M + k_C$, recovery fidelity exhibits a sharp transition from $F_{\text{rec}} \approx 0.25$ to $F_{\text{rec}} > 0.70$.</td>
+<td>Recovery fidelity is invariant to radiation size $k_D$ after depth controls.</td>
+</tr>
+<tr>
+<td><strong>H4: Noise Sensitivity</strong></td>
+<td>Entanglement fidelity decays exponentially with integrated noise duration: $F_{\text{rec}}(τ) \sim e^{-\gamma τ}$, with entanglement ($F > 0.50$) preserved up to critical error threshold $\epsilon_{\text{crit}}$.</td>
+<td>Non-monotonic response or failure of empirical data to fit Lindblad decay model ($R^2 < 0.85$).</td>
+</tr>
+</tbody></table>
+<hr/>
+<h2>6. Execution Roadmap & Staged Gates</h2>
+<p><div class='math-block' style='text-align:left; font-family:sans-serif;'></p>
+<p><strong>Staged Experimental Verification Gates:</strong><br/></p>
+<p>• <strong>Gate 0:</strong> Mathematical Erratum published on Zenodo (Record 23977106).<br/></p>
+<p>• <strong>Gate 1:</strong> Access-audit verification (Zero interaction between Decoder and R/C).<br/></p>
+<p>• <strong>Gate 2:</strong> Deterministic CPU simulation of Arms A, B, and C across 100 random scramblers.<br/></p>
+<p>• <strong>Gate 3:</strong> Cryptographic pre-registration manifest locked into ledger before execution.<br/></p>
+<p>• <strong>Gate 4:</strong> Hardware pilot on IBM Quantum Heron r2 (ibm_marrakesh) under SYS-021 payload grant.</p>
+<p></div></p>
+<div class='num-item'><span class='num-badge'>1.</span> <strong>Gate 0 (Passed)</strong>: Mathematical erratum published on Zenodo (Record 23977106); metric inversion resolved.</div>
+<div class='num-item'><span class='num-badge'>2.</span> <strong>Gate 1 (Current)</strong>: Implement the CPU-only simulation engine and restricted-access decoder with automated access audits.</div>
+<div class='num-item'><span class='num-badge'>3.</span> <strong>Gate 2</strong>: Execute Arms A, B, and C across 100 independent Haar-random and Clifford scramblers on CPU.</div>
+<div class='num-item'><span class='num-badge'>4.</span> <strong>Gate 3</strong>: Commit all simulation scripts, prediction manifests, and exact analysis pipelines to git and register the pre-registration hash $\mathcal{H}_{\text{prereg}}$ in the write-ahead ledger.</div>
+<div class='num-item'><span class='num-badge'>5.</span> <strong>Gate 4</strong>: Stage 2 physical QPU execution will be triggered <strong>only</strong> after Gate 3 verification and upon receiving an explicit payload-bound SYS-021 execution grant.</div>
+</body>
+</html>
