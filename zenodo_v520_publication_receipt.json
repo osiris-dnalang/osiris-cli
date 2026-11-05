@@ -1,0 +1,29 @@
+{
+  "deposition_id": 23976303,
+  "record_id": 23976303,
+  "doi": "10.5281/zenodo.23976303",
+  "url": "https://zenodo.org/record/23976303",
+  "title": "OSIRIS v5.2.0: Research-to-Evidence Roadmap, Reproducibility Foundation v1.0, and Frontier QPU Validation (Experiments E0\u00e2\u20ac\u201cE2, GOV-BENCH-1, SCI-BENCH-1)",
+  "files_uploaded": [
+    "osiris_research_evidence_v5.2.0.zip",
+    "osiris_research_evidence_v5.2.0.tar.gz",
+    "SHA256SUMS.txt",
+    "OSIRIS_RESEARCH_TO_EVIDENCE_ROADMAP.md",
+    "benchmark_contract.json",
+    "OSIRIS_GOV_BENCH_1_REPORT.md",
+    "OSIRIS_SCI_BENCH_1_REPORT.md",
+    "EXPERIMENT_E_FRONTIER_REPORT.md"
+  ],
+  "file_hashes": {
+    "osiris_research_evidence_v5.2.0.zip": "42f589cc2e5a8e9c938cb608a8c8ab84103fc0e760f5cfad1d2febcbd9c2bb16",
+    "osiris_research_evidence_v5.2.0.tar.gz": "d3822fbcb88a10b65645cdac8c7364056910c57b094903511c153640d530c320",
+    "SHA256SUMS.txt": "9d919c57738b2ae49205da391ebbee378bc0924b23d77470e46dbedc417fa68f",
+    "OSIRIS_RESEARCH_TO_EVIDENCE_ROADMAP.md": "5ec6cc81b06678d02c4d036ca7fdca04a87d210540731b997462e36c14e444f1",
+    "benchmark_contract.json": "cbaafab45a4f578b2ad8114e01459f6b0e7d569a11ba8d941968cd6ccc3b5cb2",
+    "OSIRIS_GOV_BENCH_1_REPORT.md": "670bc8281f7164d81ea708de29d225d1e4c9eec71064d18ea97db8e8e7266a5f",
+    "OSIRIS_SCI_BENCH_1_REPORT.md": "edc1ecfd603f83768e6627e8686284aa07722f9b968f86cea0944cdb67e00db9",
+    "EXPERIMENT_E_FRONTIER_REPORT.md": "cdf1ec226d7205719706c517966b811fd06fc1af3f78bb24d3b67b0bde7964c3"
+  },
+  "published_at": "2026-11-05T10:26:08Z",
+  "status": "published"
+}

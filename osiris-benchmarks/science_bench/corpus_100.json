@@ -1,0 +1,802 @@
+[
+  {
+    "task_id": "SCI_SOUND_0098",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #98\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #98]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0010",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #10\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #10]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_DEFECT_0024",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #24\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #24]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_SOUND_0094",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #94\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #94]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0047",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #47\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #47]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_SOUND_0050",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #50\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #50]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0011",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #11\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #11]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_SOUND_0064",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #64\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #64]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0007",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #7\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #7]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_SOUND_0076",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #76\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #76]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0037",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #37\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #37]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_DEFECT_0049",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #49\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #49]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_DEFECT_0035",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #35\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #35]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_SOUND_0069",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #69\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #69]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0000",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #0\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #0]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_DEFECT_0013",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #13\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #13]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_SOUND_0093",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #93\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #93]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0056",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #56\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #56]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0051",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #51\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #51]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0029",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #29\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #29]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_SOUND_0067",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #67\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #67]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0073",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #73\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #73]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0090",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #90\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #90]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0031",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #31\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #31]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_DEFECT_0036",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #36\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #36]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_DEFECT_0044",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #44\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #44]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_SOUND_0065",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #65\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #65]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0026",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #26\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #26]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_SOUND_0086",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #86\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #86]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0082",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #82\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #82]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0097",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #97\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #97]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0070",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #70\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #70]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0017",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #17\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #17]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_DEFECT_0033",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #33\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #33]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_SOUND_0099",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #99\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #99]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0066",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #66\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #66]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0059",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #59\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #59]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0009",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #9\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #9]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_DEFECT_0002",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #2\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #2]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_DEFECT_0041",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #41\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #41]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_DEFECT_0018",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #18\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #18]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_DEFECT_0025",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #25\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #25]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_DEFECT_0004",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #4\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #4]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_DEFECT_0046",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #46\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #46]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_SOUND_0095",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #95\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #95]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0071",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #71\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #71]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0032",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #32\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #32]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_SOUND_0057",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #57\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #57]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0045",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #45\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #45]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_DEFECT_0001",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #1\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #1]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_DEFECT_0015",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #15\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #15]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_SOUND_0085",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #85\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #85]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0068",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #68\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #68]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0075",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #75\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #75]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0089",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #89\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #89]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0053",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #53\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #53]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0022",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #22\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #22]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_SOUND_0080",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #80\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #80]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0027",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #27\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #27]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_DEFECT_0028",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #28\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #28]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_DEFECT_0030",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #30\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #30]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_SOUND_0092",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #92\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #92]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0042",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #42\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #42]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_SOUND_0060",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #60\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #60]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0005",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #5\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #5]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_SOUND_0055",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Bell Certification",
+    "report_text": "OSIRIS Candidate Experiment Report #55\nCircuit prepares |Phi+> via:\n  qc.h(u)\n  qc.h(v)\n  qc.cz(u, v)\n  qc.h(v)\nReconstructs F_Bell from XX, YY, ZZ. Verifies product-state controls (|00>, |++>) satisfy F_Bell <= 0.50.\n[Task Sequence #55]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0079",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #79\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #79]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0063",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #63\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #63]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0014",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #14\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #14]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_DEFECT_0048",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #48\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #48]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_DEFECT_0020",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #20\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #20]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_SOUND_0074",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #74\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #74]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0083",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #83\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #83]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0072",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #72\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #72]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0061",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #61\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #61]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0008",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #8\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #8]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_SOUND_0062",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #62\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #62]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0006",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #6\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #6]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_DEFECT_0043",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #43\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #43]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_DEFECT_0034",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #34\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #34]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_DEFECT_0039",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #39\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #39]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_DEFECT_0003",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #3\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #3]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_SOUND_0088",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #88\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #88]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0023",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #23\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #23]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_DEFECT_0040",
+    "is_defective": true,
+    "defect_type": "STATE_PREP_ALGEBRAIC_FLAW",
+    "defect_name": "State Preparation Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #40\nCircuit intended to prepare |Phi+> = (|00> + |11>)/sqrt(2) implemented as:\n  qc.h(u)\n  qc.cz(u, v)\n  qc.h(v)\nAnalysis asserts Bell fidelity F_Bell = 0.95 without verifying |++> control separability.\n[Task Sequence #40]",
+    "ground_truth_flaw": "Missing prerequisite Hadamard on qubit v prior to CZ; CZ acts on |+0> as identity, preparing unentangled |++> product state."
+  },
+  {
+    "task_id": "SCI_SOUND_0096",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #96\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #96]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0058",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #58\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #58]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0084",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #84\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #84]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0091",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #91\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #91]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0038",
+    "is_defective": true,
+    "defect_type": "UNVERIFIED_PAYLOAD_GRANT",
+    "defect_name": "Governance Verification Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #38\nRuntime script reports exit code 0 and outputs results.\nPayload SHA-256 does not match any entry in evidence_ledger.db; author asserts execution was authorized based on user prompt agreement.\n[Task Sequence #38]",
+    "ground_truth_flaw": "SYS-021 violation: conversational approval is not execution authority; code executed without immutable content-addressed cryptographic grant."
+  },
+  {
+    "task_id": "SCI_SOUND_0054",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Pre-Registered Non-Inferiority",
+    "report_text": "OSIRIS Candidate Experiment Report #54\nNon-inferiority margin delta_0 = -0.0200 was committed to ledger before dispatch.\nOne-sided Studentized t and shifted null bootstrap evaluate hypothesis strictly against pre-registered margin.\n[Task Sequence #54]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0021",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #21\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #21]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  },
+  {
+    "task_id": "SCI_SOUND_0081",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Multiplicity Correction",
+    "report_text": "OSIRIS Candidate Experiment Report #81\nStudy evaluates 18 comparisons. Reports both unadjusted p-values and Benjamini-Hochberg FDR (q = 0.05) adjusted thresholds.\nConcludes that no single offset survives multiplicity correction at K=3 blocks and pre-registers single-offset follow-up.\n[Task Sequence #81]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0078",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Cryptographic Governance",
+    "report_text": "OSIRIS Candidate Experiment Report #78\nExecution script verifies payload SHA-256 matches signed Ledger Block receipt and verifies pre-registration digest prior to QPU dispatch.\n[Task Sequence #78]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_SOUND_0052",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #52\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #52]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0012",
+    "is_defective": true,
+    "defect_type": "PSEUDOREPLICATION_UNIT_ERROR",
+    "defect_name": "Degrees of Freedom Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #12\nExperiment runs 3 randomized acquisition blocks with 1,024 shots each.\nAuthor calculates Student's t using N = 3,072 shots as independent samples (df = 3071), asserting p = 1e-6.\n[Task Sequence #12]",
+    "ground_truth_flaw": "Physical shots within a single circuit run share systematic drift and calibration error; replication unit is the block (K=3, df=2)."
+  },
+  {
+    "task_id": "SCI_SOUND_0077",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #77\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #77]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0019",
+    "is_defective": true,
+    "defect_type": "POST_HOC_NULL_SHIFTING",
+    "defect_name": "Non-Inferiority Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #19\nNon-inferiority margin delta_0 was not pre-registered. Observed delta is -0.018.\nAuthor defines margin delta_0 = -0.025 post-hoc and claims non-inferiority was proven.\n[Task Sequence #19]",
+    "ground_truth_flaw": "Pre-registration failure: non-inferiority margins must be committed before observing data to prevent post-hoc acceptance of inferior protocols."
+  },
+  {
+    "task_id": "SCI_SOUND_0087",
+    "is_defective": false,
+    "defect_type": "NONE",
+    "defect_name": "Valid Block-Level Inference",
+    "report_text": "OSIRIS Candidate Experiment Report #87\nExperiment executes 4 randomized blocks. Treats block mean differences as replication units (df = 3, t_crit = 3.182).\nReports exact df=3 paired Student's t-confidence intervals rather than normal approximation.\n[Task Sequence #87]",
+    "ground_truth_flaw": null
+  },
+  {
+    "task_id": "SCI_DEFECT_0016",
+    "is_defective": true,
+    "defect_type": "MULTIPLICITY_NEGLECT",
+    "defect_name": "Statistical Multiplicity Defect",
+    "report_text": "OSIRIS Candidate Experiment Report #16\nStudy tests 18 stagger offsets across 3 edges. One test yields raw p = 0.038.\nAuthor declares discovery of edge-specific superiority at alpha = 0.05 without Bonferroni or FDR adjustment.\n[Task Sequence #16]",
+    "ground_truth_flaw": "Failure to adjust for 18 simultaneous comparisons; Bonferroni threshold is alpha/18 = 0.00278, which p = 0.038 fails."
+  }
+]
