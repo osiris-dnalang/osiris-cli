@@ -1,0 +1,28 @@
+{
+  "arm_a_identity_control": {
+    "description": "Positive control (trivial identity evolution)",
+    "fidelity": 1.0,
+    "trace_distance": 0.0,
+    "operational_preservation_pct": 100.0,
+    "wasserstein_1": -0.0,
+    "hellinger_distance": 0.0,
+    "manuscript_inverted_preservation_pct": 0.0
+  },
+  "arm_b_scrambling_inversion": {
+    "description": "Scrambling control with exact unitary inversion",
+    "fidelity": 0.9999999999999969,
+    "trace_distance": 1.4005569065048372e-15,
+    "operational_preservation_pct": 99.99999999999986,
+    "wasserstein_1": 2.7200464103316335e-15,
+    "hellinger_distance": 9.71870269770071e-09
+  },
+  "arm_c_scrambling_erasure": {
+    "description": "Scrambling with k=4 interior qubits erased",
+    "fidelity": 0.5229189317911133,
+    "trace_distance": 0.5410165533466545,
+    "operational_preservation_pct": 45.89834466533455,
+    "wasserstein_1": 0.4173030289193392,
+    "hellinger_distance": 0.776532600713426,
+    "manuscript_inverted_preservation_pct": 54.90914677768891
+  }
+}
