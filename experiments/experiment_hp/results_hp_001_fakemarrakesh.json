@@ -1,0 +1,392 @@
+{
+  "benchmark": "OSIRIS-HP-001",
+  "backend": "FakeMarrakesh",
+  "execution_mode": "Calibrated Heron r2 Simulator (0 QPU s)",
+  "timestamp": "2026-11-05T17:32:43Z",
+  "n_trials": 20,
+  "calibration": {
+    "backend": "ibm_marrakesh (Heron r2)",
+    "subgraph_qubits": [
+      14,
+      15,
+      19,
+      35,
+      13,
+      34
+    ],
+    "mean_T1_us": 253.1378063316655,
+    "mean_T2_us": 217.86913815021387,
+    "mean_readout_error": 0.005696614583333333,
+    "mean_CZ_error": 0.0014220756851482607,
+    "estimated_circuit_duration_us": 1.8,
+    "effective_depolarizing_rate_gamma": 0.0407
+  },
+  "summary": {
+    "mean_arm_a_reversible": 0.9694441517869242,
+    "ci_95_arm_a": [
+      0.969444151786924,
+      0.9694441517869242
+    ],
+    "mean_arm_b_entangled": 0.878246181728421,
+    "ci_95_arm_b_entangled": [
+      0.8608460739835498,
+      0.8955514807517473
+    ],
+    "mean_arm_b_unentangled": 0.6943389522103528,
+    "ci_95_arm_b_unentangled": [
+      0.6610539401021023,
+      0.7278974801018132
+    ],
+    "mean_entanglement_advantage": 0.18390722951806818,
+    "ci_95_advantage": [
+      0.1426711372541,
+      0.22566440857014236
+    ],
+    "t_statistic": 8.575340809357677,
+    "p_value_1s": 2.9424553884015448e-08,
+    "mean_wasserstein_1": 0.0435302276009994,
+    "ci_95_w1": [
+      0.037649805856555224,
+      0.04973242872090198
+    ],
+    "mean_operational_preservation": 0.87821930012144,
+    "pearson_r_w1_fidelity": -0.6897485453439072
+  },
+  "radiation_sweep": {
+    "1": {
+      "mean": 0.6115966356637118,
+      "ci_95": [
+        0.5963529070782424,
+        0.6301950827893421
+      ]
+    },
+    "2": {
+      "mean": 0.878246181728421,
+      "ci_95": [
+        0.8607458401073802,
+        0.896031172378053
+      ]
+    },
+    "3": {
+      "mean": 0.9694441517869246,
+      "ci_95": [
+        0.9694441517869246,
+        0.9694441517869246
+      ]
+    }
+  },
+  "noise_sweep": {
+    "0.0": {
+      "mean": 0.9049287184085202
+    },
+    "0.5": {
+      "mean": 0.8915874500684706
+    },
+    "1.0": {
+      "mean": 0.878246181728421
+    },
+    "2.0": {
+      "mean": 0.8515636450483214
+    },
+    "3.0": {
+      "mean": 0.8248811083682221
+    }
+  },
+  "hypotheses_verdicts": {
+    "H1_reversible_control": {
+      "criterion": "F_ArmA >= 0.90 under Heron noise floor",
+      "observed": 0.9694441517869242,
+      "passed": true
+    },
+    "H2_restricted_recovery": {
+      "criterion": "F_ArmB > 0.50 and Advantage > 0 (p < 0.05)",
+      "observed_fidelity": 0.878246181728421,
+      "observed_advantage": 0.18390722951806818,
+      "t_statistic": 8.575340809357677,
+      "p_value_1s": 2.9424553884015448e-08,
+      "passed": true
+    },
+    "H3_page_transition": {
+      "criterion": "F(kD=1) < F(kD=2) <= F(kD=3)",
+      "observed_fidelities": [
+        0.6115966356637118,
+        0.878246181728421,
+        0.9694441517869246
+      ],
+      "passed": true
+    },
+    "H4_w1_anti_correlation": {
+      "criterion": "Pearson r(F_rec, W1) < -0.90",
+      "observed_r": -0.6897485453439072,
+      "passed": false
+    }
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "seed": 2000,
+      "arm_a_reversible": 0.9694441517869246,
+      "arm_b_entangled": 0.8865394275433096,
+      "arm_b_unentangled": 0.5824460190139944,
+      "entanglement_advantage": 0.3040934085293152,
+      "wasserstein_1": 0.04550342368194851,
+      "operational_preservation": 0.88645287004634,
+      "exp_XX": 0.8925983204522816,
+      "exp_YY": -0.8355730844487514,
+      "exp_ZZ": 0.8179863052722058
+    },
+    {
+      "trial": 2,
+      "seed": 2043,
+      "arm_a_reversible": 0.9694441517869241,
+      "arm_b_entangled": 0.8256997054138651,
+      "arm_b_unentangled": 0.6629863900278966,
+      "entanglement_advantage": 0.16271331538596845,
+      "wasserstein_1": 0.06326977608901105,
+      "operational_preservation": 0.8256884344771178,
+      "exp_XX": 0.8675010570783475,
+      "exp_YY": -0.6883768689331575,
+      "exp_ZZ": 0.7469208956439557
+    },
+    {
+      "trial": 3,
+      "seed": 2086,
+      "arm_a_reversible": 0.9694441517869241,
+      "arm_b_entangled": 0.9001691962389469,
+      "arm_b_unentangled": 0.6115294014056369,
+      "entanglement_advantage": 0.2886397948333099,
+      "wasserstein_1": 0.04305457278452013,
+      "operational_preservation": 0.9001681812749667,
+      "exp_XX": 0.87284907714799,
+      "exp_YY": -0.9000459989458791,
+      "exp_ZZ": 0.8277817088619194
+    },
+    {
+      "trial": 4,
+      "seed": 2129,
+      "arm_a_reversible": 0.9694441517869243,
+      "arm_b_entangled": 0.9489167084722202,
+      "arm_b_unentangled": 0.6542453314254468,
+      "entanglement_advantage": 0.2946713770467734,
+      "wasserstein_1": 0.019030565610388434,
+      "operational_preservation": 0.9489163998900793,
+      "exp_XX": 0.9282399254859053,
+      "exp_YY": -0.94354917084453,
+      "exp_ZZ": 0.9238777375584463
+    },
+    {
+      "trial": 5,
+      "seed": 2172,
+      "arm_a_reversible": 0.9694441517869238,
+      "arm_b_entangled": 0.8284356318244532,
+      "arm_b_unentangled": 0.649052149787916,
+      "entanglement_advantage": 0.1793834820365372,
+      "wasserstein_1": 0.04746384398263265,
+      "operational_preservation": 0.8284070377449514,
+      "exp_XX": 0.6981601064965464,
+      "exp_YY": -0.805437796731798,
+      "exp_ZZ": 0.8101446240694693
+    },
+    {
+      "trial": 6,
+      "seed": 2215,
+      "arm_a_reversible": 0.9694441517869248,
+      "arm_b_entangled": 0.7954526984761445,
+      "arm_b_unentangled": 0.7533705674416398,
+      "entanglement_advantage": 0.042082131034504755,
+      "wasserstein_1": 0.03614523487965865,
+      "operational_preservation": 0.7954489405015376,
+      "exp_XX": 0.6892554392132768,
+      "exp_YY": -0.6371362942099366,
+      "exp_ZZ": 0.8554190604813654
+    },
+    {
+      "trial": 7,
+      "seed": 2258,
+      "arm_a_reversible": 0.9694441517869246,
+      "arm_b_entangled": 0.8461116406018974,
+      "arm_b_unentangled": 0.7171881462042938,
+      "entanglement_advantage": 0.12892349439760353,
+      "wasserstein_1": 0.042605999120178234,
+      "operational_preservation": 0.8458980632867307,
+      "exp_XX": 0.7851050411471326,
+      "exp_YY": -0.7697655177411705,
+      "exp_ZZ": 0.8295760035192872
+    },
+    {
+      "trial": 8,
+      "seed": 2301,
+      "arm_a_reversible": 0.9694441517869237,
+      "arm_b_entangled": 0.9062506988840631,
+      "arm_b_unentangled": 0.6024225940714567,
+      "entanglement_advantage": 0.30382810481260636,
+      "wasserstein_1": 0.02835966778579538,
+      "operational_preservation": 0.906230798172366,
+      "exp_XX": 0.8624060220477088,
+      "exp_YY": -0.876035444631726,
+      "exp_ZZ": 0.8865613288568184
+    },
+    {
+      "trial": 9,
+      "seed": 2344,
+      "arm_a_reversible": 0.9694441517869247,
+      "arm_b_entangled": 0.9025884340584818,
+      "arm_b_unentangled": 0.8405778197377742,
+      "entanglement_advantage": 0.062010614320707536,
+      "wasserstein_1": 0.04195605878247721,
+      "operational_preservation": 0.9025874543798356,
+      "exp_XX": 0.85739703850664,
+      "exp_YY": -0.9207809328571964,
+      "exp_ZZ": 0.8321757648700913
+    },
+    {
+      "trial": 10,
+      "seed": 2387,
+      "arm_a_reversible": 0.9694441517869243,
+      "arm_b_entangled": 0.8462594111474122,
+      "arm_b_unentangled": 0.7449817081240464,
+      "entanglement_advantage": 0.1012777030233658,
+      "wasserstein_1": 0.0659377812508915,
+      "operational_preservation": 0.8462133688029461,
+      "exp_XX": 0.8041809802263509,
+      "exp_YY": -0.8446077893668651,
+      "exp_ZZ": 0.736248874996434
+    },
+    {
+      "trial": 11,
+      "seed": 2430,
+      "arm_a_reversible": 0.9694441517869243,
+      "arm_b_entangled": 0.8682088630214366,
+      "arm_b_unentangled": 0.6691760609974515,
+      "entanglement_advantage": 0.1990328020239851,
+      "wasserstein_1": 0.05490489928024225,
+      "operational_preservation": 0.8681973698158347,
+      "exp_XX": 0.8326653768753732,
+      "exp_YY": -0.8597896723313433,
+      "exp_ZZ": 0.7803804028790309
+    },
+    {
+      "trial": 12,
+      "seed": 2473,
+      "arm_a_reversible": 0.9694441517869241,
+      "arm_b_entangled": 0.9034776517867256,
+      "arm_b_unentangled": 0.8315416952572809,
+      "entanglement_advantage": 0.07193595652944462,
+      "wasserstein_1": 0.034745142474009005,
+      "operational_preservation": 0.9034733542376692,
+      "exp_XX": 0.8323699790211594,
+      "exp_YY": -0.9205211980217796,
+      "exp_ZZ": 0.8610194301039639
+    },
+    {
+      "trial": 13,
+      "seed": 2516,
+      "arm_a_reversible": 0.9694441517869244,
+      "arm_b_entangled": 0.8982295920235722,
+      "arm_b_unentangled": 0.7047999723686509,
+      "entanglement_advantage": 0.19342961965492134,
+      "wasserstein_1": 0.04159730221686503,
+      "operational_preservation": 0.8982285766178072,
+      "exp_XX": 0.8592444519686897,
+      "exp_YY": -0.90006312499306,
+      "exp_ZZ": 0.8336107911325399
+    },
+    {
+      "trial": 14,
+      "seed": 2559,
+      "arm_a_reversible": 0.9694441517869241,
+      "arm_b_entangled": 0.8700808609534856,
+      "arm_b_unentangled": 0.7862932642480336,
+      "entanglement_advantage": 0.083787596705452,
+      "wasserstein_1": 0.0485783118617551,
+      "operational_preservation": 0.8700191328204866,
+      "exp_XX": 0.8382352145123848,
+      "exp_YY": -0.8364014767485788,
+      "exp_ZZ": 0.8056867525529794
+    },
+    {
+      "trial": 15,
+      "seed": 2602,
+      "arm_a_reversible": 0.9694441517869243,
+      "arm_b_entangled": 0.892251718086073,
+      "arm_b_unentangled": 0.6338215947228927,
+      "entanglement_advantage": 0.2584301233631803,
+      "wasserstein_1": 0.03669360545135436,
+      "operational_preservation": 0.8922510300721888,
+      "exp_XX": 0.8540760889210071,
+      "exp_YY": -0.8617052052287029,
+      "exp_ZZ": 0.8532255781945826
+    },
+    {
+      "trial": 16,
+      "seed": 2645,
+      "arm_a_reversible": 0.9694441517869243,
+      "arm_b_entangled": 0.8438720306136469,
+      "arm_b_unentangled": 0.7984361397756254,
+      "entanglement_advantage": 0.045435890838021464,
+      "wasserstein_1": 0.07266311529341271,
+      "operational_preservation": 0.843871529166285,
+      "exp_XX": 0.7308978775268763,
+      "exp_YY": -0.9352427061013631,
+      "exp_ZZ": 0.7093475388263489
+    },
+    {
+      "trial": 17,
+      "seed": 2688,
+      "arm_a_reversible": 0.9694441517869239,
+      "arm_b_entangled": 0.9431429687186326,
+      "arm_b_unentangled": 0.7327445833489485,
+      "entanglement_advantage": 0.21039838536968403,
+      "wasserstein_1": 0.022657672763228,
+      "operational_preservation": 0.9431384432267313,
+      "exp_XX": 0.9411932958088741,
+      "exp_YY": -0.922009270118569,
+      "exp_ZZ": 0.9093693089470878
+    },
+    {
+      "trial": 18,
+      "seed": 2731,
+      "arm_a_reversible": 0.9694441517869241,
+      "arm_b_entangled": 0.8421895943813839,
+      "arm_b_unentangled": 0.6836919773380424,
+      "entanglement_advantage": 0.15849761704334142,
+      "wasserstein_1": 0.056424535282926236,
+      "operational_preservation": 0.8421794870067041,
+      "exp_XX": 0.8153260683454666,
+      "exp_YY": -0.7791304503117744,
+      "exp_ZZ": 0.7743018588682951
+    },
+    {
+      "trial": 19,
+      "seed": 2774,
+      "arm_a_reversible": 0.9694441517869241,
+      "arm_b_entangled": 0.9136568569237271,
+      "arm_b_unentangled": 0.6628749853146254,
+      "entanglement_advantage": 0.2507818716091017,
+      "wasserstein_1": 0.03241787218443293,
+      "operational_preservation": 0.9136525695821069,
+      "exp_XX": 0.9129763039834061,
+      "exp_YY": -0.8713226124492347,
+      "exp_ZZ": 0.8703285112622684
+    },
+    {
+      "trial": 20,
+      "seed": 2817,
+      "arm_a_reversible": 0.9694441517869241,
+      "arm_b_entangled": 0.9033899453989429,
+      "arm_b_unentangled": 0.5645986435954038,
+      "entanglement_advantage": 0.3387913018035391,
+      "wasserstein_1": 0.036595171244260705,
+      "operational_preservation": 0.9033629613061152,
+      "exp_XX": 0.8467357622466819,
+      "exp_YY": -0.9132047043261332,
+      "exp_ZZ": 0.8536193150229572
+    }
+  ],
+  "figures": [
+    "hp_001_fakemarrakesh_violin_comparison.png",
+    "hp_001_fakemarrakesh_page_transition.png",
+    "hp_001_fakemarrakesh_w1_vs_fidelity.png",
+    "hp_001_fakemarrakesh_noise_scaling.png"
+  ]
+}
