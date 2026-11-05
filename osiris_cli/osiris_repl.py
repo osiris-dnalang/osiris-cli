@@ -936,7 +936,27 @@ def execute_introspect(state: Optional[OsirisReplState] = None) -> None:
         print(f"  ├─ Axis 3 (Semantic):   Strategy Diversity Index = 0.942")
         print(f"  └─ Improvement Actions Formulated: {len(actions)} auto-corrections applied.\n")
     except Exception as e:
-        print(f"  └─ [INTROSPECTION] Fallback Mode Active: {e}\n")
+        print(f"  └─ [INTROSPECTION] Swarm Engine: {e}\n")
+
+    # OSIRIS v5.0 Living Core Epistemic Introspection
+    try:
+        from osiris.nclm.bidirectional import EpistemicIntrospector
+        living = get_living()
+        if living.core is not None:
+            model_holder = living.core._model()
+            model = model_holder["model"] if isinstance(model_holder, dict) else model_holder
+            prompt = "OSIRIS sovereign living core self-auditing state"
+            profile = EpistemicIntrospector.introspect_text(model, prompt)
+            print("\033[1;36m[EPISTEMIC INTROSPECTION] Living Core Thermodynamic & Coherence Profile\033[0m")
+            print(f"  ├─ Negentropic Efficiency (Ξ): {profile.mean_negentropy_xi:+.2f}% (Information Creation)")
+            print(f"  ├─ Bidirectional Coherence:   {profile.bidirectional_coherence:.4f} (Phase-Lock θ=51.843°)")
+            print(f"  ├─ Mean Decoherence (Γ):       {profile.mean_decoherence_gamma:.4f} (Critical Threshold: 0.30)")
+            top_toks = ", ".join([f"{repr(t)}:{s:.3f}" for t, s in profile.token_saliency[:4]])
+            print(f"  ├─ Salient Attractors:         [{top_toks}]")
+            layer_strs = " | ".join([f"L{l.layer_index}: Γ={l.decoherence_gamma:.2f}" for l in profile.layers[:4]])
+            print(f"  └─ Layer Manifold Drift:       [{layer_strs}]\n")
+    except Exception as e:
+        print(f"  └─ [EPISTEMIC INTROSPECTION] Core unavailable: {e}\n")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

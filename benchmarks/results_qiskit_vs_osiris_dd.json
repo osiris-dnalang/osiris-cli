@@ -1,0 +1,602 @@
+{
+  "timestamp": 1793847614.1131492,
+  "governance": {
+    "rule": "SYS-021",
+    "operator": "Devin Phillip Davis / Enki",
+    "script_sha256": "ed634a292a8cf165734af8b209149041fb5b5b768c28d0c756b5a53b94095b4e",
+    "max_scipy_analytical_diff": 0.0,
+    "max_qiskit_scipy_diff": 3.9273734561695584e-07
+  },
+  "config": {
+    "delay_us": 32.0,
+    "zeta_khz": 60.0,
+    "stagger_ns": 160.0,
+    "shots": 1024
+  },
+  "records": [
+    {
+      "mode": "unmitigated",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 32.0,
+        "t_minus_us": 0.0,
+        "t_eff_us": 32.0,
+        "two_phi_eff_pi_rad": 7.68,
+        "cos_2phi_eff": 0.535827,
+        "f_global": 0.157466,
+        "mean_x": 0.349289,
+        "mean_xx_signed": 0.358172,
+        "mean_xx_abs": 0.358172,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 0.157466,
+        "mean_x": 0.349289,
+        "mean_xx_signed": 0.358172,
+        "mean_xx_abs": 0.358172,
+        "mean_yy_signed": 0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 0.157466,
+      "sv_vs_scipy_diff": 3.9273734547817796e-07,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": 0.5,
+            "(15,19)": 0.2441,
+            "(19,35)": 0.2852,
+            "(35,34)": 0.2578,
+            "(34,33)": 0.25,
+            "(33,32)": 0.3027,
+            "(32,31)": 0.4961
+          },
+          "mean_signed_corr": 0.3337,
+          "mean_abs_corr": 0.3337,
+          "ci95": 0.0217
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": -0.0332,
+            "(15,19)": -0.0293,
+            "(19,35)": -0.0137,
+            "(35,34)": -0.041,
+            "(34,33)": -0.0273,
+            "(33,32)": -0.0879,
+            "(32,31)": -0.0645
+          },
+          "mean_signed_corr": -0.0424,
+          "mean_abs_corr": 0.0424,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": -0.6582,
+            "(15,19)": -0.4121,
+            "(19,35)": -0.4492,
+            "(35,34)": -0.5195,
+            "(34,33)": -0.4277,
+            "(33,32)": -0.4551,
+            "(32,31)": -0.6465
+          },
+          "mean_signed_corr": -0.5098,
+          "mean_abs_corr": 0.5098,
+          "ci95": 0.0198
+        }
+      },
+      "label": "1. Free Evolution (No DD Control)",
+      "execution_ms": 27.47
+    },
+    {
+      "mode": "qiskit_sync_xy4",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 32.0,
+        "t_minus_us": 0.0,
+        "t_eff_us": 32.0,
+        "two_phi_eff_pi_rad": 7.68,
+        "cos_2phi_eff": 0.535827,
+        "f_global": 0.157466,
+        "mean_x": 0.349289,
+        "mean_xx_signed": 0.358172,
+        "mean_xx_abs": 0.358172,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 0.157466,
+        "mean_x": 0.349289,
+        "mean_xx_signed": 0.358172,
+        "mean_xx_abs": 0.358172,
+        "mean_yy_signed": -0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 0.157466,
+      "sv_vs_scipy_diff": 3.9273734561695584e-07,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": 0.5,
+            "(15,19)": 0.2441,
+            "(19,35)": 0.2852,
+            "(35,34)": 0.2578,
+            "(34,33)": 0.25,
+            "(33,32)": 0.3027,
+            "(32,31)": 0.4961
+          },
+          "mean_signed_corr": 0.3337,
+          "mean_abs_corr": 0.3337,
+          "ci95": 0.0217
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": -0.0332,
+            "(15,19)": -0.0293,
+            "(19,35)": -0.0137,
+            "(35,34)": -0.041,
+            "(34,33)": -0.0273,
+            "(33,32)": -0.0879,
+            "(32,31)": -0.0645
+          },
+          "mean_signed_corr": -0.0424,
+          "mean_abs_corr": 0.0424,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": -0.6582,
+            "(15,19)": -0.4121,
+            "(19,35)": -0.4492,
+            "(35,34)": -0.5195,
+            "(34,33)": -0.4277,
+            "(33,32)": -0.4551,
+            "(32,31)": -0.6465
+          },
+          "mean_signed_corr": -0.5098,
+          "mean_abs_corr": 0.5098,
+          "ci95": 0.0198
+        }
+      },
+      "label": "2. Synchronous XY-4 (Delta_t = 0)",
+      "execution_ms": 32.98
+    },
+    {
+      "mode": "qiskit_sync_xy8",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 32.0,
+        "t_minus_us": 0.0,
+        "t_eff_us": 32.0,
+        "two_phi_eff_pi_rad": 7.68,
+        "cos_2phi_eff": 0.535827,
+        "f_global": 0.157466,
+        "mean_x": 0.349289,
+        "mean_xx_signed": 0.358172,
+        "mean_xx_abs": 0.358172,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 0.157466,
+        "mean_x": 0.349289,
+        "mean_xx_signed": 0.358172,
+        "mean_xx_abs": 0.358172,
+        "mean_yy_signed": 0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 0.157466,
+      "sv_vs_scipy_diff": 3.9273734561695584e-07,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": 0.5,
+            "(15,19)": 0.2441,
+            "(19,35)": 0.2852,
+            "(35,34)": 0.2578,
+            "(34,33)": 0.25,
+            "(33,32)": 0.3027,
+            "(32,31)": 0.4961
+          },
+          "mean_signed_corr": 0.3337,
+          "mean_abs_corr": 0.3337,
+          "ci95": 0.0217
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": -0.0332,
+            "(15,19)": -0.0293,
+            "(19,35)": -0.0137,
+            "(35,34)": -0.041,
+            "(34,33)": -0.0273,
+            "(33,32)": -0.0879,
+            "(32,31)": -0.0645
+          },
+          "mean_signed_corr": -0.0424,
+          "mean_abs_corr": 0.0424,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": -0.6582,
+            "(15,19)": -0.4121,
+            "(19,35)": -0.4492,
+            "(35,34)": -0.5195,
+            "(34,33)": -0.4277,
+            "(33,32)": -0.4551,
+            "(32,31)": -0.6465
+          },
+          "mean_signed_corr": -0.5098,
+          "mean_abs_corr": 0.5098,
+          "ci95": 0.0198
+        }
+      },
+      "label": "3. Synchronous XY-8 (Delta_t = 0)",
+      "execution_ms": 36.02
+    },
+    {
+      "mode": "legacy_fixed160ns_stag_xy4",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 31.52,
+        "t_minus_us": 0.64,
+        "t_eff_us": 30.88,
+        "two_phi_eff_pi_rad": 7.4112,
+        "cos_2phi_eff": -0.275369,
+        "f_global": 0.00082,
+        "mean_x": -0.011971,
+        "mean_xx_signed": -0.024514,
+        "mean_xx_abs": 0.13284,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 0.00082,
+        "mean_x": -0.011971,
+        "mean_xx_signed": -0.024514,
+        "mean_xx_abs": 0.13284,
+        "mean_yy_signed": -0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 0.00082,
+      "sv_vs_scipy_diff": 3.871231768709602e-07,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": -0.2578,
+            "(15,19)": 0.0312,
+            "(19,35)": 0.1035,
+            "(35,34)": 0.0137,
+            "(34,33)": 0.127,
+            "(33,32)": 0.0156,
+            "(32,31)": -0.2734
+          },
+          "mean_signed_corr": -0.0343,
+          "mean_abs_corr": 0.1175,
+          "ci95": 0.0229
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": 0.043,
+            "(15,19)": -0.0273,
+            "(19,35)": 0.0195,
+            "(35,34)": -0.041,
+            "(34,33)": 0.0039,
+            "(33,32)": -0.0566,
+            "(32,31)": -0.0137
+          },
+          "mean_signed_corr": -0.0103,
+          "mean_abs_corr": 0.0293,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": -0.2676,
+            "(15,19)": 0.1797,
+            "(19,35)": 0.3379,
+            "(35,34)": 0.1875,
+            "(34,33)": 0.2812,
+            "(33,32)": 0.1895,
+            "(32,31)": -0.373
+          },
+          "mean_signed_corr": 0.0765,
+          "mean_abs_corr": 0.2595,
+          "ci95": 0.0223
+        }
+      },
+      "label": "4. Legacy v1 Fixed-Offset Stag XY-4 (Delta_t = 160 ns, T_eff = 30.88 us)",
+      "execution_ms": 21.81
+    },
+    {
+      "mode": "legacy_fixed160ns_stag_xy8",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 30.88,
+        "t_minus_us": 1.28,
+        "t_eff_us": 29.6,
+        "two_phi_eff_pi_rad": 7.104,
+        "cos_2phi_eff": -0.947098,
+        "f_global": 0.0,
+        "mean_x": 0.435972,
+        "mean_xx_signed": 0.370111,
+        "mean_xx_abs": 0.91131,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 0.0,
+        "mean_x": 0.435972,
+        "mean_xx_signed": 0.370111,
+        "mean_xx_abs": 0.91131,
+        "mean_yy_signed": 0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 0.0,
+      "sv_vs_scipy_diff": 9.058934962663746e-12,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": -0.9609,
+            "(15,19)": 0.9297,
+            "(19,35)": 0.9199,
+            "(35,34)": 0.9062,
+            "(34,33)": 0.9082,
+            "(33,32)": 0.9043,
+            "(32,31)": -0.9453
+          },
+          "mean_signed_corr": 0.3803,
+          "mean_abs_corr": 0.9249,
+          "ci95": 0.0088
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": -0.002,
+            "(15,19)": 0.002,
+            "(19,35)": 0.0273,
+            "(35,34)": -0.041,
+            "(34,33)": -0.002,
+            "(33,32)": -0.0566,
+            "(32,31)": -0.0293
+          },
+          "mean_signed_corr": -0.0145,
+          "mean_abs_corr": 0.0229,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": 0.0117,
+            "(15,19)": 0.3066,
+            "(19,35)": 0.2969,
+            "(35,34)": 0.2266,
+            "(34,33)": 0.332,
+            "(33,32)": 0.252,
+            "(32,31)": -0.0273
+          },
+          "mean_signed_corr": 0.1998,
+          "mean_abs_corr": 0.2076,
+          "ci95": 0.0225
+        }
+      },
+      "label": "5. Legacy v1 Fixed-Offset Stag XY-8 (Delta_t = 160 ns, T_eff = 29.60 us)",
+      "execution_ms": 26.77
+    },
+    {
+      "mode": "osiris_balanced_bipartite_xy4",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 16.0,
+        "t_minus_us": 16.0,
+        "t_eff_us": 0.0,
+        "two_phi_eff_pi_rad": 0.0,
+        "cos_2phi_eff": 1.0,
+        "f_global": 1.0,
+        "mean_x": 1.0,
+        "mean_xx_signed": 1.0,
+        "mean_xx_abs": 1.0,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 1.0,
+        "mean_x": 1.0,
+        "mean_xx_signed": 1.0,
+        "mean_xx_abs": 1.0,
+        "mean_yy_signed": -0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 1.0,
+      "sv_vs_scipy_diff": 0.0,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": 1.0,
+            "(15,19)": 1.0,
+            "(19,35)": 1.0,
+            "(35,34)": 1.0,
+            "(34,33)": 1.0,
+            "(33,32)": 1.0,
+            "(32,31)": 1.0
+          },
+          "mean_signed_corr": 1.0,
+          "mean_abs_corr": 1.0,
+          "ci95": 0.0
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": -0.0176,
+            "(15,19)": -0.0664,
+            "(19,35)": -0.0332,
+            "(35,34)": -0.041,
+            "(34,33)": 0.0078,
+            "(33,32)": -0.0527,
+            "(32,31)": -0.0234
+          },
+          "mean_signed_corr": -0.0324,
+          "mean_abs_corr": 0.0346,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": -0.0176,
+            "(15,19)": -0.0664,
+            "(19,35)": -0.0332,
+            "(35,34)": -0.041,
+            "(34,33)": 0.0078,
+            "(33,32)": -0.0527,
+            "(32,31)": -0.0234
+          },
+          "mean_signed_corr": -0.0324,
+          "mean_abs_corr": 0.0346,
+          "ci95": 0.0231
+        }
+      },
+      "label": "6. OSIRIS Balanced Bipartite Stag XY-4 (Delta_t = tau/2 = 4.0 us, T_eff = 0)",
+      "execution_ms": 30.67
+    },
+    {
+      "mode": "osiris_balanced_bipartite_xy8",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 16.0,
+        "t_minus_us": 16.0,
+        "t_eff_us": 0.0,
+        "two_phi_eff_pi_rad": 0.0,
+        "cos_2phi_eff": 1.0,
+        "f_global": 1.0,
+        "mean_x": 1.0,
+        "mean_xx_signed": 1.0,
+        "mean_xx_abs": 1.0,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 1.0,
+        "mean_x": 1.0,
+        "mean_xx_signed": 1.0,
+        "mean_xx_abs": 1.0,
+        "mean_yy_signed": 0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 1.0,
+      "sv_vs_scipy_diff": 4.440892098500626e-16,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": 1.0,
+            "(15,19)": 1.0,
+            "(19,35)": 1.0,
+            "(35,34)": 1.0,
+            "(34,33)": 1.0,
+            "(33,32)": 1.0,
+            "(32,31)": 1.0
+          },
+          "mean_signed_corr": 1.0,
+          "mean_abs_corr": 1.0,
+          "ci95": 0.0
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": -0.0176,
+            "(15,19)": -0.0664,
+            "(19,35)": -0.0332,
+            "(35,34)": -0.041,
+            "(34,33)": 0.0078,
+            "(33,32)": -0.0527,
+            "(32,31)": -0.0234
+          },
+          "mean_signed_corr": -0.0324,
+          "mean_abs_corr": 0.0346,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": -0.0176,
+            "(15,19)": -0.0664,
+            "(19,35)": -0.0332,
+            "(35,34)": -0.041,
+            "(34,33)": 0.0078,
+            "(33,32)": -0.0527,
+            "(32,31)": -0.0234
+          },
+          "mean_signed_corr": -0.0324,
+          "mean_abs_corr": 0.0346,
+          "ci95": 0.0231
+        }
+      },
+      "label": "7. OSIRIS Balanced Bipartite Stag XY-8 (Delta_t = tau/2 = 2.0 us, T_eff = 0)",
+      "execution_ms": 29.87
+    },
+    {
+      "mode": "qiskit_custom_bipartite_xy8",
+      "total_delay_us": 32.0,
+      "j_zz_khz": 60.0,
+      "analytical": {
+        "t_plus_us": 16.0,
+        "t_minus_us": 16.0,
+        "t_eff_us": 0.0,
+        "two_phi_eff_pi_rad": 0.0,
+        "cos_2phi_eff": 1.0,
+        "f_global": 1.0,
+        "mean_x": 1.0,
+        "mean_xx_signed": 1.0,
+        "mean_xx_abs": 1.0,
+        "mean_yy_signed": 0.0
+      },
+      "scipy_propagator": {
+        "f_global": 1.0,
+        "mean_x": 1.0,
+        "mean_xx_signed": 1.0,
+        "mean_xx_abs": 1.0,
+        "mean_yy_signed": 0.0,
+        "expm_discrepancy": 0.0
+      },
+      "qiskit_statevector_f_global": 1.0,
+      "sv_vs_scipy_diff": 4.440892098500626e-16,
+      "aer_sampled": {
+        "XX": {
+          "edge_correlations": {
+            "(14,15)": 1.0,
+            "(15,19)": 1.0,
+            "(19,35)": 1.0,
+            "(35,34)": 1.0,
+            "(34,33)": 1.0,
+            "(33,32)": 1.0,
+            "(32,31)": 1.0
+          },
+          "mean_signed_corr": 1.0,
+          "mean_abs_corr": 1.0,
+          "ci95": 0.0
+        },
+        "YY": {
+          "edge_correlations": {
+            "(14,15)": -0.0176,
+            "(15,19)": -0.0664,
+            "(19,35)": -0.0332,
+            "(35,34)": -0.041,
+            "(34,33)": 0.0078,
+            "(33,32)": -0.0527,
+            "(32,31)": -0.0234
+          },
+          "mean_signed_corr": -0.0324,
+          "mean_abs_corr": 0.0346,
+          "ci95": 0.0231
+        },
+        "ZZ": {
+          "edge_correlations": {
+            "(14,15)": -0.0176,
+            "(15,19)": -0.0664,
+            "(19,35)": -0.0332,
+            "(35,34)": -0.041,
+            "(34,33)": 0.0078,
+            "(33,32)": -0.0527,
+            "(32,31)": -0.0234
+          },
+          "mean_signed_corr": -0.0324,
+          "mean_abs_corr": 0.0346,
+          "ci95": 0.0231
+        }
+      },
+      "label": "8. Qiskit Custom Sublattice-Spaced XY-8 (Delta_t = tau/2 = 2.0 us, T_eff = 0)",
+      "execution_ms": 41.75
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "job_id": "dblv7sm74qds73dr8ho0",
+  "methodological_note": "Pooling 32 block differences as independent observations (df=31) underestimates uncertainty when measurements share a job, physical couplers, and calibration window. Below we report inference clustered by physical coupler (G=4, df=3) and by randomized acquisition block (K=4, df=3).",
+  "edge_specific_effects_pp": {
+    "(15,19)": {
+      "stag80_minus_sync_pp": 0.4639,
+      "osiris_v1_minus_stag80_pp": -0.1831,
+      "osiris_v1_minus_sync_pp": 0.2808
+    },
+    "(32,31)": {
+      "stag80_minus_sync_pp": 0.2258,
+      "osiris_v1_minus_stag80_pp": -0.4944,
+      "osiris_v1_minus_sync_pp": -0.2686
+    },
+    "(34,33)": {
+      "stag80_minus_sync_pp": 0.7507,
+      "osiris_v1_minus_stag80_pp": -0.0854,
+      "osiris_v1_minus_sync_pp": 0.6653
+    },
+    "(35,34)": {
+      "stag80_minus_sync_pp": 0.3418,
+      "osiris_v1_minus_stag80_pp": -0.3418,
+      "osiris_v1_minus_sync_pp": 0.0
+    }
+  },
+  "portfolio_comparisons": {
+    "fixed_stag80_minus_sync": {
+      "coupler_clustered_df3": {
+        "clustering_unit": "Physical Coupler (G=4)",
+        "n_clusters": 4,
+        "df": 3,
+        "mean_pp": 0.4456,
+        "se_pp": 0.1127,
+        "ci95_pp": [
+          0.0868,
+          0.8043
+        ],
+        "t_stat": 3.9522,
+        "p_two_sided": 0.0289,
+        "p_one_sided_pos": 0.0145
+      },
+      "block_clustered_df3": {
+        "clustering_unit": "Acquisition Block (K=4)",
+        "n_clusters": 4,
+        "df": 3,
+        "mean_pp": 0.4456,
+        "se_pp": 0.0895,
+        "ci95_pp": [
+          0.1606,
+          0.7305
+        ],
+        "t_stat": 4.9766,
+        "p_two_sided": 0.0156,
+        "p_one_sided_pos": 0.0078
+      },
+      "naive_pooled_df31": {
+        "clustering_unit": "Naive Pooled Cell-Blocks (N=32)",
+        "n_clusters": 32,
+        "df": 31,
+        "mean_pp": 0.4456,
+        "se_pp": 0.2302,
+        "ci95_pp": [
+          -0.024,
+          0.9151
+        ],
+        "t_stat": 1.9354,
+        "p_two_sided": 0.0621,
+        "p_one_sided_pos": 0.0311
+      }
+    },
+    "osiris_v1_minus_fixed_stag80": {
+      "coupler_clustered_df3": {
+        "clustering_unit": "Physical Coupler (G=4)",
+        "n_clusters": 4,
+        "df": 3,
+        "mean_pp": -0.2762,
+        "se_pp": 0.0899,
+        "ci95_pp": [
+          -0.5623,
+          0.0099
+        ],
+        "t_stat": -3.0725,
+        "p_two_sided": 0.0545,
+        "p_one_sided_pos": 0.9728
+      },
+      "block_clustered_df3": {
+        "clustering_unit": "Acquisition Block (K=4)",
+        "n_clusters": 4,
+        "df": 3,
+        "mean_pp": -0.2762,
+        "se_pp": 0.0872,
+        "ci95_pp": [
+          -0.5538,
+          0.0014
+        ],
+        "t_stat": -3.1664,
+        "p_two_sided": 0.0506,
+        "p_one_sided_pos": 0.9747
+      },
+      "naive_pooled_df31": {
+        "clustering_unit": "Naive Pooled Cell-Blocks (N=32)",
+        "n_clusters": 32,
+        "df": 31,
+        "mean_pp": -0.2762,
+        "se_pp": 0.1692,
+        "ci95_pp": [
+          -0.6213,
+          0.0689
+        ],
+        "t_stat": -1.6323,
+        "p_two_sided": 0.1127,
+        "p_one_sided_pos": 0.9436
+      }
+    },
+    "osiris_v1_minus_sync": {
+      "coupler_clustered_df3": {
+        "clustering_unit": "Physical Coupler (G=4)",
+        "n_clusters": 4,
+        "df": 3,
+        "mean_pp": 0.1694,
+        "se_pp": 0.1998,
+        "ci95_pp": [
+          -0.4663,
+          0.8051
+        ],
+        "t_stat": 0.8479,
+        "p_two_sided": 0.4588,
+        "p_one_sided_pos": 0.2294
+      },
+      "block_clustered_df3": {
+        "clustering_unit": "Acquisition Block (K=4)",
+        "n_clusters": 4,
+        "df": 3,
+        "mean_pp": 0.1694,
+        "se_pp": 0.1684,
+        "ci95_pp": [
+          -0.3665,
+          0.7052
+        ],
+        "t_stat": 1.0059,
+        "p_two_sided": 0.3886,
+        "p_one_sided_pos": 0.1943
+      },
+      "naive_pooled_df31": {
+        "clustering_unit": "Naive Pooled Cell-Blocks (N=32)",
+        "n_clusters": 32,
+        "df": 31,
+        "mean_pp": 0.1694,
+        "se_pp": 0.1655,
+        "ci95_pp": [
+          -0.1682,
+          0.5069
+        ],
+        "t_stat": 1.0234,
+        "p_two_sided": 0.314,
+        "p_one_sided_pos": 0.157
+      }
+    }
+  }
+}

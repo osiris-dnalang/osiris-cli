@@ -1,0 +1,142 @@
+{
+  "experiment_id": "OSIRIS_EXPERIMENT_E3_CROSS_CHIP_TRANSFER",
+  "model_id": "OSIRIS_ADAPTIVE_SCHEDULER_V1.0",
+  "model_sha256": "1f6e55f500e7e0f5ffc38bd3786a278da83450d715eef2bfa2290aa75852980d",
+  "frozen_timestamp_utc": "2026-11-05T03:49:00Z",
+  "primary_backend": "ibm_kingston",
+  "fallback_backend": "ibm_fez",
+  "resource_governance": {
+    "current_balance_ru": 1.98,
+    "current_balance_seconds_approx": 115.0,
+    "max_planned_e3_spend_ru": 1.50,
+    "max_planned_e3_spend_seconds": 90.0,
+    "minimum_reserve_after_e3_ru": 0.48,
+    "estimated_e3_81_circuits_ru": 0.40,
+    "estimated_e3_81_circuits_seconds": 24.0,
+    "projected_reserve_after_e3_ru": 1.58
+  },
+  "experimental_design": {
+    "evolution_duration_ns": 8000,
+    "evolution_duration_dt": 2000,
+    "dt_ns": 4.0,
+    "initial_state": "BELL_PHI_PLUS_CERTIFIED (qc.h(u); qc.h(v); qc.cz(u,v); qc.h(v))",
+    "protocols_executed_independently_per_block": [
+      "SYNC_XY8",
+      "STAG_XY8_80",
+      "OSIRIS_ADAPTIVE_V1"
+    ],
+    "pauli_bases": ["XX", "YY", "ZZ"],
+    "shots_per_circuit": 1024,
+    "num_randomized_blocks": 3,
+    "total_circuit_executions": 81,
+    "total_physical_shots": 82944
+  },
+  "primary_outcome": {
+    "estimand": "Delta_F_transfer = F(OSIRIS_ADAPTIVE_V1) - F(STAG_XY8_80)",
+    "description": "Evaluates whether the frozen OSIRIS Adaptive v1.0 scheduler adds transferable Bell-fidelity value beyond the strongest fixed policy (STAG_XY8_80) on a new physical processor without retuning."
+  },
+  "secondary_outcomes": [
+    "Delta_F_stag_global = F(STAG_XY8_80) - F(SYNC_XY8) across all 3 edges (9 paired block evaluations)",
+    "Edge-specific Delta_F_transfer and Delta_F_stag stratified by pre-registered regime (Regime I, Regime II, Regime III)"
+  ],
+  "ibm_kingston_preregistered_edges": {
+    "(61,62)": {
+      "u": 61,
+      "v": 62,
+      "T1_u_us": 177.18,
+      "T1_v_us": 248.78,
+      "T2_u_us": 188.0,
+      "T2_v_us": 218.9,
+      "Gamma_phi_u_MHz": 0.0025,
+      "Gamma_phi_v_MHz": 0.00256,
+      "cz_len_ns": 68.0,
+      "cz_err": 0.00107,
+      "sx_err_sum": 0.000339,
+      "ro_err_sum": 0.011,
+      "eta_phi_8000ns": 0.0205,
+      "predicted_regime": "REGIME_I_NEUTRAL_SATURATED",
+      "osiris_adaptive_v1_schedule": "SYNC_XY8",
+      "osiris_adaptive_v1_offset_ns": 0,
+      "predicted_effect": "NEAR_ZERO (|F_STAG80 - F_SYNC| <= 0.5 pp; OSIRIS selects 0 ns to preserve symmetric CPMG)"
+    },
+    "(25,37)": {
+      "u": 25,
+      "v": 37,
+      "T1_u_us": 260.52,
+      "T1_v_us": 217.93,
+      "T2_u_us": 39.67,
+      "T2_v_us": 34.94,
+      "Gamma_phi_u_MHz": 0.02329,
+      "Gamma_phi_v_MHz": 0.02633,
+      "cz_len_ns": 68.0,
+      "cz_err": 0.00141,
+      "sx_err_sum": 0.000458,
+      "ro_err_sum": 0.0234,
+      "eta_phi_8000ns": 0.2106,
+      "predicted_regime": "REGIME_II_STAGGER_BENEFICIAL",
+      "osiris_adaptive_v1_schedule": "STAG_XY8_80",
+      "osiris_adaptive_v1_offset_ns": 80,
+      "predicted_effect": "POSITIVE STAGGER GAIN (F_STAG80 > F_SYNC; OSIRIS selects 80 ns stagger)"
+    },
+    "(88,89)": {
+      "u": 88,
+      "v": 89,
+      "T1_u_us": 267.76,
+      "T1_v_us": 278.6,
+      "T2_u_us": 20.07,
+      "T2_v_us": 110.1,
+      "Gamma_phi_u_MHz": 0.04796,
+      "Gamma_phi_v_MHz": 0.00729,
+      "cz_len_ns": 68.0,
+      "cz_err": 0.00307,
+      "sx_err_sum": 0.000536,
+      "ro_err_sum": 0.012,
+      "eta_phi_8000ns": 0.3837,
+      "predicted_regime": "REGIME_III_CPMG_BOUNDARY_BREAKDOWN",
+      "osiris_adaptive_v1_schedule": "SYNC_XY8",
+      "osiris_adaptive_v1_offset_ns": 0,
+      "predicted_effect": "CPMG BOUNDARY BREAKDOWN (F_SYNC > F_STAG80; OSIRIS selects 0 ns and predicts Delta_F_transfer > 0)"
+    }
+  },
+  "ibm_fez_fallback_preregistered_edges": {
+    "(58,71)": {
+      "u": 58,
+      "v": 71,
+      "T2_u_us": 125.25,
+      "T2_v_us": 130.68,
+      "cz_len_ns": 68.0,
+      "cz_err": 0.00152,
+      "ro_err_sum": 0.0098,
+      "eta_phi_8000ns": 0.045,
+      "predicted_regime": "REGIME_I_NEUTRAL_SATURATED",
+      "osiris_adaptive_v1_schedule": "SYNC_XY8",
+      "osiris_adaptive_v1_offset_ns": 0
+    },
+    "(9,10)": {
+      "u": 9,
+      "v": 10,
+      "T2_u_us": 26.27,
+      "T2_v_us": 89.5,
+      "cz_len_ns": 68.0,
+      "cz_err": 0.00167,
+      "ro_err_sum": 0.0088,
+      "eta_phi_8000ns": 0.2841,
+      "predicted_regime": "REGIME_II_STAGGER_BENEFICIAL",
+      "osiris_adaptive_v1_schedule": "STAG_XY8_80",
+      "osiris_adaptive_v1_offset_ns": 80
+    },
+    "(114,115)": {
+      "u": 114,
+      "v": 115,
+      "T2_u_us": 18.6,
+      "T2_v_us": 240.7,
+      "cz_len_ns": 68.0,
+      "cz_err": 0.0023,
+      "ro_err_sum": 0.0122,
+      "eta_phi_8000ns": 0.3947,
+      "predicted_regime": "REGIME_III_CPMG_BOUNDARY_BREAKDOWN",
+      "osiris_adaptive_v1_schedule": "SYNC_XY8",
+      "osiris_adaptive_v1_offset_ns": 0
+    }
+  }
+}
