@@ -67,5 +67,14 @@
     0.3398,
     0.1934,
     0.0205
-  ]
+  ],
+  "audited_f_A_kHz": 482.885,
+  "audited_f_A_err_kHz": 5.169,
+  "audited_f_B_kHz": 476.545,
+  "audited_f_B_err_kHz": 4.62,
+  "audited_delta_f_kHz": 6.34,
+  "audited_zeta_14_15_kHz": 3.17,
+  "audited_zeta_14_15_Hz": 3169.9,
+  "audit_status": "VERIFIED",
+  "audit_root_cause": "Non-linear least squares trapped in harmonic alias (1166 kHz) due to initial cosine phase guess phi=0 vs physical pi-pulse phase inversion. Re-fitting with phi=pi yields fundamental frequency ~480 kHz."
 }

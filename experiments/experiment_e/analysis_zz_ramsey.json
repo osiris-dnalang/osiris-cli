@@ -67,5 +67,14 @@
     0.2578,
     0.1465,
     0.0586
-  ]
+  ],
+  "audited_f_A_kHz": 497.476,
+  "audited_f_A_err_kHz": 3.84,
+  "audited_f_B_kHz": 496.895,
+  "audited_f_B_err_kHz": 3.91,
+  "audited_delta_f_kHz": 0.58,
+  "audited_zeta_61_62_kHz": 0.29,
+  "audited_zeta_61_62_Hz": 290.1,
+  "audit_status": "VERIFIED",
+  "audit_root_cause": "Solver trapped in lower alias bound (100.79 kHz). Re-fitting yields physical fundamental ~497 kHz, delta_f = 0.58 kHz, zeta = 290 Hz."
 }
