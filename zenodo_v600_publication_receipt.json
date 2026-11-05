@@ -1,0 +1,20 @@
+{
+  "timestamp": 1793922855.9269536,
+  "deposition_id": 23991499,
+  "doi": "10.5281/zenodo.23991499",
+  "url": "https://zenodo.org/api/records/23991499",
+  "github_release": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v6.0.0",
+  "ledger_sequence_index": 29,
+  "ledger_block_hash": "5955c364202950dd51dcc9b24b27a15cc339b07226681fb90a3a39999485b7ea",
+  "prev_block_hash": "2208e036806e5d3371dbdad4e80920feed3b96315bf7dfcfb12b46082c79e63b",
+  "payload_sha256": "6578828e0232ad428bc3d3ed1d74f749cd9e2f2b0a1a5333f45762089f377e2b",
+  "evidence_zip": "C:\\Users\\Ron\\osiris-cli\\dist\\osiris_research_evidence_v6.0.0.zip",
+  "files_uploaded": [
+    "osiris_research_evidence_v6.0.0.zip",
+    "osiris_research_evidence_v6.0.0.tar.gz",
+    "github_release_notes_v6.0.0.md",
+    "OSIRIS_100_ADVANCED_BASH_COMMANDS.pdf",
+    "osiris_hp001_maxq_bundle.qpy",
+    "osiris_hp001_manifest.json"
+  ]
+}
