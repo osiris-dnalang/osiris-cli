@@ -3,6 +3,8 @@
 Evaluates declared evidence only. Never runs experiments, signs grants, changes claim
 standing, or promotes a research organism.
 """
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Mapping, Sequence

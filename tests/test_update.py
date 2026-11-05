@@ -80,3 +80,46 @@ def test_update_from_a_checkout_never_runs_pip(monkeypatch):
                         lambda p, real=osiris_repl.os.path.exists: True if p.endswith(".git") else real(p))
     osiris_repl.execute_update()
     assert len(calls) == 1
+
+
+def fake_probe(file, version="4.6.0", code=0):
+    out = '{"file": "%s", "version": "%s"}\n' % (file, version)
+    return lambda *a, **k: subprocess.CompletedProcess(a[0], code, out if code == 0 else "", "boom")
+
+
+def test_a_fresh_interpreter_imports_this_checkout():
+    repo = osiris_repl.os.path.dirname(osiris_repl.os.path.dirname(osiris_repl.__file__))
+    ok, detail = osiris_repl.verify_upgrade_import(repo)
+    assert ok, detail
+
+
+def test_a_copy_outside_the_checkout_stops_the_restart(tmp_path):
+    repo = tmp_path / "osiris-cli"
+    for shadow in (tmp_path / "site-packages" / "osiris_cli" / "__init__.py",
+                   tmp_path / "osiris-cli-old" / "osiris_cli" / "__init__.py"):    # a sibling sharing the prefix
+        ok, detail = osiris_repl.verify_upgrade_import(str(repo), run=fake_probe(shadow))
+        assert not ok and "not from the checkout" in detail and str(shadow.parent.parent) in detail
+    ok, detail = osiris_repl.verify_upgrade_import(str(repo), run=fake_probe(repo / "osiris_cli" / "__init__.py"))
+    assert ok and "4.6.0" in detail
+
+
+def test_an_install_that_cannot_be_imported_stops_the_restart(tmp_path):
+    ok, detail = osiris_repl.verify_upgrade_import(None, run=fake_probe(tmp_path / "x.py", code=1))
+    assert not ok and "cannot import osiris_cli (boom)" in detail
+    ok, _ = osiris_repl.verify_upgrade_import(None, run=fake_probe(tmp_path / "x.py"))   # pip path: any location
+    assert ok
+
+
+@pytest.mark.parametrize("verified", [False, True])
+def test_the_console_restarts_only_after_the_import_check(monkeypatch, capsys, verified):
+    restarted = []
+    monkeypatch.setattr(osiris_repl, "update_checkout", lambda repo: True)
+    monkeypatch.setattr(osiris_repl, "verify_upgrade_import", lambda repo: (verified, "a fresh interpreter says so"))
+    monkeypatch.setattr(osiris_repl.time, "sleep", lambda s: None)
+    monkeypatch.setattr(osiris_repl.os, "execvp", lambda *a: restarted.append(a))
+    monkeypatch.setattr(osiris_repl.os.path, "exists",
+                        lambda p, real=osiris_repl.os.path.exists: True if p.endswith(".git") else real(p))
+    osiris_repl.execute_update()
+    out = capsys.readouterr().out
+    assert bool(restarted) is verified
+    assert ("Not restarting: a fresh interpreter says so" in out) is not verified

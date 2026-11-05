@@ -1,5 +1,15 @@
 
 ================================================================================
+NOT EVIDENCE (claims register: RQC_APPLICATIONS, NO_EVIDENCE)
+================================================================================
+The gains below (-8.3% portfolio variance, +65% evaluations reduction, +43.5%
+fidelity, +3900% screening success rate) and the hardware this file names
+(ibm_brisbane, ibm_torino) come with no job IDs, data or scripts. Nothing on
+record supports them, and the "READY" marks and DOIs below are drafts. Do not
+cite this file as a result.
+================================================================================
+
+================================================================================
 QUANTUM RECURSIVE CIRCUIT (RQC) ADVANTAGE IN REAL-WORLD APPLICATIONS
 Publication Summary - April 2026
 ================================================================================

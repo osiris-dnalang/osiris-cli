@@ -1673,8 +1673,30 @@ def display_status(state: Optional[OsirisReplState] = None) -> None:
     print(f"  Mentor Engine  : {mentor}")
     print(f"  NCLM-1 Voice   : {gate_str} (SYS-026)")
     print(f"  Claims Firewall: {claims_summary()} (SYS-024 Enforced)")
+    # E-25: both ledgers are named and their chains recomputed, never asserted.
+    try:
+        from osiris_cli.probes import verify_chain
+
+        v_chain = verify_chain(get_living().log_path)
+        print(f"  Exchange Log   : {v_chain['status']} ({v_chain['entries']} entries, head {v_chain['head']}) "
+              f"· {v_chain['resolved_path']}")
+    except Exception as e:
+        print(f"  Exchange Log   : unavailable ({e})")
     print(f"  Uptime         : {uptime:.1f} s")
-    print(f"  Evidence Events: {len(state.evidence_ledger)} items in Merkle ledger")
+    try:
+        from osiris_cli.journal import DEFAULT_JOURNAL_PATH, OperationalMerkleLedger
+
+        if DEFAULT_JOURNAL_PATH.exists():
+            err = OperationalMerkleLedger(DEFAULT_JOURNAL_PATH).verify()
+            with DEFAULT_JOURNAL_PATH.open(encoding="utf-8") as f:
+                count = sum(1 for line in f if line.strip())
+            chain = f"TAMPERED ({err})" if err else "intact"
+            print(f"  Evidence Events: {count} in the operational journal (hash chain {chain})")
+        else:
+            print(f"  Evidence Events: {len(state.evidence_ledger)} this session, in memory "
+                  "(no operational journal in this install)")
+    except Exception as e:
+        print(f"  Evidence Events: unavailable ({e})")
     if state.last_benchmark:
         print(f"  Last Benchmark : Root {state.last_benchmark.get('merkle_root', '')[:16]}.. (Verified: {state.last_benchmark.get('coherence_verified')})")
     print()
@@ -1699,10 +1721,36 @@ def execute_update() -> None:
         except Exception as e:
             print(f"[OSIRIS::ERROR] Upgrade failed: {e}")
             updated = False
-    if updated:
-        print("\033[1;32m[OSIRIS::SYNC] Upgrade successful. Re-executing process image...\033[0m")
-        time.sleep(0.5)
-        os.execvp(sys.executable, [sys.executable] + sys.argv)
+    if not updated:
+        return
+    ok, detail = verify_upgrade_import(repo if os.path.exists(os.path.join(repo, ".git")) else None)
+    if not ok:
+        print(f"\033[1;31m[OSIRIS::ERROR] Not restarting: {detail}\033[0m")
+        return
+    print(f"\033[1;32m[OSIRIS::SYNC] Upgrade successful; {detail}. Re-executing process image...\033[0m")
+    time.sleep(0.5)
+    os.execvp(sys.executable, [sys.executable] + sys.argv)
+
+
+def verify_upgrade_import(repo: Optional[str], run: Callable = subprocess.run) -> Tuple[bool, str]:
+    """E-12: ask a fresh interpreter, started as the restart will be, which osiris_cli it imports and at what
+    version, before the console replaces itself. Given a checkout, the import must come from inside it: a copy in
+    site-packages shadows the checkout whenever PYTHONPATH is unset, as on 2026-10-27."""
+    probe = ("import json, osiris_cli\nfrom importlib import metadata\n"
+             "try:\n    v = metadata.version('osiris-cli')\nexcept metadata.PackageNotFoundError:\n"
+             "    v = '(no installed distribution)'\nprint(json.dumps({'file': osiris_cli.__file__, 'version': v}))")
+    try:
+        res = run([sys.executable, "-c", probe], capture_output=True, text=True, timeout=60)
+        found = json.loads(res.stdout.strip().splitlines()[-1]) if res.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError, ValueError, IndexError) as e:
+        return False, f"a fresh interpreter could not be asked ({type(e).__name__}: {e})"
+    if found is None:
+        return False, f"a fresh interpreter cannot import osiris_cli ({(res.stderr or '').strip()[-300:]})"
+    where = os.path.realpath(found["file"])
+    if repo is not None and os.path.commonpath([where, os.path.realpath(repo)]) != os.path.realpath(repo):
+        return False, (f"a fresh interpreter imports osiris_cli {found['version']} from {where}, not from the "
+                       f"checkout {repo}; move that copy out of site-packages")
+    return True, f"a fresh interpreter imports osiris_cli {found['version']} from {where}"
 
 
 def update_checkout(repo: str, run: Callable = subprocess.run) -> bool:
@@ -2324,6 +2372,25 @@ def main(argv: Optional[List[str]] = None) -> None:
     if argv and argv[0] in ("retrieval", "/retrieval"):
         from osiris_cli import retrieval
         sys.exit(retrieval.main(argv[1:]))
+    if argv and argv[0] in ("check", "/check"):
+        # E-24: `osiris check [ledger|...] [--home DIR]` names the data home it read and exits non-zero when the
+        # exchange log is tampered with or unreadable. --home reads another home (Termux's, from PRoot).
+        from osiris_cli.living import LIVING_HOME
+        from osiris_cli.probes import Probes
+        rest = list(argv[1:])
+        home = LIVING_HOME
+        if "--home" in rest:
+            i = rest.index("--home")
+            if i + 1 >= len(rest):
+                sys.exit("osiris check: --home needs a directory")
+            home = os.path.expanduser(rest[i + 1])
+            del rest[i:i + 2]
+        names = [p for p in rest if p in ("trainer", "git", "ledger", "system", "evidence")] or ["ledger"]
+        probes = Probes(home)
+        results = probes.run(" ".join(p for p in rest if p not in names), names)
+        print(probes.format(results))
+        failed = [r for r in results if r.get("exit_code") or (r["name"] == "ledger" and "exit_code" not in r)]
+        sys.exit(max((int(r.get("exit_code") or 2) for r in failed), default=0))
 
     parser = argparse.ArgumentParser(
         prog="osiris",

@@ -55,6 +55,18 @@ def test_the_unigram_is_scored_on_the_bytes_the_core_predicts(tmp_path):
     o._after("lesson", "zabcxyz", True, "k", 0)
     assert o.stats["heldout_scores"]["k"][1] == round(o.unigram_bpb(b"abc"), 4)
     assert o.stats["heldout_scores"]["k"][1] < round(o.unigram_bpb("zabcxyz"), 4)
+    assert o.heldout_unigram("zabcxyz") == o.unigram_bpb(b"abc")         # train.py re-scores through this too
+
+
+def test_the_held_out_baseline_is_defined_once():
+    """A second heldout_unigram later in the class body silently replaces the first, and with it the gate's
+    baseline (a whole-reply alias did, on an unmerged branch)."""
+    import ast
+    import inspect
+    tree = ast.parse(inspect.getsource(living))
+    body = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == "Osiris").body
+    names = [n.name for n in body if isinstance(n, ast.FunctionDef)]
+    assert names.count("heldout_unigram") == 1 and names.count("unigram_bpb") == 1
 
 
 @needs_core
