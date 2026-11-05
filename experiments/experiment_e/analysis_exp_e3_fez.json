@@ -1,0 +1,83 @@
+{
+  "job_id": "dbm86158ft8s738ucqi0",
+  "backend": "ibm_fez",
+  "qpu_seconds": 0,
+  "qpu_ru": 0.0,
+  "prereg_sha256": "15595416c2469922cb807b4ba045de5860c86cd91a038d77046a7fbf2b1d2215",
+  "payload_sha256": "1dd51117dec70a9ade8ca880de97f01e6efb09330626bce0c2263387997cc00f",
+  "qpy_sha256": "fa3e360abf23f41dad8fe321f05922be4c211964089d3395df7257421ec9d27b",
+  "primary_outcome_Delta_F_transfer": {
+    "mean": -0.008029513888888888,
+    "se": 0.006013942946342058,
+    "t_stat": -1.33514966146674,
+    "df": 8
+  },
+  "secondary_outcome_Delta_F_stag": {
+    "mean": 0.0010850694444444445,
+    "se": 0.00460986935953253,
+    "t_stat": 0.2353796517466771,
+    "df": 8
+  },
+  "edges": {
+    "(87,88)": {
+      "osiris_selected_offset_ns": 0,
+      "F_Bell_SYNC_mean": 0.7639973958333334,
+      "F_Bell_STAG_80_mean": 0.7731119791666666,
+      "F_Bell_OSIRIS_ADAPTIVE_mean": 0.7718098958333334,
+      "Delta_F_transfer_mean": -0.0013020833333333333,
+      "Delta_F_transfer_SE": 0.008220609569774995,
+      "Delta_F_transfer_blocks": [
+        -0.009765625,
+        0.01513671875,
+        -0.00927734375
+      ],
+      "Delta_F_stag_mean": 0.009114583333333334,
+      "Delta_F_stag_SE": 0.009660622559734182,
+      "Delta_F_stag_blocks": [
+        -0.00927734375,
+        0.01318359375,
+        0.0234375
+      ]
+    },
+    "(61,62)": {
+      "osiris_selected_offset_ns": 80,
+      "F_Bell_SYNC_mean": 0.7294921875,
+      "F_Bell_STAG_80_mean": 0.7252604166666666,
+      "F_Bell_OSIRIS_ADAPTIVE_mean": 0.7224934895833334,
+      "Delta_F_transfer_mean": -0.0027669270833333335,
+      "Delta_F_transfer_SE": 0.014297925937106161,
+      "Delta_F_transfer_blocks": [
+        -0.03125,
+        0.013671875,
+        0.00927734375
+      ],
+      "Delta_F_stag_mean": -0.004231770833333333,
+      "Delta_F_stag_SE": 0.004107887195352852,
+      "Delta_F_stag_blocks": [
+        -0.00341796875,
+        -0.01171875,
+        0.00244140625
+      ]
+    },
+    "(100,101)": {
+      "osiris_selected_offset_ns": 0,
+      "F_Bell_SYNC_mean": 0.7244466145833334,
+      "F_Bell_STAG_80_mean": 0.7228190104166666,
+      "F_Bell_OSIRIS_ADAPTIVE_mean": 0.7027994791666666,
+      "Delta_F_transfer_mean": -0.02001953125,
+      "Delta_F_transfer_SE": 0.007324218750000001,
+      "Delta_F_transfer_blocks": [
+        -0.02734375,
+        -0.00537109375,
+        -0.02734375
+      ],
+      "Delta_F_stag_mean": -0.0016276041666666667,
+      "Delta_F_stag_SE": 0.009734379267126093,
+      "Delta_F_stag_blocks": [
+        -0.00244140625,
+        -0.01806640625,
+        0.015625
+      ]
+    }
+  }
+}
