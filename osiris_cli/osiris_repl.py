@@ -2325,6 +2325,25 @@ def main(argv: Optional[List[str]] = None) -> None:
     if argv and argv[0] in ("retrieval", "/retrieval"):
         from osiris_cli import retrieval
         sys.exit(retrieval.main(argv[1:]))
+    if argv and argv[0] in ("check", "/check"):
+        # E-24: `osiris check [ledger|...] [--home DIR]` names the data home it read and exits non-zero when the
+        # exchange log is tampered with or unreadable. --home reads another home (Termux's, from PRoot).
+        from osiris_cli.living import LIVING_HOME
+        from osiris_cli.probes import Probes
+        rest = list(argv[1:])
+        home = LIVING_HOME
+        if "--home" in rest:
+            i = rest.index("--home")
+            if i + 1 >= len(rest):
+                sys.exit("osiris check: --home needs a directory")
+            home = os.path.expanduser(rest[i + 1])
+            del rest[i:i + 2]
+        names = [p for p in rest if p in ("trainer", "git", "ledger", "system", "evidence")] or ["ledger"]
+        probes = Probes(home)
+        results = probes.run(" ".join(p for p in rest if p not in names), names)
+        print(probes.format(results))
+        failed = [r for r in results if r.get("exit_code") or (r["name"] == "ledger" and "exit_code" not in r)]
+        sys.exit(max((int(r.get("exit_code") or 2) for r in failed), default=0))
 
     parser = argparse.ArgumentParser(
         prog="osiris",
