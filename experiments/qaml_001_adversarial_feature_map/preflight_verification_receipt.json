@@ -1,0 +1,40 @@
+{
+  "benchmark_id": "OSIRIS-QAML-001",
+  "timestamp": "2026-11-06T04:51:10Z",
+  "arms_verified": [
+    {
+      "name": "Arm 0 (Classical CNN Baseline)",
+      "status": "VALIDATED",
+      "purity": 1.0
+    },
+    {
+      "name": "Arm 1 (Bare Quantum Feature Map)",
+      "status": "VALIDATED",
+      "purity": 0.018411977914016123,
+      "depth": 25,
+      "gate_count": 53
+    },
+    {
+      "name": "Arm 2 (Synchronous XY8 Feature Map)",
+      "status": "VALIDATED",
+      "purity": 0.018411977914016123,
+      "depth": 33,
+      "gate_count": 126
+    },
+    {
+      "name": "Arm 3 (Staggered XY8 Feature Map)",
+      "status": "VALIDATED",
+      "purity": 0.018411977914016123,
+      "depth": 41,
+      "gate_count": 134
+    },
+    {
+      "name": "Arm 4 (Identical A/A Control Arm)",
+      "status": "VALIDATED",
+      "purity": 0.018411977914016123,
+      "depth": 41,
+      "gate_count": 134
+    }
+  ],
+  "pre_flight_checks": "PASSED"
+}

@@ -1,0 +1,48 @@
+{
+  "sequence_index": 31,
+  "prev_block_hash": "2966b09693ab7c68339c2dcf6bc5385b5cc11f3f3a58b1bf750d3b1453aa65a8",
+  "block_hash": "fb73fd7844995dbc9a72cb40d6f75d9503204c7984ae95e21379fe5745adcc2d",
+  "timestamp": 1793940628.3836217,
+  "event_type": "SYS021_RAZAVI_FAR_QAML_REVIEW_COMMITTED",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "payload_sha256": "3d15a0282214a21ed6f149984ff6e5e98cfff1183d653eae70e12264776fe2e8",
+  "operation_schema_sha256": "8af6ea2986bb7c4b1f6ae2ea31d50c768faaf318fdb8bfb5efe2d0c7cda30e9c",
+  "nonce": "OSIRIS-RAZAVI-FAR-QAML-1793940628383",
+  "raw_grant": {
+    "sequence_index": 31,
+    "prev_block_hash": "2966b09693ab7c68339c2dcf6bc5385b5cc11f3f3a58b1bf750d3b1453aa65a8",
+    "timestamp": 1793940628.3836217,
+    "event_type": "SYS021_RAZAVI_FAR_QAML_REVIEW_COMMITTED",
+    "operator_id": "Devin Phillip Davis / Enki",
+    "payload_sha256": "3d15a0282214a21ed6f149984ff6e5e98cfff1183d653eae70e12264776fe2e8",
+    "operation_schema": {
+      "event": "SYS021_RAZAVI_FAR_QAML_REVIEW_COMMITTED",
+      "target_file": "docs/research/RAZAVI_FAR_2026_QAML_REVIEW_AND_OSIRIS_ALIGNMENT.md",
+      "payload_sha256": "3d15a0282214a21ed6f149984ff6e5e98cfff1183d653eae70e12264776fe2e8",
+      "file_size_bytes": 15559,
+      "journal_reference": "Artificial Intelligence Review (2026) 59:177",
+      "doi": "10.1007/s10462-026-11578-7",
+      "authors": "Roozbeh Razavi-Far et al. (TSAI Lab, University of New Brunswick)",
+      "evaluation_alignment": [
+        "4-Level Attack Surface Model (Input, Circuit, Measurement, Hardware)",
+        "Section 9.4 Statistical Completeness & NISQ Reproducibility Mandate",
+        "OSIRIS-QAML-001 Benchmark Operationalization",
+        "Transmon 1.03 pp RMS Noise Floor & N >= 33,500 Shot Floor"
+      ]
+    },
+    "operation_schema_sha256": "8af6ea2986bb7c4b1f6ae2ea31d50c768faaf318fdb8bfb5efe2d0c7cda30e9c",
+    "nonce": "OSIRIS-PQC-1793940628383",
+    "pqc_envelope": {
+      "specification": "NIST FIPS 204",
+      "algorithm": "Hybrid-Ed25519+ML-DSA-65",
+      "fips204_prehash": "9c71dc39d2aa3fe864975e05aaad30456233605e02411f59bfde259784d609e700936d36a14508b66dec8a80dc2d6c1481174a535b335dd9d215ee0fabbed24b",
+      "ed25519_signature": "b31af9d0648182d684f441e43895f790804bfd94858a158b3c269fcf06e6d3207aaf1c8ff3e5e9eca8638de38df76afb1bcd6ec3419e7933546cd1bff21d5737",
+      "ml_dsa_signature": "000ea84f665a914e935f086915d93e8bf9778597203e0ab7811ff2e21638b7724ac4d0906f88dcd152c3e59c323dd2c8c8be373f1e836aabfe8ba61f854522c7",
+      "lattice_parameters": {
+        "ring_degree": 256,
+        "modulus": 8380417,
+        "matrix_dimensions": "6x5"
+      }
+    }
+  }
+}
