@@ -1,6 +1,6 @@
 # AGILE DEFENSE SYSTEMS & ELASTIC
 ## Strategic Partnership Brief: Cryptographic Execution Provenance for Autonomous Defense Enclaves
-**Document ID:** ADS-ELASTIC-PB-2026-01  
+**Document ID:** ADS-ELASTIC-PB-2026-02  
 **Date:** November 11, 2026 | 1:00 PM ET Briefing  
 **Author:** Devin Phillip Davis, Founder & Lead Architect, Agile Defense Systems LLC  
 **Primary Counterparts:**  
@@ -15,7 +15,7 @@
                Cryptographic Provenance Sensor to Enterprise SIEM Pipeline
        ========================================================================
 
-       [ Autonomous Agent ]       [ OSIRIS Enclave Sensor ]        [ Elastic Security / SIEM ]
+       [ Autonomous Agent ]       [ osiris Enclave Sensor ]        [ Elastic Security / SIEM ]
        +------------------+       +-----------------------+        +-------------------------+
        | Tool Execution   | ----> | SYS-021 Policy Gate   | -----> | Elastic Common Schema   |
        | Compute Dispatch |       | Payload SHA-256 Match |  ECS   | (ECS 8.x) Bulk Ingest   |
@@ -25,10 +25,24 @@
                                               v                                 v
                                    [ 29-Block Local Ledger ]        [ Kibana Security SOC ]
                                    - Hybrid ML-DSA-65               - CMMC 2.0 Compliance
-                                   - Ed25519 Signatures             - Drift & Anomaly Alerts
+                                   - Ed25519 Signatures             - CNSA 2.0 PQC Ready
                                    - Zenodo DOI Head Pinning        - Anti-Splunk Volume TCO
        ========================================================================
 ```
+
+---
+
+## Executive Summary: Bridging the 5 Critical Industry Gaps
+
+Modern cybersecurity, enterprise SIEM, and defense architectures face five structural, unmet challenges as autonomous AI agents and edge computing proliferate:
+
+1. **The "Runaway Agent" Blindspot (Passive Logging vs. Active Governance):** Traditional SIEMs (Elastic, Splunk, Sentinel) are purely passive observers. They ingest logs *after* damage has occurred. If an autonomous agent hallucinates or is hijacked via prompt injection, the SIEM only produces an autopsy report.
+2. **Post-Quantum Cryptography (PQC) Audit Trail Vulnerability:** Under CNSA 2.0, OMB M-23-02, and NIST FIPS 204 mandates, audit logs retained for 7–20 years in defense enclaves are vulnerable to *"Harvest Now, Forge Later"* attacks if signed only with classical RSA or ECDSA.
+3. **Compromised Root Log Tampering:** When an advanced persistent threat (APT) or malicious insider attains elevated root privileges, standard text logs (`syslog`, `/var/log`) can be silently truncated, wiped, or modified before or during transmission.
+4. **Disconnected / Tactical Edge (DIL) Telemetry Provenance:** Military and remote defense assets operate in Disconnected, Intermittent, and Limited Bandwidth (DIL) environments. When reconnected after weeks offline, central SIEMs cannot verify whether accumulated logs were fabricated or modified offline.
+5. **The Splunk "Volume Ingestion Tax":** Microsecond C-SIMD inference, agentic execution traces, and high-frequency telemetry generate gigabytes of logs per minute. Splunk’s ingest-volume pricing creates a punitive financial penalty, forcing defense contractors to discard 90% of critical security telemetry.
+
+**The Solution:** Agile Defense Systems provides **osiris**, an operating-system-level cryptographic execution runtime. By coupling osiris with **Elasticsearch and Elastic Security**, Agile Defense Systems and Elastic deliver the industry’s first **Active Governed Execution Fabric for Defense Enclaves**—turning passive log collection into deterministic, quantum-resistant, tamper-evident operational authority.
 
 ---
 
@@ -40,16 +54,16 @@
 - **The Epistemic Flaw of Standard Logging:** Traditional SIEM ingestion relies on plain-text log files (syslog, JSON stdout, application logs). When an autonomous process or adversarial insider gains elevated permissions, text logs are trivially modified, truncated, or forged retroactively.
 - **The Compliance Reality (CMMC 2.0 Level 2/3 & NIST SP 800-171/53):**
   - **AU-3 / AU-10 (Content & Non-Repudiation):** Audit events must contain unalterable proof of operator identity, exact executable content, and temporal sequence.
-  - **AC-3 / AC-6 (Access Control & Least Privilege):** Conversational instructions ("the user authorized this") do NOT constitute verifiable execution authority.
+  - **AC-3 / AC-6 (Access Control & Least Privilege):** Conversational user statements or implicit chain-of-thought assumptions (*"the user authorized this..."*) do NOT constitute verifiable execution authority.
 
 ### 2. The Agile Defense Systems + Elastic Joint Value
-- **Agile Defense Systems** provides **OSIRIS**: an operating-system-level cryptographic execution enclave that enforces deterministic tool-call authorization and Merkle hash-chained provenance.
+- **Agile Defense Systems** provides **osiris**: an operating-system-level cryptographic execution enclave that enforces deterministic tool-call authorization and Merkle hash-chained provenance.
 - **Elastic** provides **Elasticsearch & Elastic Security**: the premier distributed search, SIEM, and observability engine capable of ingesting high-throughput machine telemetry at scale without prohibitive data penalties.
 - **The Synergistic Deliverable:** An end-to-end, zero-trust audit pipeline that transforms unverified agent actions into cryptographically signed, immutable Elastic Common Schema (ECS 8.x) records indexed in real time.
 
 ---
 
-## Slide 2: The OSIRIS Enclave Runtime
+## Slide 2: The osiris Enclave Runtime
 ### Deterministic Tool-Call Policy Enforcement (SYS-021) & Merkle Audit Logging
 
 ```
@@ -75,114 +89,113 @@
 ```
 
 ### 1. Strict Boundary Definition: What It Is and What It Is Not
-- **Deterministic Tool-Call Gate (Not a "Prompt-Injection Cure"):** Agile Defense does not claim to solve natural-language prompt injection. Instead, OSIRIS enforces an architectural firewall: regardless of what an LLM generates, the operating system kernel cannot execute a tool, script, or compute sweep without an immutable cryptographic grant.
-- **Content-Addressed Payload Grants (SYS-021):**
-  - Every authorization grant is strictly bound to $\mathcal{H}_{\text{payload}} = \text{SHA-256}(\text{code})$, an operational schema hash, an operator public key, a temporal expiry, and a monotonic sequence index.
-  - Changing a single character in the script immediately invalidates the signature and halts execution.
-
-### 2. The 29-Block Cryptographic Ledger & Public Anchoring
-- **Zero Self-Supplied Authority:** The agent cannot grant itself execution rights. All grants are signed by the designated operator keypair (`Devin Phillip Davis / Enki`).
-- **Post-Quantum Hybrid Signatures:** Dual-signed with NIST-standardized ML-DSA-65 (Dilithium) and Ed25519.
-- **Solving the Local Ledger Tamper Problem:** While the ledger resides in a high-performance local SQLite database (`evidence_ledger.db`), root tampering is prevented by **external public chain-head pinning**. Agile Defense regularly commits and pins ledger head hashes to public repositories and permanent DOIs (e.g. Zenodo DOI `10.5281/zenodo.23986363`), ensuring any unauthorized ledger rewrite is mathematically detectable by Elastic SIEM auditors.
-
----
-
-## Slide 3: Observability Discipline
-### The 1.11 pp Noise Floor, Background Drift Tracking, and Rapid Rescoring
-
-```
-   Fidelity Difference (pp)
-      +1.5 |                 [Empirical Accidental A/A Spread: RMS = 1.11 pp]
-           |
-      +1.0 |        * (+1.09 pp) E3-Pilot (12,13) 8us
-           |        * (+0.78 pp) Fez (87,88)
-      +0.5 |        * (+0.70 pp) E3-Pilot (12,13) 4us
-           |  ------------------------------------------------------------- [Initial Claim: +0.65 pp]
-       0.0 |  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [True Effect: +0.04 pp]
-           |        * (-0.28 pp) Fez (61,62)
-      -0.5 |        * (-0.63 pp) E3-Pilot (24,25) 8us
-           |
-      -1.0 |
-           |
-      -2.0 |        * (-2.16 pp) Fez (100,101)
-      -----+---------------------------------------------------------------
-```
-
-### 1. Observability Thinking Over Ungrounded Hype
-- Elastic engineers build world-class observability systems and know that **every headline metric must be grounded in an empirical noise floor**.
-- In extensive multi-arm quantum execution campaigns on IBM quantum hardware (`ibm_fez`, `ibm_marrakesh`), Agile Defense detected **seven accidental A/A comparisons** (identical physical microwave pulse schedules executed under nominally different experimental arms).
-
-### 2. Empirical Findings: The Inter-Arm Drift Floor
-- **Measured A/A Difference Spread:** Differences between identical schedules ranged from $-2.16\text{ pp}$ to $+1.09\text{ pp}$.
-- **Empirical Noise Floor:** The empirical root-mean-square (RMS) difference across identical runs was **$1.11\text{ pp}$** ($1.03\text{ pp}$ theoretical shot noise SEM at $N=1,024$).
-- **The Decisive Insight:** The background drift and hardware noise floor ($1.11\text{ pp}$) was **significantly larger than the originally hypothesized optimization benefit** ($+0.65\text{ pp}$).
-
-### 3. Immediate Open Rescoring on Zenodo
-- Rather than obscuring the drift or marketing an illusion, Agile Defense immediately applied rigorous observability discipline:
-  - Rescored the frozen policy benefit from **$+0.65\text{ pp}$ down to $+0.04\text{ pp}$**.
-  - Minted and published the comprehensive erratum and raw dataset publicly within hours (Zenodo DOI `10.5281/zenodo.23986363`, Block #26 in the evidence ledger).
-- **Why This Matters to Elastic:** Defense contractors cannot deploy autonomous systems that mistake hardware drift for real operational signals. Agile Defense builds observability into the core of its runtime, providing Elastic SIEM with pre-calibrated, drift-aware sensor streams.
+- **Deterministic Tool-Call Gate (Not a "Prompt-Injection Cure"):** Agile Defense does not claim to solve natural-language prompt injection inside model weights. Instead, osiris enforces an operating-system-level firewall at the tool-call boundary. Regardless of how an LLM or subagent is prompted, it cannot execute shell commands, compute dispatches, or state mutations without a verified cryptographic grant.
+- **Content-Addressed Grants (SYS-021 Invariant):**
+  - Grants are bound to the exact payload SHA-256 digest: $\mathcal{H}_{\text{payload}} = \text{SHA-256}(\text{code})$.
+  - Changing a file path preserves execution authority if the executable bytes are identical.
+  - Modifying a single character of code immediately alters the digest and invalidates prior authorization.
+- **Local Ledger with Public Head Pinning:**
+  - The local ledger is maintained as an append-only, Merkle hash-chained sequence where each block incorporates the hash of the preceding block: $\mathcal{H}_n = \text{SHA-256}(\mathcal{H}_{n-1} \parallel \text{Payload}_n)$.
+  - To prevent a root user or host compromise from rewriting local history, the chain head is periodically committed to external, immutable public registries (Zenodo permanent DOIs and public Git tags). Any retroactive modification of local records results in an immediate hash divergence that Elastic SIEM detects upon reconciliation.
 
 ---
 
-## Slide 4: Joint Reference Architecture
-### OSIRIS Enclave Sensor to Elastic Security (SIEM) via ECS 8.x
+## Slide 3: Meeting the 5 Unmet Industry Challenges Head-On
+
+```
++---------------------------------------------------------------------------------------------------------+
+|                                  THE 5 UNMET INDUSTRY CHALLENGES                                        |
++------------------------------------+--------------------------------------------------------------------+
+| Industry Challenge                 | How osiris + Elastic Delivers the Industry-First Solution         |
++------------------------------------+--------------------------------------------------------------------+
+| 1. Runaway Agent Liability         | Active SYS-021 pre-execution gate halts unauthorized tool calls    |
+|    (Passive SIEM Autopsies)        | before execution; ships denied-execution alerts into Elastic SIEM. |
++------------------------------------+--------------------------------------------------------------------+
+| 2. PQC Long-Retention Risk         | Hybrid NIST FIPS 204 ML-DSA-65 + Ed25519 signatures embedded in    |
+|    (CNSA 2.0 / OMB M-23-02)        | every ECS 8.x event block; immune to "Harvest Now, Forge Later".   |
++------------------------------------+--------------------------------------------------------------------+
+| 3. Compromised Root Log Tampering  | Continuous Merkle hash-chaining ($H_n = SHA(H_{n-1} || B_n)$)      |
+|    (Insider Threat & Evasion)      | anchored to external DOIs; any byte alteration breaks the chain.   |
++------------------------------------+--------------------------------------------------------------------+
+| 4. Disconnected Tactical Edge (DIL)| Self-contained, zero-network cryptographic execution; seamless     |
+|    (Offline Provenance Verif.)     | batch chain verification upon reconnection to central Elastic.     |
++------------------------------------+--------------------------------------------------------------------+
+| 5. The "Splunk Volume Tax"         | C-SIMD AVX2 telemetry streaming paired with Elastic's resource-    |
+|    (High-Frequency AI Logging)     | based pricing; ingest 100% of telemetry at fixed, lower TCO.       |
++------------------------------------+--------------------------------------------------------------------+
+```
+
+### Detailed Breakdown of Capabilities:
+1. **Active AI Agent Governance (Pre-Execution Interception):** Rather than logging after-the-fact file modifications, osiris intercepts command invocations. If an autonomous agent attempts an ungranted mutation, execution is blocked in-line, and a high-severity ECS alert (`event.action: sys021.grant.denied`) is immediately ingested into Elasticsearch.
+2. **Post-Quantum Cryptographic (PQC) Enclave:** Operating in strict conformance with CNSA 2.0 mandates, osiris implements dual-signature verification using quantum-resistant ML-DSA-65 (FIPS 204) alongside Ed25519. Defense audit records ingested into Elasticsearch remain mathematically non-repudiable for decades.
+3. **Cryptographic Proof of Non-Tampering:** An adversary with root privileges who modifies log entries cannot forge the cryptographic signature chain. When Elastic processes log ingestion, hash-chain integrity verification immediately flags sequence breaks or altered pre-images.
+4. **Tactical Edge Integrity (DIL Enclaves):** Forward-deployed military platforms operate without continuous cloud connectivity. osiris executes grants and records Merkle blocks locally without network access. Upon establishing a connection to an enterprise Elastic cluster, the entire sequence is verified and ingested in bulk with mathematical continuity.
+5. **Economic Superiority Over Splunk:** Ingesting microsecond AVX2 traces, quantum syndrome decoders, and continuous tool-call traces under Splunk's $/GB model quickly reaches hundreds of thousands of dollars in licensing. Elastic's cluster-based architecture eliminates this cost barrier.
+
+---
+
+## Slide 4: Real-World Observability & Empirical Integrity
+### Matched-Pair A/A Testing, Noise Floor Characterization, and False-Positive Elimination
+
+```
++--------------------------------------------------------------------------------------------------+
+|                    PHYSICAL TELEMETRY RIGOR: THE 1.11 pp NOISE FLOOR DISCOVERY                   |
++--------------------------------------------------------------------------------------------------+
+| Originally Hypothesized Gain (Adaptive Compiler):                     +0.65 pp Bell Fidelity     |
+| Measured Inter-Arm Spread Across Identical A/A Controls:              1.11 pp RMS Noise Floor    |
+| Decisive Correction: Rescored from +0.65 pp to:                       +0.04 pp (Within Noise)    |
+| Public Transparency Action: Published Immediate Erratum to Zenodo    DOI: 10.5281/zenodo.23986321|
++--------------------------------------------------------------------------------------------------+
+```
+
+### 1. The Observability Mindset: Separating Signal from Noise
+- In high-stakes defense environments, AI systems and threat analytics engines frequently fail because they mistake sensor noise, background network jitter, or calibration drift for actionable operational signals.
+- In multi-month physical testing across IBM Quantum Heron r2 QPUs (`ibm_marrakesh` and `ibm_fez`), Agile Defense Systems discovered that hardware drift produced an inter-arm spread of **1.11 percentage points RMS** across identical control arms (A/A testing).
+- Rather than asserting an unverified advantage, Agile Defense immediately rescored its findings from +0.65 pp to +0.04 pp and published the full dataset and erratum publicly (Zenodo DOI 10.5281/zenodo.23986321).
+- This same statistical process control (SPC) discipline is embedded in the osiris telemetry stream, allowing Elastic Security detection rules to filter out environmental baseline noise before firing high-priority alerts.
+
+---
+
+## Slide 5: The Elastic Common Schema (ECS 8.x) Integration
+### Native Telemetry Streaming, Field Mapping, and Ingestion Pipeline
 
 ```
  +-----------------------------------------------------------------------------------------+
- |                           DEFENSE ENCLAVE (SECURE BOUNDARY)                             |
- |                                                                                         |
- |   +------------------------+      +-------------------------+      +----------------+   |
- |   | Autonomous Tool Agent  | ---> | OSIRIS Governed Enclave | ---> |  Local Ledger  |   |
- |   | (Code / SIMD / QPU)    |      | (SYS-021 Verification)  |      |  (29 Blocks)   |   |
- |   +------------------------+      +-------------------------+      +----------------+   |
- |                                                |                                        |
- |                                                v                                        |
- |                             +-------------------------------------+                     |
- |                             |    OSIRIS ECS 8.x Telemetry Agent   |                     |
- |                             |    (JSON-ND Bulk Event Streamer)    |                     |
- |                             +-------------------------------------+                     |
- +------------------------------------------------|----------------------------------------+
-                                                  | TLS 1.3 / mTLS
-                                                  v
+ |                           KIBANA 8.x INTEGRATED SOC DASHBOARD                           |
  +-----------------------------------------------------------------------------------------+
- |                           ENTERPRISE ELASTIC SECURITY FABRIC                            |
- |                                                                                         |
- |   +---------------------------------------------------------------------------------+   |
- |   | Elasticsearch Cluster (Elasticsearch 8.x+ / FedRAMP / Elastic Cloud)            |   |
- |   | Indices: `osiris-audit-ledger-v1`, `osiris-execution-telemetry-v1`              |   |
- |   +---------------------------------------------------------------------------------+   |
- |                                                |                                        |
- |         +--------------------------------------+---------------------------------+      |
- |         v                                                                        v      |
+ |  [KPI: 1,600+ Events]  [KPI: 29 Ledger Blocks]  [KPI: 1.11 pp Noise Floor]  [KPI: SYS-021] |
+ +-----------------------------------------------------------------------------------------+
  |   +--------------------------------------+     +------------------------------------+   |
- |   | Elastic Security (SIEM)              |     | Kibana Observability & SOC         |   |
- |   | - SYS-021 Bypass Correlation Rules   |     | - Drift vs Noise Floor Monitoring  |   |
- |   | - Monotonic Sequence Gap Detection   |     | - Coupler Fidelity Degradation     |   |
- |   | - Automated CMMC 2.0 Audit Package   |     | - Cryptographic Chain Audit Visual |   |
+ |   | SYS-021 Execution & Security Alerts  |     | Quantum Control & Coupler Drift    |   |
+ |   |--------------------------------------|     |------------------------------------|   |
+ |   | - sys021.payload.verified (Low)      |     | - Coupler (61,62) Drift Analysis   |   |
+ |   | - sys021.grant.denied (Critical)     |     | - A/A Null Calibration Tracking    |   |
+ |   | - Cryptographic Chain Audit Visual   |     | - Microsecond SIMD Syndrome Stream |   |
  |   +--------------------------------------+     +------------------------------------+   |
  +-----------------------------------------------------------------------------------------+
 ```
 
 ### 1. Native Elastic Common Schema (ECS 8.x) Mapping
-Agile Defense emits 100% compliant ECS 8.x records directly from its verification engine:
+osiris emits 100% compliant ECS 8.x records directly from its verification engine:
 - `@timestamp`: Millisecond-accurate ISO 8601 execution timestamp.
 - `event.category`: `["process", "security", "audit"]`
 - `event.type`: `["access", "change", "denied"]`
-- `event.action`: `sys021.payload.verified`, `sys021.grant.executed`, `runtime.noise_floor.drift_detected`
+- `event.action`: `sys021.payload.verified`, `sys021.grant.denied`, `runtime.noise_floor.drift_detected`
 - `user.id`: Cryptographic operator identity (`Devin Phillip Davis / Enki`).
 - `process.hash.sha256`: Content-addressed executable payload digest.
 - `event.hash`: Cryptographic Merkle block hash.
-- Extended domain fields: `quantum.coupler`, `quantum.fidelity`, `quantum.noise_floor_pp`, `osiris.ledger_sequence`.
+- Extended domain fields: `quantum.coupler`, `quantum.fidelity`, `quantum.noise_floor_pp`, `osiris.ledger_sequence`, `crypto.signature.pqc_algorithm` (`ML-DSA-65`).
 
-### 2. Commercial Anti-Splunk DIB Replacement Architecture
-- **The Splunk Penalty in Defense Enclaves:** High-frequency autonomous AI telemetry, SIMD execution traces, and quantum syndrome decoders generate massive log volumes. Splunk’s ingest-volume pricing creates an active financial penalty against thorough auditing.
-- **The Elastic Advantage:** Elastic’s node/resource-based pricing model allows defense contractors to ingest billions of cryptographically verified execution events without cost spikes, enabling continuous zero-trust monitoring across all air-gapped and cloud enclaves.
+### 2. Turnkey Ingestion Codebases
+Agile Defense Systems delivers ready-to-run integration assets:
+- `scripts/generate_osiris_ecs_telemetry.py`: Deterministic generator producing verified ECS 8.x NDJSON logs.
+- `scripts/ingest_to_elasticsearch.py`: High-throughput Elasticsearch bulk ingest client with automated mapping templates.
+- Interactive Kibana dashboard simulation for instant stakeholder demonstrations.
 
 ---
 
-## Slide 5: Teaming & Commercial Roadmap
-### DAF / AFWERX SBIR Transition, Anti-Splunk DIB Replacement & CMMC
+## Slide 6: Commercial Go-to-Market & Teaming Roadmap
+### AFWERX SBIR Phase 1/2 Transition, Anti-Splunk DIB Displacement & SLED Alignment
 
 ```
                   2026 - 2027 COMMERCIAL TEAMING ROADMAP
@@ -202,24 +215,24 @@ Agile Defense emits 100% compliant ECS 8.x records directly from its verificatio
 
 ### 1. Near-Term Milestones: AFWERX SBIR Phase 1 Transition
 - **AFWERX SBIR Proposal Integration:** Agile Defense Systems is submitting its Phase 1 Open Topic proposal to the Department of the Air Force (DAF).
-- **Commercial Partner Transition Letter:** Designating **Elastic** as the downstream enterprise SIEM transition platform. Demonstrating an integrated pipeline from tactical edge runtime (OSIRIS) to enterprise SIEM (Elastic Security) provides exceptional technical merit scores in SBIR evaluations.
-- **Phase 2 Joint Teaming ($1.8M):** Positions Agile Defense and Elastic to jointly capture Phase 2 funding for production deployment into Air Force and defense contractor secure enclaves.
+- **Commercial Partner Transition Letter:** Designating **Elastic** as the downstream enterprise SIEM transition platform. Demonstrating an integrated pipeline from tactical edge runtime (osiris) to enterprise SIEM (Elastic Security) provides exceptional technical merit scores in SBIR evaluations.
+- **Phase 2 Joint Teaming ($1.8M):** Positions Agile Defense Systems and Elastic to jointly capture Phase 2 funding for production deployment into Air Force and defense contractor secure enclaves.
 
 ### 2. Defense Industrial Base (DIB) Commercial Positioning
 - **Target Audience:** Tier-1 and Tier-2 defense suppliers requiring CMMC 2.0 Level 2/3 certification who are currently overpaying for legacy Splunk deployments.
-- **The Joint Value Pitch:** "Cut your SIEM licensing by 40% with Elastic while gaining cryptographic non-repudiation for autonomous AI workloads with OSIRIS."
+- **The Joint Value Pitch:** *"Cut your SIEM licensing costs by 40% with Elastic while achieving CMMC 2.0 Level 2/3 non-repudiation and CNSA 2.0 post-quantum audit readiness with osiris."*
 
 ### 3. SLED & Research Computing Channel
-- **University of the Cumberlands Pilot:** Extending modern Elastic SIEM and OSIRIS verifiable compute tracking to research computing and academic lab environments, aligning with Christian Martucci’s SLED objectives.
+- **University of the Cumberlands Pilot:** Extending modern Elastic SIEM and osiris verifiable compute tracking to research computing and academic lab environments, aligning with Christian Martucci’s SLED objectives.
 
 ---
 
-## Summary Agenda for Wednesday, November 11, 2026 (1:00 PM ET)
+## Meeting Agenda: Wednesday, November 11, 2026 (1:00 PM ET)
 
 | Time | Topic | Speaker / Lead | Objective |
 |---|---|---|---|
-| **00:00 - 00:05** | Introductions & DIB Context | Sarnath Chari & Christian Martucci | Align on defense contractor CMMC 2.0 & SIEM priorities |
-| **00:05 - 00:15** | OSIRIS Runtime & Observability Discipline | Devin Phillip Davis | Walk through 1.11 pp noise floor discovery and SYS-021 enclave gates |
+| **00:00 - 00:05** | Introductions & DIB Context | Sarnath Chari & Christian Martucci | Align on defense contractor CMMC 2.0, CNSA 2.0, and SIEM priorities |
+| **00:05 - 00:15** | osiris Runtime & Solving the 5 Gaps | Devin Phillip Davis | Walk through active agent gating, PQC enclave, and 1.11 pp noise floor |
 | **00:15 - 00:22** | Live Demonstration: Elastic ECS Telemetry | Devin Phillip Davis | Interactive review of 1,600+ ECS events, 29 ledger blocks, and Kibana dashboard |
 | **00:22 - 00:30** | Teaming Alignment & Next Steps | All | Formalize AFWERX SBIR Phase 1 transition letter and Elastic Partner onboarding |
 
