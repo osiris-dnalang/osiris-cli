@@ -4,15 +4,31 @@
   "status": "PRE_REGISTERED",
   "timestamp": "2026-11-05T23:34:00Z",
   "target_backend": "ibm_marrakesh",
-  "qubit_chain": [1, 2, 3, 4, 5, 6, 7, 8],
+  "qubit_chain": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
   "shots_per_point": 33500,
   "blocks": 33,
   "shots_per_block": 1024,
   "feature_dimension": 8,
   "attack_suite": {
-    "methods": ["PGD", "FGSM"],
+    "methods": [
+      "PGD",
+      "FGSM"
+    ],
     "norm": "L_inf",
-    "epsilons": [0.02, 0.05, 0.1],
+    "epsilons": [
+      0.02,
+      0.05,
+      0.1
+    ],
     "pgd_steps": 10,
     "pgd_step_size": "eps / 4"
   },
@@ -73,5 +89,32 @@
       "threshold": 0.0103,
       "quarantine_limit": 0.015
     }
-  }
+  },
+  "files": [
+    {
+      "file": "PRE_REGISTRATION.md",
+      "size_bytes": 5433,
+      "sha256": "bd2d10e51c17515d6e1d39c1e5752067e8bfafd304f4440dbaa5fdaea0eed16a"
+    },
+    {
+      "file": "run_qaml_001.py",
+      "size_bytes": 21065,
+      "sha256": "5a3e5e5870896c283f1dc5e94f3aae07c751830974cc5d0b0a7e218cc7d4d3a4"
+    },
+    {
+      "file": "preflight_verification_receipt.json",
+      "size_bytes": 981,
+      "sha256": "44a5fb403989268035602d50c857001e33b90695285b8376387916b6a16e566a"
+    },
+    {
+      "file": "noisy_aer_benchmark_results.json",
+      "size_bytes": 1606,
+      "sha256": "35bb4f057024e43cbc53714c595b339ab2dec1117cc0d91580fb8dcb57262066"
+    },
+    {
+      "file": "sys021_qaml_001_dispatch_grant.json",
+      "size_bytes": 1558,
+      "sha256": "a24bbcd9175239d423cd12448fddbd6f2f598bce02cef51ce0f91214dc09274a"
+    }
+  ]
 }

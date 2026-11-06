@@ -1,0 +1,67 @@
+{
+  "benchmark_id": "OSIRIS-QAML-001",
+  "protocol": "PGD-Adversarial Transmon Robustness",
+  "timestamp": "2026-11-06T08:05:28Z",
+  "test_samples": 50,
+  "shots_per_circuit": 1024,
+  "epsilons": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+  ],
+  "arm_results": {
+    "Arm 0 (Classical CNN Baseline)": {
+      "0.0": 0.44,
+      "0.02": 0.38,
+      "0.05": 0.3,
+      "0.1": 0.22
+    },
+    "Arm 1 (Bare Quantum Feature Map)": {
+      "0.0": 0.94,
+      "0.02": 0.96,
+      "0.05": 0.86,
+      "0.1": 0.7
+    },
+    "Arm 2 (Synchronous XY8 Map)": {
+      "0.0": 0.92,
+      "0.02": 0.96,
+      "0.05": 0.88,
+      "0.1": 0.72
+    },
+    "Arm 3 (Staggered XY8 Map - OSIRIS)": {
+      "0.0": 0.96,
+      "0.02": 0.96,
+      "0.05": 0.9,
+      "0.1": 0.74
+    },
+    "Arm 4 (Identical A/A Drift Control)": {
+      "0.0": 0.96,
+      "0.02": 0.94,
+      "0.05": 0.84,
+      "0.1": 0.74
+    }
+  },
+  "hypotheses_evaluation": {
+    "H1_clean_accuracy": {
+      "claim": "Clean accuracy >= 80.0%",
+      "observed": "96.00%",
+      "passed": true
+    },
+    "H2_quantum_vs_classical_adversarial": {
+      "claim": "Delta_adv >= +5.00 pp over Classical CNN at eps=0.05",
+      "observed_delta_pp": 60.0,
+      "passed": true
+    },
+    "H3_staggered_vs_synchronous_dd": {
+      "claim": "Delta_stag >= +1.50 pp over Synchronous XY8 at eps=0.05",
+      "observed_delta_pp": 2.0,
+      "passed": true
+    },
+    "H4_aa_drift_gate": {
+      "claim": "|Arm 3 - Arm 4| <= 2.50 pp drift floor",
+      "observed_diff_pp": 6.0,
+      "passed": false
+    }
+  }
+}

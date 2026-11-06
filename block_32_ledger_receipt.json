@@ -1,0 +1,10 @@
+{
+  "sequence_index": 32,
+  "event_type": "SYS021_QAML_001_PREREGISTRATION_PACKAGE_COMMITTED",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "payload_sha256": "8cce9af5cf832cd7b0c1c946f4382f639e781a18f87c4f9e22a6efad5fa6ad86",
+  "operation_schema_sha256": "36d1495eaaa06ed2b08a2c7571ce9faffdbe422cecae94e0183b8934de59f94e",
+  "timestamp": 1793952598.960422,
+  "nonce": "OSIRIS-QAML-001-PREREG-1793952598960",
+  "package_path": "dist/osiris_qaml_001_preregistration_package.tar.gz"
+}

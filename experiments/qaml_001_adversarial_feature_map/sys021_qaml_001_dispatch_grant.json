@@ -1,0 +1,51 @@
+{
+  "grant_id": "GRANT-SYS021-QAML001-2B4F9D4F1AE2",
+  "status": "PENDING_OPERATOR_SIGNATURE",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "operation": "OSIRIS_QAML_001_PHYSICAL_DISPATCH",
+  "timestamp": 1793952389.8383296,
+  "expires_at": 1794038789.8383296,
+  "payload_file": "experiments/qaml_001_adversarial_feature_map/run_qaml_001.py",
+  "payload_sha256": "5a3e5e5870896c283f1dc5e94f3aae07c751830974cc5d0b0a7e218cc7d4d3a4",
+  "operation_schema": {
+    "protocol": "OSIRIS-QAML-001",
+    "target_hardware": [
+      "ibm_marrakesh",
+      "ibm_fez"
+    ],
+    "qubit_chain": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "total_shots_per_arm": 33792,
+    "total_blocks": 33,
+    "shots_per_block": 1024,
+    "perturbation_epsilons": [
+      0.0,
+      0.02,
+      0.05,
+      0.1
+    ],
+    "statistical_power_floor": "N >= 33,500 shots per basis per arm",
+    "drift_quarantine_threshold_pp": 1.03,
+    "execution_arms": [
+      "Arm 0: Classical CNN Baseline (4-layer)",
+      "Arm 1: Bare Quantum Feature Map (idle 0 ns)",
+      "Arm 2: Synchronous XY8 Feature Map (Delta = 0 ns)",
+      "Arm 3: Staggered XY8 Feature Map (Delta = 80 ns)",
+      "Arm 4: Identical A/A Drift Control (Delta = 80 ns)"
+    ]
+  },
+  "operation_schema_sha256": "8d4407a30e1170627b5e9d9cf95995e34e30160b1ae70b6a071b42896b1f8c8f",
+  "pqc_signature_template": {
+    "specification": "NIST FIPS 204",
+    "algorithm": "Hybrid-Ed25519+ML-DSA-65",
+    "target_ledger_sequence": 32
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "title": "OSIRIS-QAML-001: Adversarial Robustness of Staggered-DD Transmon Quantum Feature Maps vs. Classical CNNs (Preregistration Protocol v1.0)",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "publication_date": "2026-11-06",
+    "version": "1.0.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "quantum machine learning",
+      "quantum adversarial robustness",
+      "QAML",
+      "dynamical decoupling",
+      "staggered XY8",
+      "transmon crosstalk",
+      "second-order Pauli feature map",
+      "Projected Gradient Descent",
+      "IBM Quantum",
+      "ibm_marrakesh",
+      "ibm_fez",
+      "SYS-021",
+      "epistemic governance",
+      "preregistration"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>OSIRIS-QAML-001 Preregistration Protocol v1.0</strong></p><p>This pre-registration protocol establishes an empirical hardware benchmark testing whether high-dimensional quantum feature spaces (Havlíček et al., 2019; Sen, 2024; Razavi-Far et al., 2026) protected by bipartite staggered dynamical decoupling (<code>stag_xy8</code>, Delta = 80 ns) confer verifiable adversarial robustness against classical norm-bounded Projected Gradient Descent (PGD-L_inf) perturbations, or whether claimed advantages collapse into transmon calibration drift (sigma_drift = 1.03 pp RMS).</p><p><strong>Target Hardware:</strong> IBM Quantum Heron r2 (<code>ibm_marrakesh</code> / <code>ibm_fez</code>, 156-qubit heavy-hex architecture).</p><p><strong>Five Matched Experimental Arms:</strong></p><ul><li><strong>Arm 0 (Classical CNN Baseline):</strong> 4-layer neural network with LeakyReLU activations.</li><li><strong>Arm 1 (Bare Quantum Feature Map):</strong> Unmitigated idle windows (0 ns) measuring environmental dephasing.</li><li><strong>Arm 2 (Synchronous XY8 Map):</strong> Simultaneous XY8 pulses (Delta = 0 ns) refocusing single-qubit dephasing while spectator ZZ crosstalk remains active.</li><li><strong>Arm 3 (Staggered XY8 Map - OSIRIS):</strong> Bipartite sublattice staggered XY8 pulses (Delta = 80 ns) suppressing both single-qubit dephasing and multi-qubit spectator ZZ crosstalk.</li><li><strong>Arm 4 (Identical A/A Drift Control):</strong> Independent physical realization of Arm 3 to quantify real-time hardware calibration drift.</li></ul><p><strong>Statistical Power Floor:</strong> N &gt;= 33,500 shots per basis per arm (33 randomized blocks x 1,024 shots) resolving minimum true delta = 0.50 pp at 2-sigma with 95% confidence.</p><p><strong>Baseline Noisy-Aer Simulation:</strong> Gate 0 pre-flight simulation verified clean encoding capacity (Arm 3 clean accuracy = 96.00%), adversarial advantage over classical CNN under PGD at eps = 0.05 (Delta = +60.00 pp), and staggered crosstalk advantage over synchronous DD (Delta = +2.00 pp).</p>",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23967473",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23969941",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.1007/s10462-026-11578-7",
+        "relation": "cites",
+        "scheme": "doi"
+      }
+    ],
+    "package_archive": {
+      "filename": "osiris_qaml_001_preregistration_package.tar.gz",
+      "sha256": "8cce9af5cf832cd7b0c1c946f4382f639e781a18f87c4f9e22a6efad5fa6ad86",
+      "size_bytes": 10955
+    }
+  }
+}
