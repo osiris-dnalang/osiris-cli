@@ -15,7 +15,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-ROOT = Path("/home/enki/osiris-cli-v431-governed")
+ROOT = Path(__file__).resolve().parent
 METADATA_PATH = ROOT / "zenodo_deposit_hp_001_results.json"
 RECORD_OUTPUT = ROOT / "zenodo_record_hp_001_results.json"
 API_BASE = "https://zenodo.org/api/deposit/depositions"

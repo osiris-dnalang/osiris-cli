@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 from qiskit.quantum_info import random_unitary
 from qiskit_ibm_runtime.fake_provider import FakeMarrakesh
 
-ENGINE_DIR = Path("/home/enki/osiris-cli-v431-governed/experiments/experiment_hp")
+ENGINE_DIR = Path(__file__).resolve().parent
 sys.path.append(str(ENGINE_DIR))
 from hayden_preskill_engine import (
     run_arm_a_reversible,
@@ -41,7 +41,7 @@ from hayden_preskill_engine import (
     I2, X, Y, Z, XX, YY, ZZ, II, PROJ_PHI_PLUS
 )
 
-ROOT = Path("/home/enki/osiris-cli-v431-governed/experiments/experiment_hp")
+ROOT = Path(__file__).resolve().parent
 OUTPUT_JSON = ROOT / "results_hp_001_fakemarrakesh.json"
 
 # ==============================================================================

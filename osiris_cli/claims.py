@@ -280,6 +280,23 @@ REGISTER: Tuple[Claim, ...] = (
                r"\bfips[- ](signed|verified|compliant|certified)")),
 
     # ── hardware results that hold up ────────────────────────────────────────
+    Claim("HERON_R2_STAG_XY8", "Staggered XY8 decoupling validated across 156-qubit IBM Heron r2 ibm_marrakesh (663,552 shots, 648 circuits)",
+          "SUPPORTED",
+          "Physical QPU campaign (4 jobs: dblrpnt8ft8s738tlgcg, dblsnal8mdtc73d6pkmg, dblt471kbkrc73coc33g, dbltkdd8ft8s738toef0): "
+          "Decisive protection against environmental decoherence across all seven physical heavy-hex edges (Δ⟨XX⟩ up to +0.4360 at 4.0 µs). "
+          "Statistically significant gain on benchmark edge (14, 15) over synchronous XY8: Δ⟨XX⟩ = +0.0186 (95% bootstrap CI [+0.0107, +0.0264], "
+          "p < 0.001). Historical job dblr6lhkbkrc73co9h30 transpiler pulse-collapse artifact resolved with 4.0 ns dt delays.",
+          (("doi", "10.5281/zenodo.23967473", "Heron r2 physical validation"),),
+          (r"heron|marrakesh", r"stag\w*|stagger\w*", r"xy8|dynamical decoupling|dd")),
+    Claim("AMOC_PROVENANCE", "Prior art and bitwise provenance for AMOC ocean observing telemetry, payload hash-locking, and parametric settlement chains",
+          "SUPPORTED",
+          "Forensic Bitwise & Structural Audit Supplement (Case #564883754, Zenodo DOI 10.5281/zenodo.23968474) and Formal Notice of IP "
+          "Encumbrance and Litigation Hold (Zenodo DOI 10.5281/zenodo.23968569): Confirms strict prior art and ledgered provenance against "
+          "derivative commercializations (e.g. X5 Convergence / QE Channel) dating from baseline deposition 10.5281/zenodo.19482796.",
+          (("doi", "10.5281/zenodo.23968474", "AMOC forensic audit supplement"),
+           ("doi", "10.5281/zenodo.23968569", "IP encumbrance notice"),
+           ("doi", "10.5281/zenodo.19482796", "prior art baseline")),
+          (r"amoc|sverdrup", r"hash lock|payload fingerprint|parametric|settlement")),
     Claim("STAGGERED_DD", "Staggered XY4 decoupling (odd sublattice offset half a slot) preserves |+⟩ on ibm_fez "
           "chains far better than simultaneous XY4 or CPMG", "SUPPORTED",
           "8-qubit chain: 0.946 / 0.888 / 0.795 at 8 / 16 / 32 µs, against about 0.59 (simultaneous) and "

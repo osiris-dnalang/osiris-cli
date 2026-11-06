@@ -160,21 +160,24 @@ static PyObject* py_fast_gelu(PyObject* self, PyObject* args) {
  * returns out: (H, HD)
  * ------------------------------------------------------------------------- */
 static PyObject* py_fast_kv_attention_step(PyObject* self, PyObject* args) {
-    PyArrayObject *q_obj, *k_obj, *v_obj;
+    PyObject *q_arg, *k_arg, *v_arg;
     float scale;
 
-    if (!PyArg_ParseTuple(args, "O!O!O!f",
-                          &PyArray_Type, &q_obj,
-                          &PyArray_Type, &k_obj,
-                          &PyArray_Type, &v_obj,
+    if (!PyArg_ParseTuple(args, "OOOf",
+                          &q_arg,
+                          &k_arg,
+                          &v_arg,
                           &scale)) {
         return NULL;
     }
 
-    if (PyArray_TYPE(q_obj) != NPY_FLOAT32 ||
-        PyArray_TYPE(k_obj) != NPY_FLOAT32 ||
-        PyArray_TYPE(v_obj) != NPY_FLOAT32) {
-        PyErr_SetString(PyExc_TypeError, "Arrays must be float32");
+    PyArrayObject* q_obj = (PyArrayObject*)PyArray_FROM_OTF(q_arg, NPY_FLOAT32, NPY_ARRAY_IN_ARRAY);
+    PyArrayObject* k_obj = (PyArrayObject*)PyArray_FROM_OTF(k_arg, NPY_FLOAT32, NPY_ARRAY_IN_ARRAY);
+    PyArrayObject* v_obj = (PyArrayObject*)PyArray_FROM_OTF(v_arg, NPY_FLOAT32, NPY_ARRAY_IN_ARRAY);
+    if (!q_obj || !k_obj || !v_obj) {
+        Py_XDECREF(q_obj);
+        Py_XDECREF(k_obj);
+        Py_XDECREF(v_obj);
         return NULL;
     }
 
@@ -184,7 +187,12 @@ static PyObject* py_fast_kv_attention_step(PyObject* self, PyObject* args) {
 
     npy_intp out_dims[2] = {H, HD};
     PyArrayObject* out_obj = (PyArrayObject*)PyArray_SimpleNew(2, out_dims, NPY_FLOAT32);
-    if (!out_obj) return NULL;
+    if (!out_obj) {
+        Py_DECREF(q_obj);
+        Py_DECREF(k_obj);
+        Py_DECREF(v_obj);
+        return NULL;
+    }
 
     const float* q_data = (const float*)PyArray_DATA(q_obj);
     const float* k_data = (const float*)PyArray_DATA(k_obj);
@@ -194,6 +202,9 @@ static PyObject* py_fast_kv_attention_step(PyObject* self, PyObject* args) {
     float* scores = (float*)malloc(T * sizeof(float));
     if (!scores) {
         Py_DECREF(out_obj);
+        Py_DECREF(q_obj);
+        Py_DECREF(k_obj);
+        Py_DECREF(v_obj);
         return PyErr_NoMemory();
     }
 

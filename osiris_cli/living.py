@@ -1066,7 +1066,8 @@ class Osiris:
 
         sent_user = None
         incomplete = ""
-        use_core_voice = os.environ.get("OSIRIS_CORE_VOICE", "1") != "0" or getattr(self, "force_core_voice", False)
+        force_core = getattr(self, "force_core_voice", None)
+        use_core_voice = bool(force_core) if force_core is not None else (os.environ.get("OSIRIS_CORE_VOICE", "1") != "0")
         if gate["open"] and self.core is not None and use_core_voice:
             self.out("\nOSIRIS › ")
             try:

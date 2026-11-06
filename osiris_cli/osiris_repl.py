@@ -1382,6 +1382,7 @@ def get_living():
 
         _LIVING = Osiris(core=core, mentor=mentor, knowledge=knowledge, probes=Probes(LIVING_HOME, trainer_status=trainer_status),
                          small_talk=small_talk)
+        _LIVING.force_core_voice = os.environ.get("OSIRIS_CORE_VOICE", "0") == "1"
     return _LIVING
 
 

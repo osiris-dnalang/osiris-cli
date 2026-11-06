@@ -82,7 +82,9 @@ def prefill_kv(model, prompt_ids: List[int], kv_cache: FastKVCache) -> np.ndarra
         k = _linear_forward(block.attn.k_proj, norm_h).reshape(B, P, H, HD).transpose(0, 2, 1, 3)
         v = _linear_forward(block.attn.v_proj, norm_h).reshape(B, P, H, HD).transpose(0, 2, 1, 3)
 
-        # Store in KV cache
+        # Store in KV cache as C-contiguous (B, H, P, HD) float32 tensors
+        k = np.ascontiguousarray(k, dtype=np.float32)
+        v = np.ascontiguousarray(v, dtype=np.float32)
         kv_cache.k_cache[i] = k
         kv_cache.v_cache[i] = v
 
@@ -163,17 +165,17 @@ def decode_step_kv(model, token_id: int, pos: int, kv_cache: FastKVCache) -> np.
         k_new = _linear_forward(block.attn.k_proj, norm_h).reshape(B, 1, H, HD).transpose(0, 2, 1, 3)
         v_new = _linear_forward(block.attn.v_proj, norm_h).reshape(B, 1, H, HD).transpose(0, 2, 1, 3)
 
-        # Append to KV cache
-        k = np.concatenate([kv_cache.k_cache[i], k_new], axis=2)
-        v = np.concatenate([kv_cache.v_cache[i], v_new], axis=2)
+        # Append to KV cache and enforce C-contiguous (B, H, T, HD) float32 layout
+        k = np.ascontiguousarray(np.concatenate([kv_cache.k_cache[i], k_new], axis=2), dtype=np.float32)
+        v = np.ascontiguousarray(np.concatenate([kv_cache.v_cache[i], v_new], axis=2), dtype=np.float32)
         kv_cache.k_cache[i] = k
         kv_cache.v_cache[i] = v
 
         # Attention
         if HAVE_C_SIMD and not getattr(block.attn, "pilot_wave", False):
-            q_2d = q[0, :, 0, :].astype(np.float32)
-            k_3d = k[0, :, :, :].astype(np.float32)
-            v_3d = v[0, :, :, :].astype(np.float32)
+            q_2d = np.ascontiguousarray(q[0, :, 0, :], dtype=np.float32)
+            k_3d = np.ascontiguousarray(k[0, :, :, :], dtype=np.float32)
+            v_3d = np.ascontiguousarray(v[0, :, :, :], dtype=np.float32)
             out_heads = _c_simd.fast_kv_attention_step(q_2d, k_3d, v_3d, float(scale))
             out = out_heads.reshape(B, 1, -1)
         else:
