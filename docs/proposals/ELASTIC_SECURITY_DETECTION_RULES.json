@@ -1,0 +1,182 @@
+{
+  "rules": [
+    {
+      "id": "osiris-rule-001",
+      "name": "osiris: Autonomous Agent Unauthorized Tool Execution Attempt (SYS-021 Gate)",
+      "description": "Detects an attempt by an autonomous AI agent, toolchain, or subagent to execute an unauthenticated payload or mutate system state without a cryptographically signed SYS-021 grant. The osiris runtime halts execution in-line prior to kernel dispatch.",
+      "severity": "critical",
+      "risk_score": 92,
+      "type": "query",
+      "language": "kuery",
+      "query": "event.category: \"security\" and event.action: \"sys021.grant.denied\" and osiris.enclave.status: \"halted_pre_execution\"",
+      "interval": "1m",
+      "max_signals": 100,
+      "tags": [
+        "osiris",
+        "SYS-021",
+        "Autonomous-Agent-Defense",
+        "Prompt-Injection-Mitigation",
+        "CMMC-2.0-AC-3",
+        "NIST-SP-800-53-AU-10"
+      ],
+      "threat": [
+        {
+          "framework": "MITRE ATT&CK",
+          "tactic": {
+            "id": "TA0002",
+            "name": "Execution",
+            "reference": "https://attack.mitre.org/tactics/TA0002/"
+          },
+          "technique": [
+            {
+              "id": "T1059",
+              "name": "Command and Scripting Interpreter",
+              "reference": "https://attack.mitre.org/techniques/T1059/"
+            }
+          ]
+        }
+      ],
+      "false_positive_risks": [
+        "Unenrolled developer testing scripts without generating a valid cryptographic grant."
+      ],
+      "response_actions": [
+        "Isolate subagent process context.",
+        "Verify operator public key enrollment in osiris trust root.",
+        "Forensically inspect process.command_line and process.hash.sha256 in Elastic SIEM."
+      ]
+    },
+    {
+      "id": "osiris-rule-002",
+      "name": "osiris: In-Flight Payload Bytecode or AST Digest Divergence",
+      "description": "Detects an in-flight mutation or race condition where the executable bytes presented to the runtime do not match the pre-signed grant SHA-256 digest (H_payload != SHA-256(code)). Indicates memory tampering, file replacement, or unauthorized script injection.",
+      "severity": "critical",
+      "risk_score": 96,
+      "type": "query",
+      "language": "kuery",
+      "query": "event.action: \"sys021.payload.tampered\" or (event.category: \"security\" and osiris.error: \"payload_digest_mismatch\")",
+      "interval": "1m",
+      "max_signals": 50,
+      "tags": [
+        "osiris",
+        "SYS-021",
+        "Integrity-Tamper",
+        "AST-Firewall",
+        "NIST-SP-800-53-SI-7",
+        "CMMC-2.0-AU-10"
+      ],
+      "threat": [
+        {
+          "framework": "MITRE ATT&CK",
+          "tactic": {
+            "id": "TA0005",
+            "name": "Defense Evasion",
+            "reference": "https://attack.mitre.org/tactics/TA0005/"
+          },
+          "technique": [
+            {
+              "id": "T1565.001",
+              "name": "Data Manipulation: Stored Data Manipulation",
+              "reference": "https://attack.mitre.org/techniques/T1565/001/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "osiris-rule-003",
+      "name": "osiris: Cryptographic Merkle Hash Chain Divergence (Root Log Tampering)",
+      "description": "Detects an irreconcilable hash-chain break in the local osiris audit ledger (H_n != SHA-256(H_{n-1} || Block_n)). Indicates an adversary or compromised root account attempted to rewrite, delete, or fabricate retroactive audit history.",
+      "severity": "critical",
+      "risk_score": 99,
+      "type": "query",
+      "language": "kuery",
+      "query": "event.action: \"osiris.merkle_chain.fork_detected\" or osiris.chain_integrity: \"corrupted\"",
+      "interval": "1m",
+      "max_signals": 10,
+      "tags": [
+        "osiris",
+        "Merkle-Ledger",
+        "Anti-Tamper",
+        "Insider-Threat",
+        "NIST-SP-800-53-AU-9",
+        "CMMC-2.0-AU-3"
+      ],
+      "threat": [
+        {
+          "framework": "MITRE ATT&CK",
+          "tactic": {
+            "id": "TA0005",
+            "name": "Defense Evasion",
+            "reference": "https://attack.mitre.org/tactics/TA0005/"
+          },
+          "technique": [
+            {
+              "id": "T1562.001",
+              "name": "Impair Defenses: Disable or Modify Tools",
+              "reference": "https://attack.mitre.org/techniques/T1562/001/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "osiris-rule-004",
+      "name": "osiris: Post-Quantum Cryptography (PQC) Signature Verification Failure (CNSA 2.0)",
+      "description": "Detects a block or telemetry transmission failing NIST FIPS 204 ML-DSA-65 lattice signature verification, or attempting an unauthenticated classical cryptographic algorithm downgrade. Enforces CNSA 2.0 quantum-resistant audit mandate.",
+      "severity": "high",
+      "risk_score": 85,
+      "type": "query",
+      "language": "kuery",
+      "query": "event.category: \"authentication\" and osiris.pqc.status: \"signature_invalid\" and crypto.signature.pqc_algorithm: \"ML-DSA-65\"",
+      "interval": "5m",
+      "max_signals": 50,
+      "tags": [
+        "osiris",
+        "PQC",
+        "CNSA-2.0",
+        "NIST-FIPS-204",
+        "ML-DSA-65",
+        "OMB-M-23-02"
+      ]
+    },
+    {
+      "id": "osiris-rule-005",
+      "name": "osiris: Hardware Noise Floor & Epistemic Calibration Drift",
+      "description": "Identifies when physical edge telemetry, quantum syndrome decoders, or sensor streams drift beyond the 1.11 pp RMS noise floor established by matched-pair A/A baseline controls. Prevents SOC false-positive storms caused by ambient thermal or RF fluctuations.",
+      "severity": "medium",
+      "risk_score": 50,
+      "type": "query",
+      "language": "kuery",
+      "query": "event.action: \"runtime.noise_floor.drift_detected\" and quantum.noise_floor_pp > 1.11",
+      "interval": "15m",
+      "max_signals": 100,
+      "tags": [
+        "osiris",
+        "Observability",
+        "Statistical-Process-Control",
+        "False-Positive-Suppression",
+        "Quantum-Telemetry"
+      ]
+    },
+    {
+      "id": "osiris-rule-006",
+      "name": "osiris: Tactical Edge Disconnected Batch Reconciliation Anomaly",
+      "description": "Detects gaps, sequence skips, or nonces out-of-order when a forward-deployed edge enclave reconnects after disconnected operations (DIL) and bulk-dumps accumulated offline audit ledgers into central Elastic.",
+      "severity": "high",
+      "risk_score": 80,
+      "type": "query",
+      "language": "kuery",
+      "query": "event.action: \"osiris.edge_reconcile.sequence_gap\" or osiris.reconciliation_status: \"broken_nonce_sequence\"",
+      "interval": "5m",
+      "max_signals": 25,
+      "tags": [
+        "osiris",
+        "Tactical-Edge",
+        "DIL-Operations",
+        "JADC2",
+        "ABMS",
+        "CMMC-2.0-AU-11"
+      ]
+    }
+  ]
+}

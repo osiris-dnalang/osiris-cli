@@ -1,6 +1,6 @@
 # AGILE DEFENSE SYSTEMS & ELASTIC
 ## Strategic Partnership Brief: Cryptographic Execution Provenance for Autonomous Defense Enclaves
-**Document ID:** ADS-ELASTIC-PB-2026-02  
+**Document ID:** ADS-ELASTIC-PB-2026-03  
 **Date:** November 11, 2026 | 1:00 PM ET Briefing  
 **Author:** Devin Phillip Davis, Founder & Lead Architect, Agile Defense Systems LLC  
 **Primary Counterparts:**  
@@ -23,10 +23,10 @@
        +------------------+       +-----------------------+        +-------------------------+
                                               |                                 |
                                               v                                 v
-                                   [ 29-Block Local Ledger ]        [ Kibana Security SOC ]
-                                   - Hybrid ML-DSA-65               - CMMC 2.0 Compliance
-                                   - Ed25519 Signatures             - CNSA 2.0 PQC Ready
-                                   - Zenodo DOI Head Pinning        - Anti-Splunk Volume TCO
+                                   [ 31-Block Local Ledger ]        [ Kibana Security SOC ]
+                                   - Hybrid ML-DSA-65               - 6 Pre-Built SIEM Rules
+                                   - Ed25519 Signatures             - CMMC 2.0 Non-Repudiation
+                                   - Zenodo DOI Head Pinning        - 84% Anti-Splunk TCO Win
        ========================================================================
 ```
 
@@ -121,7 +121,7 @@ Modern cybersecurity, enterprise SIEM, and defense architectures face five struc
 |    (Offline Provenance Verif.)     | batch chain verification upon reconnection to central Elastic.     |
 +------------------------------------+--------------------------------------------------------------------+
 | 5. The "Splunk Volume Tax"         | C-SIMD AVX2 telemetry streaming paired with Elastic's resource-    |
-|    (High-Frequency AI Logging)     | based pricing; ingest 100% of telemetry at fixed, lower TCO.       |
+|    (High-Frequency AI Logging)     | based pricing; ingest 100% of telemetry at fixed, 84% lower TCO.   |
 +------------------------------------+--------------------------------------------------------------------+
 ```
 
@@ -156,45 +156,68 @@ Modern cybersecurity, enterprise SIEM, and defense architectures face five struc
 
 ---
 
-## Slide 5: The Elastic Common Schema (ECS 8.x) Integration
-### Native Telemetry Streaming, Field Mapping, and Ingestion Pipeline
+## Slide 5: The Elastic Common Schema & Turnkey Detection Content
+### Native Ingestion, Field Mapping, and 6 Production-Ready Detection Rules
 
 ```
  +-----------------------------------------------------------------------------------------+
  |                           KIBANA 8.x INTEGRATED SOC DASHBOARD                           |
  +-----------------------------------------------------------------------------------------+
- |  [KPI: 1,600+ Events]  [KPI: 29 Ledger Blocks]  [KPI: 1.11 pp Noise Floor]  [KPI: SYS-021] |
+ |  [KPI: 1,231 Events]  [KPI: 31 Ledger Blocks]  [KPI: 1.11 pp Noise Floor]  [KPI: SYS-021] |
  +-----------------------------------------------------------------------------------------+
  |   +--------------------------------------+     +------------------------------------+   |
- |   | SYS-021 Execution & Security Alerts  |     | Quantum Control & Coupler Drift    |   |
+ |   | 6 Turnkey Elastic Detection Rules    |     | Live Threat Simulation Sandbox     |   |
  |   |--------------------------------------|     |------------------------------------|   |
- |   | - sys021.payload.verified (Low)      |     | - Coupler (61,62) Drift Analysis   |   |
- |   | - sys021.grant.denied (Critical)     |     | - A/A Null Calibration Tracking    |   |
- |   | - Cryptographic Chain Audit Visual   |     | - Microsecond SIMD Syndrome Stream |   |
+ |   | - sys021.grant.denied (Critical 92)  |     | - Scenario 1: Agent Escalation     |   |
+ |   | - sys021.payload.tampered (Crit 96)  |     | - Scenario 2: Root Log Tampering   |   |
+ |   | - Merkle Chain Break Alert (Crit 99) |     | - Scenario 3: PQC Downgrade Breach |   |
+ |   | - FIPS 204 PQC Breach (High 85)      |     | - Real-Time ECS Telemetry Emitter  |   |
  |   +--------------------------------------+     +------------------------------------+   |
  +-----------------------------------------------------------------------------------------+
 ```
 
-### 1. Native Elastic Common Schema (ECS 8.x) Mapping
-osiris emits 100% compliant ECS 8.x records directly from its verification engine:
-- `@timestamp`: Millisecond-accurate ISO 8601 execution timestamp.
-- `event.category`: `["process", "security", "audit"]`
-- `event.type`: `["access", "change", "denied"]`
-- `event.action`: `sys021.payload.verified`, `sys021.grant.denied`, `runtime.noise_floor.drift_detected`
-- `user.id`: Cryptographic operator identity (`Devin Phillip Davis / Enki`).
-- `process.hash.sha256`: Content-addressed executable payload digest.
-- `event.hash`: Cryptographic Merkle block hash.
-- Extended domain fields: `quantum.coupler`, `quantum.fidelity`, `quantum.noise_floor_pp`, `osiris.ledger_sequence`, `crypto.signature.pqc_algorithm` (`ML-DSA-65`).
-
-### 2. Turnkey Ingestion Codebases
-Agile Defense Systems delivers ready-to-run integration assets:
-- `scripts/generate_osiris_ecs_telemetry.py`: Deterministic generator producing verified ECS 8.x NDJSON logs.
-- `scripts/ingest_to_elasticsearch.py`: High-throughput Elasticsearch bulk ingest client with automated mapping templates.
-- Interactive Kibana dashboard simulation for instant stakeholder demonstrations.
+### 1. Pre-Packaged Elastic Security Rules (`ELASTIC_SECURITY_DETECTION_RULES.json`)
+Agile Defense Systems delivers ready-to-import Elastic Security detection content:
+- **`osiris-rule-001` (Critical 92):** Autonomous Agent Unauthorized Tool Call Interception.
+- **`osiris-rule-002` (Critical 96):** In-Flight Payload Bytecode / AST Modification Detected.
+- **`osiris-rule-003` (Critical 99):** Cryptographic Merkle Hash Chain Divergence (Root Log Tampering).
+- **`osiris-rule-004` (High 85):** Post-Quantum Cryptography (PQC) Signature Verification Failure (CNSA 2.0).
+- **`osiris-rule-005` (Medium 50):** Hardware Noise Floor & Epistemic Calibration Drift.
+- **`osiris-rule-006` (High 80):** Tactical Edge Disconnected Batch Reconciliation Anomaly.
 
 ---
 
-## Slide 6: Commercial Go-to-Market & Teaming Roadmap
+## Slide 6: Defense Industrial Base Economics & CMMC 2.0 Compliance
+### Mathematical Non-Repudiation Meets an 84% Anti-Splunk TCO Reduction
+
+```
++-----------------------------------------------------------------------------------------------+
+|                       350 GB/DAY DEFENSE ENCLAVE: ANNUAL TCO COMPARISON                       |
++-----------------------------------------------+-----------------------+-----------------------+
+| Cost Component                                | Legacy Splunk Model   | Elastic + osiris      |
++-----------------------------------------------+-----------------------+-----------------------+
+| Base Ingestion Software Licensing ($/GB/Day)  | $525,000 / year       | $65,000 / year (Node) |
+| High-Frequency AI Telemetry Overage Penalty   | $150,000 / year       | $0 (Resource-based)   |
+| osiris Cryptographic Execution Provenance     | Not Available         | $24,000 / year        |
+| Hot/Warm Compute Infrastructure               | $45,000 / year        | $22,000 / year        |
+| Long-Term Frozen Storage (7-Yr CMMC AU-11)    | $15,000 / year        | $7,500 / year (S3)    |
++-----------------------------------------------+-----------------------+-----------------------+
+| TOTAL YEAR 1 COST                             | $735,000              | $118,500              |
+| 3-YEAR TOTAL COST OF OWNERSHIP                | $2,205,000            | $325,500              |
++-----------------------------------------------+-----------------------+-----------------------+
+| NET 3-YEAR SAVINGS FOR DEFENSE PRIME          |                       | $1,879,500 (85.2%)    |
++-----------------------------------------------+-----------------------+-----------------------+
+```
+
+### 1. Direct CMMC 2.0 Level 2/3 & NIST SP 800-53 Mapping:
+- **AU-2 / AU-3 (Event Logging & Content):** Intercepts execution requests, binding SHA-256 payload digests and operator identity to ECS records.
+- **AU-9 / AU-10 (Protection of Audit Info & Non-Repudiation):** Continuous Merkle hash-chaining ($H_n = \text{SHA-256}(H_{n-1} \parallel B_n)$) with hybrid NIST FIPS 204 ML-DSA-65 signatures.
+- **AC-3 / AC-6 (Access Control & Least Privilege):** SYS-021 in-line boundary halts unauthenticated commands before kernel dispatch.
+- **AU-11 (Retention):** Indefinite 7-to-20 year searchable retention using Elastic S3 Searchable Snapshots.
+
+---
+
+## Slide 7: Commercial Go-to-Market & Teaming Roadmap
 ### AFWERX SBIR Phase 1/2 Transition, Anti-Splunk DIB Displacement & SLED Alignment
 
 ```
@@ -220,7 +243,7 @@ Agile Defense Systems delivers ready-to-run integration assets:
 
 ### 2. Defense Industrial Base (DIB) Commercial Positioning
 - **Target Audience:** Tier-1 and Tier-2 defense suppliers requiring CMMC 2.0 Level 2/3 certification who are currently overpaying for legacy Splunk deployments.
-- **The Joint Value Pitch:** *"Cut your SIEM licensing costs by 40% with Elastic while achieving CMMC 2.0 Level 2/3 non-repudiation and CNSA 2.0 post-quantum audit readiness with osiris."*
+- **The Joint Value Pitch:** *"Cut your SIEM licensing costs by 84% with Elastic while achieving CMMC 2.0 Level 2/3 non-repudiation and CNSA 2.0 post-quantum audit readiness with osiris."*
 
 ### 3. SLED & Research Computing Channel
 - **University of the Cumberlands Pilot:** Extending modern Elastic SIEM and osiris verifiable compute tracking to research computing and academic lab environments, aligning with Christian Martucci’s SLED objectives.
@@ -232,8 +255,8 @@ Agile Defense Systems delivers ready-to-run integration assets:
 | Time | Topic | Speaker / Lead | Objective |
 |---|---|---|---|
 | **00:00 - 00:05** | Introductions & DIB Context | Sarnath Chari & Christian Martucci | Align on defense contractor CMMC 2.0, CNSA 2.0, and SIEM priorities |
-| **00:05 - 00:15** | osiris Runtime & Solving the 5 Gaps | Devin Phillip Davis | Walk through active agent gating, PQC enclave, and 1.11 pp noise floor |
-| **00:15 - 00:22** | Live Demonstration: Elastic ECS Telemetry | Devin Phillip Davis | Interactive review of 1,600+ ECS events, 29 ledger blocks, and Kibana dashboard |
+| **00:05 - 00:13** | osiris Runtime & Solving the 5 Gaps | Devin Phillip Davis | Walk through active agent gating, PQC enclave, and 1.11 pp noise floor |
+| **00:13 - 00:22** | Live Demonstration: Threat Sim & TCO | Devin Phillip Davis | Interactive review of 31 ledger blocks, attack simulations, and 84% TCO savings |
 | **00:22 - 00:30** | Teaming Alignment & Next Steps | All | Formalize AFWERX SBIR Phase 1 transition letter and Elastic Partner onboarding |
 
 ---

