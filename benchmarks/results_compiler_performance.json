@@ -1,0 +1,255 @@
+{
+  "benchmark_id": "OSIRIS_VS_QISKIT_COMPILER_PERFORMANCE_V2",
+  "repeats_per_workload": 15,
+  "mean_speedup_vs_qiskit_opt1_x": 6.8,
+  "mean_speedup_vs_qiskit_opt3_stag_x": 13.87,
+  "mean_memory_reduction_vs_qiskit_opt3_x": 3.71,
+  "all_workloads_unitary_exact": true,
+  "workloads": [
+    {
+      "workload_id": "W1_2Q_BELL_DD_4US",
+      "n_qubits": 2,
+      "dd_duration_ns": 4000,
+      "compilers": {
+        "QISKIT_OPT1_PAD_DD_SYNC": {
+          "median_compile_ms": 5.907,
+          "iqr_compile_ms": 0.294,
+          "peak_memory_kb": 191.9,
+          "cz_count": 1,
+          "oneq_gate_count": 19,
+          "delay_count": 19,
+          "topological_depth": 20,
+          "dd_window_scheduled_dt": 1009,
+          "dd_window_scheduled_ns": 4036.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 8.882e-16
+        },
+        "QISKIT_OPT3_PAD_DD_STAG": {
+          "median_compile_ms": 12.69,
+          "iqr_compile_ms": 0.657,
+          "peak_memory_kb": 276.69,
+          "cz_count": 1,
+          "oneq_gate_count": 19,
+          "delay_count": 18,
+          "topological_depth": 20,
+          "dd_window_scheduled_dt": 1009,
+          "dd_window_scheduled_ns": 4036.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 8.882e-16
+        },
+        "OSIRIS_CONTROL_COMPILER_V2": {
+          "median_compile_ms": 0.53,
+          "iqr_compile_ms": 0.048,
+          "peak_memory_kb": 80.71,
+          "cz_count": 1,
+          "oneq_gate_count": 19,
+          "delay_count": 18,
+          "topological_depth": 20,
+          "dd_window_scheduled_dt": 1000,
+          "dd_window_scheduled_ns": 4000.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 8.882e-16
+        }
+      },
+      "osiris_speedup_vs_qiskit_opt1_x": 11.14,
+      "osiris_speedup_vs_qiskit_opt3_x": 23.94,
+      "osiris_memory_reduction_vs_qiskit_opt3_x": 3.43
+    },
+    {
+      "workload_id": "W2_4Q_GHZ_CHAIN_DD_4US",
+      "n_qubits": 4,
+      "dd_duration_ns": 4000,
+      "compilers": {
+        "QISKIT_OPT1_PAD_DD_SYNC": {
+          "median_compile_ms": 7.396,
+          "iqr_compile_ms": 0.451,
+          "peak_memory_kb": 244.62,
+          "cz_count": 3,
+          "oneq_gate_count": 37,
+          "delay_count": 40,
+          "topological_depth": 22,
+          "dd_window_scheduled_dt": 1019,
+          "dd_window_scheduled_ns": 4076.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 1.554e-15
+        },
+        "QISKIT_OPT3_PAD_DD_STAG": {
+          "median_compile_ms": 14.558,
+          "iqr_compile_ms": 0.845,
+          "peak_memory_kb": 359.37,
+          "cz_count": 3,
+          "oneq_gate_count": 37,
+          "delay_count": 38,
+          "topological_depth": 22,
+          "dd_window_scheduled_dt": 1019,
+          "dd_window_scheduled_ns": 4076.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 1.554e-15
+        },
+        "OSIRIS_CONTROL_COMPILER_V2": {
+          "median_compile_ms": 1.011,
+          "iqr_compile_ms": 0.125,
+          "peak_memory_kb": 96.48,
+          "cz_count": 3,
+          "oneq_gate_count": 37,
+          "delay_count": 36,
+          "topological_depth": 20,
+          "dd_window_scheduled_dt": 1000,
+          "dd_window_scheduled_ns": 4000.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 1.554e-15
+        }
+      },
+      "osiris_speedup_vs_qiskit_opt1_x": 7.32,
+      "osiris_speedup_vs_qiskit_opt3_x": 14.41,
+      "osiris_memory_reduction_vs_qiskit_opt3_x": 3.72
+    },
+    {
+      "workload_id": "W3_5Q_CLUSTER_CHAIN_DD_8US",
+      "n_qubits": 5,
+      "dd_duration_ns": 8000,
+      "compilers": {
+        "QISKIT_OPT1_PAD_DD_SYNC": {
+          "median_compile_ms": 7.98,
+          "iqr_compile_ms": 0.347,
+          "peak_memory_kb": 304.17,
+          "cz_count": 4,
+          "oneq_gate_count": 46,
+          "delay_count": 51,
+          "topological_depth": 21,
+          "dd_window_scheduled_dt": 2022,
+          "dd_window_scheduled_ns": 8088.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 1.776e-15
+        },
+        "QISKIT_OPT3_PAD_DD_STAG": {
+          "median_compile_ms": 15.915,
+          "iqr_compile_ms": 0.761,
+          "peak_memory_kb": 424.41,
+          "cz_count": 4,
+          "oneq_gate_count": 46,
+          "delay_count": 49,
+          "topological_depth": 21,
+          "dd_window_scheduled_dt": 2022,
+          "dd_window_scheduled_ns": 8088.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 1.776e-15
+        },
+        "OSIRIS_CONTROL_COMPILER_V2": {
+          "median_compile_ms": 1.224,
+          "iqr_compile_ms": 0.116,
+          "peak_memory_kb": 99.94,
+          "cz_count": 4,
+          "oneq_gate_count": 46,
+          "delay_count": 45,
+          "topological_depth": 21,
+          "dd_window_scheduled_dt": 2000,
+          "dd_window_scheduled_ns": 8000.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 1.776e-15
+        }
+      },
+      "osiris_speedup_vs_qiskit_opt1_x": 6.52,
+      "osiris_speedup_vs_qiskit_opt3_x": 13.0,
+      "osiris_memory_reduction_vs_qiskit_opt3_x": 4.25
+    },
+    {
+      "workload_id": "W4_8Q_HEAVY_HEX_DD_8US",
+      "n_qubits": 8,
+      "dd_duration_ns": 8000,
+      "compilers": {
+        "QISKIT_OPT1_PAD_DD_SYNC": {
+          "median_compile_ms": 9.846,
+          "iqr_compile_ms": 0.465,
+          "peak_memory_kb": 418.52,
+          "cz_count": 7,
+          "oneq_gate_count": 73,
+          "delay_count": 81,
+          "topological_depth": 22,
+          "dd_window_scheduled_dt": 2019,
+          "dd_window_scheduled_ns": 8076.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 3.331e-15
+        },
+        "QISKIT_OPT3_PAD_DD_STAG": {
+          "median_compile_ms": 18.938,
+          "iqr_compile_ms": 0.489,
+          "peak_memory_kb": 600.28,
+          "cz_count": 7,
+          "oneq_gate_count": 73,
+          "delay_count": 77,
+          "topological_depth": 22,
+          "dd_window_scheduled_dt": 2019,
+          "dd_window_scheduled_ns": 8076.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 3.331e-15
+        },
+        "OSIRIS_CONTROL_COMPILER_V2": {
+          "median_compile_ms": 1.988,
+          "iqr_compile_ms": 0.193,
+          "peak_memory_kb": 146.87,
+          "cz_count": 7,
+          "oneq_gate_count": 73,
+          "delay_count": 72,
+          "topological_depth": 20,
+          "dd_window_scheduled_dt": 2000,
+          "dd_window_scheduled_ns": 8000.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 3.331e-15
+        }
+      },
+      "osiris_speedup_vs_qiskit_opt1_x": 4.95,
+      "osiris_speedup_vs_qiskit_opt3_x": 9.52,
+      "osiris_memory_reduction_vs_qiskit_opt3_x": 4.09
+    },
+    {
+      "workload_id": "W5_12Q_BRICKWALL_DD_8US",
+      "n_qubits": 12,
+      "dd_duration_ns": 8000,
+      "compilers": {
+        "QISKIT_OPT1_PAD_DD_SYNC": {
+          "median_compile_ms": 11.835,
+          "iqr_compile_ms": 0.697,
+          "peak_memory_kb": 573.38,
+          "cz_count": 10,
+          "oneq_gate_count": 109,
+          "delay_count": 122,
+          "topological_depth": 22,
+          "dd_window_scheduled_dt": 2019,
+          "dd_window_scheduled_ns": 8076.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 6.661e-16
+        },
+        "QISKIT_OPT3_PAD_DD_STAG": {
+          "median_compile_ms": 24.576,
+          "iqr_compile_ms": 0.642,
+          "peak_memory_kb": 811.43,
+          "cz_count": 10,
+          "oneq_gate_count": 109,
+          "delay_count": 116,
+          "topological_depth": 22,
+          "dd_window_scheduled_dt": 2019,
+          "dd_window_scheduled_ns": 8076.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 6.661e-16
+        },
+        "OSIRIS_CONTROL_COMPILER_V2": {
+          "median_compile_ms": 2.903,
+          "iqr_compile_ms": 0.097,
+          "peak_memory_kb": 266.77,
+          "cz_count": 10,
+          "oneq_gate_count": 109,
+          "delay_count": 108,
+          "topological_depth": 20,
+          "dd_window_scheduled_dt": 2000,
+          "dd_window_scheduled_ns": 8000.0,
+          "unitary_statevector_fidelity": 1.0,
+          "unitary_abs_error": 6.661e-16
+        }
+      },
+      "osiris_speedup_vs_qiskit_opt1_x": 4.08,
+      "osiris_speedup_vs_qiskit_opt3_x": 8.46,
+      "osiris_memory_reduction_vs_qiskit_opt3_x": 3.04
+    }
+  ]
+}

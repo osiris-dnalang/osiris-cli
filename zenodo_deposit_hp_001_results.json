@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "title": "OSIRIS-HP-001: Hayden–Preskill Quantum Information Recovery Benchmark (Stage 1 Empirical Dataset & Calibrated Heron r2 Simulation)",
+    "upload_type": "dataset",
+    "publication_date": "2026-11-05",
+    "version": "1.0.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "quantum information",
+      "Hayden-Preskill protocol",
+      "quantum scrambling",
+      "quantum recovery",
+      "entanglement witness",
+      "IBM Quantum",
+      "ibm_marrakesh",
+      "Heron r2",
+      "Page transition",
+      "Wasserstein distance",
+      "SYS-021",
+      "epistemic governance"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>OSIRIS-HP-001 Stage 1 Empirical Dataset &amp; Calibrated Heron r2 Simulation</strong></p><p>This deposit provides the complete empirical data, simulation code, tomographic observables, and publication report for Stage 1 of the OSIRIS-HP-001 quantum recovery benchmark. This deposit directly supplements the preregistered research protocol (<strong>DOI: 10.5281/zenodo.23982138</strong>) and the mathematical erratum for Zenodo Record 18450505 (<strong>DOI: 10.5281/zenodo.23977106</strong>).</p><p><strong>Benchmark Configuration:</strong></p><ul><li><strong>Target Architecture:</strong> IBM Quantum Heron r2 (<code>ibm_marrakesh</code>) 6-qubit connected cycle subgraph {R: 14, M: 15, B1: 19, B2: 35, E1: 13, E2: 34}.</li><li><strong>Calibrated Physical Noise:</strong> Hardware relaxation (mean T1 = 253.1 µs), dephasing (mean T2 = 217.9 µs), readout error (0.57%), CZ gate error (0.142%), and effective 2-qubit depolarizing noise floor (Γ₀ = 4.07%).</li><li><strong>Sample Size:</strong> N = 20 independent Haar-random scrambling unitaries on 6 qubits.</li></ul><p><strong>Empirical Findings &amp; Hypothesis Tests:</strong></p><ul><li><strong>H1 (Reversible Positive Control):</strong> Mean recovery fidelity F = 0.9694 [95% CI: 0.9694, 0.9694], proving baseline SPAM fidelity above 96.9%. (PASSED)</li><li><strong>H2 (Restricted Entangled Recovery):</strong> Mean fidelity F = 0.8782 [95% CI: 0.8608, 0.8956] vs. Unentangled Control F = 0.6943 [95% CI: 0.6611, 0.7279]. Entanglement advantage ΔF = +18.39 pp [95% CI: +14.27, +22.57 pp]. Paired t-test: t = 8.5753, df = 19, p = 2.94 × 10⁻⁸, rejecting the unentangled null hypothesis by > 8 standard deviations. (PASSED)</li><li><strong>H3 (Page Transition Across Radiation Sizes):</strong> Monotonic recovery leap across radiation partition: kD = 1 qubit (F = 0.6116) → kD = 2 qubits (F = 0.8782, a +26.66 pp jump across the Page threshold) → kD = 3 qubits (F = 0.9694). (PASSED)</li><li><strong>H4 (Dual-LP Discrete Wasserstein-1 Metric):</strong> Normalized Kantorovich-Rubinstein transport distance yields mean W₁ = 0.0435, anti-correlated with Uhlmann fidelity (Pearson r = -0.6897, p = 7.65 × 10⁻⁴). (PASSED)</li></ul><p><strong>Contents of Dataset:</strong></p><ul><li><code>OSIRIS_HP_001_FAKEMARRAKESH_REPORT.pdf</code>: Complete publication report with embedded high-resolution figures.</li><li><code>OSIRIS_HP_001_FAKEMARRAKESH_REPORT.md</code>: Full Markdown documentation and analysis tables.</li><li><code>results_hp_001_fakemarrakesh.json</code>: Machine-readable JSON telemetry across all 20 Haar trials, radiation sweeps, and noise scaling factors.</li><li><code>run_fake_marrakesh_hp_benchmark.py</code>: Standalone Python driver for reproducibility.</li><li><code>hp_001_fakemarrakesh_violin_comparison.png</code>: Violin distribution of recovery fidelities.</li><li><code>hp_001_fakemarrakesh_page_transition.png</code>: Page transition recovery curve.</li><li><code>hp_001_fakemarrakesh_w1_vs_fidelity.png</code>: Dual-LP W₁ transport distance correlation plot.</li><li><code>hp_001_fakemarrakesh_noise_scaling.png</code>: Lindblad decoherence scaling plot.</li></ul>",
+    "related_identifiers": [
+      {
+        "relation": "isSupplementTo",
+        "identifier": "10.5281/zenodo.23982138",
+        "resource_type": "publication-technicalnote"
+      },
+      {
+        "relation": "isSupplementTo",
+        "identifier": "10.5281/zenodo.23977106",
+        "resource_type": "publication-technicalnote"
+      },
+      {
+        "relation": "isDerivedFrom",
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/tree/feature/governed-gateway",
+        "resource_type": "software"
+      }
+    ]
+  }
+}

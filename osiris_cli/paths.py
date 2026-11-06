@@ -37,6 +37,7 @@ def add_optional_paths() -> List[str]:
     candidates = [str(REPO_ROOT)]
     candidates += [p for p in os.environ.get("OSIRIS_EXTRA_PATHS", "").split(os.pathsep) if p]
     candidates += [str(Path.home() / name) for name in SIBLING_CHECKOUTS]
+    candidates += [str(Path.home())]
     added = []
     for path in candidates:
         if os.path.isdir(path) and path not in sys.path:

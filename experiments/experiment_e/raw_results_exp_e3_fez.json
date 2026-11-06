@@ -1,0 +1,1468 @@
+{
+  "job_id": "dbm86158ft8s738ucqi0",
+  "backend": "ibm_fez",
+  "qpu_seconds": 0,
+  "payload_sha256": "1dd51117dec70a9ade8ca880de97f01e6efb09330626bce0c2263387997cc00f",
+  "prereg_sha256": "15595416c2469922cb807b4ba045de5860c86cd91a038d77046a7fbf2b1d2215",
+  "qpy_sha256": "fa3e360abf23f41dad8fe321f05922be4c211964089d3395df7257421ec9d27b",
+  "records": [
+    {
+      "circuit_index": 0,
+      "name": "E3_FEZ_b0_87_88_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 434,
+        "10": 449,
+        "11": 63,
+        "00": 78
+      },
+      "expectation": -0.724609375
+    },
+    {
+      "circuit_index": 1,
+      "name": "E3_FEZ_b0_100_101_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 444,
+        "01": 91,
+        "11": 399,
+        "10": 90
+      },
+      "expectation": 0.646484375
+    },
+    {
+      "circuit_index": 2,
+      "name": "E3_FEZ_b0_61_62_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 370,
+        "01": 409,
+        "11": 135,
+        "00": 110
+      },
+      "expectation": -0.521484375
+    },
+    {
+      "circuit_index": 3,
+      "name": "E3_FEZ_b0_100_101_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 418,
+        "00": 412,
+        "10": 108,
+        "01": 86
+      },
+      "expectation": 0.62109375
+    },
+    {
+      "circuit_index": 4,
+      "name": "E3_FEZ_b0_100_101_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 391,
+        "01": 113,
+        "11": 424,
+        "10": 96
+      },
+      "expectation": 0.591796875
+    },
+    {
+      "circuit_index": 5,
+      "name": "E3_FEZ_b0_87_88_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 445,
+        "10": 68,
+        "00": 445,
+        "01": 66
+      },
+      "expectation": 0.73828125
+    },
+    {
+      "circuit_index": 6,
+      "name": "E3_FEZ_b0_61_62_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 419,
+        "01": 390,
+        "00": 121,
+        "11": 94
+      },
+      "expectation": -0.580078125
+    },
+    {
+      "circuit_index": 7,
+      "name": "E3_FEZ_b0_100_101_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "01": 412,
+        "10": 422,
+        "11": 93,
+        "00": 97
+      },
+      "expectation": -0.62890625
+    },
+    {
+      "circuit_index": 8,
+      "name": "E3_FEZ_b0_61_62_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 435,
+        "11": 444,
+        "10": 79,
+        "01": 66
+      },
+      "expectation": 0.716796875
+    },
+    {
+      "circuit_index": 9,
+      "name": "E3_FEZ_b0_61_62_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 412,
+        "00": 406,
+        "10": 108,
+        "01": 98
+      },
+      "expectation": 0.59765625
+    },
+    {
+      "circuit_index": 10,
+      "name": "E3_FEZ_b0_87_88_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 467,
+        "10": 430,
+        "11": 55,
+        "00": 72
+      },
+      "expectation": -0.751953125
+    },
+    {
+      "circuit_index": 11,
+      "name": "E3_FEZ_b0_100_101_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 435,
+        "01": 76,
+        "11": 427,
+        "10": 86
+      },
+      "expectation": 0.68359375
+    },
+    {
+      "circuit_index": 12,
+      "name": "E3_FEZ_b0_61_62_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 409,
+        "11": 107,
+        "01": 404,
+        "00": 104
+      },
+      "expectation": -0.587890625
+    },
+    {
+      "circuit_index": 13,
+      "name": "E3_FEZ_b0_87_88_STAG_XY8_80_YY",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "01": 419,
+        "10": 453,
+        "00": 72,
+        "11": 80
+      },
+      "expectation": -0.703125
+    },
+    {
+      "circuit_index": 14,
+      "name": "E3_FEZ_b0_61_62_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "01": 106,
+        "10": 119,
+        "00": 401,
+        "11": 398
+      },
+      "expectation": 0.560546875
+    },
+    {
+      "circuit_index": 15,
+      "name": "E3_FEZ_b0_87_88_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 409,
+        "00": 459,
+        "01": 85,
+        "10": 71
+      },
+      "expectation": 0.6953125
+    },
+    {
+      "circuit_index": 16,
+      "name": "E3_FEZ_b0_100_101_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 414,
+        "01": 414,
+        "00": 102,
+        "11": 94
+      },
+      "expectation": -0.6171875
+    },
+    {
+      "circuit_index": 17,
+      "name": "E3_FEZ_b0_87_88_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 453,
+        "01": 77,
+        "10": 70,
+        "11": 424
+      },
+      "expectation": 0.712890625
+    },
+    {
+      "circuit_index": 18,
+      "name": "E3_FEZ_b0_100_101_STAG_XY8_80_XX",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 92,
+        "00": 412,
+        "11": 425,
+        "01": 95
+      },
+      "expectation": 0.634765625
+    },
+    {
+      "circuit_index": 19,
+      "name": "E3_FEZ_b0_100_101_SYNC_XY8_YY",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 100,
+        "01": 410,
+        "10": 419,
+        "11": 95
+      },
+      "expectation": -0.619140625
+    },
+    {
+      "circuit_index": 20,
+      "name": "E3_FEZ_b0_61_62_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 455,
+        "11": 439,
+        "01": 67,
+        "10": 63
+      },
+      "expectation": 0.74609375
+    },
+    {
+      "circuit_index": 21,
+      "name": "E3_FEZ_b0_100_101_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 408,
+        "00": 450,
+        "10": 89,
+        "01": 77
+      },
+      "expectation": 0.67578125
+    },
+    {
+      "circuit_index": 22,
+      "name": "E3_FEZ_b0_61_62_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 464,
+        "00": 436,
+        "01": 67,
+        "10": 57
+      },
+      "expectation": 0.7578125
+    },
+    {
+      "circuit_index": 23,
+      "name": "E3_FEZ_b0_61_62_SYNC_XY8_XX",
+      "block": 0,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 399,
+        "01": 100,
+        "00": 416,
+        "10": 109
+      },
+      "expectation": 0.591796875
+    },
+    {
+      "circuit_index": 24,
+      "name": "E3_FEZ_b0_87_88_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 444,
+        "11": 380,
+        "10": 97,
+        "01": 103
+      },
+      "expectation": 0.609375
+    },
+    {
+      "circuit_index": 25,
+      "name": "E3_FEZ_b0_87_88_STAG_XY8_80_ZZ",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 430,
+        "10": 90,
+        "11": 416,
+        "01": 88
+      },
+      "expectation": 0.65234375
+    },
+    {
+      "circuit_index": 26,
+      "name": "E3_FEZ_b0_87_88_SYNC_XY8_ZZ",
+      "block": 0,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 401,
+        "00": 426,
+        "01": 97,
+        "10": 100
+      },
+      "expectation": 0.615234375
+    },
+    {
+      "circuit_index": 27,
+      "name": "E3_FEZ_b1_61_62_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 390,
+        "01": 103,
+        "00": 423,
+        "10": 108
+      },
+      "expectation": 0.587890625
+    },
+    {
+      "circuit_index": 28,
+      "name": "E3_FEZ_b1_100_101_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 105,
+        "11": 396,
+        "00": 422,
+        "01": 101
+      },
+      "expectation": 0.59765625
+    },
+    {
+      "circuit_index": 29,
+      "name": "E3_FEZ_b1_61_62_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 408,
+        "00": 410,
+        "10": 104,
+        "01": 102
+      },
+      "expectation": 0.59765625
+    },
+    {
+      "circuit_index": 30,
+      "name": "E3_FEZ_b1_61_62_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "01": 415,
+        "10": 394,
+        "00": 108,
+        "11": 107
+      },
+      "expectation": -0.580078125
+    },
+    {
+      "circuit_index": 31,
+      "name": "E3_FEZ_b1_61_62_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 435,
+        "00": 453,
+        "01": 69,
+        "10": 67
+      },
+      "expectation": 0.734375
+    },
+    {
+      "circuit_index": 32,
+      "name": "E3_FEZ_b1_61_62_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 66,
+        "11": 476,
+        "00": 421,
+        "10": 61
+      },
+      "expectation": 0.751953125
+    },
+    {
+      "circuit_index": 33,
+      "name": "E3_FEZ_b1_100_101_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 424,
+        "11": 401,
+        "01": 96,
+        "10": 103
+      },
+      "expectation": 0.611328125
+    },
+    {
+      "circuit_index": 34,
+      "name": "E3_FEZ_b1_61_62_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 411,
+        "01": 403,
+        "00": 102,
+        "11": 108
+      },
+      "expectation": -0.58984375
+    },
+    {
+      "circuit_index": 35,
+      "name": "E3_FEZ_b1_87_88_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 435,
+        "01": 451,
+        "00": 76,
+        "11": 62
+      },
+      "expectation": -0.73046875
+    },
+    {
+      "circuit_index": 36,
+      "name": "E3_FEZ_b1_100_101_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 404,
+        "01": 411,
+        "11": 111,
+        "00": 98
+      },
+      "expectation": -0.591796875
+    },
+    {
+      "circuit_index": 37,
+      "name": "E3_FEZ_b1_100_101_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 107,
+        "01": 402,
+        "00": 108,
+        "10": 407
+      },
+      "expectation": -0.580078125
+    },
+    {
+      "circuit_index": 38,
+      "name": "E3_FEZ_b1_100_101_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 444,
+        "01": 87,
+        "11": 387,
+        "10": 106
+      },
+      "expectation": 0.623046875
+    },
+    {
+      "circuit_index": 39,
+      "name": "E3_FEZ_b1_100_101_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "01": 94,
+        "11": 422,
+        "00": 416,
+        "10": 92
+      },
+      "expectation": 0.63671875
+    },
+    {
+      "circuit_index": 40,
+      "name": "E3_FEZ_b1_100_101_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 419,
+        "00": 437,
+        "01": 86,
+        "10": 82
+      },
+      "expectation": 0.671875
+    },
+    {
+      "circuit_index": 41,
+      "name": "E3_FEZ_b1_61_62_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 447,
+        "00": 435,
+        "10": 75,
+        "01": 67
+      },
+      "expectation": 0.72265625
+    },
+    {
+      "circuit_index": 42,
+      "name": "E3_FEZ_b1_61_62_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 389,
+        "11": 441,
+        "10": 98,
+        "01": 96
+      },
+      "expectation": 0.62109375
+    },
+    {
+      "circuit_index": 43,
+      "name": "E3_FEZ_b1_87_88_STAG_XY8_80_YY",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 452,
+        "01": 432,
+        "00": 70,
+        "11": 70
+      },
+      "expectation": -0.7265625
+    },
+    {
+      "circuit_index": 44,
+      "name": "E3_FEZ_b1_87_88_STAG_XY8_80_XX",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 427,
+        "00": 453,
+        "10": 64,
+        "01": 80
+      },
+      "expectation": 0.71875
+    },
+    {
+      "circuit_index": 45,
+      "name": "E3_FEZ_b1_87_88_SYNC_XY8_XX",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 77,
+        "00": 479,
+        "11": 393,
+        "01": 75
+      },
+      "expectation": 0.703125
+    },
+    {
+      "circuit_index": 46,
+      "name": "E3_FEZ_b1_87_88_STAG_XY8_80_ZZ",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 405,
+        "00": 433,
+        "10": 87,
+        "01": 99
+      },
+      "expectation": 0.63671875
+    },
+    {
+      "circuit_index": 47,
+      "name": "E3_FEZ_b1_87_88_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 443,
+        "10": 443,
+        "11": 69,
+        "00": 69
+      },
+      "expectation": -0.73046875
+    },
+    {
+      "circuit_index": 48,
+      "name": "E3_FEZ_b1_61_62_SYNC_XY8_YY",
+      "block": 1,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 400,
+        "11": 106,
+        "10": 413,
+        "00": 105
+      },
+      "expectation": -0.587890625
+    },
+    {
+      "circuit_index": 49,
+      "name": "E3_FEZ_b1_100_101_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 413,
+        "00": 437,
+        "10": 98,
+        "01": 76
+      },
+      "expectation": 0.66015625
+    },
+    {
+      "circuit_index": 50,
+      "name": "E3_FEZ_b1_87_88_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 439,
+        "00": 415,
+        "01": 81,
+        "10": 89
+      },
+      "expectation": 0.66796875
+    },
+    {
+      "circuit_index": 51,
+      "name": "E3_FEZ_b1_87_88_SYNC_XY8_ZZ",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 434,
+        "11": 383,
+        "10": 105,
+        "01": 102
+      },
+      "expectation": 0.595703125
+    },
+    {
+      "circuit_index": 52,
+      "name": "E3_FEZ_b1_100_101_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 1,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 416,
+        "11": 89,
+        "01": 402,
+        "00": 117
+      },
+      "expectation": -0.59765625
+    },
+    {
+      "circuit_index": 53,
+      "name": "E3_FEZ_b1_87_88_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 1,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 60,
+        "00": 437,
+        "11": 456,
+        "10": 71
+      },
+      "expectation": 0.744140625
+    },
+    {
+      "circuit_index": 54,
+      "name": "E3_FEZ_b2_61_62_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 396,
+        "10": 402,
+        "00": 112,
+        "11": 114
+      },
+      "expectation": -0.55859375
+    },
+    {
+      "circuit_index": 55,
+      "name": "E3_FEZ_b2_87_88_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 457,
+        "00": 65,
+        "01": 438,
+        "11": 64
+      },
+      "expectation": -0.748046875
+    },
+    {
+      "circuit_index": 56,
+      "name": "E3_FEZ_b2_87_88_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 437,
+        "11": 394,
+        "01": 96,
+        "10": 97
+      },
+      "expectation": 0.623046875
+    },
+    {
+      "circuit_index": 57,
+      "name": "E3_FEZ_b2_61_62_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "01": 408,
+        "11": 104,
+        "10": 402,
+        "00": 110
+      },
+      "expectation": -0.58203125
+    },
+    {
+      "circuit_index": 58,
+      "name": "E3_FEZ_b2_87_88_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 459,
+        "11": 428,
+        "10": 72,
+        "01": 65
+      },
+      "expectation": 0.732421875
+    },
+    {
+      "circuit_index": 59,
+      "name": "E3_FEZ_b2_100_101_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 407,
+        "11": 408,
+        "10": 118,
+        "01": 91
+      },
+      "expectation": 0.591796875
+    },
+    {
+      "circuit_index": 60,
+      "name": "E3_FEZ_b2_61_62_SYNC_XY8_ZZ",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 57,
+        "10": 73,
+        "11": 421,
+        "00": 473
+      },
+      "expectation": 0.74609375
+    },
+    {
+      "circuit_index": 61,
+      "name": "E3_FEZ_b2_87_88_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 434,
+        "00": 395,
+        "01": 91,
+        "10": 104
+      },
+      "expectation": 0.619140625
+    },
+    {
+      "circuit_index": 62,
+      "name": "E3_FEZ_b2_61_62_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 397,
+        "00": 423,
+        "10": 104,
+        "01": 100
+      },
+      "expectation": 0.6015625
+    },
+    {
+      "circuit_index": 63,
+      "name": "E3_FEZ_b2_100_101_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "01": 409,
+        "10": 420,
+        "11": 102,
+        "00": 93
+      },
+      "expectation": -0.619140625
+    },
+    {
+      "circuit_index": 64,
+      "name": "E3_FEZ_b2_87_88_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 412,
+        "00": 482,
+        "10": 56,
+        "01": 74
+      },
+      "expectation": 0.74609375
+    },
+    {
+      "circuit_index": 65,
+      "name": "E3_FEZ_b2_100_101_OSIRIS_ADAPTIVE_V1_YY",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 111,
+        "11": 113,
+        "01": 401,
+        "10": 399
+      },
+      "expectation": -0.5625
+    },
+    {
+      "circuit_index": 66,
+      "name": "E3_FEZ_b2_61_62_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 466,
+        "11": 437,
+        "01": 63,
+        "10": 58
+      },
+      "expectation": 0.763671875
+    },
+    {
+      "circuit_index": 67,
+      "name": "E3_FEZ_b2_61_62_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 112,
+        "00": 416,
+        "11": 390,
+        "01": 106
+      },
+      "expectation": 0.57421875
+    },
+    {
+      "circuit_index": 68,
+      "name": "E3_FEZ_b2_61_62_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "11": 437,
+        "00": 455,
+        "10": 71,
+        "01": 61
+      },
+      "expectation": 0.7421875
+    },
+    {
+      "circuit_index": 69,
+      "name": "E3_FEZ_b2_100_101_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 445,
+        "11": 408,
+        "10": 85,
+        "01": 86
+      },
+      "expectation": 0.666015625
+    },
+    {
+      "circuit_index": 70,
+      "name": "E3_FEZ_b2_100_101_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 426,
+        "01": 101,
+        "11": 398,
+        "10": 99
+      },
+      "expectation": 0.609375
+    },
+    {
+      "circuit_index": 71,
+      "name": "E3_FEZ_b2_61_62_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 398,
+        "11": 101,
+        "01": 418,
+        "00": 107
+      },
+      "expectation": -0.59375
+    },
+    {
+      "circuit_index": 72,
+      "name": "E3_FEZ_b2_87_88_STAG_XY8_80_YY",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "YY",
+      "effective_offset_ns": 80,
+      "counts": {
+        "10": 416,
+        "01": 473,
+        "00": 74,
+        "11": 61
+      },
+      "expectation": -0.736328125
+    },
+    {
+      "circuit_index": 73,
+      "name": "E3_FEZ_b2_87_88_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "10": 413,
+        "01": 439,
+        "00": 87,
+        "11": 85
+      },
+      "expectation": -0.6640625
+    },
+    {
+      "circuit_index": 74,
+      "name": "E3_FEZ_b2_100_101_SYNC_XY8_YY",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "YY",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 398,
+        "00": 109,
+        "10": 417,
+        "11": 100
+      },
+      "expectation": -0.591796875
+    },
+    {
+      "circuit_index": 75,
+      "name": "E3_FEZ_b2_87_88_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 418,
+        "00": 464,
+        "10": 78,
+        "01": 64
+      },
+      "expectation": 0.72265625
+    },
+    {
+      "circuit_index": 76,
+      "name": "E3_FEZ_b2_100_101_OSIRIS_ADAPTIVE_V1_XX",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "00": 396,
+        "11": 435,
+        "01": 94,
+        "10": 99
+      },
+      "expectation": 0.623046875
+    },
+    {
+      "circuit_index": 77,
+      "name": "E3_FEZ_b2_87_88_STAG_XY8_80_ZZ",
+      "block": 2,
+      "edge": "(87,88)",
+      "u": 87,
+      "v": 88,
+      "protocol": "STAG_XY8_80",
+      "basis": "ZZ",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 471,
+        "01": 88,
+        "10": 87,
+        "11": 378
+      },
+      "expectation": 0.658203125
+    },
+    {
+      "circuit_index": 78,
+      "name": "E3_FEZ_b2_100_101_OSIRIS_ADAPTIVE_V1_ZZ",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "OSIRIS_ADAPTIVE_V1",
+      "basis": "ZZ",
+      "effective_offset_ns": 0,
+      "counts": {
+        "11": 389,
+        "01": 91,
+        "00": 430,
+        "10": 114
+      },
+      "expectation": 0.599609375
+    },
+    {
+      "circuit_index": 79,
+      "name": "E3_FEZ_b2_100_101_SYNC_XY8_XX",
+      "block": 2,
+      "edge": "(100,101)",
+      "u": 100,
+      "v": 101,
+      "protocol": "SYNC_XY8",
+      "basis": "XX",
+      "effective_offset_ns": 0,
+      "counts": {
+        "01": 87,
+        "11": 397,
+        "00": 447,
+        "10": 93
+      },
+      "expectation": 0.6484375
+    },
+    {
+      "circuit_index": 80,
+      "name": "E3_FEZ_b2_61_62_STAG_XY8_80_XX",
+      "block": 2,
+      "edge": "(61,62)",
+      "u": 61,
+      "v": 62,
+      "protocol": "STAG_XY8_80",
+      "basis": "XX",
+      "effective_offset_ns": 80,
+      "counts": {
+        "00": 392,
+        "01": 114,
+        "11": 392,
+        "10": 126
+      },
+      "expectation": 0.53125
+    }
+  ]
+}

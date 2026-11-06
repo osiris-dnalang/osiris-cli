@@ -1,0 +1,118 @@
+{
+  "created": "2026-11-05T11:05:11.446522+00:00",
+  "modified": "2026-11-05T11:05:11.862288+00:00",
+  "id": 23977106,
+  "conceptrecid": "23977105",
+  "doi": "10.5281/zenodo.23977106",
+  "conceptdoi": "10.5281/zenodo.23977105",
+  "doi_url": "https://doi.org/10.5281/zenodo.23977106",
+  "metadata": {
+    "title": "Formal Erratum & Forensic Audit: Statistical Validation of W\u2082 Geometry in Quantum Circuits (Zenodo Record 18450505)",
+    "doi": "10.5281/zenodo.23977106",
+    "publication_date": "2026-11-05",
+    "description": "<p><strong>Formal Erratum &amp; Forensic Audit for Zenodo Record 18450505</strong></p><p>This document provides a comprehensive, dispassionate forensic audit and formal mathematical erratum for the February 2026 manuscript <em>\"Statistical Validation of W\u2082 Geometry in Quantum Circuits: Evidence for Black Hole Information Preservation\"</em> (originally archived under Zenodo Record <a href=\"https://doi.org/10.5281/zenodo.18450505\">10.5281/zenodo.18450505</a>).</p><p><strong>Summary of Confirmed Findings:</strong></p><ul><li><strong>Metric Misidentification:</strong> The expression <code>W\u2082(\u03c1\u2081, \u03c1\u2082) = \u221a(Tr[(\u221a\u03c1\u2081 - \u221a\u03c1\u2082)\u00b2])</code> is the quantum Hellinger metric (Hilbert-Schmidt difference on matrix square roots), not the quantum Wasserstein-2 distance. It lacks an underlying transport cost matrix and coupling optimization.</li><li><strong>Metric Inversion Error:</strong> Information preservation was defined as <code>I_pres = W\u2082(\u03c1_in, \u03c1_out) / W\u2082_max</code>. Under any positive-definite metric, <code>D(\u03c1, \u03c1) = 0</code>. Consequently, identity evolution evaluates to 0% preservation while orthogonal states evaluate to 100%. The metric was literally inverted, measuring state dissimilarity rather than information retention.</li><li><strong>Ungrounded Null Hypothesis:</strong> The one-sample t-test against an assumed 50% null baseline (t = 8.73, p &lt; 0.001) has no physical justification. In an 8-qubit space (d = 256), Haar-random state fidelity is 1/d \u2248 0.39%.</li><li><strong>Physical Overreach:</strong> An 8-qubit unitary circuit is reversible by definition. Unitary propagation through parameterized gates on IBM hardware measures hardware gate fidelity and decoherence, but provides no empirical evidence resolving the astrophysical black hole information paradox or ruling out firewalls.</li></ul><p><strong>Remediation:</strong> In accordance with SYS-021 Dispassionate Forensic Incident Documentation, the original record is preserved as an empirical artifact. The research is reconstructed as a rigorous 3-arm Hayden-Preskill quantum information scrambling and recovery benchmark.</p>",
+    "access_right": "open",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "keywords": [
+      "quantum information",
+      "erratum",
+      "forensic audit",
+      "Wasserstein distance",
+      "quantum Hellinger distance",
+      "metric inversion",
+      "Hayden-Preskill protocol",
+      "scrambling",
+      "black hole information paradox",
+      "SYS-021",
+      "epistemic governance",
+      "NISQ benchmarking"
+    ],
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.18450505",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.18450505",
+        "relation": "isDerivedFrom",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/blob/feature/governed-gateway/docs/research/ERRATUM_AND_FORENSIC_AUDIT_ZENODO_18450505_W2_BLACK_HOLE.md",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ],
+    "version": "1.0.0",
+    "license": "cc-by-4.0",
+    "imprint_publisher": "Zenodo",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "prereserve_doi": {
+      "doi": "10.5281/zenodo.23977106",
+      "recid": 23977106
+    }
+  },
+  "title": "Formal Erratum & Forensic Audit: Statistical Validation of W\u2082 Geometry in Quantum Circuits (Zenodo Record 18450505)",
+  "links": {
+    "self": "https://zenodo.org/api/records/23977106",
+    "html": "https://zenodo.org/records/23977106",
+    "doi": "https://doi.org/10.5281/zenodo.23977106",
+    "parent_doi": "https://doi.org/10.5281/zenodo.23977105",
+    "badge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23977106.svg",
+    "conceptbadge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23977105.svg",
+    "files": "https://zenodo.org/api/records/23977106/files",
+    "bucket": "https://zenodo.org/api/files/e4c82111-ee79-43bf-8d22-e019684dff6f",
+    "thumb250": "https://zenodo.org/record/23977106/thumb250",
+    "thumbs": {
+      "10": "https://zenodo.org/record/23977106/thumb10",
+      "50": "https://zenodo.org/record/23977106/thumb50",
+      "100": "https://zenodo.org/record/23977106/thumb100",
+      "250": "https://zenodo.org/record/23977106/thumb250",
+      "750": "https://zenodo.org/record/23977106/thumb750",
+      "1200": "https://zenodo.org/record/23977106/thumb1200"
+    },
+    "latest_draft": "https://zenodo.org/api/deposit/depositions/23977106",
+    "latest_draft_html": "https://zenodo.org/deposit/23977106",
+    "publish": "https://zenodo.org/api/deposit/depositions/23977106/actions/publish",
+    "edit": "https://zenodo.org/api/deposit/depositions/23977106/actions/edit",
+    "discard": "https://zenodo.org/api/deposit/depositions/23977106/actions/discard",
+    "newversion": "https://zenodo.org/api/deposit/depositions/23977106/actions/newversion",
+    "record": "https://zenodo.org/api/records/23977106",
+    "record_html": "https://zenodo.org/record/23977106",
+    "latest": "https://zenodo.org/api/records/23977106/versions/latest",
+    "latest_html": "https://zenodo.org/records/23977106/latest"
+  },
+  "record_id": 23977106,
+  "owner": 1593545,
+  "files": [
+    {
+      "id": "43bcc8b9-f306-4b1e-83c9-5baa2e4724eb",
+      "filename": "ERRATUM_AND_FORENSIC_AUDIT_ZENODO_18450505_W2_BLACK_HOLE.md",
+      "filesize": 13600,
+      "checksum": "98f1f4248c5c1b625af051eb088c3e6c",
+      "links": {
+        "self": "https://zenodo.org/api/records/23977106/files/43bcc8b9-f306-4b1e-83c9-5baa2e4724eb",
+        "download": "https://zenodo.org/api/records/23977106/draft/files/ERRATUM_AND_FORENSIC_AUDIT_ZENODO_18450505_W2_BLACK_HOLE.md/content"
+      }
+    },
+    {
+      "id": "323d6ed0-2ce5-4348-86a7-91c81ebefd79",
+      "filename": "ERRATUM_AND_FORENSIC_AUDIT_ZENODO_18450505_W2_BLACK_HOLE.pdf",
+      "filesize": 267480,
+      "checksum": "6294488eb48da5946843c498f6b002fd",
+      "links": {
+        "self": "https://zenodo.org/api/records/23977106/files/323d6ed0-2ce5-4348-86a7-91c81ebefd79",
+        "download": "https://zenodo.org/api/records/23977106/draft/files/ERRATUM_AND_FORENSIC_AUDIT_ZENODO_18450505_W2_BLACK_HOLE.pdf/content"
+      }
+    }
+  ],
+  "state": "done",
+  "submitted": true
+}

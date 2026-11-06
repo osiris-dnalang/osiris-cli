@@ -1,0 +1,90 @@
+{
+  "block_index": 28,
+  "block_hash": "2208e036806e5d3371dbdad4e80920feed3b96315bf7dfcfb12b46082c79e63b",
+  "prev_block_hash": "1cf5fddb243df88bd747ad40736050311b9f5e0b25057e2023455d1ab801df71",
+  "grant": {
+    "sequence_index": 28,
+    "prev_block_hash": "1cf5fddb243df88bd747ad40736050311b9f5e0b25057e2023455d1ab801df71",
+    "timestamp": 1793918693.6669748,
+    "event_type": "SYS021_OSIRIS_60_PQC_ENCLAVE_AND_PILLARS_ACTIVATION",
+    "operator_id": "Devin Phillip Davis / Enki",
+    "payload_sha256": "4e225e79d10447156d1b31842b67fba4fe0596236f005e97eb152c241edfbaae",
+    "operation_schema": {
+      "event": "SYS021_OSIRIS_60_PQC_ENCLAVE_AND_PILLARS_ACTIVATION",
+      "target_version": "6.0.0",
+      "pillars": {
+        "pillar_1": {
+          "name": "NCLM Autonomous Speaking Gate & Core Architecture",
+          "spec": "Held-out BPB <= 2.000, 4/4 adversarial tests passing",
+          "files": [
+            "test_p1_adversarial_core.py"
+          ]
+        },
+        "pillar_2": {
+          "name": "Edge-Resident QLDPC Neural Decoder",
+          "spec": "Latency < 100us, CSS boundary enforcement, 4/4 adversarial tests passing",
+          "files": [
+            "test_p2_adversarial_qldpc.py"
+          ]
+        },
+        "pillar_3": {
+          "name": "Native Adaptive Quantum Compiler & Hayden-Preskill Protocol (OSIRIS-HP-001)",
+          "spec": "Transpiler zero SWAP overhead (CZ <= 24), F_rec > 0.50, W < 0, 4/4 adversarial tests passing",
+          "files": [
+            "maxq_wormhole.py",
+            "test_p3_adversarial_quantum.py"
+          ]
+        },
+        "pillar_4": {
+          "name": "Silicon-Anchored Post-Quantum Cryptographic Enclave",
+          "spec": "NIST FIPS 204 ML-DSA-65 + Ed25519 hybrid signatures, 5/5 adversarial tests passing",
+          "files": [
+            "pqc_enclave.py",
+            "test_p4_adversarial_pqc.py"
+          ]
+        }
+      },
+      "total_adversarial_tests_verified": 17,
+      "manifest": {
+        "test_p1_adversarial_core.py": {
+          "size": 5216,
+          "sha256": "f594c2704abd7d118594b10ca81d187a2d68a78f1f4aeda479f07d58f58b23e2"
+        },
+        "test_p2_adversarial_qldpc.py": {
+          "size": 4400,
+          "sha256": "640c4289f65330b63bec51bb68ad5a450ff64ce0f44622fadf049d4746461a18"
+        },
+        "maxq_wormhole.py": {
+          "size": 3528,
+          "sha256": "3c336c590f9cf777ce3bafd820ccb631a2289cc88159edf543094fdfabdd26a7"
+        },
+        "test_p3_adversarial_quantum.py": {
+          "size": 3456,
+          "sha256": "e8ec943002453a6b07131c7789b1870074295172095eec5794bb06f1bfb5c960"
+        },
+        "pqc_enclave.py": {
+          "size": 5345,
+          "sha256": "75fa5e5521698ad6d41effb6f2f12b37674c8231c002997e461b2b3152f0a178"
+        },
+        "test_p4_adversarial_pqc.py": {
+          "size": 5795,
+          "sha256": "4e1804fbc4e4b338200fdaa5b31966b1f22f8edb430deb73b397d8b470ed286e"
+        }
+      }
+    },
+    "operation_schema_sha256": "defb21a2c6657323535c94989486b852b8d25bf11869cb5ed7892d0b7f10d267",
+    "nonce": "OSIRIS-PQC-1793918693666",
+    "pqc_envelope": {
+      "specification": "NIST FIPS 204",
+      "algorithm": "Hybrid-Ed25519+ML-DSA-65",
+      "fips204_prehash": "feb3f35a01659f1af1d542a9a8792a7e32387e4ebd07fb53b0377e5003921492c33ec69b7b4bd49ae6f4c9a1470fc7f140a002df6ec92eac46daf126b9305084",
+      "ed25519_signature": "86af3990c4aa899fd06e346a186aeda377bee49e23e58fcc8aae81b571c9255e4f3d989427bc77666468908760ab1bf7c1897aaff801b8ac774b075710c54845",
+      "ml_dsa_signature": "ab4add9043c38463f30fdb13abbd70b45acb775e54c2653787ab3bc44ff24065781a6d1082fe53973d9a62df79cae49b01eef8403818d3b0439752382bea8c4d",
+      "lattice_parameters": {
+        "ring_degree": 256,
+        "modulus": 8380417,
+        "matrix_dimensions": "6x5"
+      }
+    }
+  }
+}

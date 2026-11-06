@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "title": "OSIRIS v5.2.0: Research-to-Evidence Roadmap, Reproducibility Foundation v1.0, and Frontier QPU Validation (Experiments E0–E2, GOV-BENCH-1, SCI-BENCH-1)",
+    "upload_type": "dataset",
+    "description": "Evidence package and clean-room reproducibility foundation for OSIRIS v5.2.0. Contains the formal 180-Day Research-to-Evidence Roadmap, the standardized osiris-benchmarks platform (environment.lock, benchmark_contract.json, run_benchmark.py, verify_results.py), the 1,000-task autonomous code governance benchmark (OSIRIS-GOV-BENCH-1, demonstrating 0.0% critical escapes and 0.0% false rejections), the 100-task scientific falsification benchmark (OSIRIS-SCI-BENCH-1, demonstrating 100.0% defect recall and 0.0% FDR), and the complete Experiment E series frontier QPU datasets on IBM Quantum Heron r2 processors (Certified Bell entanglement in Exp E0, multi-duration stagger response landscape in Exp E1, frozen predictive scheduler and prospective held-out validation across 4 unseen couplers in Exp E2, and pre-registered cross-chip transfer in Exp E3). All code executions and artifacts are anchored by an immutable 14-block SQLite cryptographic authority chain (SYS-021).",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "OSIRIS Research Collective"
+      }
+    ],
+    "keywords": [
+      "quantum control",
+      "dynamical decoupling",
+      "AI safety",
+      "autonomous agents",
+      "reproducibility",
+      "scientific falsification",
+      "cryptographic governance",
+      "IBM Heron",
+      "superconducting qubits"
+    ],
+    "access_right": "open",
+    "license": "Apache-2.0",
+    "version": "v5.2.0",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23967473",
+        "relation": "continues",
+        "resource_type": "dataset"
+      },
+      {
+        "identifier": "10.5281/zenodo.23968474",
+        "relation": "isSupplementTo",
+        "resource_type": "dataset"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v5.2.0",
+        "relation": "isSupplementTo",
+        "resource_type": "software"
+      }
+    ]
+  }
+}

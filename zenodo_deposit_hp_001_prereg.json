@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "title": "OSIRIS-HP-001: Hayden–Preskill Quantum Information Recovery Benchmark (Preregistration Protocol v1.0)",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "publication_date": "2026-11-05",
+    "version": "1.0.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "quantum information",
+      "Hayden-Preskill protocol",
+      "quantum scrambling",
+      "quantum recovery",
+      "entanglement witness",
+      "preregistration",
+      "IBM Quantum",
+      "ibm_marrakesh",
+      "Heron r2",
+      "SYS-021",
+      "Page transition",
+      "epistemic governance"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>OSIRIS-HP-001 Preregistration Protocol v1.0</strong></p><p>This protocol establishes a formal, pre-registered, and falsifiable quantum information recovery benchmark based on the Hayden-Preskill thought experiment (Hayden &amp; Preskill 2007; Yoshida &amp; Kitaev 2017). Designed for execution on IBM Quantum Heron r2 processors (<code>ibm_marrakesh</code>) following deterministic Stage 1 CPU simulation.</p><p><strong>Core Thesis:</strong> Investigates whether an unknown quantum state can be reconstructed by a restricted-access decoder operating strictly on early radiation and newly emitted late radiation after scrambling across an entangled register, and quantifies recovery degradation under calibrated physical noise.</p><p><strong>Three Controlled Experimental Arms:</strong></p><ul><li><strong>Arm A (Identity Recovery Control):</strong> Full-access reversible control establishing the SPAM ceiling and hardware noise baseline (unit fidelity prediction).</li><li><strong>Arm B (Restricted-Access Recovery):</strong> Message entangled with reference R; black hole B entangled with early radiation E. Scrambler U acts on M + B. Remnant C and Reference R are strictly quarantined. Decoder V_ED operates exclusively on E + D, outputting decoded message M'. Evaluates entanglement fidelity F_rec = &lt;Phi+| rho_RM' |Phi+&gt; reconstructed via XX, YY, and ZZ tomography.</li><li><strong>Arm C (Noise Degradation Sweep):</strong> Calibrated physical noise sweep (depolarizing, dephasing, relaxation) evaluating recovery resilience.</li></ul><p><strong>Formal Pre-Registered Hypotheses:</strong></p><ul><li><strong>H1 (Reversible Control):</strong> Full-access inverse achieves F &gt;= 0.999 in noiseless simulation.</li><li><strong>H2 (Restricted Recovery):</strong> Decoder on E + D achieves F_rec &gt; 0.50 (quantum entanglement witness) with &gt;10 pp advantage over unentangled controls.</li><li><strong>H3 (Page Transition):</strong> Monotonic fidelity scaling as late radiation size crosses the Page threshold (kD = 1 &lt; kD = 2 &lt; kD = 3 = 1.0).</li><li><strong>H4 (Noise Sensitivity):</strong> Monotonic degradation under physical noise channels.</li></ul><p>Stage 1 CPU simulation passed all acceptance criteria across N = 20 Haar-random trials (Arm B F = 0.9097 vs. unentangled control F = 0.7223, advantage +18.74 pp, p = 9.05e-12).</p>",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23969941",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23977106",
+        "relation": "isSupplementTo",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/blob/feature/governed-gateway/docs/research/OSIRIS_HP_001_PREREGISTRATION.md",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ]
+  }
+}

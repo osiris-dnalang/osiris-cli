@@ -1,0 +1,12 @@
+{
+  "job_id": "dbm8ni674qds73drr68g",
+  "backend": "ibm_marrakesh",
+  "status": "QUEUED",
+  "submission_time": "2026-11-05T13:59:37.012155+00:00",
+  "ledger_block_index": 21,
+  "ledger_block_hash": "2f68ab441b7913419f4a48783f0574289c7f62e839de8400563b425b223aa2c9",
+  "payload_sha256": "14cbb4af5647b28cd320a3a7aaeb0d058f6a3d28afbc28c9c00d69a9a8c64d1c",
+  "qpy_sha256": "171e7f3ec3948c2c3d0cba8eb430e7e8e2651d9dac833e66d60607a6d4828d35",
+  "total_circuits": 32,
+  "shots_per_circuit": 1024
+}

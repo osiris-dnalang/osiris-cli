@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "title": "OSIRIS v5.3.0: Dual-Component Quantum Control Resolution & Empirical Frontier Validation (Experiments E3–E4, ZZ-Ramsey Alias Resolution, and Reproducibility Archive)",
+    "upload_type": "dataset",
+    "description": "Evidence package and clean-room reproducibility foundation for OSIRIS v5.3.0. Contains the definitive empirical resolution of multi-qubit dynamical decoupling (DD) on heavy-hex fixed-frequency transmon processors. Incorporates the complete empirical findings from Experiment E3 on ibm_fez (81 circuits, falsifying single-parameter dephasing portability), the harmonic alias resolution of conditional Hamiltonian ZZ-Ramsey characterizations on ibm_marrakesh (extracting true static coupling zeta_14_15 = 3.170 kHz vs zeta_61_62 = 0.290 kHz), and prospective mechanism-discrimination Experiment E4 (Job dbm9ctu74qds73drs9j0, 72 ISA circuits, 73,728 shots on ibm_marrakesh). The empirical data decisively falsifies pure Microwave Pulse Collision Avoidance (MPCA accounts for only 9.5% of fidelity recovery at boundary contact Delta = 32 ns) and confirms the Dual-Component Model (high-frequency pulse collision contributes <= 10%, while macroscopic timing offsets Delta = 160 ns act as a phase-conjugate cancellation knob against coherent static Hamiltonian crosstalk). Includes the formal peer-review manuscript draft targeting Physical Review Letters, the 180-Day Research-to-Evidence Roadmap, and benchmarks. All code executions and hardware data are anchored by an unbroken 24-block SQLite cryptographic authority chain under SYS-021.",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "OSIRIS Research Collective"
+      }
+    ],
+    "keywords": [
+      "quantum control",
+      "dynamical decoupling",
+      "superconducting qubits",
+      "IBM Heron",
+      "spectator crosstalk",
+      "Hamiltonian parameter estimation",
+      "AI safety",
+      "autonomous science",
+      "reproducibility",
+      "cryptographic governance"
+    ],
+    "access_right": "open",
+    "license": "Apache-2.0",
+    "version": "v5.3.0",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23976303",
+        "relation": "continues",
+        "resource_type": "dataset"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v5.3.0",
+        "relation": "isSupplementTo",
+        "resource_type": "software"
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "title": "The Sovereign Dual-Substrate Architecture: Governed Execution, Automated Falsification, and Quantum Hardware Control on Constrained Consumer Silicon (Release v4.8.0)",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "publication_date": "2026-11-04",
+    "version": "4.8.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "sovereign AI",
+      "governed execution",
+      "dual-substrate",
+      "quantum computing",
+      "dynamical decoupling",
+      "spectator crosstalk",
+      "automated falsification",
+      "epistemic quarantine",
+      "local-first AI",
+      "ARM64 NEON",
+      "IBM Quantum Heron",
+      "SYS-021",
+      "Merkle ledger",
+      "continual learning",
+      "non-causal language model",
+      "control compiler",
+      "open-system Lindblad dynamics",
+      "ibm_marrakesh",
+      "held-out validation"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>OSIRIS v4.8.0 Monograph & Governed Release Package</strong></p><p>This release encapsulates the sovereign architecture, operational history, and empirical verification of the <strong>OSIRIS</strong> and <strong>dna::}{::lang</strong> project, featuring the complete prospective quantum control campaign on IBM Heron r2 hardware (<code>ibm_marrakesh</code>) and the resolution of the OSIRIS vs. Qiskit dynamical decoupling benchmark.</p><p><strong>Key Empirical & Architectural Additions in v4.8.0:</strong></p><ul><li><strong>Resolution of the OSIRIS vs. Qiskit Ideal Benchmark:</strong> Established through 3-engine numerical simulation (analytical toggling frame, SciPy matrix exponentiation, and Qiskit Aer) that ideal commuting ZZ crosstalk cancellation is governed by toggling-frame exposure bisection (A_uv = 0). Proved that Qiskit configured with matched sublattice staggering achieves identical perfect refocusing (agreement within 3.93e-7 Aer / 1.58e-12 ODE), confirming that the advantage lies in hardware-aware scheduling policies rather than SDK-level limitations.</li><li><strong>Forensic Post-Mortem of Prospective Experiment E2:</strong> Documented the empirical falsification of Adaptive Scheduler v1.0 on 4 held-out couplers, identifying that single-qubit maximum dephasing thresholds improperly defaulted to synchronous control, while bilateral partner dephasing governs CPMG breakdown. Cluster-robust inference (G=4, df=3) demonstrated that Fixed 80ns stagger outperformed synchronous XY8 by +0.446 +- 0.113 pp (p_2s = 0.0289).</li><li><strong>OSIRIS Control Compiler v2 (Risk-Aware Graph Surrogate):</strong> Formulated a cost-sensitive objective J(s) = F_hat(s) - lambda*sigma_F(s) - gamma*C(s). In open-system Lindblad master equation benchmarks across all 14 ibm_marrakesh couplers (28 cells with finite pulse width tau_p = 36ns, detuning, T1/T2, and filter leakage), OSIRIS v2 achieved +1.825 pp over Fixed 80ns (p_2s = 0.0004) and +2.356 pp over synchronous XY8 (p_2s = 0.0069). On a connected 5-qubit heavy-hex chain (Q12-Q19), shifting only the central vertex Q15 beat uniform staggering by +2.24 pp.</li><li><strong>Prospective Physical Hardware Validation (Experiment E3 Pilot):</strong> Executed under SYS-021 Ledger Block #15 on ibm_marrakesh (Job dbm00gd8mdtc73d6vjcg, 216 ISA circuits, 221,184 physical shots across 3 unseen physical couplers), OSIRIS Control Compiler v2 achieved 78.529% mean Bell-state fidelity, beating the primary Fixed 80ns baseline (77.878%) by +0.651 pp (block-clustered p_1s = 0.0348, positive in all 3 blocks) and beating synchronous XY8 (78.003%) by +0.526 pp (p_2s = 0.0454, positive in all 3 blocks).</li><li><strong>Compiler Performance Benchmark:</strong> Across 5 heavy-hex workloads (2 to 12 qubits), OSIRIS delivered 6.80x mean compilation speedup vs. Qiskit Opt-1 + PadDynamicalDecoupling, 13.87x speedup and 3.71x lower memory vs. Qiskit Opt-3 + Staggered PadDynamicalDecoupling, with verified exact unitary preservation (|1 - F_Statevector| <= 3.3e-15).</li></ul><p>The release bundle includes the complete Monograph with Amendment 3, compiled PDFs, executable benchmark suites, staged QPY archives, raw QPU bitstring counts, and cryptographic authorization receipts.</p>",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v4.8.0",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5281/zenodo.23257201",
+        "relation": "continues",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23213288",
+        "relation": "references",
+        "scheme": "doi"
+      }
+    ]
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "title": "OSIRIS Physical QPU Validation Campaign \u2014 Staggered XY8",
+  "version": "1.0",
+  "target_backend": "ibm_marrakesh",
+  "historical_baseline_job": "dblr6lhkbkrc73co9h30",
+  "physical_qubits": [
+    14,
+    15,
+    19,
+    35,
+    34,
+    33,
+    32,
+    31
+  ],
+  "edges_7": [
+    [
+      14,
+      15
+    ],
+    [
+      15,
+      19
+    ],
+    [
+      19,
+      35
+    ],
+    [
+      35,
+      34
+    ],
+    [
+      34,
+      33
+    ],
+    [
+      33,
+      32
+    ],
+    [
+      32,
+      31
+    ]
+  ],
+  "edges_pilot_3": [
+    [
+      14,
+      15
+    ],
+    [
+      19,
+      35
+    ],
+    [
+      33,
+      32
+    ]
+  ],
+  "dt_ns": 4.0,
+  "evolution_window_ns": 4000.0,
+  "stagger_offset_ns": 160.0,
+  "pulse_duration_ns": 36.0,
+  "protocols": [
+    "IDLE",
+    "SYNC_XY8",
+    "STAG_XY8",
+    "SHIFT_XY8"
+  ],
+  "measurement_bases": [
+    "XX",
+    "YY",
+    "ZZ"
+  ],
+  "target_states": [
+    "BELL_PHI_PLUS",
+    "PRODUCT_00"
+  ],
+  "execution_plan": {
+    "phase_A": "Physical timing schedule verification (0 QPU shots, local ISA audit)",
+    "phase_B_pilot": {
+      "edges": [
+        [
+          14,
+          15
+        ],
+        [
+          19,
+          35
+        ],
+        [
+          33,
+          32
+        ]
+      ],
+      "shots_per_circuit": 1024,
+      "reps": 3,
+      "circuits_count": 108
+    },
+    "phase_B_full": {
+      "edges": [
+        [
+          14,
+          15
+        ],
+        [
+          15,
+          19
+        ],
+        [
+          19,
+          35
+        ],
+        [
+          35,
+          34
+        ],
+        [
+          34,
+          33
+        ],
+        [
+          33,
+          32
+        ],
+        [
+          32,
+          31
+        ]
+      ],
+      "shots_per_circuit": 4096,
+      "reps": 5,
+      "circuits_count": 420
+    }
+  },
+  "decision_rules": {
+    "timing_validity": "All audited pulse schedules match 4000 ns window and 160 ns offset",
+    "yy_suppression": "Positive reduction in |<YY>| with 95% bootstrap CI excluding zero",
+    "xx_preservation": "Meets non-inferiority margin delta < 0.02 relative to SYNC_XY8",
+    "edge_consistency": "Full transparent reporting across all 7 physical edges"
+  }
+}

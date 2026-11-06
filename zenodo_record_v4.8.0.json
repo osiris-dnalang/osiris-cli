@@ -1,0 +1,155 @@
+{
+  "created": "2026-11-05T05:01:15.925492+00:00",
+  "modified": "2026-11-05T05:01:16.577150+00:00",
+  "id": 23969941,
+  "conceptrecid": "23969940",
+  "doi": "10.5281/zenodo.23969941",
+  "conceptdoi": "10.5281/zenodo.23969940",
+  "doi_url": "https://doi.org/10.5281/zenodo.23969941",
+  "metadata": {
+    "title": "The Sovereign Dual-Substrate Architecture: Governed Execution, Automated Falsification, and Quantum Hardware Control on Constrained Consumer Silicon (Release v4.8.0)",
+    "doi": "10.5281/zenodo.23969941",
+    "publication_date": "2026-11-04",
+    "description": "<p><strong>OSIRIS v4.8.0 Monograph &amp; Governed Release Package</strong></p><p>This release encapsulates the sovereign architecture, operational history, and empirical verification of the <strong>OSIRIS</strong> and <strong>dna::}{::lang</strong> project, featuring the complete prospective quantum control campaign on IBM Heron r2 hardware (<code>ibm_marrakesh</code>) and the resolution of the OSIRIS vs. Qiskit dynamical decoupling benchmark.</p><p><strong>Key Empirical &amp; Architectural Additions in v4.8.0:</strong></p><ul><li><strong>Resolution of the OSIRIS vs. Qiskit Ideal Benchmark:</strong> Established through 3-engine numerical simulation (analytical toggling frame, SciPy matrix exponentiation, and Qiskit Aer) that ideal commuting ZZ crosstalk cancellation is governed by toggling-frame exposure bisection (A_uv = 0). Proved that Qiskit configured with matched sublattice staggering achieves identical perfect refocusing (agreement within 3.93e-7 Aer / 1.58e-12 ODE), confirming that the advantage lies in hardware-aware scheduling policies rather than SDK-level limitations.</li><li><strong>Forensic Post-Mortem of Prospective Experiment E2:</strong> Documented the empirical falsification of Adaptive Scheduler v1.0 on 4 held-out couplers, identifying that single-qubit maximum dephasing thresholds improperly defaulted to synchronous control, while bilateral partner dephasing governs CPMG breakdown. Cluster-robust inference (G=4, df=3) demonstrated that Fixed 80ns stagger outperformed synchronous XY8 by +0.446 +- 0.113 pp (p_2s = 0.0289).</li><li><strong>OSIRIS Control Compiler v2 (Risk-Aware Graph Surrogate):</strong> Formulated a cost-sensitive objective J(s) = F_hat(s) - lambda*sigma_F(s) - gamma*C(s). In open-system Lindblad master equation benchmarks across all 14 ibm_marrakesh couplers (28 cells with finite pulse width tau_p = 36ns, detuning, T1/T2, and filter leakage), OSIRIS v2 achieved +1.825 pp over Fixed 80ns (p_2s = 0.0004) and +2.356 pp over synchronous XY8 (p_2s = 0.0069). On a connected 5-qubit heavy-hex chain (Q12-Q19), shifting only the central vertex Q15 beat uniform staggering by +2.24 pp.</li><li><strong>Prospective Physical Hardware Validation (Experiment E3 Pilot):</strong> Executed under SYS-021 Ledger Block #15 on ibm_marrakesh (Job dbm00gd8mdtc73d6vjcg, 216 ISA circuits, 221,184 physical shots across 3 unseen physical couplers), OSIRIS Control Compiler v2 achieved 78.529% mean Bell-state fidelity, beating the primary Fixed 80ns baseline (77.878%) by +0.651 pp (block-clustered p_1s = 0.0348, positive in all 3 blocks) and beating synchronous XY8 (78.003%) by +0.526 pp (p_2s = 0.0454, positive in all 3 blocks).</li><li><strong>Compiler Performance Benchmark:</strong> Across 5 heavy-hex workloads (2 to 12 qubits), OSIRIS delivered 6.80x mean compilation speedup vs. Qiskit Opt-1 + PadDynamicalDecoupling, 13.87x speedup and 3.71x lower memory vs. Qiskit Opt-3 + Staggered PadDynamicalDecoupling, with verified exact unitary preservation (|1 - F_Statevector| &lt;= 3.3e-15).</li></ul><p>The release bundle includes the complete Monograph with Amendment 3, compiled PDFs, executable benchmark suites, staged QPY archives, raw QPU bitstring counts, and cryptographic authorization receipts.</p>",
+    "access_right": "open",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "keywords": [
+      "sovereign AI",
+      "governed execution",
+      "dual-substrate",
+      "quantum computing",
+      "dynamical decoupling",
+      "spectator crosstalk",
+      "automated falsification",
+      "epistemic quarantine",
+      "local-first AI",
+      "ARM64 NEON",
+      "IBM Quantum Heron",
+      "SYS-021",
+      "Merkle ledger",
+      "continual learning",
+      "non-causal language model",
+      "control compiler",
+      "open-system Lindblad dynamics",
+      "ibm_marrakesh",
+      "held-out validation"
+    ],
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v4.8.0",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5281/zenodo.23257201",
+        "relation": "continues",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23213288",
+        "relation": "references",
+        "scheme": "doi"
+      }
+    ],
+    "version": "4.8.0",
+    "license": "cc-by-4.0",
+    "imprint_publisher": "Zenodo",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "prereserve_doi": {
+      "doi": "10.5281/zenodo.23969941",
+      "recid": 23969941
+    }
+  },
+  "title": "The Sovereign Dual-Substrate Architecture: Governed Execution, Automated Falsification, and Quantum Hardware Control on Constrained Consumer Silicon (Release v4.8.0)",
+  "links": {
+    "self": "https://zenodo.org/api/records/23969941",
+    "html": "https://zenodo.org/records/23969941",
+    "doi": "https://doi.org/10.5281/zenodo.23969941",
+    "parent_doi": "https://doi.org/10.5281/zenodo.23969940",
+    "badge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23969941.svg",
+    "conceptbadge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23969940.svg",
+    "files": "https://zenodo.org/api/records/23969941/files",
+    "bucket": "https://zenodo.org/api/files/9ba98982-be75-4c2f-b98b-7d125e030d41",
+    "thumb250": "https://zenodo.org/record/23969941/thumb250",
+    "thumbs": {
+      "10": "https://zenodo.org/record/23969941/thumb10",
+      "50": "https://zenodo.org/record/23969941/thumb50",
+      "100": "https://zenodo.org/record/23969941/thumb100",
+      "250": "https://zenodo.org/record/23969941/thumb250",
+      "750": "https://zenodo.org/record/23969941/thumb750",
+      "1200": "https://zenodo.org/record/23969941/thumb1200"
+    },
+    "latest_draft": "https://zenodo.org/api/deposit/depositions/23969941",
+    "latest_draft_html": "https://zenodo.org/deposit/23969941",
+    "publish": "https://zenodo.org/api/deposit/depositions/23969941/actions/publish",
+    "edit": "https://zenodo.org/api/deposit/depositions/23969941/actions/edit",
+    "discard": "https://zenodo.org/api/deposit/depositions/23969941/actions/discard",
+    "newversion": "https://zenodo.org/api/deposit/depositions/23969941/actions/newversion",
+    "record": "https://zenodo.org/api/records/23969941",
+    "record_html": "https://zenodo.org/record/23969941",
+    "latest": "https://zenodo.org/api/records/23969941/versions/latest",
+    "latest_html": "https://zenodo.org/records/23969941/latest"
+  },
+  "record_id": 23969941,
+  "owner": 1593545,
+  "files": [
+    {
+      "id": "1d051648-1538-4ac4-b936-608729326f13",
+      "filename": "osiris_v4.8.0_frontier_quantum_control_release.zip",
+      "filesize": 1124568,
+      "checksum": "5100594a131a9d62e8288a6cb139f0a0",
+      "links": {
+        "self": "https://zenodo.org/api/records/23969941/files/1d051648-1538-4ac4-b936-608729326f13",
+        "download": "https://zenodo.org/api/records/23969941/draft/files/osiris_v4.8.0_frontier_quantum_control_release.zip/content"
+      }
+    },
+    {
+      "id": "f9021afc-0c17-480c-ba08-6fb2ee58e84d",
+      "filename": "MANIFEST_SHA256_v4.8.0.txt",
+      "filesize": 4898,
+      "checksum": "f0a95f7ac88bd1a6aab519f95c2271c5",
+      "links": {
+        "self": "https://zenodo.org/api/records/23969941/files/f9021afc-0c17-480c-ba08-6fb2ee58e84d",
+        "download": "https://zenodo.org/api/records/23969941/draft/files/MANIFEST_SHA256_v4.8.0.txt/content"
+      }
+    },
+    {
+      "id": "57b32aee-c312-4ad1-8268-95a824c4f52d",
+      "filename": "osiris_v4.8.0_frontier_quantum_control_release.tar.gz",
+      "filesize": 1099584,
+      "checksum": "4fc3f0aebcb9dd7125f87abd1a985a80",
+      "links": {
+        "self": "https://zenodo.org/api/records/23969941/files/57b32aee-c312-4ad1-8268-95a824c4f52d",
+        "download": "https://zenodo.org/api/records/23969941/draft/files/osiris_v4.8.0_frontier_quantum_control_release.tar.gz/content"
+      }
+    },
+    {
+      "id": "a24323b1-69cd-47fd-a44a-97d0df60dd59",
+      "filename": "SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.md",
+      "filesize": 21527,
+      "checksum": "b03d0e6496f0e02ef39f9f7d42e3a795",
+      "links": {
+        "self": "https://zenodo.org/api/records/23969941/files/a24323b1-69cd-47fd-a44a-97d0df60dd59",
+        "download": "https://zenodo.org/api/records/23969941/draft/files/SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.md/content"
+      }
+    },
+    {
+      "id": "8915d3c0-3572-4a00-9f85-4f1e2adffab0",
+      "filename": "SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.pdf",
+      "filesize": 405118,
+      "checksum": "068128080418361ae4de285e416f4a17",
+      "links": {
+        "self": "https://zenodo.org/api/records/23969941/files/8915d3c0-3572-4a00-9f85-4f1e2adffab0",
+        "download": "https://zenodo.org/api/records/23969941/draft/files/SOVEREIGN_DUAL_SUBSTRATE_MONOGRAPH.pdf/content"
+      }
+    }
+  ],
+  "state": "done",
+  "submitted": true
+}

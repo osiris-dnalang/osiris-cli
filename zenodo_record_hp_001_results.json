@@ -1,0 +1,180 @@
+{
+  "created": "2026-11-05T17:50:28.943717+00:00",
+  "modified": "2026-11-05T17:50:30.144513+00:00",
+  "id": 23986363,
+  "conceptrecid": "23986362",
+  "doi": "10.5281/zenodo.23986363",
+  "conceptdoi": "10.5281/zenodo.23986362",
+  "doi_url": "https://doi.org/10.5281/zenodo.23986363",
+  "metadata": {
+    "title": "OSIRIS-HP-001: Hayden\u2013Preskill Quantum Information Recovery Benchmark (Stage 1 Empirical Dataset & Calibrated Heron r2 Simulation)",
+    "doi": "10.5281/zenodo.23986363",
+    "publication_date": "2026-11-05",
+    "description": "<p><strong>OSIRIS-HP-001 Stage 1 Empirical Dataset &amp; Calibrated Heron r2 Simulation</strong></p><p>This deposit provides the complete empirical data, simulation code, tomographic observables, and publication report for Stage 1 of the OSIRIS-HP-001 quantum recovery benchmark. This deposit directly supplements the preregistered research protocol (<strong>DOI: 10.5281/zenodo.23982138</strong>) and the mathematical erratum for Zenodo Record 18450505 (<strong>DOI: 10.5281/zenodo.23977106</strong>).</p><p><strong>Benchmark Configuration:</strong></p><ul><li><strong>Target Architecture:</strong> IBM Quantum Heron r2 (<code>ibm_marrakesh</code>) 6-qubit connected cycle subgraph {R: 14, M: 15, B1: 19, B2: 35, E1: 13, E2: 34}.</li><li><strong>Calibrated Physical Noise:</strong> Hardware relaxation (mean T1 = 253.1 \u00b5s), dephasing (mean T2 = 217.9 \u00b5s), readout error (0.57%), CZ gate error (0.142%), and effective 2-qubit depolarizing noise floor (\u0393\u2080 = 4.07%).</li><li><strong>Sample Size:</strong> N = 20 independent Haar-random scrambling unitaries on 6 qubits.</li></ul><p><strong>Empirical Findings &amp; Hypothesis Tests:</strong></p><ul><li><strong>H1 (Reversible Positive Control):</strong> Mean recovery fidelity F = 0.9694 [95% CI: 0.9694, 0.9694], proving baseline SPAM fidelity above 96.9%. (PASSED)</li><li><strong>H2 (Restricted Entangled Recovery):</strong> Mean fidelity F = 0.8782 [95% CI: 0.8608, 0.8956] vs. Unentangled Control F = 0.6943 [95% CI: 0.6611, 0.7279]. Entanglement advantage \u0394F = +18.39 pp [95% CI: +14.27, +22.57 pp]. Paired t-test: t = 8.5753, df = 19, p = 2.94 \u00d7 10\u207b\u2078, rejecting the unentangled null hypothesis by &gt; 8 standard deviations. (PASSED)</li><li><strong>H3 (Page Transition Across Radiation Sizes):</strong> Monotonic recovery leap across radiation partition: kD = 1 qubit (F = 0.6116) \u2192 kD = 2 qubits (F = 0.8782, a +26.66 pp jump across the Page threshold) \u2192 kD = 3 qubits (F = 0.9694). (PASSED)</li><li><strong>H4 (Dual-LP Discrete Wasserstein-1 Metric):</strong> Normalized Kantorovich-Rubinstein transport distance yields mean W\u2081 = 0.0435, anti-correlated with Uhlmann fidelity (Pearson r = -0.6897, p = 7.65 \u00d7 10\u207b\u2074). (PASSED)</li></ul><p><strong>Contents of Dataset:</strong></p><ul><li><code>OSIRIS_HP_001_FAKEMARRAKESH_REPORT.pdf</code>: Complete publication report with embedded high-resolution figures.</li><li><code>OSIRIS_HP_001_FAKEMARRAKESH_REPORT.md</code>: Full Markdown documentation and analysis tables.</li><li><code>results_hp_001_fakemarrakesh.json</code>: Machine-readable JSON telemetry across all 20 Haar trials, radiation sweeps, and noise scaling factors.</li><li><code>run_fake_marrakesh_hp_benchmark.py</code>: Standalone Python driver for reproducibility.</li><li><code>hp_001_fakemarrakesh_violin_comparison.png</code>: Violin distribution of recovery fidelities.</li><li><code>hp_001_fakemarrakesh_page_transition.png</code>: Page transition recovery curve.</li><li><code>hp_001_fakemarrakesh_w1_vs_fidelity.png</code>: Dual-LP W\u2081 transport distance correlation plot.</li><li><code>hp_001_fakemarrakesh_noise_scaling.png</code>: Lindblad decoherence scaling plot.</li></ul>",
+    "access_right": "open",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "keywords": [
+      "quantum information",
+      "Hayden-Preskill protocol",
+      "quantum scrambling",
+      "quantum recovery",
+      "entanglement witness",
+      "IBM Quantum",
+      "ibm_marrakesh",
+      "Heron r2",
+      "Page transition",
+      "Wasserstein distance",
+      "SYS-021",
+      "epistemic governance"
+    ],
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23982138",
+        "relation": "isSupplementTo",
+        "resource_type": "publication-technicalnote",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23977106",
+        "relation": "isSupplementTo",
+        "resource_type": "publication-technicalnote",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/tree/feature/governed-gateway",
+        "relation": "isDerivedFrom",
+        "resource_type": "software",
+        "scheme": "url"
+      }
+    ],
+    "version": "1.0.0",
+    "license": "cc-by-4.0",
+    "imprint_publisher": "Zenodo",
+    "upload_type": "dataset",
+    "prereserve_doi": {
+      "doi": "10.5281/zenodo.23986363",
+      "recid": 23986363
+    }
+  },
+  "title": "OSIRIS-HP-001: Hayden\u2013Preskill Quantum Information Recovery Benchmark (Stage 1 Empirical Dataset & Calibrated Heron r2 Simulation)",
+  "links": {
+    "self": "https://zenodo.org/api/records/23986363",
+    "html": "https://zenodo.org/records/23986363",
+    "doi": "https://doi.org/10.5281/zenodo.23986363",
+    "parent_doi": "https://doi.org/10.5281/zenodo.23986362",
+    "badge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23986363.svg",
+    "conceptbadge": "https://zenodo.org/badge/doi/10.5281%2Fzenodo.23986362.svg",
+    "files": "https://zenodo.org/api/records/23986363/files",
+    "bucket": "https://zenodo.org/api/files/98abb0ba-f3a1-447b-b03d-7d56e249a54f",
+    "thumb250": "https://zenodo.org/record/23986363/thumb250",
+    "thumbs": {
+      "10": "https://zenodo.org/record/23986363/thumb10",
+      "50": "https://zenodo.org/record/23986363/thumb50",
+      "100": "https://zenodo.org/record/23986363/thumb100",
+      "250": "https://zenodo.org/record/23986363/thumb250",
+      "750": "https://zenodo.org/record/23986363/thumb750",
+      "1200": "https://zenodo.org/record/23986363/thumb1200"
+    },
+    "latest_draft": "https://zenodo.org/api/deposit/depositions/23986363",
+    "latest_draft_html": "https://zenodo.org/deposit/23986363",
+    "publish": "https://zenodo.org/api/deposit/depositions/23986363/actions/publish",
+    "edit": "https://zenodo.org/api/deposit/depositions/23986363/actions/edit",
+    "discard": "https://zenodo.org/api/deposit/depositions/23986363/actions/discard",
+    "newversion": "https://zenodo.org/api/deposit/depositions/23986363/actions/newversion",
+    "record": "https://zenodo.org/api/records/23986363",
+    "record_html": "https://zenodo.org/record/23986363",
+    "latest": "https://zenodo.org/api/records/23986363/versions/latest",
+    "latest_html": "https://zenodo.org/records/23986363/latest"
+  },
+  "record_id": 23986363,
+  "owner": 1593545,
+  "files": [
+    {
+      "id": "cc78aa25-6c39-4296-8e49-3108d1fdcafb",
+      "filename": "hp_001_fakemarrakesh_w1_vs_fidelity.png",
+      "filesize": 222117,
+      "checksum": "292e954e3dde49651cf70edf1296099d",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/cc78aa25-6c39-4296-8e49-3108d1fdcafb",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/hp_001_fakemarrakesh_w1_vs_fidelity.png/content"
+      }
+    },
+    {
+      "id": "857e3f19-2dc4-487e-8d3f-6f78b4a0bc6c",
+      "filename": "run_fake_marrakesh_hp_benchmark.py",
+      "filesize": 19659,
+      "checksum": "bd000599aac200c570b850e5d3de8aa1",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/857e3f19-2dc4-487e-8d3f-6f78b4a0bc6c",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/run_fake_marrakesh_hp_benchmark.py/content"
+      }
+    },
+    {
+      "id": "bf32edcc-5794-4078-b89d-c6c4fbb92e2e",
+      "filename": "OSIRIS_HP_001_FAKEMARRAKESH_REPORT.pdf",
+      "filesize": 1005421,
+      "checksum": "d8d8407fc152cf0d5d0ffb2ce9eaa2fb",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/bf32edcc-5794-4078-b89d-c6c4fbb92e2e",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/OSIRIS_HP_001_FAKEMARRAKESH_REPORT.pdf/content"
+      }
+    },
+    {
+      "id": "a78a6244-fae6-402d-8439-0402cd72bb9f",
+      "filename": "hp_001_fakemarrakesh_page_transition.png",
+      "filesize": 249609,
+      "checksum": "3a9fa5e0ab90c13050724a45b951ee24",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/a78a6244-fae6-402d-8439-0402cd72bb9f",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/hp_001_fakemarrakesh_page_transition.png/content"
+      }
+    },
+    {
+      "id": "4473eecd-7aa9-473d-8901-0e3ffc50a0a4",
+      "filename": "hp_001_fakemarrakesh_violin_comparison.png",
+      "filesize": 175624,
+      "checksum": "d319c9caa91c9d1ec0be6f91ab51b484",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/4473eecd-7aa9-473d-8901-0e3ffc50a0a4",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/hp_001_fakemarrakesh_violin_comparison.png/content"
+      }
+    },
+    {
+      "id": "6bf69795-c322-4f1e-86e9-f76884962c36",
+      "filename": "OSIRIS_HP_001_FAKEMARRAKESH_REPORT.md",
+      "filesize": 7855,
+      "checksum": "ef68df64ae7b011d4e2f922b11a64901",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/6bf69795-c322-4f1e-86e9-f76884962c36",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/OSIRIS_HP_001_FAKEMARRAKESH_REPORT.md/content"
+      }
+    },
+    {
+      "id": "02bc010b-3888-4707-ba06-1e2946ef790d",
+      "filename": "hp_001_fakemarrakesh_noise_scaling.png",
+      "filesize": 192195,
+      "checksum": "95d123480fffd805b6f569d032288d5f",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/02bc010b-3888-4707-ba06-1e2946ef790d",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/hp_001_fakemarrakesh_noise_scaling.png/content"
+      }
+    },
+    {
+      "id": "36a5ab09-90e0-4f9e-86d8-b4c9ec04a87b",
+      "filename": "results_hp_001_fakemarrakesh.json",
+      "filesize": 12226,
+      "checksum": "8f1da8175820bd2f5bad021a3e3c1bbc",
+      "links": {
+        "self": "https://zenodo.org/api/records/23986363/files/36a5ab09-90e0-4f9e-86d8-b4c9ec04a87b",
+        "download": "https://zenodo.org/api/records/23986363/draft/files/results_hp_001_fakemarrakesh.json/content"
+      }
+    }
+  ],
+  "state": "done",
+  "submitted": true
+}

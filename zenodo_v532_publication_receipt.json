@@ -1,0 +1,26 @@
+{
+  "deposition_id": 23990352,
+  "record_id": 23990352,
+  "doi": "10.5281/zenodo.23990352",
+  "url": "https://zenodo.org/record/23990352",
+  "title": "OSIRIS v5.3.2: Deterministic C-SIMD Acceleration, Gate 0 Substrate Portability, MAXQ SWAP-Free Subgraph Routing, and Hayden-Preskill Quantum Recovery Benchmark",
+  "version": "v5.3.2",
+  "files_uploaded": [
+    "osiris_research_evidence_v5.3.2.zip",
+    "osiris_research_evidence_v5.3.2.tar.gz",
+    "SHA256SUMS.txt",
+    "github_release_notes_v5.3.2.md",
+    "OSIRIS_100_ADVANCED_BASH_COMMANDS.pdf",
+    "PATHWAY_TO_OSIRIS_6.0.md"
+  ],
+  "file_hashes": {
+    "osiris_research_evidence_v5.3.2.zip": "d319b96eed7e0bbfbda6d476b05f54d884072780f2d0166b60a9bee365d6073e",
+    "osiris_research_evidence_v5.3.2.tar.gz": "dbde894f1a6c8a225b8cf52e2b8fd6a2d7bf95b2f719d3885364e10c67913a48",
+    "SHA256SUMS.txt": "c675682f15a2ebc1ef9e0ee12292d6eb93da7f99b450f3636c112f6aa79786ef",
+    "github_release_notes_v5.3.2.md": "e4157f7508319bb4e5a0c451d4003ba0147c1eb65ea0f1cb5934fdefda790d72",
+    "OSIRIS_100_ADVANCED_BASH_COMMANDS.pdf": "98a1d14565f57d1d0174a93ba236d688a3ec4573fbd7640d8437ec39b4f852a1",
+    "PATHWAY_TO_OSIRIS_6.0.md": "636d0c183a08b8e388e8fc70d28f0beff0055bab7fffa43f91f6953d08d82105"
+  },
+  "published_at": "2026-11-05T21:44:55Z",
+  "status": "published"
+}

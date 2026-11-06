@@ -19,6 +19,25 @@ from .calibration_spc import (
     TimeOrderedSPCValidator,
     verify_subsystem_calibrations,
 )
+from .bidirectional_dd import (
+    StaggeredDDSchedule,
+    BidirectionalDDCompiler,
+)
+from .heron_staggered_benchmark import (
+    HERON_KINGSTON_QUBITS,
+    HERON_KINGSTON_EDGES,
+    BenchmarkTrialResult,
+    ClosedLoopBenchmarkReport,
+    HeronBenchmarkEngine,
+    run_heron_refocuser_benchmark,
+)
+from .neural_qldpc import (
+    CSSCode,
+    DecodingResult,
+    NeuralSyndromeDecoder,
+    PauliFrameTracker,
+    gf2_rank,
+)
 
 __all__ = [
     "CircuitSpec",
@@ -33,4 +52,17 @@ __all__ = [
     "CalibrationDriftReport",
     "TimeOrderedSPCValidator",
     "verify_subsystem_calibrations",
+    "StaggeredDDSchedule",
+    "BidirectionalDDCompiler",
+    "HERON_KINGSTON_QUBITS",
+    "HERON_KINGSTON_EDGES",
+    "BenchmarkTrialResult",
+    "ClosedLoopBenchmarkReport",
+    "HeronBenchmarkEngine",
+    "run_heron_refocuser_benchmark",
+    "CSSCode",
+    "DecodingResult",
+    "NeuralSyndromeDecoder",
+    "PauliFrameTracker",
+    "gf2_rank",
 ]

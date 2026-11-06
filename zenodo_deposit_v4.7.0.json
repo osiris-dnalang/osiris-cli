@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "title": "The Sovereign Dual-Substrate Architecture: Governed Execution, Automated Falsification, and Quantum Hardware Control on Constrained Consumer Silicon",
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "publication_date": "2026-10-31",
+    "version": "4.7.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "sovereign AI",
+      "governed execution",
+      "dual-substrate",
+      "quantum computing",
+      "dynamical decoupling",
+      "spectator crosstalk",
+      "automated falsification",
+      "epistemic quarantine",
+      "local-first AI",
+      "ARM64 NEON",
+      "IBM Quantum Heron",
+      "SYS-021",
+      "Merkle ledger",
+      "continual learning",
+      "non-causal language model"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>OSIRIS v4.7.0 Monograph & Governed Release Package</strong></p><p>This technical note and empirical dataset encapsulate the complete sovereign architecture, operational history, and automated self-correction framework of the <strong>OSIRIS</strong> and <strong>dna::}{::lang</strong> project. Developed entirely on severely constrained consumer hardware\u2014a handheld Google Pixel Fold (<strong>Node Alpha</strong>, running Termux with ARM64 NEON SIMD kernels and a 300s thermal horizon; now retired post-campaign) and a GPU-less HP laptop powered by an Intel Core i7 CPU (<strong>Node Beta</strong>, executing local quantized mentor models and NCLM continual training within WSL2)\u2014OSIRIS proves that sovereign, verifiable scientific agency can be achieved without enterprise server clusters.</p><p><strong>Key Empirical & Architectural Contributions:</strong></p><ul><li><strong>Governed Execution (SYS-021):</strong> Enforces the foundational axiom <em>'Cognition may be distributed; authority is not.'</em> Unverified generative models propose; deterministic AST firewalls constrain; cryptographic receipts authorize (H_payload = SHA-256(code)); and immutable Merkle DAGs record.</li><li><strong>Automated Falsification of the &tau;-Phase Anomaly:</strong> Under strict budget limits on the IBM Quantum Open Plan (Job <code>dbiobimne4hc73bf2am0</code> on IBM Heron r2 <code>ibm_fez</code>), OSIRIS autonomously audited and conclusively refuted the historical December 2025 hypothesis (&tau;0 = 46 &mu;s, &theta;_lock = 51.843&deg;). Using 3-basis Pauli tomography (ZZ, XX, YY), OSIRIS proved that apparent 'entanglement revivals' were classical T1 relaxation artifacts to |00&gt; (P_Bell drops to a minimum at T1*ln(2) and rebounds as qubits decay to ground; transverse coherence C_perp measures dead zero: +0.0029 &plusmn; 0.0221; &theta;_lock p = 0.3537). The erratum is permanently anchored under Merkle Root <code>7e8f20c2e0ce...</code>.</li><li><strong>Genuine Quantum Advantage in Multi-Qubit Crosstalk Refocusing:</strong> On 156-qubit heavy-hex architecture (<code>ibm_kingston</code>, Job <code>dbb4ppk24mrc73bo8ntg</code>), OSIRIS evolved bipartite sublattice pulse-timing staggering (<code>xy4x2_stag</code> and <code>osiris_evolved_g1</code>) that crushes standard unstaggered dynamical decoupling (retaining 0.9602 and 0.9373 vs 0.8625 ground state probability) by canceling static spectator ZZ crosstalk.</li><li><strong>Continual Living Intelligence (osiris.nclm):</strong> Operates an online, byte-level transformer core governed by a permanently held-out speaking gate (&le; 2.0 bits/byte vs unigram baseline), actively distilling mentor lessons from verified writing.</li></ul><p>The package contains the full monograph, reproducible Qiskit/QPY circuit definitions, raw decoded IBM Quantum execution spans and bitstrings, Merkle governance ledgers, and the complete OSIRIS v4.7.0 codebase.</p>",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v4.7.0",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5281/zenodo.23257201",
+        "relation": "isNewVersionOf",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23213288",
+        "relation": "references",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23256344",
+        "relation": "references",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23075229",
+        "relation": "references",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23102693",
+        "relation": "references",
+        "scheme": "doi"
+      }
+    ]
+  }
+}

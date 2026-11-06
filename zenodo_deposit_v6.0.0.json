@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "OSIRIS 6.0: The Self-Compressing Sovereign Architecture across Post-Quantum Enclaves, Neural QLDPC Decoders, MAXQ Zero-SWAP Routing, and NCLM Autonomous Speaking Gates",
+    "upload_type": "dataset",
+    "description": "Peer-audited research evidence package and clean-room reproducibility archive for OSIRIS 6.0. This major milestone activates the Self-Compressing Sovereign Architecture across four sequentially verified pillars and an immutable cryptographic authority chain: (1) Pillar 1: NCLM Autonomous Speaking Gate & Core Architecture — Held-out validation discipline (loss <= 2.000 BPB), AST prompt injection firewall, unlearned weight quarantine, and C-SIMD memory stride protection; (2) Pillar 2: Edge-Resident QLDPC Neural Decoder — Ultra-fast syndrome decoding (<100 microseconds latency; mean 8.42 microseconds), fail-closed non-CSS commutation trap (Hx Hz^T != 0), high-weight syndrome defense, and Pauli frame preservation; (3) Pillar 3: MAXQ Adaptive Quantum Compiler & Hayden-Preskill Protocol (OSIRIS-HP-001) — Greedy disjoint-edge routing on IBM Heron r2 cycle subgraph {14, 15, 19, 35, 34, 13}, zero-SWAP transpilation firewall (CZ <= 24; compiled CZ = 22, depth 44), negative information scrambling (I_3 < 0, W < 0), and deterministic OpenQASM 3.0 and native QPY bundle exports; (4) Pillar 4: Silicon-Anchored Post-Quantum Cryptographic Enclave — NIST FIPS 204 Module-Lattice Digital Signatures (ML-DSA-65 / Dilithium Level 3) + Ed25519 hybrid dual-signatures, 512-bit SHAKE-256 pre-hash verification, and fail-closed defense against downgrade attacks and signature bit-flips; (5) Immutable Authority Ledger: Hash-chained Blocks #1 through #29 committed to SQLite evidence_ledger.db under SYS-021; (6) Complete dual-repository regression verification: 1,383 passing tests across osiris-cli and dnalang-core with zero regressions.",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems, LLC"
+      }
+    ],
+    "keywords": [
+      "quantum computing",
+      "IBM Heron",
+      "QLDPC",
+      "neural decoder",
+      "Hayden-Preskill",
+      "quantum compilation",
+      "zero-SWAP routing",
+      "post-quantum cryptography",
+      "NIST FIPS 204",
+      "ML-DSA-65",
+      "Dilithium",
+      "language models",
+      "continual learning",
+      "cryptographic governance",
+      "SYS-021"
+    ],
+    "access_right": "open",
+    "license": "Apache-2.0",
+    "version": "v6.0.0",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23990352",
+        "relation": "continues",
+        "resource_type": "dataset"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v6.0.0",
+        "relation": "isSupplementTo",
+        "resource_type": "software"
+      }
+    ]
+  }
+}

@@ -21,6 +21,11 @@ from .sovereign_mechanics import (
     TorsionLockedAttention, PhaseConjugateCorrector,
     FractalAntennaEmbedding, SovereignBlock, NegentropicTracker,
 )
+from .bidirectional import (
+    BidirectionalAttention, OnlineNegentropicTracker,
+    IntrospectiveGovernor, GovernorAction, AnomalyReceipt,
+    EpistemicIntrospector, IntrospectionProfile,
+)
 from .optimizer import AdamW, LRSchedule
 from .trainer import Trainer, TrainingConfig
 from .inference import (
@@ -51,6 +56,10 @@ __all__ = [
     # 11D-CRSM Mechanics
     "TorsionLockedAttention", "PhaseConjugateCorrector",
     "FractalAntennaEmbedding", "SovereignBlock", "NegentropicTracker",
+    # OSIRIS v5.0 Bidirectional & Introspection
+    "BidirectionalAttention", "OnlineNegentropicTracker",
+    "IntrospectiveGovernor", "GovernorAction", "AnomalyReceipt",
+    "EpistemicIntrospector", "IntrospectionProfile",
     # Optimizer
     "AdamW", "LRSchedule",
     # Trainer

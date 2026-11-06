@@ -176,6 +176,11 @@ ORGANISM_ARCHES = {
     "crsm": dict(torsion_lock=True, phase_conjugate=True, fractal_embedding=False, positional="phi"),
     "standard": dict(torsion_lock=False, phase_conjugate=False, fractal_embedding=False,
                      pilot_wave=False, golden_scale=False, positional="standard", ff_dim=384),
+    "standard_scale512": dict(torsion_lock=False, phase_conjugate=False, fractal_embedding=False,
+                              pilot_wave=False, golden_scale=False, positional="standard",
+                              dim=256, n_layers=6, n_heads=4, ff_dim=768, max_seq_len=512),
+    "crsm_scale512": dict(torsion_lock=True, phase_conjugate=True, fractal_embedding=False, positional="phi",
+                          dim=256, n_layers=6, n_heads=4, ff_dim=512, max_seq_len=512),
 }
 ORGANISM_MAX_BACKUPS = 5
 # Every ORGANISM_MILESTONE_EVERY steps the live core keeps one checkpoint for good (organism.milestone<N>.npz:
@@ -3585,7 +3590,10 @@ def _organism_build(arch=None):
     from osiris.nclm import AdamW, LRSchedule, SovereignConfig, SovereignTransformerV2
     arch = arch or _organism_arch()
     flags = dict(ORGANISM_ARCHES[arch])
-    geometry = dict(ORGANISM_GEOMETRY, ff_dim=flags.pop("ff_dim", ORGANISM_GEOMETRY["ff_dim"]))
+    geometry = dict(ORGANISM_GEOMETRY)
+    for k in ("dim", "n_layers", "n_heads", "ff_dim", "max_seq_len"):
+        if k in flags:
+            geometry[k] = flags.pop(k)
     cfg = SovereignConfig(vocab_size=256, dropout=0.0, **flags, **geometry)
     model = SovereignTransformerV2(cfg)
     model.organism_arch = arch

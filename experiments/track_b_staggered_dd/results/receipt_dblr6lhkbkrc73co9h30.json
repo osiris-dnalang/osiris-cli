@@ -1,0 +1,19 @@
+{
+  "job_id": "dblr6lhkbkrc73co9h30",
+  "backend": "ibm_marrakesh",
+  "payload_hash": "726a836e934134ec1dec6a4bbdc3b25a1c407274844b67d4fb855115b15c25db",
+  "permit_nonce": "7a7f078f575835860cbe88897f02eb17",
+  "timestamp": 1793831766.559698,
+  "n_pubs": 9,
+  "shots_per_pub": 1024,
+  "physical_qubits": [
+    14,
+    15,
+    19,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

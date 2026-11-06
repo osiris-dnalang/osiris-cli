@@ -1,0 +1,72 @@
+{
+  "experiment_id": "OSIRIS_EXPERIMENT_E3_CROSS_CHIP_TRANSFER",
+  "target_qpu": "ibm_fez",
+  "architecture": "IBM Heron r2 (156 qubits)",
+  "model_sha256": "1f6e55f500e7e0f5ffc38bd3786a278da83450d715eef2bfa2290aa75852980d",
+  "evolution_duration_ns": 8000,
+  "edges": {
+    "(87,88)": {
+      "edge": [87, 88],
+      "cz_len_ns": 68.0,
+      "cz_error": 0.0030,
+      "t1_u_us": 186.0,
+      "t2_u_us": 266.4,
+      "t1_v_us": 146.6,
+      "t2_v_us": 213.0,
+      "Gamma_phi_u_MHz": 0.001066,
+      "Gamma_phi_v_MHz": 0.001284,
+      "max_Gamma_phi_MHz": 0.001284,
+      "eta_phi": 0.0103,
+      "regime": "REGIME_I_NEUTRAL_SATURATED",
+      "recommended_protocol": "SYNC_XY8",
+      "recommended_offset_ns": 0,
+      "predicted_sign_delta_F": "NEAR_ZERO (|Delta F_Bell| <= 0.005)"
+    },
+    "(61,62)": {
+      "edge": [61, 62],
+      "cz_len_ns": 68.0,
+      "cz_error": 0.0020,
+      "t1_u_us": 187.4,
+      "t2_u_us": 100.4,
+      "t1_v_us": 80.5,
+      "t2_v_us": 30.5,
+      "Gamma_phi_u_MHz": 0.007292,
+      "Gamma_phi_v_MHz": 0.026576,
+      "max_Gamma_phi_MHz": 0.026576,
+      "eta_phi": 0.2126,
+      "regime": "REGIME_II_STAGGER_BENEFICIAL",
+      "recommended_protocol": "STAG_XY8_80",
+      "recommended_offset_ns": 80,
+      "predicted_sign_delta_F": "POSITIVE (Delta F_Bell > 0, STAG_XY8_80 > SYNC_XY8)"
+    },
+    "(100,101)": {
+      "edge": [100, 101],
+      "cz_len_ns": 68.0,
+      "cz_error": 0.0028,
+      "t1_u_us": 185.0,
+      "t2_u_us": 20.4,
+      "t1_v_us": 128.0,
+      "t2_v_us": 133.7,
+      "Gamma_phi_u_MHz": 0.046317,
+      "Gamma_phi_v_MHz": 0.003573,
+      "max_Gamma_phi_MHz": 0.046317,
+      "eta_phi": 0.3705,
+      "regime": "REGIME_III_CPMG_BOUNDARY_BREAKDOWN",
+      "recommended_protocol": "SYNC_XY8",
+      "recommended_offset_ns": 0,
+      "predicted_sign_delta_F": "NEGATIVE (Delta F_Bell < 0, SYNC_XY8 > STAG_XY8)"
+    }
+  },
+  "pre_registered_primary_outcome": "Delta_F_transfer = F_OSIRIS_Adaptive - F_STAG_XY8_80",
+  "pre_registered_secondary_outcome": "Delta_F_stag = F_STAG_XY8_80 - F_SYNC_XY8",
+  "frozen_policy_offsets_ns": {
+    "(87,88)": 0,
+    "(61,62)": 80,
+    "(100,101)": 0
+  },
+  "decision_criteria": {
+    "adaptive_beats_fixed_80": "Delta_F_transfer > 0 with CI excluding zero -> Evidence of transferable adaptive policy across chips",
+    "both_perform_similarly": "Delta_F_transfer ~= 0 -> Fixed 80 ns is sufficient control law",
+    "stagger_advantage_replicates_in_regime_II": "Delta_F_stag((61,62)) > 0 -> Replicates positive stagger benefit observed on Marrakesh"
+  }
+}

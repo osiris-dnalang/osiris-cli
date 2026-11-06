@@ -1,0 +1,14 @@
+{
+  "job_id": "dbm86158ft8s738ucqi0",
+  "backend": "ibm_fez",
+  "status": "QUEUED",
+  "submission_time": "2026-11-05T13:22:13.054211+00:00",
+  "ledger_block_index": 20,
+  "ledger_block_hash": "bfbbb33e444dde534a22b0d71be44cd56380fa64787f83e4c3170df06ed48167",
+  "payload_sha256": "1dd51117dec70a9ade8ca880de97f01e6efb09330626bce0c2263387997cc00f",
+  "prereg_sha256": "15595416c2469922cb807b4ba045de5860c86cd91a038d77046a7fbf2b1d2215",
+  "qpy_sha256": "fa3e360abf23f41dad8fe321f05922be4c211964089d3395df7257421ec9d27b",
+  "circuits_count": 81,
+  "shots_per_circuit": 1024,
+  "total_shots": 82944
+}

@@ -1,0 +1,219 @@
+\documentclass[aps,preprint,superscriptaddress,longbibliography]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{siunitx}
+
+\begin{document}
+
+\title{CRSM and Tetrahedral Dielectric Lattice Resonances: A Hypothesis and Reproducibility Protocol}
+
+\author{Devin Phillip Davis}
+\affiliation{Agile Defense Systems LLC, Kentucky, USA}
+\affiliation{OSIRIS Quantum Discovery Program}
+
+\date{Draft: \today}
+
+\begin{abstract}
+This document defines a testable research program for the proposed Coaxial
+Resonance State Manifold (CRSM) and related tetrahedral dielectric-lattice
+hypotheses. It is a hypothesis and reproducibility draft, not a report of
+confirmed anomalous vacuum energy, propulsion, quantum entropy suppression,
+or a replacement for dark matter. Numerical claims in earlier CRSM manuscript
+versions, including an entropy-suppression score and a fixed physical lock
+angle, are not treated here as verified results. The existing OSIRIS claims
+register records \texttt{THETA\_LOCK} as \texttt{REFUTED} and
+\texttt{LAMBDA\_PHI} as \texttt{NOT\_MEASURED}; this draft does not alter
+those records. We specify the mathematical, statistical, and experimental
+artifacts required before any claim can be evaluated for support.
+\end{abstract}
+
+\maketitle
+
+\section{Status, scope, and provenance}
+
+\textbf{Status: hypothesis/protocol draft.} No new experiment, hardware job,
+numerical reproduction, independent review, or pre-registration is claimed
+to have occurred by virtue of this document.
+
+The CRSM label refers to a proposed model family involving dielectric
+structures, geometric constraints, and field configurations. The existence
+of a useful mathematical parameterization would not by itself establish a
+new vacuum mechanism or physical effect. Each claim must be stated with an
+observable, units, a null model, an analysis method, and a reproducible
+source artifact.
+
+The related historical OSIRIS manuscript
+\texttt{papers/crsm\_nature\_physics\_2026.tex} is preserved unchanged.
+This draft is a separate artifact and should not be interpreted as a
+replacement or as byte-identical to prior manuscript text. The accompanying
+repository document \texttt{docs/research/crsm\_claim\_audit.md} maps
+important claims to current evidence status and missing evidence.
+
+\section{Claims and current evidence status}
+
+\begin{table}[h]
+\centering
+\caption{Initial evidence posture for major CRSM claims. These are not new
+claim-register transitions.}
+\begin{tabular}{p{0.39\linewidth}p{0.18\linewidth}p{0.34\linewidth}}
+\toprule
+Claim & Current treatment & Evidence needed \\
+\midrule
+A physical resonance at $51.843^\circ$ & Existing status: \texttt{REFUTED} & Independent, pre-registered measurement with calibrated controls \\
+A universal $\Lambda_\Phi$ coupling & Existing status: \texttt{NOT\_MEASURED} & Dimensionally consistent derivation and traceable measurement \\
+Quantum entropy suppression & Unverified here & Raw job data, dependence analysis, fixed statistics, replication \\
+Casimir or vacuum-energy anomaly & Hypothesis & Correct geometry, boundary conditions, uncertainty budget, conventional baseline \\
+Propulsion or mass reduction & Hypothesis & Energy/momentum balance and direct calibrated force measurement \\
+Galaxy rotation-curve alternative & Hypothesis & Versioned data and fair, held-out model comparison \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Geometry must be specified before interpretation}
+
+A tetrahedral construction requires explicit three-dimensional vertices and
+a statement of which geometric angle is intended. Common tetrahedral angles
+are not interchangeable. In particular,
+\begin{equation}
+\arccos(1/3) \approx 70.5288^\circ,
+\end{equation}
+which is not $51.843^\circ$. The latter is approximately
+$\arctan(14/11)$ and must not be described as the result of the former
+identity. Any proposed lock or resonance angle must be derived from an
+explicit geometry and then measured independently; selecting a value from
+a geometric coincidence does not establish a physical resonance.
+
+For a proposed lattice, the authors should provide coordinates
+$\{\mathbf{v}_i\}$, edge lengths, boundary conditions, orientation
+conventions, and a reproducible calculation of any predicted eigenmodes.
+A schematic or a fitted angle alone is insufficient.
+
+\section{Dimensional and field-theory requirements}
+
+The ideal parallel-plate Casimir energy per unit area is commonly written
+\begin{equation}
+\frac{E_{\mathrm{Cas}}}{A}
+= -\frac{\pi^2\hbar c}{720d^3},
+\end{equation}
+while the corresponding force per unit area is
+\begin{equation}
+\frac{F_{\mathrm{Cas}}}{A}
+= -\frac{\pi^2\hbar c}{240d^4}.
+\end{equation}
+These expressions refer to idealized parallel conducting plates at
+separation $d$. A proposed dielectric cavity requires its own geometry,
+material response, mode spectrum, and boundary conditions. A quantity
+proportional to $d^{-4}$ must not be labeled energy density without a
+definition and dimensional derivation appropriate to the model.
+
+A parameter with units of inverse seconds cannot be inserted directly into
+a dimensionless multiplicative correction unless a reference timescale or
+other dimensionally consistent definition is provided. The numerical value
+$2.176435\times10^{-8}$ is close to the Planck mass expressed in kilograms;
+that numerical match does not establish a coupling rate in
+$\mathrm{s}^{-1}$.
+
+For electromagnetic energy transfer, use the oriented Poynting flux
+\begin{equation}
+P_{\partial V}(t)=\oint_{\partial V}
+\mathbf{S}(\mathbf{x},t)\cdot\hat{\mathbf{n}}\,dA,
+\qquad
+\mathbf{S}=\mathbf{E}\times\mathbf{H},
+\end{equation}
+with a defined control volume, surface orientation, time averaging, and
+energy accounting. An integral of $|\mathbf{E}\times\mathbf{B}|$ is not
+equivalent to a signed net power flux. A flux calculation alone does not
+demonstrate propulsion, mass reduction, energy creation, or a spacetime
+metric perturbation. Any relativistic interpretation needs an explicit
+derivation from a stated stress-energy tensor and field equations.
+
+\section{Quantum-device entropy claim: minimum evidence}
+
+Any previously reported entropy-suppression statistic, including a large
+$Z$-score or small $p$-value, remains unverified in this draft. The
+minimum reproducibility package includes:
+\begin{enumerate}
+  \item immutable per-job raw results or counts, job identifiers, backend,
+  timestamps, circuit hashes, shot counts, and calibration metadata;
+  \item the exact data-selection history, exclusion log, analysis commit,
+  dependency lock, random seeds, and executable command;
+  \item a pre-specified sampling unit and treatment of dependence between
+  jobs, circuits, calibration windows, and repeated runs;
+  \item a fixed entropy estimator, baseline definition, effect size,
+  uncertainty interval, primary statistic, and multiplicity correction;
+  \item all controls, all conditions, and all null or negative results;
+  \item an independent reproduction from the immutable artifacts and a
+  separately collected replication under a frozen analysis.
+\end{enumerate}
+
+A job count is not automatically an independent sample size. A small
+$p$-value, even when correctly computed, is not by itself evidence for a
+particular physical mechanism. Exploratory analyses must be labeled as
+exploratory and may not be retroactively described as confirmatory.
+
+\section{Proposed experimental program}
+
+\subsection{Microwave or dielectric cavity}
+
+Specify the cavity geometry, dielectric properties, mode spectrum,
+instrument calibration, thermal conditions, and expected conventional
+response before collecting outcome data. Compare the proposed model with
+conventional electromagnetic calculations and include sham and negative
+controls. Publish uncertainties and all deviations from the frozen
+protocol.
+
+\subsection{Optical interferometry}
+
+Define the observable, phase-stability requirements, noise model, blind or
+randomized conditions where practical, and a pre-specified decision rule.
+Distinguish instrument drift and environmental coupling from a model-specific
+prediction. No anomalous result should be claimed without independent
+calibration and replication.
+
+\subsection{Galaxy rotation curves}
+
+Use a named, versioned public dataset and preserve source hashes. Freeze
+sample selection, distance and inclination treatment, baryonic components,
+uncertainties, likelihood, priors, and held-out evaluation before fitting.
+Compare CRSM with established alternatives using the same observations and
+uncertainty assumptions. Report model complexity, residual diagnostics,
+uncertainty intervals, sensitivity analyses, and held-out predictive
+performance. A visual match to selected curves is not sufficient evidence
+of superiority.
+
+\section{Analysis and reporting policy}
+
+Before confirmatory data analysis, freeze the hypothesis, sampling unit,
+primary endpoint, null model, test statistic, exclusions, stopping rule,
+multiplicity policy, and failure criteria. Preserve raw data immutably and
+record hashes for all derived artifacts. Report effect sizes and uncertainty
+intervals, not only significance levels. Publish null outcomes and all
+protocol deviations.
+
+Software tests can establish specified properties of code; they do not by
+themselves validate a physical model. Simulations are conditional on their
+assumptions and do not count as physical measurements. Configured constants
+are not measured quantities. Every claim should be linked to a stable source
+artifact and a reviewed evidence status.
+
+\section{Limitations and decision rule}
+
+This document supplies a protocol framework, not results. The equations and
+tests above identify requirements for a later investigation; they do not
+establish that CRSM is physically correct or that an anomaly exists. Claims
+remain hypotheses until data provenance, dimensional consistency,
+appropriate controls, independent analysis, and replication support the
+specific statement being made. Existing negative and artifact findings must
+remain visible in the research lineage.
+
+\section*{Data and code availability}
+
+No new dataset, experiment, or analysis output is released with this draft.
+A future result must identify its immutable data artifacts, source commit,
+environment, exact reproduction commands, output hashes, and review record.
+The manuscript should not be assigned a publication DOI or described as
+peer-reviewed until those events actually occur.
+
+\end{document}

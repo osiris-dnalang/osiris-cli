@@ -53,3 +53,9 @@ venv312/
 repos/
 .osiris_env*
 
+
+# osiris_nclm_cli runtime outputs (written next to REPO_ROOT by design)
+.autoadvance/
+.osiris_state/
+auto_enhance_*.json
+auto_complete_*.json
