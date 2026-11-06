@@ -6,5 +6,7 @@
   "operation_schema_sha256": "36d1495eaaa06ed2b08a2c7571ce9faffdbe422cecae94e0183b8934de59f94e",
   "timestamp": 1793952598.960422,
   "nonce": "OSIRIS-QAML-001-PREREG-1793952598960",
-  "package_path": "dist/osiris_qaml_001_preregistration_package.tar.gz"
+  "package_path": "dist/osiris_qaml_001_preregistration_package.tar.gz",
+  "block_hash": "71bcec0fa3bf82e135dc5d87214d30b15925e1dc0afd5b7fc6c8731fccafdbaf",
+  "prev_block_hash": "fb73fd7844995dbc9a72cb40d6f75d9503204c7984ae95e21379fe5745adcc2d"
 }
