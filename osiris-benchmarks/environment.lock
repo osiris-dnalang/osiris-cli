@@ -1,0 +1,25 @@
+# OSIRIS Reproducibility Foundation: Environment Lock
+# Generated: 2026-11-05T04:11:00Z
+# Host Platform: Windows-10-10.0.26300-SP0 (AMD64)
+# Container/WSL Substrate: Ubuntu 24.04 LTS (x86_64, Linux kernel 5.15+)
+
+[runtimes]
+python_host = "3.11.0"
+python_cleanroom = "3.12.3"
+
+[core_packages]
+qiskit = "2.4.0"
+qiskit-ibm-runtime = "0.45.0"
+scipy = "1.17.1"
+numpy = "2.4.4"
+
+[hardware_profiles]
+qpu_primary = "ibm_marrakesh (156-qubit Heron r2, dt=4.0ns)"
+qpu_transfer = "ibm_kingston (156-qubit Heron r2, dt=4.0ns)"
+qpu_fallback = "ibm_fez (156-qubit Heron r2, dt=4.0ns)"
+cpu_bench = "AMD64 / x86_64 multi-core"
+
+[determinism_invariants]
+seed_preregistration = 20261105
+ledger_hash_algorithm = "SHA-256"
+encoding = "UTF-8 (ANSI sanitized)"

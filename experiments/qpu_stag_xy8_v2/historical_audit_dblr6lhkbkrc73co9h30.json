@@ -1,0 +1,304 @@
+{
+  "job_id": "dblr6lhkbkrc73co9h30",
+  "backend": "ibm_marrakesh",
+  "creation_date": "2026-11-04 17:36:06.515268-05:00",
+  "status": "DONE",
+  "analysis": {
+    "finding": "TIMING_AMBIGUITY_AND_DD_OMISSION",
+    "root_cause": "The historical circuits contained zero delay instructions and zero dynamical decoupling pulses. Transpilation combined the un-spaced XY sequence into identity/virtual-Z rotations, leaving only basis rotations and measurements. Furthermore, 'XX' circuits contained no rotation (measuring computational basis Z), yielding ~0.95 apparent correlation on un-evolved |00>, while 'YY' and 'ZZ' circuits contained an H rotation on |00>, producing uniform random bitstrings that trivially averaged to ~0.00 expectation value.",
+    "qubits_detected": [
+      14,
+      15,
+      19,
+      31,
+      32,
+      33,
+      34,
+      35
+    ],
+    "pubs": [
+      {
+        "index": 0,
+        "name": "sync_xy4_ZZ",
+        "ops": {
+          "rz": 16,
+          "sx": 8,
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "00110000",
+            10
+          ],
+          [
+            "01101000",
+            9
+          ],
+          [
+            "10100111",
+            8
+          ],
+          [
+            "00001110",
+            8
+          ],
+          [
+            "00000100",
+            8
+          ]
+        ]
+      },
+      {
+        "index": 1,
+        "name": "sync_xy4_XX",
+        "ops": {
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "00000000",
+            929
+          ],
+          [
+            "10000000",
+            27
+          ],
+          [
+            "00001000",
+            21
+          ],
+          [
+            "00000100",
+            20
+          ],
+          [
+            "00000010",
+            9
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "name": "sync_xy4_YY",
+        "ops": {
+          "rz": 16,
+          "sx": 8,
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "11101000",
+            11
+          ],
+          [
+            "11000011",
+            9
+          ],
+          [
+            "11011100",
+            9
+          ],
+          [
+            "01111110",
+            9
+          ],
+          [
+            "00111101",
+            8
+          ]
+        ]
+      },
+      {
+        "index": 3,
+        "name": "stag_xy4_ZZ",
+        "ops": {
+          "rz": 16,
+          "sx": 8,
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "01111111",
+            11
+          ],
+          [
+            "01110000",
+            11
+          ],
+          [
+            "00011100",
+            10
+          ],
+          [
+            "00110000",
+            10
+          ],
+          [
+            "10010101",
+            9
+          ]
+        ]
+      },
+      {
+        "index": 4,
+        "name": "stag_xy4_XX",
+        "ops": {
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "00000000",
+            927
+          ],
+          [
+            "10000000",
+            27
+          ],
+          [
+            "00001000",
+            20
+          ],
+          [
+            "00000100",
+            18
+          ],
+          [
+            "00000010",
+            17
+          ]
+        ]
+      },
+      {
+        "index": 5,
+        "name": "stag_xy4_YY",
+        "ops": {
+          "rz": 16,
+          "sx": 8,
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "10111100",
+            10
+          ],
+          [
+            "11011110",
+            9
+          ],
+          [
+            "10010010",
+            9
+          ],
+          [
+            "01011000",
+            8
+          ],
+          [
+            "11011001",
+            8
+          ]
+        ]
+      },
+      {
+        "index": 6,
+        "name": "stag_xy8_ZZ",
+        "ops": {
+          "rz": 16,
+          "sx": 8,
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "01101011",
+            13
+          ],
+          [
+            "11011111",
+            10
+          ],
+          [
+            "00011000",
+            10
+          ],
+          [
+            "00111010",
+            9
+          ],
+          [
+            "00111110",
+            9
+          ]
+        ]
+      },
+      {
+        "index": 7,
+        "name": "stag_xy8_XX",
+        "ops": {
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "00000000",
+            941
+          ],
+          [
+            "10000000",
+            25
+          ],
+          [
+            "00001000",
+            18
+          ],
+          [
+            "00000100",
+            15
+          ],
+          [
+            "00000010",
+            14
+          ]
+        ]
+      },
+      {
+        "index": 8,
+        "name": "stag_xy8_YY",
+        "ops": {
+          "rz": 16,
+          "sx": 8,
+          "measure": 8
+        },
+        "total_shots": 1024,
+        "top_bitstrings": [
+          [
+            "10101101",
+            11
+          ],
+          [
+            "10011011",
+            11
+          ],
+          [
+            "00111100",
+            9
+          ],
+          [
+            "10010010",
+            8
+          ],
+          [
+            "01100000",
+            8
+          ]
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "title": "OSIRIS v5.3.1: Pre-Registered Held-Out Dynamical Decoupling Validation, Empirical Noise Floor Bounds, and Statistical Rescoring on 156-Qubit IBM Heron r2",
+    "upload_type": "dataset",
+    "description": "Evidence package and clean-room reproducibility archive for OSIRIS v5.3.1. This release incorporates the comprehensive peer audit and statistical rescoring of the multi-stage dynamical decoupling campaign (Experiments E0–E4) executed on 156-qubit IBM Heron r2 processors (ibm_marrakesh and ibm_fez). Primary updates and disclosures include: (1) Rescoring of all prospective estimands against pre-registered baselines and multinomial shot noise, including rescoring the E3 pilot to +0.038 pp under the frozen binary policy; (2) Falsification of scalar cross-chip parameter transferability on ibm_fez (Delta F_transfer = -0.80 +- 0.60 pp); (3) Discovery of the empirical inter-arm noise floor (1.03 pp RMS) across seven accidental A/A comparisons executing identical physical schedules, proving that background hardware drift exceeds reported sub-percentage DD gains; (4) Honest mechanistic bounds from Experiment E4 showing that stagger sweeps on both couplers fit a flat response (chi^2 p > 0.85), and conditional Ramsey measurements bound static ZZ coupling to <= 10 kHz without resolving a non-zero shift at 0.91 sigma; (5) A rigorous sample size power calculation establishing that resolving 0.5 pp DD improvements at 2-sigma requires >= 33,000 shots per basis per arm; (6) Complete literature integration citing Niu, Todri-Sanial & Bronn (arXiv:2403.05391), Viola & Lloyd (1998), and Pokharel & Lidar (2023). All artifacts are cryptographically anchored to an unbroken 26-block SQLite ledger under SYS-021.",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems, LLC"
+      }
+    ],
+    "keywords": [
+      "quantum control",
+      "dynamical decoupling",
+      "superconducting qubits",
+      "IBM Heron",
+      "spectator crosstalk",
+      "reproducibility",
+      "null results",
+      "noise floor",
+      "cryptographic governance"
+    ],
+    "access_right": "open",
+    "license": "Apache-2.0",
+    "version": "v5.3.1",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23983003",
+        "relation": "continues",
+        "resource_type": "dataset"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v5.3.1",
+        "relation": "isSupplementTo",
+        "resource_type": "software"
+      }
+    ]
+  }
+}

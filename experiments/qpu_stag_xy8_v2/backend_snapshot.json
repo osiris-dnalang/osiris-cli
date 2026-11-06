@@ -1,0 +1,83 @@
+{
+  "backend_name": "ibm_marrakesh",
+  "num_qubits": 156,
+  "dt_ns": 4.0,
+  "timing_constraints": {
+    "granularity": 1,
+    "min_length": 2,
+    "pulse_alignment": 1,
+    "acquire_alignment": 1
+  },
+  "qubit_properties": {
+    "14": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    },
+    "15": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    },
+    "19": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    },
+    "35": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    },
+    "34": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    },
+    "33": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    },
+    "32": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    },
+    "31": {
+      "x_duration_ns": 36.0,
+      "sx_duration_ns": 36.0,
+      "measure_duration_ns": 2684.0
+    }
+  },
+  "edge_properties": {
+    "(14,15)": {
+      "cz_duration_ns": 68.0,
+      "cz_error": 0.0017065702651044568
+    },
+    "(15,19)": {
+      "cz_duration_ns": 68.0,
+      "cz_error": 0.00496657179320914
+    },
+    "(19,35)": {
+      "cz_duration_ns": 80.0,
+      "cz_error": 0.0024132217247090637
+    },
+    "(35,34)": {
+      "cz_duration_ns": 68.0,
+      "cz_error": 0.002086598828892783
+    },
+    "(34,33)": {
+      "cz_duration_ns": 68.0,
+      "cz_error": 0.002668278677438851
+    },
+    "(33,32)": {
+      "cz_duration_ns": 68.0,
+      "cz_error": 0.002235182807845265
+    },
+    "(32,31)": {
+      "cz_duration_ns": 68.0,
+      "cz_error": 0.0024311757254741606
+    }
+  }
+}

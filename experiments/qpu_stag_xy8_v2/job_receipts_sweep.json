@@ -1,0 +1,31 @@
+{
+  "job_id": "dblt471kbkrc73coc33g",
+  "backend": "ibm_marrakesh",
+  "circuits": 144,
+  "shots": 1024,
+  "edges": [
+    [
+      14,
+      15
+    ],
+    [
+      33,
+      32
+    ],
+    [
+      19,
+      35
+    ]
+  ],
+  "offsets_ns": [
+    0,
+    80,
+    160,
+    240,
+    320,
+    480,
+    640,
+    800
+  ],
+  "duration_us": 8.0
+}

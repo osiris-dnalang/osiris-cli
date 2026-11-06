@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "title": "OSIRIS v5.3.2: Deterministic C-SIMD Acceleration, Gate 0 Substrate Portability, MAXQ SWAP-Free Subgraph Routing, and Hayden-Preskill Quantum Recovery Benchmark",
+    "upload_type": "dataset",
+    "description": "Evidence package and clean-room reproducibility archive for OSIRIS v5.3.2. This release incorporates major architectural enhancements, hardware acceleration fixes, quantum toolchain compiler gates, and quantum information recovery verification: (1) NCLM C-SIMD KV Cache Tensor Stride & Contiguity Fix: Resolved non-contiguous C-pointer striding in c_simd_ops.c and fast_inference.py, reducing decode logit discrepancy from 10.632 to 1.14e-5 (bitwise parity with NumPy baseline); (2) Gate 0 Substrate Portability: Eliminated hardcoded environment paths across the codebase, achieving 100% hermetic test passage (1,318 passed, 0 failed across all modules); (3) MAXQ Wormhole Subgraph Compiler: Implemented deterministic greedy disjoint-edge matching on the 6-qubit closed cycle subgraph {14, 15, 19, 35, 34, 13} of IBM Heron r2, enforcing a fail-closed dual-layer firewall against non-local SWAP routing (CZ <= 24); (4) Stage 2 Telemetry & Wasserstein-2 Metric Formalization: Formal empirical refutation of the geometric phase hypothesis H1: theta* = phi^2 (Delta R-hat = -0.167) and confirmation of the 1st-rank optimum at theta = 2.118 rad (R-hat = 0.7541) with inverse diversity-robustness scaling rho ~ -0.95; (5) OSIRIS-HP-001 Hayden-Preskill Quantum Information Recovery Benchmark: 6-qubit simulator, Petz reconstruction mapping, Pauli observable tomography, and 5-gate preregistration audit confirming early radiation entanglement enables black hole information retrieval (F_entangled = 0.7645 vs F_control = 0.2004, witness W = -0.2645 < 0); (6) Pathway to OSIRIS 6.0: Architectural charter for the Self-Compressing Sovereign Architecture across 5 core pillars; (7) OSIRIS 100 Advanced Systems Operations Manual: Complete publication-grade runbook covering all 9 operational planes.",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems, LLC"
+      }
+    ],
+    "keywords": [
+      "quantum control",
+      "IBM Heron",
+      "Hayden-Preskill",
+      "quantum information recovery",
+      "Petz recovery",
+      "subgraph routing",
+      "optimal transport",
+      "Wasserstein distance",
+      "C-SIMD",
+      "AVX2",
+      "cryptographic governance",
+      "reproducibility",
+      "SYS-021"
+    ],
+    "access_right": "open",
+    "license": "Apache-2.0",
+    "version": "v5.3.2",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.23986321",
+        "relation": "continues",
+        "resource_type": "dataset"
+      },
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v5.3.2",
+        "relation": "isSupplementTo",
+        "resource_type": "software"
+      }
+    ]
+  }
+}

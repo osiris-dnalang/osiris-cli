@@ -53,28 +53,47 @@ def verify_chain(path: str) -> Dict[str, object]:
     entry; otherwise the chain is broken there (an edited, inserted-with-a-false-link or removed entry). A `prev`
     that names an earlier entry other than the one just before is a fork: two writers appended from different heads
     (2026-10-07, before the writer read the file's last entry). Forks are listed, never hidden; they are not breaks,
-    because no entry was altered and every link resolves."""
+    because no entry was altered and every link resolves.
+
+    The result names the file it read (``resolved_path``, so a console reading the wrong data home shows it) and a
+    ``status`` with an ``exit_code`` (E-24): INTACT 0; EMPTY 0, no log or no entries yet; TAMPERED 1, an entry fails its hash or
+    links nowhere; UNREADABLE 2, the file or a line of it cannot be read or parsed."""
     import hashlib
     genesis = "0" * 64
-    n, prev, broken, forks, seen = 0, genesis, None, [], {genesis}
+    resolved = os.path.abspath(os.path.expanduser(path))
+    n, prev, forks, seen = 0, genesis, [], {genesis}
+
+    def result(status: str, broken_at: Optional[int] = None, error: Optional[str] = None) -> Dict[str, object]:
+        return {"resolved_path": resolved, "status": status, "intact": status in ("INTACT", "EMPTY"),
+                "exit_code": {"INTACT": 0, "EMPTY": 0, "TAMPERED": 1, "UNREADABLE": 2}[status],
+                "entries": n, "broken_at": broken_at, "forks": forks, "head": prev[:12], "error": error}
+
+    if not os.path.exists(resolved):
+        return result("EMPTY")
     try:
-        with open(path, encoding="utf-8") as f:
+        with open(resolved, encoding="utf-8") as f:
             for i, line in enumerate(f):
-                entry = json.loads(line)
+                if not line.strip():
+                    continue
+                try:
+                    entry = json.loads(line)
+                except ValueError as e:
+                    return result("UNREADABLE", i, f"line {i + 1} is not JSON ({e})")
+                if not isinstance(entry, dict):
+                    return result("TAMPERED", i, f"line {i + 1} is not an entry")
                 h = entry.pop("hash", None)
                 body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
-                if hashlib.sha256(body.encode()).hexdigest() != h or entry.get("prev") not in seen:
-                    broken = i
-                    break
+                if hashlib.sha256(body.encode()).hexdigest() != h:
+                    return result("TAMPERED", i, f"entry {i} does not hash to its recorded hash")
+                if entry.get("prev") not in seen:
+                    return result("TAMPERED", i, f"entry {i} links to no earlier entry")
                 if entry.get("prev") != prev:
                     forks.append(i)
                 seen.add(h)
                 prev, n = h, n + 1
-    except FileNotFoundError:
-        return {"entries": 0, "intact": True, "head": prev}
-    except (OSError, ValueError) as e:
-        return {"entries": n, "intact": False, "error": type(e).__name__}
-    return {"entries": n, "intact": broken is None, "broken_at": broken, "forks": forks, "head": prev[:12]}
+    except (OSError, UnicodeDecodeError) as e:
+        return result("UNREADABLE", None, f"{type(e).__name__}: {e}")
+    return result("INTACT" if n else "EMPTY")
 
 
 def verify_chain_tail(path: str, tail_lines: int = 20) -> Dict[str, object]:
@@ -156,9 +175,35 @@ class Probes:
         return {"name": "trainer", "cmd": "osiris train --status", "out": "\n".join(lines)}
 
     def ledger(self, _msg: str = "") -> Dict[str, str]:
-        v = verify_chain(os.path.join(self.living_home, "exchanges.jsonl"))
-        return {"name": "ledger", "cmd": "verify ~/.osiris/living/exchanges.jsonl hash chain",
-                "out": json.dumps(v)}
+        """The exchange log's chain, naming the file read: two data homes (PRoot's ~/.osiris and Termux's) each
+        hold a log, and a console reading the other one is the E-24 failure."""
+        resolved_path = os.path.abspath(os.path.expanduser(os.path.join(self.living_home, "exchanges.jsonl")))
+        v = verify_chain(resolved_path)
+        verdict_str = "PASS" if v["intact"] else f"FAIL ({v['status']})"
+        out_lines = [
+            f"Data Home:    {resolved_path}",
+            f"Status:       {v['status']}",
+            f"Integrity:    {verdict_str} (exit code {v['exit_code']})",
+            f"Entries:      {v['entries']} verified",
+            f"Chain Head:   {v['head']}",
+            f"Forks:        {len(v['forks'])}",
+        ]
+        if v.get("broken_at") is not None:
+            out_lines.append(f"Broken At:    entry {v['broken_at']} ({v.get('error', '')})")
+        elif v.get("error"):
+            out_lines.append(f"Error:        {v['error']}")
+        if v["status"] == "EMPTY":
+            out_lines.append("Note:         no exchange log here yet; a console that has talked before is "
+                             "reading another data home")
+        return {
+            "name": "ledger",
+            "cmd": f"verify {resolved_path} hash chain",
+            "out": "\n".join(out_lines),
+            "resolved_path": resolved_path,
+            "status": str(v["status"]),
+            "intact": bool(v["intact"]),
+            "exit_code": int(v["exit_code"]),
+        }
 
     def git(self, _msg: str = "") -> Dict[str, str]:
         parts = []

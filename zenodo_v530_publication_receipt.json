@@ -1,0 +1,34 @@
+{
+  "deposition_id": 23983003,
+  "record_id": 23983003,
+  "doi": "10.5281/zenodo.23983003",
+  "url": "https://zenodo.org/record/23983003",
+  "title": "OSIRIS v5.3.0: Dual-Component Quantum Control Resolution & Empirical Frontier Validation (Experiments E3\u2013E4, ZZ-Ramsey Alias Resolution, and Reproducibility Archive)",
+  "version": "v5.3.0",
+  "files_uploaded": [
+    "osiris_research_evidence_v5.3.0.zip",
+    "osiris_research_evidence_v5.3.0.tar.gz",
+    "SHA256SUMS.txt",
+    "OSIRIS_RESEARCH_TO_EVIDENCE_ROADMAP.md",
+    "EXPERIMENT_E_FRONTIER_REPORT.md",
+    "manuscript_dual_component_quantum_control.tex",
+    "analysis_exp_e4.json",
+    "analysis_zz_ramsey_14_15.json",
+    "OSIRIS_GOV_BENCH_1_REPORT.md",
+    "OSIRIS_SCI_BENCH_1_REPORT.md"
+  ],
+  "file_hashes": {
+    "osiris_research_evidence_v5.3.0.zip": "76e474b8ee215a2ec616a165dfb75287ac2d5226d9947481ab32f70f02f49419",
+    "osiris_research_evidence_v5.3.0.tar.gz": "8a9c7f454068d8b97553d1535e4752e8eda3f16f96790ed4323156d94b489a03",
+    "SHA256SUMS.txt": "c3fb0f743beed449d021e428f070704d48ab1def958f2e38ebc31c7f9d2fe734",
+    "OSIRIS_RESEARCH_TO_EVIDENCE_ROADMAP.md": "5ec6cc81b06678d02c4d036ca7fdca04a87d210540731b997462e36c14e444f1",
+    "EXPERIMENT_E_FRONTIER_REPORT.md": "87dffba97ad96223a1147633ed1823125f2b6c76f7c567007e34ef4158bb856e",
+    "manuscript_dual_component_quantum_control.tex": "04eec6c1c1ae369fee72fa694521e358a38be92b72c50a61c087c0ec6ffaa7bc",
+    "analysis_exp_e4.json": "39c3fdbb799d91eecec9fc636931a21175eb79e9613a45db028a1fae3744d146",
+    "analysis_zz_ramsey_14_15.json": "44120274e68d4fed41fbb8119f323117df4ae038c015c31945b4ea43c69348a5",
+    "OSIRIS_GOV_BENCH_1_REPORT.md": "670bc8281f7164d81ea708de29d225d1e4c9eec71064d18ea97db8e8e7266a5f",
+    "OSIRIS_SCI_BENCH_1_REPORT.md": "edc1ecfd603f83768e6627e8686284aa07722f9b968f86cea0944cdb67e00db9"
+  },
+  "published_at": "2026-11-05T15:05:17Z",
+  "status": "published"
+}

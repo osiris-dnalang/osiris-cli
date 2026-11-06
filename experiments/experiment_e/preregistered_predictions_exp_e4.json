@@ -1,0 +1,40 @@
+{
+  "experiment_id": "EXP_E4_PULSE_OVERLAP_FINGERPRINTING",
+  "timestamp_utc": "2026-11-05T14:42:00Z",
+  "backend": "ibm_marrakesh",
+  "edges": {
+    "primary": [14, 15],
+    "control": [61, 62]
+  },
+  "evolution_duration_ns": 8000,
+  "evolution_duration_dt": 2000,
+  "dt_ns": 4.0,
+  "pulse_duration_ns": 32.0,
+  "pulse_duration_dt": 8,
+  "stagger_offsets_ns": [0, 16, 32, 48, 80, 160],
+  "stagger_offsets_dt": [0, 4, 8, 12, 20, 40],
+  "measurement_bases": ["XX", "YY", "ZZ"],
+  "randomized_blocks": 2,
+  "shots_per_circuit": 1024,
+  "total_circuits": 72,
+  "total_shots": 73728,
+  "hypotheses": {
+    "H1_Pulse_Collision_Avoidance": {
+      "mechanism": "Drive crosstalk and ac-Stark collision during simultaneous 32 ns single-qubit microwave pulses.",
+      "prediction_14_15": "Sharp step / discontinuity in Bell fidelity F_Bell and <XX> across Delta in [16, 32] ns, reaching plateau at Delta >= 32 ns (zero overlap).",
+      "mathematical_criterion": "(F_Bell(32ns) - F_Bell(0ns)) / (F_Bell(160ns) - F_Bell(0ns)) >= 0.75",
+      "plateau_slope_criterion": "abs(dF/dDelta) for Delta in [32, 160] ns < 0.25 * (F_Bell(32ns) - F_Bell(0ns)) / 32ns"
+    },
+    "H2_Filter_Function_Refocusing": {
+      "mechanism": "Continuous spectral filter modulation or timing-dependent Hamiltonian phase cancellation.",
+      "prediction_14_15": "Smooth, continuous monotonic or quadratic variation of F_Bell across Delta in [0, 160] ns without saturation at 32 ns.",
+      "mathematical_criterion": "(F_Bell(32ns) - F_Bell(0ns)) / (F_Bell(160ns) - F_Bell(0ns)) < 0.50"
+    },
+    "H3_Control_Edge_Null": {
+      "mechanism": "Tunable coupler on (61, 62) has high isolation and low static ZZ (0.29 kHz).",
+      "prediction_61_62": "Zero or negligible stagger effect across all Delta (|Delta F_Bell| <= 0.6 pp, p > 0.10)."
+    }
+  },
+  "operator": "Devin Phillip Davis / Enki",
+  "governance_standard": "SYS-021"
+}

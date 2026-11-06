@@ -1,0 +1,492 @@
+{
+  "timestamp_utc": "2026-11-04T23:07:50Z",
+  "backend": "ibm_marrakesh",
+  "dt_ns": 4.0,
+  "nominal_evolution_ns": 4000.0000000000005,
+  "stagger_offset_ns": 160.0,
+  "verified_edges": {
+    "(14,15)": {
+      "IDLE": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 0,
+        "pulse_count_q1": 0,
+        "stagger_offsets_ns": [],
+        "timing_verified": true
+      },
+      "SYNC_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      },
+      "STAG_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0
+        ],
+        "timing_verified": true
+      },
+      "SHIFT_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      }
+    },
+    "(15,19)": {
+      "IDLE": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 0,
+        "pulse_count_q1": 0,
+        "stagger_offsets_ns": [],
+        "timing_verified": true
+      },
+      "SYNC_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      },
+      "STAG_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0
+        ],
+        "timing_verified": true
+      },
+      "SHIFT_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      }
+    },
+    "(19,35)": {
+      "IDLE": {
+        "state_prep_end_ns": 152.0,
+        "evolution_end_ns": 4152.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 0,
+        "pulse_count_q1": 0,
+        "stagger_offsets_ns": [],
+        "timing_verified": true
+      },
+      "SYNC_XY8": {
+        "state_prep_end_ns": 152.0,
+        "evolution_end_ns": 4152.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      },
+      "STAG_XY8": {
+        "state_prep_end_ns": 152.0,
+        "evolution_end_ns": 4152.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0
+        ],
+        "timing_verified": true
+      },
+      "SHIFT_XY8": {
+        "state_prep_end_ns": 152.0,
+        "evolution_end_ns": 4152.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      }
+    },
+    "(35,34)": {
+      "IDLE": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 0,
+        "pulse_count_q1": 0,
+        "stagger_offsets_ns": [],
+        "timing_verified": true
+      },
+      "SYNC_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      },
+      "STAG_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0
+        ],
+        "timing_verified": true
+      },
+      "SHIFT_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      }
+    },
+    "(34,33)": {
+      "IDLE": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 0,
+        "pulse_count_q1": 0,
+        "stagger_offsets_ns": [],
+        "timing_verified": true
+      },
+      "SYNC_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      },
+      "STAG_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0
+        ],
+        "timing_verified": true
+      },
+      "SHIFT_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      }
+    },
+    "(33,32)": {
+      "IDLE": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 0,
+        "pulse_count_q1": 0,
+        "stagger_offsets_ns": [],
+        "timing_verified": true
+      },
+      "SYNC_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      },
+      "STAG_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0
+        ],
+        "timing_verified": true
+      },
+      "SHIFT_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      }
+    },
+    "(32,31)": {
+      "IDLE": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 0,
+        "pulse_count_q1": 0,
+        "stagger_offsets_ns": [],
+        "timing_verified": true
+      },
+      "SYNC_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      },
+      "STAG_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0,
+          160.0
+        ],
+        "timing_verified": true
+      },
+      "SHIFT_XY8": {
+        "state_prep_end_ns": 140.0,
+        "evolution_end_ns": 4140.0,
+        "evolution_duration_ns": 4000.0,
+        "evolution_duration_dt": 1000,
+        "pulse_count_q0": 8,
+        "pulse_count_q1": 8,
+        "stagger_offsets_ns": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "timing_verified": true
+      }
+    }
+  }
+}

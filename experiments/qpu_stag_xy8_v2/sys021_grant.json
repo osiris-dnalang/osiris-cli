@@ -1,0 +1,10 @@
+{
+  "expires_at": 1793920592.1912959,
+  "nonce": "ads-sys021-55520a320dad4fc0baa10d2d2474af29",
+  "operation_schema_sha256": "26925ebd9669946eee6844dc9e913ddf53e98f50bf36949972627243199f7665",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "payload_sha256": "629587f50af60c8f17a659953fb4b5aec815afc1b4d5759708fb7bc0b8b80f6b",
+  "public_key": "b9427a381d248f122c607d2087d8355e92f9738ca2415f6861ce63417f900dc4",
+  "timestamp": 1793834192.1912959,
+  "signature": "bfb1c95a75e6703cbdbd7741de556a7cf50fa2cfed7d0fbf0887f473a40b60389a2796b27a9286002c53bc0933fdfd96c4fd023c7a1aa189900b40dc273bac0b"
+}

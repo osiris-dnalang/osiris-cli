@@ -1,0 +1,62 @@
+{
+  "target_backend": "ibm_marrakesh",
+  "total_jobs": 4,
+  "job_ids": [
+    "dblrpnt8ft8s738tlgcg",
+    "dblsnal8mdtc73d6pkmg",
+    "dblt471kbkrc73coc33g",
+    "dbltkdd8ft8s738toef0"
+  ],
+  "total_circuits": 648,
+  "total_shots": 663552,
+  "total_qpu_seconds": 192,
+  "total_paired_observations": 42,
+  "global_stats": {
+    "mean_delta_xx": 0.005115327380952381,
+    "std_delta_xx": 0.029831287707504532,
+    "ci_95_delta_xx": [
+      -0.00451078869047619,
+      0.013811383928571428
+    ],
+    "mean_delta_yy": -0.0008370535714285714,
+    "std_delta_yy": 0.02565801447926093,
+    "ci_95_delta_yy": [
+      -0.008603050595238096,
+      0.006928943452380952
+    ],
+    "p_non_inferior": 0.0,
+    "p_superior": 0.8595
+  },
+  "edge_stratified": {
+    "(14,15)": {
+      "n_pairs": 10,
+      "mean_delta_xx": 0.0185546875,
+      "std_delta_xx": 0.011726885197092246,
+      "ci_95_xx": [
+        0.0107421875,
+        0.025
+      ],
+      "p_superior": 1.0
+    },
+    "(33,32)": {
+      "n_pairs": 10,
+      "mean_delta_xx": 0.0080078125,
+      "std_delta_xx": 0.028187999103466557,
+      "ci_95_xx": [
+        -0.0091796875,
+        0.025390625
+      ],
+      "p_superior": 0.8115
+    },
+    "(19,35)": {
+      "n_pairs": 10,
+      "mean_delta_xx": 0.001171875,
+      "std_delta_xx": 0.023375569219339344,
+      "ci_95_xx": [
+        -0.0130859375,
+        0.0154296875
+      ],
+      "p_superior": 0.5545
+    }
+  }
+}
