@@ -28,22 +28,57 @@ out_ndjson = output_dir / "osiris_ecs_telemetry.ndjson"
 out_bulk = output_dir / "osiris_ecs_bulk.ndjson"
 
 def get_ledger_blocks():
-    import tempfile, shutil
-    temp_db = Path(tempfile.gettempdir()) / "temp_evidence_ledger.db"
+    import tempfile, shutil, glob, json
+    rows = []
     try:
-        shutil.copy2(local_db, temp_db)
-        conn = sqlite3.connect(temp_db)
-    except Exception:
-        conn = sqlite3.connect(r"C:\Users\Ron\evidence_ledger.db")
-    
-    cur = conn.cursor()
-    rows = cur.execute("""
-        SELECT sequence_index, prev_block_hash, block_hash, timestamp, 
-               event_type, operator_id, payload_sha256, operation_schema_sha256, 
-               nonce, raw_grant_json 
-        FROM ledger_blocks ORDER BY sequence_index ASC
-    """).fetchall()
-    conn.close()
+        temp_db = Path(tempfile.gettempdir()) / "temp_evidence_ledger.db"
+        try:
+            shutil.copy2(local_db, temp_db)
+            conn = sqlite3.connect(temp_db)
+        except Exception:
+            conn = sqlite3.connect(r"C:\Users\Ron\evidence_ledger.db")
+        cur = conn.cursor()
+        rows = list(cur.execute("""
+            SELECT sequence_index, prev_block_hash, block_hash, timestamp, 
+                   event_type, operator_id, payload_sha256, operation_schema_sha256, 
+                   nonce, raw_grant_json 
+            FROM ledger_blocks ORDER BY sequence_index ASC
+        """).fetchall())
+        conn.close()
+    except Exception as e:
+        print(f"Note: sqlite read warning ({e}), falling back to receipts.")
+
+    repo_dirs = [
+        Path(__file__).resolve().parent.parent,
+        Path(r"\\wsl$\Ubuntu\home\enki\osiris-cli"),
+        Path(r"C:\Users\Ron\.gemini\antigravity-cli\brain\7c32c8e2-435d-4e26-8461-c863e8b48925"),
+    ]
+    seen = set(r[0] for r in rows)
+    for rd in repo_dirs:
+        for rf in sorted(rd.glob("block_*_ledger_receipt.json")):
+            try:
+                with open(rf, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                seq = data.get("sequence_index")
+                if seq is not None and seq not in seen:
+                    seen.add(seq)
+                    raw_grant_str = json.dumps(data.get("raw_grant", {}))
+                    rows.append((
+                        seq,
+                        data.get("prev_block_hash", ""),
+                        data.get("block_hash", ""),
+                        data.get("timestamp", 0),
+                        data.get("event_type", ""),
+                        data.get("operator_id", ""),
+                        data.get("payload_sha256", ""),
+                        data.get("operation_schema_sha256", ""),
+                        data.get("nonce", ""),
+                        raw_grant_str
+                    ))
+            except Exception:
+                pass
+
+    rows.sort(key=lambda x: x[0])
     return rows
 
 def format_timestamp(ts):
