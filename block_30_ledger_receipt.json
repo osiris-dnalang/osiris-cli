@@ -1,0 +1,48 @@
+{
+  "sequence_index": 30,
+  "prev_block_hash": "5955c364202950dd51dcc9b24b27a15cc339b07226681fb90a3a39999485b7ea",
+  "block_hash": "2966b09693ab7c68339c2dcf6bc5385b5cc11f3f3a58b1bf750d3b1453aa65a8",
+  "timestamp": 1793939548.054051,
+  "event_type": "SYS021_QAML_ROBUSTNESS_SURVEY_COMMITTED",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "payload_sha256": "771ca8e2a8e20b0979ecd19d9af9dd2fa5ab4cdd8535738e8f9d729516775b67",
+  "operation_schema_sha256": "812f76f58a79d70d14c2f2c31a2359f1c17e5897e612ec95434a54235bdfddda",
+  "nonce": "OSIRIS-QAML-SURVEY-1793939548054",
+  "raw_grant": {
+    "event_type": "SYS021_QAML_ROBUSTNESS_SURVEY_COMMITTED",
+    "nonce": "OSIRIS-PQC-1793939548054",
+    "operation_schema": {
+      "core_mechanisms_addressed": [
+        "Quantum Feature Mapping in Hilbert Spaces",
+        "Variational Quantum Circuits (VQCs)",
+        "Transmon ZZ Spectator Crosstalk & Shot-Noise Modeling",
+        "SYS-021 Cryptographic Authorization Ledger Boundaries"
+      ],
+      "evaluation_standard": "OSIRIS-GOV-BENCH-1",
+      "event": "SYS021_QAML_ROBUSTNESS_SURVEY_COMMITTED",
+      "file_size_bytes": 20587,
+      "payload_sha256": "771ca8e2a8e20b0979ecd19d9af9dd2fa5ab4cdd8535738e8f9d729516775b67",
+      "survey_author": "Jaydip Sen (Praxis Business School, India)",
+      "survey_title": "Quantum-Enhanced Adversarial Robustness in Artificial Intelligence",
+      "target_file": "docs/research/QUANTUM_ADVERSARIAL_ROBUSTNESS_SYNTHESIS_AND_OSIRIS_BRIDGE.md"
+    },
+    "operation_schema_sha256": "812f76f58a79d70d14c2f2c31a2359f1c17e5897e612ec95434a54235bdfddda",
+    "operator_id": "Devin Phillip Davis / Enki",
+    "payload_sha256": "771ca8e2a8e20b0979ecd19d9af9dd2fa5ab4cdd8535738e8f9d729516775b67",
+    "pqc_envelope": {
+      "algorithm": "Hybrid-Ed25519+ML-DSA-65",
+      "ed25519_signature": "57a54dddf348cca27041bdf050ab3d3887ae488530510821d66c9f757a5b0d34db000b5d0666825119b31cbc438d47ddeb818a8d76d991de94d4c89db11a9ca1",
+      "fips204_prehash": "d307a8415730287dee97435440dce6fb77bc1f48cddc18473b988a6f5b6e2773ad83da204e8d0353e6e115703d47837d7fa38e96bafed3fb9cd51e04cb861008",
+      "lattice_parameters": {
+        "matrix_dimensions": "6x5",
+        "modulus": 8380417,
+        "ring_degree": 256
+      },
+      "ml_dsa_signature": "bc66318dfb6874fefacba7dfb30b1fe14ccd243c57d7f734fd66191ca30ee3474e09bdd1812b370d058e363b2c433f93bbe94e4dad4abb2b11eab56ba73dbec2",
+      "specification": "NIST FIPS 204"
+    },
+    "prev_block_hash": "5955c364202950dd51dcc9b24b27a15cc339b07226681fb90a3a39999485b7ea",
+    "sequence_index": 30,
+    "timestamp": 1793939548.054433
+  }
+}
