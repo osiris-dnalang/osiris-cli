@@ -2,8 +2,9 @@
 
 **Decision recorded:** 2026-10-26. The owner (Devin Phillip Davis) approved the policy in session.
 **Spec:** `OSIRIS_DUAL_NODE_REPL_MASTER_SPEC_v1.2.md`, sections 5.2 and 5.2.1, SYS-021, and action 18.
-**Status:** the decision is recorded and the trust root is enrolled. The SYS-021 verifier is **not yet
-implemented**. Until it is, the spec's rule stands: production execution stays blocked.
+**Status:** the decision is recorded and the trust root is enrolled. The SYS-021 verifier is
+`osiris_cli/grants.py` (section 7, items 1 and 2), pending the owner's review. No production
+operation calls it yet, so the spec's rule still stands: production execution stays blocked.
 
 ## 1. Principal
 
@@ -33,7 +34,16 @@ ssh-keygen -Y verify -f governance/allowed_signers -I owner -n osiris-grant -s g
 ```
 
 `grant.json` is the canonical payload of spec 5.2 plus `scope`, `signed_at` and `expires_s`. The
-private key never leaves its node. On 2026-10-26 I checked the mechanism with a throwaway key: a
+private key never leaves its node.
+
+`python -m osiris_cli.grants draft --payload-digest <sha256> --scope <scope>` prints one to sign:
+`payload_digest` (the operation's SHA-256, lowercase hex), `scope`, `signed_at` (UTC, written
+`YYYY-MM-DDTHH:MM:SSZ`), `expires_s` (default 900) and a random `nonce`, as sorted compact JSON.
+Spec v1.2 was not available when the verifier was written, so these names follow the action
+record above and `ExecutionGrant.payload_digest`; other fields are allowed and ignored. A grant's
+id is the SHA-256 of grant.json. `python -m osiris_cli.grants check grant.json ...` checks a
+signed grant without using it, and `python -m osiris_cli.grants revoke <id> --reason ...`
+revokes one. Events go to `~/.osiris/authorization_ledger.jsonl`, a hash chain. On 2026-10-26 I checked the mechanism with a throwaway key: a
 matching grant verifies, and both a single changed payload byte and a wrong namespace are refused
 (exit 255).
 
@@ -72,9 +82,11 @@ It never holds key material.
 ## 7. What remains (exit condition of action 18)
 
 1. Implement the verifier (`ssh-keygen -Y verify` behind one function), the 5.2.1 events, the
-   NTP check and atomic consumption.
+   NTP check and atomic consumption. *Implemented in `osiris_cli/grants.py` (`authorize`,
+   `revoke`); pending review.*
 2. Tests: a missing, unbound, expired, revoked, tampered, wrong-namespace or wrong-principal grant
    leaves the operation unauthorized; a valid grant authorizes only the matching digest, once.
+   *Implemented in `tests/test_grants.py`; pending review.*
 3. Enroll the Node Alpha backup key.
 
 Production execution stays blocked until items 1 and 2 are done and pass.

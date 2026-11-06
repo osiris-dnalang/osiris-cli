@@ -11,6 +11,8 @@ from osiris_cli.living import Osiris
 
 from tests.test_living import FakeCore, ScriptedMentor
 
+REPO = Path(__file__).resolve().parents[1]
+
 
 # ── physics checks against known values ──────────────────────────────────────
 
@@ -111,6 +113,34 @@ def test_computed_verdicts_agree_with_the_register():
             assert lines, c.id
             if c.verdict == "RULED_OUT":
                 assert "RULED_OUT" in lines[0], (c.id, lines[0])
+
+
+def test_demo_and_unsupported_results_are_registered_as_such():
+    """E-27 and E-28: demo arithmetic and gains or citations with nothing behind them are named, not cited."""
+    expected = {"ENTROPY_SUPPRESSION_Z29": "ARTIFACT", "RQC_APPLICATIONS": "NO_EVIDENCE",
+                "RQC_MANIFEST_CITATION": "NO_EVIDENCE"}
+    for cid, verdict in expected.items():
+        c = claims.by_id(cid)
+        assert c is not None and c.verdict == verdict, cid
+        for kind, ref, _ in c.evidence:                 # each cited file is in this checkout
+            assert kind == "file" and ref.startswith("osiris-cli/"), ref
+            assert (REPO / ref[len("osiris-cli/"):]).is_file(), ref
+    texts = {"ENTROPY_SUPPRESSION_Z29": "Shannon entropy suppression at z = 29.83 in anomalies_week4.csv",
+             "RQC_APPLICATIONS": "RQC cut the variance 8.3% in the portfolio run",
+             "RQC_MANIFEST_CITATION": "the results are archived at doi 10.5281/zenodo.9729504"}
+    for cid, text in texts.items():
+        assert cid in [c.id for c in claims.match(text)], (cid, text)
+    for topic in ("how does portfolio optimization map to QAOA?", "topological order in the Kitaev model",
+                  "a paper in npj Quantum Information", "Nature Quantum Information"):
+        assert not {"RQC_APPLICATIONS", "RQC_MANIFEST_CITATION"} & {c.id for c in claims.match(topic)}, topic
+
+
+def test_the_quarantined_files_point_at_their_claims():
+    """The two RQC files stay in the tree; each now opens by naming its register entry."""
+    for name, cid in (("APPLICATION_RESULTS.txt", "RQC_APPLICATIONS"),
+                      ("RESEARCH_ARCHIVE_MANIFEST.txt", "RQC_MANIFEST_CITATION")):
+        head = (REPO / name).read_text(encoding="utf-8").splitlines()[:12]
+        assert any(f"claims register: {cid}, NO_EVIDENCE" in line for line in head), name
 
 
 PAPER = (r"net integrated Poynting flux ... phase-locked to a geometric angle of $\theta_{lock} = 51.843^\circ$"

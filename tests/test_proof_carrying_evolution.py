@@ -24,6 +24,8 @@ from osiris_cli.orchestration.engine import GovernedAgentEngine
 from osiris_cli.orchestration.schemas import ExecutionGrant
 from osiris.compiler.dna_ir import QuantumCircuitIR
 
+FIXTURE_LEDGER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "dnalang_ledger_v0_2_0.py")
+
 
 def test_typed_evaluation_receipt_canonical_digest():
     """Verify EvaluationReceipt computes deterministic RFC 8785 SHA-256 digest."""
@@ -211,12 +213,18 @@ def test_parent_derived_mutation_and_hash_chained_ledger(tmp_path):
     assert b2["prev_ledger_hash"] == b1["block_hash"]
 
 
-def test_governed_engine_application_on_authorization(tmp_path):
+def test_governed_engine_application_on_authorization(tmp_path, monkeypatch):
     """
     Verify GovernedAgentEngine applies changes to disk IF AND ONLY IF authorized.
     When unauthorized, application is skipped.
     """
-    engine = GovernedAgentEngine(allowed_paths=[str(tmp_path)])
+    import genome_ledger as gl
+
+    if not os.path.exists(gl.LEDGER_SRC):  # no dnalang-core: use the pinned ledger.py
+        monkeypatch.setattr(gl, "LEDGER_SRC", FIXTURE_LEDGER)
+        monkeypatch.setattr(gl, "_ledger_mod", None)
+    # A ledger of its own: the default is the canonical ~/.osiris/genome_ledger.jsonl.
+    engine = GovernedAgentEngine(ledger_file=str(tmp_path / "genome_ledger.jsonl"), allowed_paths=[str(tmp_path)])
     target = str(tmp_path / "sample_module.py")
 
     # 1. Run step without grant -> authorized=False, applied=False, file does not exist

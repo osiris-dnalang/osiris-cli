@@ -264,6 +264,8 @@ class AnomalyDetector:
                     baseline_std=0.1,
                     z_score=float((max_entropy - entropy) / 0.1),
                     percentile=float(100 * entropy / max_entropy),
+                    # E-27: the baseline (5 bits unless passed), its 0.1 spread and this p are fixed here, not
+                    # measured, so z and p are demo arithmetic and must not be cited (claim ENTROPY_SUPPRESSION_Z29).
                     permutation_p_value=0.01,
                     is_significant=True,
                     anomaly_type="entropy_suppression",

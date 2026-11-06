@@ -116,6 +116,16 @@ REGISTER: Tuple[Claim, ...] = (
               ("doi", "10.5281/zenodo.23213023", "v4.2.0 erratum + re-analysis: nulls give the same 19.93 bits; scripts and results")),
           (r"negentrop\w*", r"136[\s-]*bit", r"\b19\.93", r"entropy gap"),
           checks=(("entropy_ceiling", (1e6, 19.9316)),)),
+    Claim("ENTROPY_SUPPRESSION_Z29", "Shannon entropy suppression at z = 29.83 (anomalies_week4.csv)", "ARTIFACT",
+          "anomalies_week4.csv is demo output, not a measurement. Its 20 rows are named demo_0 to demo_19 and hold "
+          "four distinct entropies. Every z is (5 - H) / 0.1 and every p is 0.0100, because AnomalyDetector takes "
+          "the 5-qubit maximum (5 bits) as the baseline by default, fixes its standard deviation at 0.1 and sets "
+          "permutation_p_value to 0.01; Phase1Executor scores synthetic counts when a circuit has none.",
+          (("file", "osiris-cli/anomalies_week4.csv", "the 20 demo rows"),
+           ("file", "osiris-cli/quantum_discovery/phase1_analysis/anomaly_detector.py", "baseline, its 0.1 spread and p = 0.01, fixed in code"),
+           ("file", "osiris-cli/quantum_discovery/phase1_analysis/phase1_executor.py", "_generate_synthetic_counts, used when a circuit has no counts")),
+          (r"\bz\s*[=≈:]\s*29\.83", r"entropy[\s_-]*suppression", r"anomalies_week4"),
+          testable="Recompute entropy, baseline spread and p from hardware counts that carry job IDs."),
     Claim("PHI_THRESHOLD", "Φ = 0.7734 consciousness threshold and phase transition (51× enhancement, d = 1.65)",
           "ARTIFACT",
           "The corpus mixes 2- to 127-qubit circuits, all scored with the Bell-state formula P(00)+P(11); "
@@ -470,6 +480,23 @@ REGISTER: Tuple[Claim, ...] = (
           (CARD_V2_NOTE,),
           (r"\bpqc\b", r"post[- ]quantum", r"fips[- ]20[3456]", r"ml[- ]dsa", r"ml[- ]kem"),
           testable="Verified against FIPS 204 test vectors with hybrid EVM signature verifier."),
+    Claim("RQC_APPLICATIONS", "RQC application gains: -8.3% portfolio variance, +65% evaluations reduction (VQE), "
+          "+43.5% topological-order fidelity, +3900% high-Tc screening success rate", "NO_EVIDENCE",
+          "APPLICATION_RESULTS.txt reports these gains and names ibm_brisbane and ibm_torino, but gives no job IDs, "
+          "data or scripts: nothing on record supports the numbers.",
+          (("file", "osiris-cli/APPLICATION_RESULTS.txt", "the reported gains, with no runs behind them"),
+           ("file", "osiris-cli/RQC_RESEARCH_METHODOLOGY.md", "the proposed method")),
+          (r"8\.3\s*%.*portfolio|portfolio[\s_-]*variance.*8\.3", r"\b43\.5\s*%", r"\b3900(\.0)?\s*%",
+           r"vqe.*aspirin", r"application[\s_-]*results"),
+          testable="Pre-registered runs that record job IDs, data and a baseline for each gain."),
+    Claim("RQC_MANIFEST_CITATION", "RQC results published in Nature Quantum Information (2026) and archived on Zenodo",
+          "NO_EVIDENCE",
+          "RESEARCH_ARCHIVE_MANIFEST.txt cites a Nature Quantum Information (2026) article and the DOIs "
+          "10.5281/zenodo.9729504 and 10.5281/zenodo.9340128 with the URL 'https://zenodo.org/record/[id]'. "
+          "Zenodo's API returns 404 for both records (checked 2026-10-29), and nothing on record shows the article.",
+          (("file", "osiris-cli/RESEARCH_ARCHIVE_MANIFEST.txt", "the draft manifest and its placeholder URLs"),),
+          (r"zenodo\.org/record/\[id\]", r"zenodo\.9729504", r"zenodo\.9340128", r"research_archive_manifest"),
+          testable="A published article and Zenodo records that resolve."),
 )
 
 _COMPILED = [(c, [re.compile(p, re.I) for p in c.patterns]) for c in REGISTER]

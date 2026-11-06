@@ -17,8 +17,9 @@ def test_ledger_check_detects_tampering(tmp_path):
     o = Osiris(core=None, mentor=None, home=str(tmp_path), out=lambda s: None, background=False, tty=False)
     for i in range(3):
         o._record({"user": f"m{i}", "reply": "r"})
-    assert verify_chain(o.log_path) == {"entries": 3, "intact": True, "broken_at": None, "forks": [],
-                                        "head": o.stats["last_head"][:12]}
+    v0 = verify_chain(o.log_path)
+    assert v0["entries"] == 3 and v0["intact"] is True and v0["broken_at"] is None and v0["forks"] == []
+    assert v0["head"] == o.stats["last_head"][:12] and v0["status"] == "INTACT" and v0["exit_code"] == 0
     lines = open(o.log_path).read().splitlines()
     row = json.loads(lines[1])
     row["reply"] = "edited"
@@ -26,6 +27,7 @@ def test_ledger_check_detects_tampering(tmp_path):
     open(o.log_path, "w").write("\n".join(lines) + "\n")
     v = verify_chain(o.log_path)
     assert not v["intact"] and v["broken_at"] == 1
+    assert v["status"] == "TAMPERED" and v["exit_code"] == 1
 
 
 def test_files_are_read_only_under_home_and_never_secrets(tmp_path):

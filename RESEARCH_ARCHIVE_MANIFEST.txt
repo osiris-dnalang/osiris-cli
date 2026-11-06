@@ -1,4 +1,12 @@
 
+# ================================================================================
+# DRAFT, NOT A RECORD (claims register: RQC_MANIFEST_CITATION, NO_EVIDENCE)
+# ================================================================================
+# The DOIs below (10.5281/zenodo.9729504, 10.5281/zenodo.9340128) return 404 from
+# Zenodo's API (checked 2026-10-29), the URLs read https://zenodo.org/record/[id],
+# and nothing on record shows the Nature Quantum Information (2026) article.
+# ================================================================================
+
 # OSIRIS Quantum Research Archive
 # Recursive Quantum Circuit Advantage Demonstration
 # Generated: 2026-04-07T00:48:07.477992

@@ -27,6 +27,10 @@ from osiris_cli import chain_lock
 
 _HEX64 = re.compile(r"[0-9a-f]{64}")
 
+# The checkout's tracked journal. Outside a checkout (a wheel install) this path does not
+# exist, and readers fall back as they do for any missing journal.
+DEFAULT_JOURNAL_PATH = Path(__file__).resolve().parents[1] / "provenance" / "osiris_operational_journal.jsonl"
+
 
 def _canon(d: Any) -> str:
     return json.dumps(d, sort_keys=True, separators=(",", ":"), ensure_ascii=False)

@@ -14,8 +14,7 @@ from osiris_cli.dnalang.falsification import (
     NullControlResult,
 )
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-JOURNAL_PATH = REPO_ROOT / "provenance" / "osiris_operational_journal.jsonl"
+JOURNAL_PATH = Path(__file__).resolve().parents[1] / "provenance" / "osiris_operational_journal.jsonl"
 
 
 def test_adversarial_falsification_passes_valid_candidate():

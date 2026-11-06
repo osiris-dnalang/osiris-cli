@@ -101,6 +101,47 @@ def test_claims_summary_is_counted_from_the_register():
         assert claims_summary() == f"1 registered claims | 1 {claims.REGISTER[0].verdict}"
 
 
+def test_status_recomputes_both_chains_and_names_the_exchange_log(tmp_path):
+    """E-25: /status names the exchange log it read and recomputes both hash chains instead of asserting them."""
+    import json
+    import os
+
+    from osiris_cli import journal
+    from osiris_cli.living import Osiris
+
+    o = Osiris(core=None, mentor=None, home=str(tmp_path / "living"), out=lambda s: None, background=False, tty=False)
+    for i in range(2):
+        o._record({"user": f"m{i}", "reply": "r"})
+    j = journal.OperationalMerkleLedger(tmp_path / "journal.jsonl")
+    j.append("test", {"n": 1})
+    with patch("osiris_cli.osiris_repl.get_living", return_value=o), \
+            patch.object(journal, "DEFAULT_JOURNAL_PATH", j.path):
+        out = _status(OsirisReplState())
+        assert (f"Exchange Log   : INTACT (2 entries, head {o.stats['last_head'][:12]}) · "
+                f"{os.path.abspath(o.log_path)}") in out
+        assert "Evidence Events: 1 in the operational journal (hash chain intact)" in out
+        assert "Merkle ledger" not in out
+        assert f"Claims Firewall: {claims_summary()} (SYS-024 Enforced)" in out
+
+        entry = json.loads(j.path.read_text().splitlines()[0])
+        entry["n"] = 2                                    # payload fields sit at the top level
+        j.path.write_text(json.dumps(entry) + "\n")
+        lines = open(o.log_path).read().splitlines()
+        open(o.log_path, "w").write(lines[0].replace('"r"', '"edited"') + "\n" + lines[1] + "\n")
+        out = _status(OsirisReplState())
+        assert "Exchange Log   : TAMPERED (0 entries" in out
+        assert "Evidence Events: 1 in the operational journal (hash chain TAMPERED (Entry 0:" in out
+
+    with patch("osiris_cli.osiris_repl.get_living", side_effect=RuntimeError("no core")), \
+            patch.object(journal, "DEFAULT_JOURNAL_PATH", tmp_path / "absent.jsonl"):
+        state = OsirisReplState()
+        out = _status(state)
+    assert "Exchange Log   : unavailable (no core)" in out
+    assert (f"Evidence Events: {len(state.evidence_ledger)} this session, in memory "
+            "(no operational journal in this install)") in out
+    assert not (tmp_path / "absent.jsonl").exists()
+
+
 def test_execute_ignite_truthfulness_and_banner_harmony():
     """Verify that execute_ignite banner does not emit contradictory 11D CRSM claims."""
     state = OsirisReplState()

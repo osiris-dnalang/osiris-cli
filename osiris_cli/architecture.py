@@ -122,7 +122,9 @@ def live_state(living=None, console=None) -> Dict[str, Tuple[str, str]]:
             return "idle", "exchange log unavailable"
         c = verify_chain(living.log_path)
         if not c["intact"]:
-            return "blocked", f"exchange log BROKEN at entry {c.get('broken_at', '?')}"
+            at = c.get("broken_at")
+            return "blocked", f"exchange log {c['status']}" + (f" at entry {at}" if at is not None else "") + \
+                f": {c['error']}"
         forks = c.get("forks") or []
         if forks:
             return "verified", (f"{c['entries']} exchanges, no entry altered; {len(forks)} fork(s) from concurrent "

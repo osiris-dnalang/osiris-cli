@@ -24,6 +24,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
+from osiris_cli.journal import DEFAULT_JOURNAL_PATH
 from osiris_cli.quantum.pub_mapper import OperationalMerkleLedger
 
 
@@ -105,8 +106,7 @@ class AdversarialFalsificationEngine:
        baseline in osiris_operational_journal.jsonl.
     """
 
-    REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-    DEFAULT_JOURNAL_PATH = REPO_ROOT / "provenance" / "osiris_operational_journal.jsonl"
+    DEFAULT_JOURNAL_PATH = DEFAULT_JOURNAL_PATH
 
     def __init__(self, journal_path: Optional[Union[str, Path]] = None):
         self.journal_path = Path(journal_path) if journal_path else self.DEFAULT_JOURNAL_PATH
