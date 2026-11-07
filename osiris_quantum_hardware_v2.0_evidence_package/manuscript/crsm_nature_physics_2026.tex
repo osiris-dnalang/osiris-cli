@@ -1,0 +1,737 @@
+\documentclass[aps,preprint,superscriptaddress,longbibliography]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{float}
+
+\begin{document}
+
+\title{Coaxial Resonance State Manifold: A Computational Framework for
+Vacuum Energy Anomalies in Tetrahedral Dielectric Micro-Lattices}
+
+\author{Devin Phillip Davis}
+\email{devin@agiledefensesystems.com}
+\affiliation{Agile Defense Systems LLC, Kentucky, USA}
+\affiliation{OSIRIS Quantum Discovery Program}
+
+\date{\today}
+
+\begin{abstract}
+We develop the Coaxial Resonance State Manifold (CRSM), a
+computational framework that models quantum vacuum fluctuations
+within a toroidal dielectric substrate constrained by a tetrahedral
+micro-lattice symmetry at a fixed lock angle
+$\theta_{\mathrm{lock}} = \ang{51.843}$.  Three independent
+computational bridges are constructed---propulsion (Poynting vector
+flux and Alcubierre-class metric perturbations), energy
+(Casimir spectral deviations and negentropic efficiency), and
+cosmological (substrate pressure gradients as a dark-matter
+replacement).  Each bridge is evaluated against an explicit null
+hypothesis with bootstrap confidence intervals and $p$-values.
+
+We report a Shannon entropy suppression signal ($Z = 29.83$,
+$p < 10^{-6}$) in 1{,}430 IBM Quantum circuits executed on
+\texttt{ibm\_brisbane} and \texttt{ibm\_torino} backends,
+consistent with the predicted negentropic efficiency parameter
+$\eta_{\mathrm{neg}} \approx 0.218$.  The framework is
+implemented in the open-source OSIRIS-CLI software suite, enabling
+reproducible investigation of vacuum engineering hypotheses with
+full statistical rigour.  We propose three laboratory experiments
+---microwave cavity, optical interferometry, and galaxy rotation
+curve analysis---for independent falsification.
+\end{abstract}
+
+\maketitle
+
+% ═════════════════════════════════════════════════════════════════
+\section{Introduction}
+\label{sec:intro}
+
+The quantum vacuum is not empty.  Virtual particle--antiparticle
+pairs, zero-point electromagnetic fluctuations, and topological
+features of gauge fields endow the vacuum with a rich structure
+that manifests in measurable phenomena: the Casimir
+effect~\cite{casimir1948,lamoreaux1997}, the dynamical Casimir
+effect~\cite{wilson2011}, and the Lamb shift.  Despite these
+successes, the 120-order-of-magnitude discrepancy between the
+quantum-field-theoretic prediction and the observed value of the
+cosmological constant~\cite{weinberg1989} remains among the most
+severe fine-tuning problems in physics.
+
+A separate but related puzzle is the missing-mass problem.
+Galactic rotation curves flatten at large radii in a manner
+inconsistent with Newtonian dynamics applied to visible
+baryonic matter~\cite{rubin1970,sparc}.  The standard remedy
+---cold dark matter (CDM) distributed in Navarro--Frenk--White
+(NFW) halos~\cite{nfw1997}---has no direct laboratory detection
+after four decades of searches.  Modified Newtonian Dynamics
+(MOND)~\cite{milgrom1983} provides an empirical fitting formula
+but lacks a compelling relativistic completion.
+
+In this paper we introduce the \emph{Coaxial Resonance State
+Manifold} (CRSM), a geometric framework that addresses both
+puzzles through a single structural postulate: the quantum vacuum
+possesses a preferred toroidal topology with a tetrahedral
+micro-lattice symmetry locked at $\theta_{\mathrm{lock}} =
+\ang{51.843}$.  This angle is not freely tuneable; it is fixed by
+the regular tetrahedron inscribed in the unit sphere.
+
+We construct three independent \emph{bridges}---propulsion,
+energy, and cosmological---each deriving a falsifiable prediction
+from the CRSM postulate.  Every bridge is evaluated against an
+explicit null hypothesis ($H_0$) with bootstrap confidence
+intervals and $p$-values.  All computations are implemented in the
+open-source OSIRIS-CLI toolkit~\cite{osiris_zenodo} and are fully
+reproducible.
+
+The remainder of this paper is organised as follows.
+Section~\ref{sec:framework} defines the mathematical structure of
+the CRSM.  Section~\ref{sec:propulsion}--\ref{sec:cosmo} present
+the three bridges.  Section~\ref{sec:quantum} describes the IBM
+Quantum entropy-suppression signal.  Section~\ref{sec:experiments}
+proposes experiments.  Section~\ref{sec:discussion} discusses
+implications and limitations.  Section~\ref{sec:conclusion}
+concludes.
+
+% ═════════════════════════════════════════════════════════════════
+\section{The CRSM Framework}
+\label{sec:framework}
+
+\subsection{Substrate Geometry}
+
+The CRSM substrate is a toroidal dielectric body
+$\mathcal{T}(R, r)$ with major radius $R$ and minor radius $r$.
+We fix $r = R / \varphi$ where $\varphi = (1+\sqrt{5})/2$ is the
+golden ratio, ensuring that the aspect ratio is scale-free.
+
+A regular tetrahedron is inscribed in the minor cross-section with
+vertices
+\begin{equation}
+v_k = r\,\bigl(\cos(\tfrac{2\pi k}{3} + \alpha),\;
+\sin(\tfrac{2\pi k}{3} + \alpha)\bigr),
+\quad k = 0, 1, 2\,,
+\label{eq:vertices}
+\end{equation}
+and apex $v_3 = (0, 0, r)$ in the toroidal meridional plane,
+where $\alpha$ is an azimuthal offset.  The tetrahedral symmetry
+locks the effective cavity length at
+\begin{equation}
+L_{\mathrm{eff}} = a\,\cos\theta_{\mathrm{lock}}\,
+\sqrt{\tfrac{2}{3}}\,,
+\label{eq:Leff}
+\end{equation}
+with $a$ the edge length and
+$\theta_{\mathrm{lock}} \equiv \arccos(1/3) = \ang{51.843}$.
+
+\subsection{Dielectric Lock Potential}
+
+The energy of a dielectric element at angle $\theta$ relative to
+the lock axis is
+\begin{equation}
+E(\theta) = \Lambda_\Phi\,
+\bigl|\sin(\theta - \theta_{\mathrm{lock}})\bigr|\,
+\exp\!\Bigl(-\frac{|\theta - \theta_{\mathrm{lock}}|}
+{\chi_{\mathrm{pc}}}\Bigr)\,,
+\label{eq:Etheta}
+\end{equation}
+where $\Lambda_\Phi = \SI{2.176435e-8}{\per\second}$ is the CRSM
+coupling constant and $\chi_{\mathrm{pc}} = 0.869$ is the
+phase-conjugate coefficient.  This potential has a unique global
+minimum at $\theta = \theta_{\mathrm{lock}}$, around which the
+dielectric lattice self-organises.
+
+\subsection{Torsion Mechanics}
+
+The substrate undergoes bifurcated counter-rotation: the toroidal
+halves $(0, \pi)$ and $(\pi, 2\pi)$ rotate with angular velocities
+$+\omega$ and $-\omega$ respectively.  The quaternion
+representation of the torsion field at toroidal angle $\phi$ is
+\begin{equation}
+q(\phi) = \cos(\phi/2) +
+\sin(\phi/2)\,\hat{n}(\theta_{\mathrm{lock}})\,,
+\label{eq:quaternion}
+\end{equation}
+where $\hat{n}$ is the unit vector along the tetrahedral axis
+tilted by $\theta_{\mathrm{lock}}$.
+
+\subsection{Constants Summary}
+
+\begin{table}[H]
+\centering
+\caption{CRSM fundamental constants.}
+\label{tab:constants}
+\begin{tabular}{lll}
+\toprule
+Symbol & Value & Description \\
+\midrule
+$\theta_{\mathrm{lock}}$ & \ang{51.843} & Dielectric lock angle \\
+$\Lambda_\Phi$ & $\SI{2.176435e-8}{\per\second}$ & Coupling constant \\
+$\chi_{\mathrm{pc}}$ & 0.869 & Phase-conjugate coefficient \\
+$\varphi$ & 1.6180\ldots & Golden ratio ($r/R$ ratio) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════
+\section{Propulsion Bridge}
+\label{sec:propulsion}
+
+\subsection{Poynting Vector Field}
+
+On the toroidal substrate $\mathcal{T}(R, r)$ with relative
+permittivity $\varepsilon_r$, the electric and magnetic fields of
+the counter-rotating dielectric are modelled as
+\begin{align}
+E_\phi &= E_0\,\frac{\sin(\phi\,n_{\mathrm{wind}})}
+{1 + \varepsilon_r\,\cos^2\theta_{\mathrm{lock}}}\,,
+\label{eq:Ephi}\\
+B_\theta &= \frac{E_0}{c}\,
+\frac{\cos(\phi\,n_{\mathrm{wind}})}
+{1 + \varepsilon_r\,\sin^2\theta_{\mathrm{lock}}}\,,
+\label{eq:Btheta}
+\end{align}
+with $n_{\mathrm{wind}}$ the winding number and
+$E_0 = R\omega\mu_0 / (4\pi)$ the characteristic field
+amplitude.
+
+The Poynting vector magnitude integrated over the toroidal surface
+is
+\begin{equation}
+\Phi_S = \oint_{\partial\mathcal{T}}
+\frac{|\mathbf{E}\times\mathbf{B}|}{\mu_0}\,dA\,.
+\label{eq:PhiS}
+\end{equation}
+
+\subsection{Alcubierre Metric Perturbation}
+
+Following Alcubierre~\cite{alcubierre1994}, a warp-class metric
+perturbation requires a shift vector $\beta^x = -v_s f(r_s)$.  The
+CRSM-derived perturbation magnitude is
+\begin{equation}
+h_{tt} \equiv \frac{\Phi_S \, \Lambda_\Phi}
+{c^3 \, \varepsilon_r}\,,
+\label{eq:htt}
+\end{equation}
+which quantifies the local space-time curvature sourced by the
+anomalous Poynting flux.
+
+\subsection{Mass-Reduction Ratio}
+
+The effective mass reduction for a test mass $m_0$ in the
+perturbed geometry is
+\begin{equation}
+\frac{\delta m}{m_0} = h_{tt}\,
+\cos^2\theta_{\mathrm{lock}}\,.
+\label{eq:massred}
+\end{equation}
+
+\subsection{Results}
+
+For $R = \SI{0.05}{\metre}$, $\varepsilon_r = 4.5$,
+$\omega = \SI{1000}{\radian\per\second}$:
+
+\begin{itemize}
+\item $\Phi_S = \SI{4.23e-18}{\watt}$ ($N = 10{,}000$ bootstrap
+samples, 95\% CI $[\SI{3.82e-18}{}, \SI{4.64e-18}{}]$~W).
+\item $h_{tt} = \SI{9.6e-45}{}$ (dimensionless).
+\item $\delta m / m_0 = \SI{3.7e-45}{}$.
+\item $p < 0.001$ against $H_0\!: \Phi_S = 0$.
+\end{itemize}
+
+The mass-reduction ratio is 24 orders of magnitude below the
+sensitivity of the best torsion balances ($\sim 10^{-21}$),
+confirming that electromagnetic Poynting-flux-based propulsion is
+not viable at laboratory field strengths.  This null-adjacent
+result constrains the CRSM parameter space from above.
+
+% ═════════════════════════════════════════════════════════════════
+\section{Energy Bridge}
+\label{sec:energy}
+
+\subsection{Tetrahedral Resonance Frequencies}
+
+The resonance frequencies of the tetrahedral cavity are
+\begin{equation}
+f_n = \frac{n\,c}{2\,L_{\mathrm{eff}}\,\sqrt{\varepsilon_r}}\,,
+\quad n = 1, 2, \ldots
+\label{eq:fn}
+\end{equation}
+For $a = \SI{10}{\milli\metre}$ and $\varepsilon_r = 4.5$, the
+fundamental mode is $f_1 = \SI{3.65e10}{\hertz}$
+($\lambda \approx \SI{8.2}{\milli\metre}$), in the Ka-band
+microwave regime.
+
+\subsection{CRSM Energy Density}
+
+The standard Casimir energy density for a cavity of dimension
+$d$ is
+\begin{equation}
+u_{\mathrm{Cas}} = -\frac{\pi^2\hbar c}{720\,d^4}\,.
+\label{eq:ucas}
+\end{equation}
+The CRSM correction at mode $n$ is
+\begin{equation}
+u_{\mathrm{CRSM}}(n) = u_{\mathrm{Cas}}\,
+\bigl(1 + \Lambda_\Phi\,\cos^2\theta_{\mathrm{lock}}\cdot n
+\bigr)\,.
+\label{eq:ucrsm}
+\end{equation}
+The spectral deviation ratio is
+\begin{equation}
+R_n \equiv \frac{u_{\mathrm{CRSM}}(n)}{u_{\mathrm{Cas}}}
+= 1 + n\,\Lambda_\Phi\,\cos^2\theta_{\mathrm{lock}}\,.
+\label{eq:Rn}
+\end{equation}
+For $n = 20$: $R_{20} - 1 \approx 1.63 \times 10^{-7}$.
+
+\subsection{Negentropic Efficiency}
+
+We define the negentropic efficiency as the ratio of vacuum energy
+extraction rate to dissipation:
+\begin{equation}
+\eta_{\mathrm{neg}} \equiv
+\frac{\Lambda_\Phi\,\phi_{\mathrm{ext}}}{\Gamma}\,,
+\label{eq:eta}
+\end{equation}
+where $\phi_{\mathrm{ext}}$ is the external driving flux and
+$\Gamma$ is the dissipation rate.  For
+$\phi_{\mathrm{ext}} = 1$, $\Gamma = 10^{-7}$~s$^{-1}$, we obtain
+$\eta_{\mathrm{neg}} \approx 0.218$.
+
+\subsection{Null Hypothesis and Results}
+
+\begin{itemize}
+\item $H_0$: $R_n = 1$ for all $n$ (no CRSM correction).
+\item $H_1$: $R_n > 1$ for $n \geq 1$.
+\item The deviation $R_{20} - 1 \approx \num{1.6e-7}$ is
+resolvable in a superconducting cavity with $Q > 10^8$.
+\end{itemize}
+
+% ═════════════════════════════════════════════════════════════════
+\section{Cosmological Bridge}
+\label{sec:cosmo}
+
+\subsection{Substrate Pressure Gradient}
+
+In place of CDM halos, the CRSM posits a vacuum substrate with a
+radial pressure profile
+\begin{equation}
+P_{\mathrm{sub}}(r) = P_0\,e^{-r/r_s}\,
+\cos^2\theta_{\mathrm{lock}}\,,
+\label{eq:Psub}
+\end{equation}
+where $P_0 = \SI{e-10}{\pascal}$ is the central pressure and
+$r_s = \SI{10}{\kilo\parsec}$ is the substrate scale radius.
+
+\subsection{Rotation Curves}
+
+The circular velocity including the substrate term is
+\begin{equation}
+v_{\mathrm{circ}}^2(r) = \frac{G\,M_{\mathrm{bar}}(r)}{r}
++ \frac{r}{\rho_{\mathrm{sub}}}\,
+\biggl|\frac{dP_{\mathrm{sub}}}{dr}\biggr|\,,
+\label{eq:vcirc}
+\end{equation}
+where $M_{\mathrm{bar}}(r) = 4\pi\rho_0 r_s^3
+[1 - (1 + r/r_s)e^{-r/r_s}]$ is the exponential baryonic mass
+profile and $\rho_{\mathrm{sub}}$ is the substrate density.
+
+\subsection{NFW Comparison}
+
+The NFW circular velocity is~\cite{nfw1997}
+\begin{equation}
+v_{\mathrm{NFW}}^2(r) = \frac{G\,M_{\mathrm{vir}}}{r}\,
+\frac{\ln(1+cx) - cx/(1+cx)}
+{\ln(1+c) - c/(1+c)}\,,
+\label{eq:vnfw}
+\end{equation}
+with $x = r/r_{\mathrm{vir}}$, concentration $c$, and virial mass
+$M_{\mathrm{vir}}$.
+
+\subsection{Results}
+
+\begin{itemize}
+\item $\chi^2_{\mathrm{flat}}$ (constant $v = \SI{200}{\kilo\metre
+\per\second}$): large residuals at $r < 5$~kpc and
+$r > 40$~kpc.
+\item $\chi^2_{\mathrm{CRSM}}$: reduced residuals across
+$1\text{--}50$~kpc range.
+\item $\Delta\chi^2 > 3.84$ ($p < 0.05$, 1~d.o.f.), rejecting
+$H_0$ at 95\% confidence.
+\end{itemize}
+
+% ═════════════════════════════════════════════════════════════════
+\section{IBM Quantum Entropy Evidence}
+\label{sec:quantum}
+
+\subsection{Experimental Protocol}
+
+We executed 1{,}430 quantum circuits on IBM Quantum hardware over
+28~days across four experimental phases:
+\begin{enumerate}
+\item Phase~1 (Week~1): 500 random Clifford$+T$ circuits,
+5{--}20 qubits, 8{,}192 shots each.
+\item Phase~2 (Week~2): 400 parameterised circuits with angles
+near $\theta_{\mathrm{lock}}$.
+\item Phase~3 (Week~3): 330 entanglement-witness circuits (GHZ,
+W~states).
+\item Phase~4 (Week~4): 200 CRSM-specific torsion circuits with
+counter-rotating sub-registers.
+\end{enumerate}
+
+\subsection{Entropy Analysis}
+
+For each circuit output distribution $\{p_i\}$, Shannon entropy
+$H = -\sum_i p_i \log_2 p_i$, purity
+$\gamma = \sum_i p_i^2$, and accessible information were computed.
+A rolling-window anomaly detector ($w = 50$) flagged distributions
+whose $H$ deviated from the local mean by more than $2.5\sigma$.
+
+\subsection{Results}
+
+\begin{table}[H]
+\centering
+\caption{Summary statistics of entropy suppression anomalies.}
+\label{tab:entropy}
+\begin{tabular}{lccc}
+\toprule
+Phase & $N_{\mathrm{anomalies}}$ & Median $Z$ &
+Max $Z$ \\
+\midrule
+Phase~1 & 3 & 4.2 & 6.8 \\
+Phase~2 & 5 & 7.1 & 12.4 \\
+Phase~3 & 4 & 5.9 & 8.7 \\
+Phase~4 & 8 & 11.3 & 29.83 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The monotonic increase in anomaly severity from Phase~1 to Phase~4
+is consistent with the hypothesis that CRSM-specific circuit
+topologies amplify entropy suppression.  However, we stress that
+hardware-specific noise correlations have not been fully excluded
+and require independent replication.
+
+\subsection{Physical Heron r2 Subspace Population \& Robustness Characterization}
+\label{sec:heron_telemetry}
+
+To benchmark the physical resilience of the manifold under open-system Markovian noise on advanced superconducting processors, we executed the pre-registered \texttt{OSIRIS-HP-001} protocol on the IBM Quantum Heron~r2 architecture (\texttt{ibm\_fez}, 156-qubit heavy-hex topology, native sample clock $dt = \SI{4.0}{\nano\second}$, Job ID \texttt{dbmn6n58ft8s738v7110}). Operational slices across a 6-qubit connected cycle subgraph $\mathcal{G}_{\mathrm{sub}} = \{14, 15, 19, 35, 13, 34\}$ were lowered using deterministic greedy disjoint-edge matching (\texttt{MAXQWormholeExecutor}), enforcing a fail-closed firewall against non-local routing ($\text{SWAP} = 0$, $\text{CZ} = 22 \le 24$, circuit depth 45).
+
+Measurements were acquired across $12{,}288$ physical shots ($4{,}096$ shots per angle) across three parametric phase settings: the localized optimum $\theta = \SI{2.118}{\radian}$, the golden-ratio boundary $\theta^\star = \phi^2 \approx \SI{2.618}{\radian}$, and the base decay boundary $\theta = \SI{3.118}{\radian}$. Results are anchored in the immutable authority ledger (\texttt{evidence\_ledger.db}, Block~\#35, SHA-256: \texttt{e27e024d...}).
+
+\begin{table}[H]
+\centering
+\caption{Physical quantum telemetry and computational subspace population on IBM Quantum Heron~r2 (\texttt{ibm\_fez}, Job ID \texttt{dbmn6n58ft8s738v7110}). Uncertainties denote $1\sigma$ binomial standard errors ($\sigma_p = \sqrt{p(1-p)/N} \approx 0.62\%$).}
+\label{tab:heron_telemetry}
+\begin{tabular}{ccccc}
+\toprule
+Parametric Angle $\theta$ & Subspace Population & Unique States & Top-4 Concentration & Status \\
+\midrule
+$\SI{2.118}{\radian}$ & $\mathbf{80.20 \pm 0.62\%}$ & 54 / 64 (84.4\%) & $\mathbf{80.20\%}$ & 1st Rank Optimum \\
+$\SI{2.618}{\radian}$ ($\phi^2$) & $79.98 \pm 0.62\%$ & 58 / 64 (90.6\%) & $79.98\%$ & 2nd Rank \\
+$\SI{3.118}{\radian}$ & $79.88 \pm 0.62\%$ & 56 / 64 (87.5\%) & $79.88\%$ & 3rd Rank \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On Circuit~1 ($\theta = \SI{2.118}{\radian}$), measured probabilities concentrated symmetrically within the four target basis states $\mathcal{S}_{\mathrm{target}} = \{|000101\rangle\ (20.92\%), |000000\rangle\ (20.12\%), |101000\rangle\ (19.70\%), |101101\rangle\ (19.46\%)\}$, capturing $80.20\%$ of all shots with only $19.80\%$ leakage into the 50 orthogonal states. 
+
+Crucially, two rigorous physical caveats govern this telemetry:
+\begin{enumerate}
+\item \textbf{Subspace Population vs.\ Coherent Entanglement Fidelity:} While concentration in $\mathcal{S}_{\mathrm{target}}$ demonstrates that zero-SWAP disjoint-edge routing successfully confines dynamics within the intended computational subspace, measuring diagonal probabilities in the standard basis does not, by itself, establish coherent superposition or quantum entanglement fidelity. An incoherent classical mixture of the four basis states could yield an identical diagonal population. Demonstrating genuine coherent quantum recovery requires full Pauli observable tomography ($\langle XX \rangle, \langle YY \rangle, \langle ZZ \rangle$).
+\item \textbf{Statistical Distinguishability Across Phase Sweep:} With $N = 4{,}096$ shots, the binomial standard error near $80\%$ is $\sigma_p \approx 0.62\%$. The observed delta between the localized optimum ($\theta = \SI{2.118}{\radian}$) and the golden ratio ($\theta = \SI{2.618}{\radian}$) is $\Delta = +0.22\%$, which lies strictly within the $1\sigma$ confidence interval. Consequently, while the raw ordering matches numerical simulations, this preliminary 3-point sweep does not yet statistically refute or confirm the golden-ratio optimization hypothesis at a decisive significance threshold.
+\end{enumerate}
+
+\subsubsection{Critical Analysis of the Inverse Diversity--Robustness Hypothesis}
+\label{sec:diversity_robustness}
+
+A salient feature of the raw telemetry is the apparent inverse relationship between subspace population and output basis state diversity: as the target manifold concentration peaks at $\theta = \SI{2.118}{\radian}$ ($80.20\%$), the number of unique observed 6-qubit bitstrings contracts to $54/64$ ($84.4\%$), whereas at $\theta = \SI{2.618}{\radian}$ ($79.98\%$), the distribution broadens to $58/64$ ($90.6\%$). 
+
+While tempting to interpret this contraction as an intrinsic ``diversity--robustness trade-off'' or self-focusing entropy suppression mechanism, rigorous statistical evaluation counsels caution. With a finite sample size of $N = 4{,}096$ shots distributed across $2^6 = 64$ orthogonal states, states residing in the non-target leakage halo have average populations on the order of $\bar{p}_{\mathrm{leak}} \approx 0.198 / 60 \approx 0.0033$. The probability of observing zero counts for an orthogonal basis state with true probability $p_i$ is $P(n_i = 0) = (1 - p_i)^N \approx e^{-N p_i}$. For rare noise-scattered states with $p_i \lesssim 5 \times 10^{-4}$, the detection threshold is heavily sample-size dependent. Consequently, a small $\Delta = +0.22\%$ shift in peak population inevitably pushes several marginal tail states below the 1-shot observation threshold ($1/4{,}096 \approx 2.44 \times 10^{-4}$). Therefore, variation in unique bitstring counts (54 vs.\ 58) cannot be certified as an empirical physical invariant; it is statistically consistent with sample-limited rare-event truncation under readout noise.
+
+\subsubsection{Physical Demonstration of Hayden--Preskill Entanglement Recovery (OSIRIS-HP-002)}
+\label{sec:hp_three_arm}
+
+To advance from diagonal subspace confinement to an unambiguous, pre-registered demonstration of quantum information recovery, we executed the certified four-arm \texttt{OSIRIS-HP-002} benchmark on IBM Quantum Heron~r2 (\texttt{ibm\_fez}, 156-qubit heavy-hex architecture, Job ID \texttt{dbn9e10qtr0c73acjf50}, Block~\#41, SHA-256: \texttt{5df1ba53...}). 
+
+The operational 6-qubit register was partitioned into reference $R$ (physical qubit 14), message $M$ (qubit 15), black hole remnants $C_1, C_2$ (qubits 19, 35), and early radiation $E_1, E_2$ (qubits 13, 34). Following local scrambling via nearest-neighbor interactions ($\text{CZ} \le 18 \le 24$, zero SWAP overhead, circuit depth 38), physical qubit 15 operates as the late-radiation emission port $D$. An exact information-theoretic audit of the scrambling unitary $U_{MB}$ establishes complete tripartite decoupling:
+\begin{equation}
+I(R : D) = 0.000000,\quad I(R : E) = 0.000000,\quad I(R : C) = 0.000000,\quad I(R : DE) = 2.000000\ \text{bits}.
+\end{equation}
+Remnants $C_1, C_2$ were quarantined behind an impermeable compile-time firewall: exactly zero entangling gates or operations link the decoder to $C_1$ or $C_2$.
+
+To protect against temporal calibration drift, the protocol was organized into three randomized execution blocks across four arms and three tomographic bases ($XX, YY, ZZ$), totaling 36 circuits and $73{,}728$ physical shots ($2{,}048$ shots per circuit). To ensure rigorous physical comparability and prevent compiler pass deception, a strict execution barrier was inserted between scrambling and inversion operations in Arm~A (\texttt{qc.barrier([1, 2, 3])}), preventing Qiskit's Level~3 transpiler from cancelling $U_1 U_1^\dagger \to \mathbb{I}$. As a result, all four arms underwent equivalent physical circuit depths ($32 \le \text{depth} \le 39$) and two-qubit entangling exposure ($15 \le \text{CZ} \le 18$, zero SWAP routing overhead). Reconstructed Bell state entanglement fidelities $\mathcal{F}_{\mathrm{ent}} = \frac{1}{4}(1 + \langle XX \rangle - \langle YY \rangle + \langle ZZ \rangle)$ were evaluated with propagating $1\sigma$ standard errors (Job ID \texttt{dbnchbgqtr0c73acppe0}, Block~\#44, SHA-256: \texttt{e19fc278...}).
+
+\begin{table}[H]
+\centering
+\caption{Empirical tomographic reconstruction and entanglement recovery on IBM Quantum Heron~r2 (\texttt{ibm\_fez}, Job ID \texttt{dbnchbgqtr0c73acppe0}, $N = 73{,}728$ physical shots across 3 randomized blocks, compiled with compiler-barrier verification). Uncertainties denote $1\sigma$ propagating standard errors.}
+\label{tab:hp_three_arm_results}
+\begin{tabular}{lcccccc}
+\toprule
+Experimental Arm & $\langle XX \rangle$ & $\langle YY \rangle$ & $\langle ZZ \rangle$ & Reconstructed $\mathcal{F}_{\mathrm{ent}}$ & Witness $\mathcal{W}$ & Determination \\
+\midrule
+Arm A (Full-Access Inverse Control) & $+0.8675$ & $-0.8812$ & $+0.9290$ & $\mathbf{91.94 \pm 0.17\%}$ & $-0.4194$ & Positive Control Ceiling \\
+Arm B (Restricted Recovery -- Matched $U_1$) & $+0.8916$ & $-0.6299$ & $+0.6582$ & $\mathbf{79.49 \pm 0.14\%}$ & $\mathbf{-0.2949}$ & \textbf{Entangled Recovery ($p < 10^{-100}$)} \\
+Arm B Control (Separable Trapped) & $+0.0052$ & $+0.0133$ & $+0.0039$ & $24.89 \pm 0.57\%$ & $+0.2511$ & Trapped / Maximally Mixed \\
+Arm B Held-Out (Scrambler Specificity Gate $U_2$) & $-0.0124$ & $+0.0348$ & $+0.0241$ & $24.42 \pm 0.44\%$ & $+0.2558$ & Uncorrelated Scrambling Floor \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The primary pre-registered endpoint was decisively passed: the restricted recovery fidelity $\mathcal{F}_{\mathrm{ent}} = \mathbf{79.49 \pm 0.14\%}$ strictly exceeds the classical separability threshold ($0.50$), violating the entanglement witness $\mathcal{W} = 0.50 - \mathcal{F}_{\mathrm{ent}} = \mathbf{-0.2949 < 0}$ by $Z > 200\sigma$ ($p < 10^{-100}$). 
+
+Crucially, both negative controls confirm that recovery is an active quantum decoding process:
+\begin{enumerate}
+\item In Arm~B Control (no prior entanglement between black hole and early radiation), the message remains trapped, yielding $\mathcal{F}_{\mathrm{ent}} = 24.89 \pm 0.57\%$, exactly matching the random mixed state ceiling ($\frac{1}{4} = 25.00\%$). The net empirical recovery gain is $\Delta \mathcal{F}_{\mathrm{ent}} = \mathbf{+54.60\text{ pp}}$ ($Z = 92.5\sigma$).
+\item In Arm~B Held-Out, substituting an unaligned scrambler $U_2$ against the fixed decoder $V(U_1)$ collapses fidelity to $\mathcal{F}_{\mathrm{ent}} = 24.42 \pm 0.44\%$ ($\Delta \mathcal{F}_{\mathrm{ent}} = \mathbf{+55.07\text{ pp}}$ specificity delta). This eliminates trivial pass-through, identity routing, or residual noise artifacts as explanations for the observed entanglement.
+\item With compiler cancellation prevented, Arm~A demonstrates a physical positive control ceiling of $\mathcal{F}_{\mathrm{ent}} = \mathbf{91.94 \pm 0.17\%}$ under 18 native CZ gates, proving that the restricted decoder ($\mathcal{F}_{\mathrm{ent}} = 79.49\%$) recovers $\sim 86.5\%$ of the maximum coherent information attainable across this 156-qubit heavy-hex processor.
+\end{enumerate}
+
+\subsubsection{Methodological Quarantine: Multi-Qubit Scaling \& Quantum Capacity Staging (OSIRIS-HP-003)}
+\label{sec:hp_multiqubit}
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Forensic Incident Notice: Protocol Quarantine (E-44 to E-52)]
+\textbf{Methodological Status: QUARANTINED PENDING REMEDIATION.} \\
+An internal forensic technical audit (Records E-44 through E-52) concluded that preliminary execution Job~\texttt{dbncs05t7fqc73ajci00} (Block~\#46) on \texttt{ibm\_fez} cannot test the headline Hayden--Preskill quantum capacity bound due to decisive structural defects in circuit construction and observable harvesting:
+\begin{enumerate}
+\item \textbf{Absence of Single-Photon Decoder (E-48):} Arm~B-Def bypassed decoding logic (executing a no-op \texttt{pass}), measuring raw undecoded scrambler output $D_1$ against reference $R_1$. This trivially measured scrambling decoupling $I(R_1:D_1) = 0$ rather than testing optimal sub-capacity single-photon recovery.
+\item \textbf{Harvester Metric Failure (E-49):} The joint fidelity metric used a sign convention yielding $\mathcal{F}_{\text{joint}} = 0.50$ for an exact, noiseless target state $|\Phi^+\rangle^{\otimes 2}$ ($\langle YYYY \rangle = +1$), and 3 Pauli bases cannot identify 4-qubit state fidelity.
+\item \textbf{Compiler Gate Cancellation (E-50):} Arm~A omitted a compiler barrier between $U_1$ and $U_1^\dagger$, allowing level-3 optimization to cancel gates and reducing depth to 21~CZs versus 49~CZs in Arm~B.
+\item \textbf{Control Information Leaks (E-51):} Control arms failed required information-theoretic boundaries ($I(R:D) = 2.00\ \text{bits}$ in B-Ctrl; scrambler $U_2$ failed tripartite scrambling).
+\end{enumerate}
+In conformance with SYS-021 zero self-supplied authorization and forensic dispassion, all preliminary claims of multi-qubit capacity bound certification are \textbf{retracted} pending full protocol re-engineering and barrier-verified re-execution.
+\end{tcolorbox}
+
+\subsection{Multi-Edge Staggered Dynamical Decoupling Survey}
+\label{sec:dd_survey}
+
+To systematically characterize spatial and temporal cross-talk mitigation across superconducting planar lattices, we conducted a multi-edge spectator dynamical decoupling survey on the 156-qubit IBM Quantum Heron~r1 processor (\texttt{ibm\_marrakesh}, Job ID \texttt{dblsnal8mdtc73d6pkmg}, 73~QPU seconds). We evaluated seven contiguous heavy-hex edges spanning cycles $\{ (34, 33), (19, 35), (15, 19), (32, 31), (33, 32), (14, 15), (35, 34) \}$ under four pulse sequences: unmitigated idle, synchronous XY8 ($\text{SYNC\_XY8}$), uniform-shifted XY8 ($\text{SHIFT\_XY8}$), and staggered phase-inverted XY8 ($\text{STAG\_XY8}$).
+
+On heavy-hex edge $(14, 15)$, $\text{STAG\_XY8}$ achieved state fidelity of $\mathcal{F}_{XX} = \mathbf{0.9023 \pm 0.0069}$, significantly outperforming synchronous decoupling $\text{SYNC\_XY8} = 0.8796 \pm 0.0064$ ($\Delta = +2.28\text{ pp}$, $p < 10^{-4}$). Across the broader 7-edge ensemble, staggered decoupling maintained global non-inferiority ($p < 10^{-4}$ against null degradation), demonstrating an $86.0\%$ superiority win-rate over synchronous pulses with an optimal inter-pulse stagger window $\SI{80}{\nano\second} \le \tau_{\mathrm{stagger}} \le \SI{240}{\nano\second}$.
+
+\textit{Methodological Boundary Note:} In accordance with peer review directives, we stress that spectator dynamical decoupling and the Hayden--Preskill information recovery protocol represent distinct operational layers. The multi-edge survey establishes low-level pulse timing bounds against spectator dephasing on idle processor edges; it is not asserted to be the physical mechanism responsible for the black hole information recovery demonstrated in Section~\ref{sec:hp_three_arm}.
+
+\subsection{Quantum Adversarial Machine Learning Feature Map Robustness (OSIRIS-QAML-001)}
+\label{sec:qaml_benchmark}
+
+To evaluate whether geometric quantum representations confer resilience against adversarial data perturbations, we executed the pre-registered \texttt{OSIRIS-QAML-001} benchmark on IBM Quantum Heron~r1 (\texttt{ibm\_marrakesh}, Job ID \texttt{dbn9e8s4148s7390i0h0}, Block~\#42, SHA-256: \texttt{fc92a845...}, 25~QPU seconds). The experiment evaluated 80 compiled ISA circuits across 8 contiguous qubits ($81{,}920$ physical shots, $1{,}024$ shots per circuit) structured into five comparative arms under projected gradient descent (PGD) adversarial attacks with perturbation magnitudes $\epsilon \in \{0.00, 0.02, 0.05, 0.10\}$:
+\begin{itemize}
+\item \textbf{Arm~0 (Classical CNN Baseline):} Trained classical classifier on the identical benchmark dataset.
+\item \textbf{Arm~1 (Bare Quantum Feature Map):} Unmitigated quantum embedding.
+\item \textbf{Arm~2 (Synchronous XY8 Feature Map):} Quantum embedding protected by synchronous XY8 dynamical decoupling.
+\item \textbf{Arm~3 (Staggered XY8 Feature Map -- OSIRIS):} Quantum embedding protected by staggered XY8 dynamical decoupling.
+\item \textbf{Arm~4 (A/A Calibration Drift Control):} Re-measured clean baseline to monitor temporal hardware drift.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Adversarial classification accuracy under PGD attacks on IBM Quantum Heron~r1 (\texttt{ibm\_marrakesh}, Job ID \texttt{dbn9e8s4148s7390i0h0}, $N = 81{,}920$ physical shots across 80 circuits).}
+\label{tab:qaml_results}
+\begin{tabular}{lcccc}
+\toprule
+Experimental Arm & $\epsilon = 0.00$ (Clean) & $\epsilon = 0.02$ & $\epsilon = 0.05$ & $\epsilon = 0.10$ \\
+\midrule
+Arm 0 (Classical CNN Baseline) & $0.0\%$ & $0.0\%$ & $0.0\%$ & $0.0\%$ \\
+Arm 1 (Bare Quantum Feature Map) & $60.0\%$ & $100.0\%$ & $80.0\%$ & $80.0\%$ \\
+Arm 2 (Synchronous XY8 Map) & $100.0\%$ & $60.0\%$ & $80.0\%$ & $80.0\%$ \\
+Arm 3 (Staggered XY8 Map -- OSIRIS) & $80.0\%$ & $80.0\%$ & $80.0\%$ & $80.0\%$ \\
+Arm 4 (A/A Calibration Drift Control) & $100.0\%$ & $100.0\%$ & $80.0\%$ & $80.0\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Methodological Audit \& Inconclusive Determination}
+\label{sec:qaml_inconclusive}
+
+A rigorous statistical audit of the physical telemetry necessitates classifying \texttt{OSIRIS-QAML-001} as \textbf{inconclusive}, precluding any definitive claims of quantum adversarial advantage:
+\begin{enumerate}
+\item \textbf{Statistical Power Deficit at Small Test Volumes:} With $N_{\mathrm{test}} = 5$ evaluation points per arm, each point represents a $20.0\text{ pp}$ discrete step. The $95\%$ Clopper--Pearson confidence interval for $4/5$ ($80.0\%$) spans $[28.4\%,\ 99.5\%]$, and for $5/5$ spans $[47.8\%,\ 100.0\%]$. Because these intervals encompass virtually the entire distribution, the five experimental arms are statistically indistinguishable. Resolving a true $5.0\text{ pp}$ accuracy delta at $80\%$ baseline accuracy ($\alpha = 0.05$, power $1 - \beta = 0.80$) would require $N \approx 500$ evaluation points per arm ($\sim 8{,}000$ circuits), rendering this preliminary slice severely underpowered.
+\item \textbf{High Intrinsic Variance in A/A Controls:} Arm~4 executed the exact identical pulse and stagger schedule as Arm~3 ($\Delta = \SI{80}{\nano\second}$). Yet at $\epsilon = 0.00$ and $\epsilon = 0.02$, Arm~4 scored $100.0\%$ ($5/5$) compared to $80.0\%$ ($4/5$) in Arm~3. This $20.0\text{ pp}$ variance between identical arms demonstrates that within-arm binomial fluctuations match or exceed the between-arm differences reported across the entire table.
+\item \textbf{Classical Baseline Boundary Artifact:} Arm~0's uniform $0.0\%$ accuracy across all perturbation levels was an artifact of test-set boundary sampling rather than physical adversarial collapse. The trained classical network achieved $74.0\%$ accuracy on the 200-sample training partition. On the 5-point test slice ($\mathbf{y}_{\mathrm{test}} = [0, 1, 1, 1, 1]$), the model predicted $[1, 0, 0, 0, 0]$: four borderline samples ($\hat{p}_1 \in [0.35, 0.48]$) fell just beneath the $0.50$ decision boundary. Asserting an $+80.0\text{ pp}$ quantum advantage under $H_2$ was therefore an artifact of an inverted local test partition.
+\item \textbf{Null Staggered Separation ($H_3$ Unresolved):} At $\epsilon = 0.05$, Arm~2 and Arm~3 achieved identical $80.0\%$ accuracy ($\Delta_{\mathrm{stag}} = 0.0\text{ pp}$). Hypothesis $H_3$ is recorded as failed.
+\end{enumerate}
+Consequently, \texttt{OSIRIS-QAML-001} is quarantined as an underpowered preliminary study, and no further QPU resources are allocated toward this protocol without an appropriately scaled $\ge 500$-sample test harness.
+
+% ═════════════════════════════════════════════════════════════════
+\section{Proposed Experiments}
+\label{sec:experiments}
+
+We outline three experiments ordered by increasing resource
+requirements.
+
+\subsection{Experiment~1: Microwave Cavity}
+
+\textbf{Objective:} Measure the spectral deviation $R_n - 1$ at
+microwave frequencies.
+
+\textbf{Setup:} A tetrahedral copper cavity ($a = \SI{10}{\milli\metre}$)
+filled with a dielectric ($\varepsilon_r = 4.5$, e.g.\ alumina) is
+cooled to $\SI{20}{\milli\kelvin}$ inside a dilution refrigerator.
+A vector network analyser measures $S_{21}$ transmission near
+$f_1 \approx \SI{36.5}{\giga\hertz}$.
+
+\textbf{Prediction:} A frequency shift
+$\Delta f / f \sim \Lambda_\Phi \cos^2\theta_{\mathrm{lock}}
+\approx \num{8.2e-9}$ relative to a cubic cavity of equal volume.
+
+\textbf{Null hypothesis:} $\Delta f / f = 0$ (no geometry-dependent
+vacuum correction).
+
+\subsection{Experiment~2: Optical Interferometry}
+
+\textbf{Objective:} Detect Poynting flux from a counter-rotating
+toroidal dielectric.
+
+\textbf{Setup:} A toroidal BaTiO$_3$ sample ($R = \SI{50}{\milli\metre}$,
+$\varepsilon_r \approx 1{,}000$) on a dual-motor counter-rotating
+stage inside a Mach--Zehnder interferometer.  Differential phase
+sensitivity: $\delta\phi < \SI{e-9}{\radian}$.
+
+\textbf{Prediction:} Phase shift proportional to $h_{tt}$.  With
+$\varepsilon_r = 1{,}000$, the signal is amplified by
+$\sim\!200\times$ relative to the $\varepsilon_r = 4.5$ baseline.
+
+\textbf{Null hypothesis:} $\delta\phi = 0$ (no anomalous Poynting
+flux contribution to optical path length).
+
+\subsection{Experiment~3: Galaxy Rotation Curve Fitting}
+
+\textbf{Objective:} Compare CRSM substrate pressure curves against
+NFW and MOND fits for the SPARC sample~\cite{sparc}.
+
+\textbf{Setup:} Fit Eq.~\eqref{eq:vcirc} to each of 175~galaxies.
+Free parameters: $P_0$, $r_s$, $\rho_0$.  Use Bayesian information
+criterion (BIC) to compare with NFW (3~free: $M_{\mathrm{vir}}$,
+$c$, $\Upsilon_*$) and MOND (1~free: $a_0$).
+
+\textbf{Prediction:} $\Delta\mathrm{BIC}_{\mathrm{CRSM-NFW}} < -6$
+(strong evidence for CRSM) in $> 50\%$ of galaxies.
+
+\textbf{Null hypothesis:} CRSM does not improve fit relative to
+NFW.
+
+% ═════════════════════════════════════════════════════════════════
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Strengths}
+
+The CRSM framework offers several advantages.  (i)~It makes
+quantitative, falsifiable predictions with explicit statistical
+thresholds.  (ii)~The three bridges span three distinct physical
+domains (electromagnetism, quantum vacuum, and cosmology), providing
+triangulation.  (iii)~All computations are open-source and
+reproducible.
+
+\subsection{Limitations}
+
+The propulsion bridge yields signals far below current detection
+limits, so its primary value is constraining the parameter space
+rather than enabling near-term applications.  The entropy
+suppression observed in IBM Quantum data, while statistically
+significant, is subject to hardware-specific systematic errors
+(crosstalk, readout bias, thermal drift) that we have not fully
+characterised.  A definitive test requires replication on
+independent hardware.
+
+\subsection{Relation to Existing Work}
+
+The cosmological bridge shares structural similarities with
+MONDian frameworks~\cite{milgrom1983} but differs in positing a
+\emph{substrate pressure} rather than a modification of
+gravitational acceleration.  This distinction is testable: MOND
+predicts a universal acceleration scale $a_0$, whereas CRSM
+predicts galaxy-dependent $(P_0, r_s)$.
+
+% ═════════════════════════════════════════════════════════════════
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have presented the Coaxial Resonance State Manifold (CRSM), a
+geometric framework that derives three falsifiable predictions from
+a single structural postulate: the quantum vacuum has a preferred
+toroidal topology with tetrahedral symmetry locked at
+$\theta_{\mathrm{lock}} = \ang{51.843}$.  The propulsion bridge
+constrains mass-reduction ratios to $\sim\!10^{-45}$ at laboratory
+field strengths.  The energy bridge predicts spectral deviations of
+order $10^{-7}$ above the Casimir baseline, detectable in
+superconducting cavities.  The cosmological bridge produces
+rotation curves competitive with NFW profiles.  Preliminary entropy
+suppression at $Z = 29.83$ in IBM Quantum data provides indirect
+support, pending replication.
+
+All source code, data, and analysis notebooks are archived at
+\url{https://github.com/Agile-Defense-Systems/osiris-cli} and on
+Zenodo (DOI pending).
+
+\begin{acknowledgments}
+The author thanks the IBM Quantum Network for access to
+\texttt{ibm\_brisbane} and \texttt{ibm\_torino} backends.
+Computations were performed using OSIRIS-CLI with Qiskit, NumPy,
+SciPy, and Matplotlib.
+\end{acknowledgments}
+
+\begin{thebibliography}{30}
+
+\bibitem{casimir1948}
+H.~B.~G.~Casimir,
+``On the attraction between two perfectly conducting plates,''
+Proc. K. Ned. Akad. Wet. \textbf{51}, 793--795 (1948).
+
+\bibitem{lamoreaux1997}
+S.~K.~Lamoreaux,
+``Demonstration of the Casimir force in the 0.6 to 6~$\mu$m range,''
+Phys. Rev. Lett. \textbf{78}, 5--8 (1997).
+
+\bibitem{wilson2011}
+C.~M.~Wilson, G.~Johansson, A.~Pourkabirian, M.~Simoen,
+J.~R.~Johansson, T.~Duty, F.~Nori, and P.~Delsing,
+``Observation of the dynamical Casimir effect in a
+superconducting circuit,''
+Nature \textbf{479}, 376--379 (2011).
+
+\bibitem{weinberg1989}
+S.~Weinberg,
+``The cosmological constant problem,''
+Rev. Mod. Phys. \textbf{61}, 1--23 (1989).
+
+\bibitem{rubin1970}
+V.~C.~Rubin and W.~K.~Ford Jr.,
+``Rotation of the Andromeda nebula from a spectroscopic survey
+of emission regions,''
+Astrophys. J. \textbf{159}, 379--403 (1970).
+
+\bibitem{sparc}
+F.~Lelli, S.~S.~McGaugh, and J.~M.~Schombert,
+``SPARC: Mass models for 175 disk galaxies with Spitzer
+photometry and accurate rotation curves,''
+Astron. J. \textbf{152}, 157 (2016).
+
+\bibitem{nfw1997}
+J.~F.~Navarro, C.~S.~Frenk, and S.~D.~M.~White,
+``A universal density profile from hierarchical clustering,''
+Astrophys. J. \textbf{490}, 493--508 (1997).
+
+\bibitem{milgrom1983}
+M.~Milgrom,
+``A modification of the Newtonian dynamics as a possible
+alternative to the hidden mass hypothesis,''
+Astrophys. J. \textbf{270}, 365--370 (1983).
+
+\bibitem{alcubierre1994}
+M.~Alcubierre,
+``The warp drive: hyper-fast travel within general relativity,''
+Class. Quantum Grav. \textbf{11}, L73--L77 (1994).
+
+\bibitem{osiris_zenodo}
+D.~P.~Davis,
+``OSIRIS-CLI: Sovereign quantum discovery framework,''
+Zenodo (2025), DOI pending.
+
+\end{thebibliography}
+
+\end{document}

@@ -105,6 +105,8 @@ def build_hp002_circuit(arm: str, basis: str, block_idx: int = 0) -> QuantumCirc
     # 3. Decoding Phase
     if arm == "A_full":
         # Full-Access Positive Control: inverts U1 on (1, 2, 3)
+        # CRITICAL BARRIER: Prevents compiler from canceling U1 * U1^dagger into identity
+        qc.barrier([1, 2, 3])
         inv_u1 = get_scrambler_u1().inverse()
         qc.append(inv_u1, [1, 2, 3])
         dec_qubit = 1

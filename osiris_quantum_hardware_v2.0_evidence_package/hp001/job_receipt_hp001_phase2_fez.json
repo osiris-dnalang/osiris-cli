@@ -1,0 +1,16 @@
+{
+  "job_id": "dbn8m444148s7390gnmg",
+  "backend": "ibm_fez",
+  "circuit_count": 9,
+  "shots_per_circuit": 4096,
+  "total_physical_shots": 36864,
+  "qpy_sha256": "2918899985c904a25e5453b78ec10535c082a86d2857d06fe2343044a5f6c834",
+  "dispatch_timestamp": "2026-11-07T02:21:04Z",
+  "status": "COMPLETED",
+  "qpu_usage": {
+    "quantum_seconds": 12,
+    "seconds": 12,
+    "status": "complete"
+  },
+  "results_file": "physical_hp001_phase2_results.json"
+}

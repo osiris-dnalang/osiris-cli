@@ -1,0 +1,42 @@
+{
+  "job_id": "dbn8m444148s7390gnmg",
+  "backend": "ibm_fez",
+  "execution_date": "2026-11-07T02:23:14Z",
+  "total_circuits": 9,
+  "total_physical_shots": 36864,
+  "qpu_usage": {
+    "quantum_seconds": 12,
+    "seconds": 12,
+    "status": "complete"
+  },
+  "arms": {
+    "Arm A (Full-Access Inverse)": {
+      "exp_xx": 0.970215,
+      "exp_yy": -0.964844,
+      "exp_zz": 0.973633,
+      "fidelity": 0.977173,
+      "sigma_fidelity": 0.001656,
+      "is_entangled": true,
+      "entanglement_witness": -0.477173
+    },
+    "Arm B (Restricted Recovery - Early Ent)": {
+      "exp_xx": 0.891113,
+      "exp_yy": -0.822266,
+      "exp_zz": 0.843262,
+      "fidelity": 0.88916,
+      "sigma_fidelity": 0.003534,
+      "is_entangled": true,
+      "entanglement_witness": -0.38916
+    },
+    "Arm B Control (Separable Trapped)": {
+      "exp_xx": -0.016602,
+      "exp_yy": 0.028809,
+      "exp_zz": -0.011719,
+      "fidelity": 0.235718,
+      "sigma_fidelity": 0.006764,
+      "is_entangled": false,
+      "entanglement_witness": 0.264282
+    }
+  },
+  "delta_recovery_gain": 0.653442
+}

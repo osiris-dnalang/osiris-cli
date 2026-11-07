@@ -1,12 +1,17 @@
 import json
 import hashlib
+import sys
 import time
 import sqlite3
 from pathlib import Path
+
+EXPERIMENT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = EXPERIMENT_DIR.parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
 from osiris_cli.node_beta_governance import NodeBetaGovernor
 
-EXPERIMENT_DIR = Path("/mnt/c/Users/Ron/osiris-cli/experiments/hp002")
-DB_PATH = Path("/mnt/c/Users/Ron/evidence_ledger.db")
+DB_PATH = Path(r"C:\Users\Ron\evidence_ledger.db") if Path(r"C:\Users\Ron\evidence_ledger.db").exists() else Path("/mnt/c/Users/Ron/evidence_ledger.db")
 
 payload_file = EXPERIMENT_DIR / "stage_hp002_harness.py"
 payload_h = hashlib.sha256(payload_file.read_bytes()).hexdigest()

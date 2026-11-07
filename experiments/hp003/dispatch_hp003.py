@@ -23,10 +23,10 @@ from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
 
 def load_credentials() -> Dict[str, str]:
     cred_paths = [
+        Path.home() / ".qiskit" / "qiskit-ibm.json",
         Path(r"/mnt/c/Users/Ron/Downloads/dnalang.json"),
         Path(r"C:\Users\Ron\Downloads\dnalang.json"),
-        Path.home() / "Downloads" / "dnalang.json",
-        Path.home() / ".qiskit" / "qiskit-ibm.json"
+        Path.home() / "Downloads" / "dnalang.json"
     ]
     for p in cred_paths:
         if p.exists():
@@ -69,12 +69,12 @@ def main():
         isa_circuits = qpy.load(f)
     print(f"Loaded {len(isa_circuits)} frozen ISA circuits.")
 
-    # 3. Initialize Runtime Service
-    creds = load_credentials()
+    # 3. Initialize Runtime Service (Prioritizing Default Active Account)
     try:
-        service = QiskitRuntimeService(channel=creds["channel"], token=creds["token"])
-    except Exception:
         service = QiskitRuntimeService()
+    except Exception:
+        creds = load_credentials()
+        service = QiskitRuntimeService(channel=creds["channel"], token=creds["token"])
 
     backend_name = manifest["backend"]
     backend = service.backend(backend_name)

@@ -1,0 +1,26 @@
+{
+  "job_id": "dbnchbgqtr0c73acppe0",
+  "backend": "ibm_fez",
+  "circuit_count": 36,
+  "shots_per_circuit": 2048,
+  "total_physical_shots": 73728,
+  "dispatch_timestamp": "2026-11-07T06:43:58Z",
+  "status": "COMPLETED",
+  "qpu_usage": {
+    "qpu_charge_time_seconds": 21,
+    "value": 0.3487,
+    "unit": "resource_units",
+    "status": "pending",
+    "details": [
+      {
+        "value": 0.3487,
+        "unit": "resource_units",
+        "metric": {
+          "id": "caffe3ca-729c-5750-8777-df63bbf8bfd9",
+          "value": 21
+        }
+      }
+    ]
+  },
+  "results_file": "physical_hp002_results.json"
+}
