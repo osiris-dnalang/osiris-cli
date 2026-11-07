@@ -55,7 +55,9 @@ def test_security_assessment_quarantines_known_patterns():
     assert any(f.quarantine for f in findings)
 
     # Private key
-    pk = "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0\n-----END RSA PRIVATE KEY-----"
+    # Dummy PEM body; the header is split so the source has no contiguous PEM header.
+    pk = ("-----BEGIN " + "RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0\n-----END "
+          + "RSA PRIVATE KEY-----")
     findings_pk = paste_learning.assess_security(pk)
     assert any("private_key" in f.description for f in findings_pk)
 

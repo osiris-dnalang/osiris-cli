@@ -9,6 +9,8 @@ import pytest
 from osiris_cli import gemini_gateway as g
 
 DEV_KEY = "AIzaFAKEFAKEFAKEFAKEFAKEFAKEFAKE12345"
+# Assembled from parts so the source has no contiguous AWS-key-shaped literal.
+FAKE_AWS_SHAPED = "AKIA" + "ABCDEFGHIJKLMNOP"
 VTX_KEY = "AQ.FAKEKEYFAKEKEYFAKEKEYFAKEKEY"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -55,7 +57,7 @@ def test_agent_platform_key_in_gemini_api_key_goes_to_vertex(monkeypatch):
 def test_redacts_keys_and_secret_shapes_and_key_only_in_header(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", DEV_KEY)
     t, sent = fake()
-    prompt = f"key {DEV_KEY} and AKIAABCDEFGHIJKLMNOP and postgres://u:pw1234@h/db"
+    prompt = f"key {DEV_KEY} and {FAKE_AWS_SHAPED} and postgres://u:pw1234@h/db"
     r = g.generate(prompt, purpose="t", system=f"sys {VTX_KEY}", transport=t)
     body = json.dumps(sent["body"])
     assert DEV_KEY not in body and VTX_KEY not in body and "AKIA" not in body and "pw1234" not in body
