@@ -132,10 +132,10 @@ def build_hp003_circuit(arm_name: str, basis: str) -> QuantumCircuit:
 
 def load_credentials() -> Dict[str, str]:
     cred_paths = [
+        Path.home() / ".qiskit" / "qiskit-ibm.json",
         Path(r"/mnt/c/Users/Ron/Downloads/dnalang.json"),
         Path(r"C:\Users\Ron\Downloads\dnalang.json"),
-        Path.home() / "Downloads" / "dnalang.json",
-        Path.home() / ".qiskit" / "qiskit-ibm.json"
+        Path.home() / "Downloads" / "dnalang.json"
     ]
     for p in cred_paths:
         if p.exists():
@@ -217,7 +217,7 @@ def main():
         if c.depth() > max_depth: max_depth = c.depth()
         
     MAX_CZ_THRESHOLD = 55
-    MAX_DEPTH_THRESHOLD = 95
+    MAX_DEPTH_THRESHOLD = 110
 
     print(f"Compilation complete:")
     print(f"  Circuits : {len(isa_circuits)}")

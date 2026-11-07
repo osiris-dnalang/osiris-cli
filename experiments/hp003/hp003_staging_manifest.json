@@ -4,9 +4,9 @@
   "total_circuits": 45,
   "shots_per_circuit": 1024,
   "total_shots": 46080,
-  "qpy_sha256": "2ffb2360c3e271bf9cf5852b25ea52c21034e68ebb7bdfb0b47249dc0b0c0977",
+  "qpy_sha256": "931563b75563b4a5c899b5c6ce72c6d0c057dfd0b2ec0f94f970aaf68732a075",
   "max_cz": 49,
-  "max_depth": 87,
+  "max_depth": 102,
   "arms": [
     "Arm A",
     "Arm B",

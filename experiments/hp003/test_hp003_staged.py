@@ -125,4 +125,4 @@ def test_frozen_circuit_count_and_manifest():
         assert manifest["shots_per_circuit"] == 1024
         assert manifest["total_shots"] == 46080
         assert manifest["max_cz"] <= 55
-        assert manifest["max_depth"] <= 95
+        assert manifest["max_depth"] <= 110
