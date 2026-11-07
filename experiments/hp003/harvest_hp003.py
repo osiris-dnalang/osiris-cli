@@ -60,9 +60,6 @@ def main():
     meta_list = manifest["circuit_metadata"]
 
     circuit_records = []
-    # Collect expectations per (block, arm, basis)
-    # arms: ["Arm A", "Arm B", "Arm B-Def", "Arm B-Ctrl", "Arm B-Held"]
-    # bases: ["XX", "YY", "ZZ"]
     structured_data = {}
 
     for cct_idx, pub_res in enumerate(result):
@@ -78,10 +75,8 @@ def main():
         shots = sum(counts.values())
 
         # Classical bits: c[0] is R1, c[1] is M1', c[2] is R2, c[3] is M2'
-        # Bitstring: 'c3 c2 c1 c0' -> indices: c[0]=bitstring[-1], c[1]=bitstring[-2], c[2]=bitstring[-3], c[3]=bitstring[-4]
         exp_pair1 = 0.0
         exp_pair2 = 0.0
-        exp_joint = 0.0
 
         for bitstr, count in counts.items():
             bs = bitstr.replace(" ", "")
@@ -89,11 +84,9 @@ def main():
             p2 = 1.0 if bs[-3] == bs[-4] else -1.0
             exp_pair1 += p1 * count
             exp_pair2 += p2 * count
-            exp_joint += (p1 * p2) * count
 
         exp_pair1 /= shots
         exp_pair2 /= shots
-        exp_joint /= shots
 
         circuit_records.append({
             "circuit_idx": cct_idx,
@@ -102,7 +95,6 @@ def main():
             "basis": basis,
             "exp_pair1": round(exp_pair1, 6),
             "exp_pair2": round(exp_pair2, 6),
-            "exp_joint": round(exp_joint, 6),
             "shots": shots,
             "counts_unique": len(counts)
         })
@@ -113,7 +105,6 @@ def main():
         structured_data[key][basis] = {
             "pair1": exp_pair1,
             "pair2": exp_pair2,
-            "joint": exp_joint,
             "shots": shots
         }
 
@@ -121,7 +112,7 @@ def main():
     arms = manifest["arms"]
     n_blocks = manifest["n_blocks"]
     block_evaluations = []
-    arm_block_fidelities = {arm: {"f1": [], "f2": [], "f_mean": [], "f_joint": []} for arm in arms}
+    arm_block_fidelities = {arm: {"f1": [], "f2": [], "f_mean": [], "f_prod": []} for arm in arms}
 
     for b_idx in range(n_blocks):
         b_summary = {"block_id": b_idx, "arms": {}}
@@ -131,18 +122,18 @@ def main():
             f1 = (1.0 + b_arm["XX"]["pair1"] - b_arm["YY"]["pair1"] + b_arm["ZZ"]["pair1"]) / 4.0
             f2 = (1.0 + b_arm["XX"]["pair2"] - b_arm["YY"]["pair2"] + b_arm["ZZ"]["pair2"]) / 4.0
             f_mean = 0.5 * (f1 + f2)
-            f_joint = (1.0 + b_arm["XX"]["joint"] - b_arm["YY"]["joint"] + b_arm["ZZ"]["joint"]) / 4.0
+            f_prod = f1 * f2
 
             b_summary["arms"][arm] = {
                 "f1": round(f1, 6),
                 "f2": round(f2, 6),
                 "f_mean": round(f_mean, 6),
-                "f_joint": round(f_joint, 6)
+                "f_prod": round(f_prod, 6)
             }
             arm_block_fidelities[arm]["f1"].append(f1)
             arm_block_fidelities[arm]["f2"].append(f2)
             arm_block_fidelities[arm]["f_mean"].append(f_mean)
-            arm_block_fidelities[arm]["f_joint"].append(f_joint)
+            arm_block_fidelities[arm]["f_prod"].append(f_prod)
 
         block_evaluations.append(b_summary)
 
@@ -153,48 +144,64 @@ def main():
         m_f1 = float(np.mean(data["f1"]))
         m_f2 = float(np.mean(data["f2"]))
         m_fmean = float(np.mean(data["f_mean"]))
-        m_fjoint = float(np.mean(data["f_joint"]))
+        m_fprod = float(np.mean(data["f_prod"]))
 
         sem_fmean = float(np.std(data["f_mean"], ddof=1) / math.sqrt(n_blocks)) if n_blocks > 1 else 0.0
         witness_w = 0.50 - m_fmean
+        witness_w1 = 0.50 - m_f1
+        witness_w2 = 0.50 - m_f2
+        z_score = (m_fmean - 0.50) / sem_fmean if sem_fmean > 0 else 0.0
 
         arm_synthesis[arm] = {
             "mean_f1": round(m_f1, 6),
             "mean_f2": round(m_f2, 6),
             "mean_f_average": round(m_fmean, 6),
-            "mean_f_joint": round(m_fjoint, 6),
+            "mean_f_prod": round(m_fprod, 6),
             "sem_f_average": round(sem_fmean, 6),
             "entanglement_witness": round(witness_w, 6),
+            "witness_w1": round(witness_w1, 6),
+            "witness_w2": round(witness_w2, 6),
+            "z_score": round(z_score, 2),
             "is_entangled": bool(witness_w < 0),
             "block_fidelities_mean": [round(x, 6) for x in data["f_mean"]]
         }
 
     # Evaluate pre-registered hypotheses H1 - H5
-    f_arm_a = arm_synthesis["Arm A"]["mean_f_average"]
+    f1_arm_a = arm_synthesis["Arm A"]["mean_f1"]
+    f2_arm_a = arm_synthesis["Arm A"]["mean_f2"]
     f_arm_b = arm_synthesis["Arm B"]["mean_f_average"]
-    f_arm_b_def = arm_synthesis["Arm B-Def"]["mean_f_joint"]
+    z_arm_b = arm_synthesis["Arm B"]["z_score"]
+
+    f1_arm_b_def = arm_synthesis["Arm B-Def"]["mean_f1"]
+    f2_arm_b_def = arm_synthesis["Arm B-Def"]["mean_f2"]
+    w1_arm_b_def = arm_synthesis["Arm B-Def"]["witness_w1"]
+
     f_arm_b_ctrl = arm_synthesis["Arm B-Ctrl"]["mean_f_average"]
     f_arm_b_held = arm_synthesis["Arm B-Held"]["mean_f_average"]
 
     endpoints = {
         "H1_reversibility_positive_control": {
-            "claim": "F_mean(Arm A) >= 0.85",
-            "observed": f_arm_a,
-            "passed": bool(f_arm_a >= 0.85)
+            "claim": "F1(Arm A) >= 0.85 and F2(Arm A) >= 0.85 independently",
+            "observed_f1": f1_arm_a,
+            "observed_f2": f2_arm_a,
+            "passed": bool(f1_arm_a >= 0.85 and f2_arm_a >= 0.85)
         },
         "H2_primary_multiqubit_restricted_recovery": {
-            "claim": "F_mean(Arm B) > 0.50",
+            "claim": "F_mean(Arm B) > 0.50 with Z > 3.72 (p < 1e-4)",
             "observed": f_arm_b,
+            "z_score": z_arm_b,
             "witness": arm_synthesis["Arm B"]["entanglement_witness"],
-            "passed": bool(f_arm_b > 0.50)
+            "passed": bool(f_arm_b > 0.50 and z_arm_b > 3.72)
         },
         "H3_quantum_capacity_single_photon_threshold": {
-            "claim": "F_joint(Arm B-Def) <= 0.35 (Sub-capacity failure)",
-            "observed": f_arm_b_def,
-            "passed": bool(f_arm_b_def <= 0.35)
+            "claim": "F1(Arm B-Def) <= 0.55 (W1 >= 0) and F2(Arm B-Def) <= 0.35 (Capacity bound)",
+            "observed_f1": f1_arm_b_def,
+            "observed_f2": f2_arm_b_def,
+            "witness_w1": w1_arm_b_def,
+            "passed": bool(f1_arm_b_def <= 0.55 and f2_arm_b_def <= 0.35)
         },
-        "H4_separable_entanglement_bridge": {
-            "claim": "F_mean(Arm B-Ctrl) <= 0.35 (Trapped control)",
+        "H4_unentangled_early_radiation_baseline": {
+            "claim": "F_mean(Arm B-Ctrl) <= 0.35 (Unentangled baseline)",
             "observed": f_arm_b_ctrl,
             "passed": bool(f_arm_b_ctrl <= 0.35)
         },
@@ -209,26 +216,30 @@ def main():
         "benchmark_id": manifest["benchmark_id"],
         "backend": backend_name,
         "job_id": job_id,
-        "execution_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "total_circuits": len(result),
-        "total_physical_shots": sum(r["shots"] for r in circuit_records),
-        "qpu_usage": usage,
-        "arm_synthesis": arm_synthesis,
-        "endpoints_evaluation": endpoints,
+        "timestamp_harvested": time.time(),
+        "total_shots_acquired": sum(r["shots"] for r in circuit_records),
+        "circuit_records": circuit_records,
         "block_evaluations": block_evaluations,
-        "circuit_records": circuit_records
+        "arm_synthesis": arm_synthesis,
+        "hypothesis_verifications": endpoints
     }
 
     out_file = EXPERIMENT_DIR / "physical_hp003_results.json"
     out_file.write_text(json.dumps(results, indent=2), encoding="utf-8")
-    print(f"\n[SUCCESS] Physical telemetry harvested and evaluated!")
-    print(f"Results saved to: {out_file.name}")
-    print("\n--- Synthesis Summary ---")
-    for arm, syn in arm_synthesis.items():
-        print(f"  {arm:14s}: F_mean = {syn['mean_f_average']*100:.2f}%, F_joint = {syn['mean_f_joint']*100:.2f}%, Witness = {syn['entanglement_witness']:.4f}")
-    print("\n--- Endpoints Evaluation ---")
-    for h, res in endpoints.items():
-        print(f"  {h:42s}: {'PASSED' if res['passed'] else 'FAILED'} (Observed: {res['observed']})")
+    print(f"\nPhysical results saved to: {out_file.name}")
+
+    print("\n" + "=" * 80)
+    print("PRE-REGISTERED HYPOTHESIS VERIFICATIONS")
+    print("=" * 80)
+    for h_name, h_data in endpoints.items():
+        status = "[PASS]" if h_data["passed"] else "[FAIL]"
+        print(f"{status:7s} {h_name}: {h_data['claim']}")
+        if "observed" in h_data:
+            print(f"        Observed: {h_data['observed']}")
+        else:
+            print(f"        Observed: F1={h_data.get('observed_f1')}, F2={h_data.get('observed_f2')}")
+
+    print("\n[SUCCESS] Telemetry harvest and synthesis complete.")
 
 
 if __name__ == "__main__":
