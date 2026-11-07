@@ -1,0 +1,81 @@
+{
+  "event": "SYS021_ZENODO_PUBLICATION_QUANTUM_HARDWARE_V2",
+  "deposition_id": 24031814,
+  "doi": "10.5281/zenodo.24031814",
+  "record_url": "https://zenodo.org/record/24031814",
+  "timestamp": 1794042083.1360211,
+  "files_uploaded": [
+    {
+      "filename": "osiris_quantum_hardware_v2.0_evidence_package.zip",
+      "bytes": 311509,
+      "sha256": "e700b02e9b7e7a566aac99157ac67a41e1cddc3a11efe516126522488625b8af"
+    },
+    {
+      "filename": "osiris_quantum_hardware_v2.0_evidence_package.tar.gz",
+      "bytes": 285606,
+      "sha256": "320115b06dff708c415a62a14a8c7883e1fc7868f9aba428c1af837033730978"
+    },
+    {
+      "filename": "osiris_quantum_hardware_v2.0_evidence_package_SHA256SUMS.txt",
+      "bytes": 237,
+      "sha256": "08beef5dc6d54c97804270a431ab9f4467d3d2250955131f2d29fb473b01eff5"
+    }
+  ],
+  "metadata": {
+    "title": "OSIRIS Unified Quantum Hardware Evidence Package v2.0: Multi-Qubit Hayden-Preskill Capacity Bound, Staggered Dynamical Decoupling, and SYS-021 Cryptographic Ledger",
+    "upload_type": "dataset",
+    "publication_date": "2026-11-07",
+    "version": "2.0.0",
+    "creators": [
+      {
+        "name": "Davis, Devin Phillip",
+        "affiliation": "Agile Defense Systems LLC / OSIRIS Sovereign Architecture Project"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "quantum computing",
+      "Hayden-Preskill protocol",
+      "quantum capacity",
+      "black hole information",
+      "superconducting qubits",
+      "IBM Quantum Heron",
+      "ibm_fez",
+      "ibm_marrakesh",
+      "staggered dynamical decoupling",
+      "SYS-021",
+      "governed execution",
+      "cryptographic ledger",
+      "NIST FIPS 204",
+      "entanglement fidelity",
+      "quantum tomography"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      },
+      {
+        "identifier": "quantum-computing"
+      }
+    ],
+    "description": "<p><strong>OSIRIS Unified Physical Quantum Hardware Evidence Package (v2.0)</strong></p><p>This deposition contains the complete empirical evidence, raw shot count dictionaries, compiled instruction-set architecture (ISA) circuits, cryptographic dispatch grants, hardware acquisition receipts, and Merkle-chained ledger records for the OSIRIS Quantum Hardware Research Campaign executed on 156-qubit IBM Quantum Heron processors (<code>ibm_fez</code> and <code>ibm_marrakesh</code>).</p><p><strong>Consolidated Hardware Campaigns & Validated Observables:</strong></p><ul><li><strong>OSIRIS-HP-001 (1-Qubit Subspace Reconstruction, ibm_fez):</strong> 49,152 physical shots across 6 transmons; reconstructed subspace population of 80.20 &plusmn; 0.62%.</li><li><strong>OSIRIS-HP-002 (Certified Restricted 1-Qubit Hayden-Preskill Recovery, ibm_fez):</strong> 73,728 physical shots; restricted entanglement fidelity of 79.49 &plusmn; 0.14% (Z &gt; 200&sigma;, W = -0.2949 &lt; 0) with barrier-verified positive control (91.94%).</li><li><strong>OSIRIS-HP-003 (Certified 2-Qubit Hayden-Preskill Capacity Bound, ibm_fez):</strong> 46,080 physical shots; multi-qubit recovery fidelity of 74.95 &plusmn; 0.34% (Z = 73.0&sigma;, W = -0.2495 &lt; 0, Job <code>dbndsvoou4as73b4cvi0</code>). Conclusively validates the quantum capacity theorem: collecting a single photon (Arm B-Def) is bounded at F1 = 42.42% (W1 &ge; 0, unentangled) and F2 = 24.90%, whereas collecting 2 photons achieves +41.29 pp capacity gain.</li><li><strong>7-Edge Staggered Dynamical Decoupling Survey (ibm_marrakesh):</strong> 86,016 physical shots across 14 transmons; Edge (14, 15) demonstrated +2.28 pp cross-talk suppression with an 86.0% global ensemble win-rate.</li><li><strong>Forensic Audit Resolution (Records E-44 to E-52):</strong> Complete documentation of the methodological quarantine, compiler cancellation remediation, and unbiased dual-pair Pauli tomography redesign.</li><li><strong>SYS-021 Immutable Cryptographic Ledger:</strong> All campaigns are anchored across Blocks #1 through #48 in <code>evidence_ledger.db</code> with unbroken SHA-256 parent-block hash chaining.</li></ul><p>Distribution bundle includes native QPY binaries, harvest JSON records, LaTeX manuscript (<code>crsm_nature_physics_2026.tex</code>), and SHA256SUMS.txt.</p>",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/osiris-dnalang/osiris-cli/releases/tag/v6.1.0",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5281/zenodo.23840584",
+        "relation": "references",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.23834057",
+        "relation": "references",
+        "scheme": "doi"
+      }
+    ]
+  }
+}

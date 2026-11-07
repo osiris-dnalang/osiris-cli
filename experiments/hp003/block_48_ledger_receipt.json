@@ -1,0 +1,33 @@
+{
+  "sequence_index": 48,
+  "prev_block_hash": "74a0987e6baf92c7205a65170eaf6fcc4b74718ce26128a4a09e57baa040b041",
+  "event_type": "SYS021_HP003_HARDWARE_ACQUISITION_RECEIPT",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "job_id": "dbndsvoou4as73b4cvi0",
+  "backend": "ibm_fez",
+  "real_qpu_seconds": 14,
+  "total_circuits": 45,
+  "total_physical_shots": 46080,
+  "results_sha256": "757442a222e37b5c5050c5ac3843954a253ae1a358b1451ec9f1fc743912a19a",
+  "arm_a_fidelity": 0.745117,
+  "arm_b_fidelity": 0.749512,
+  "arm_b_def_f1": 0.424154,
+  "arm_b_def_f2": 0.249023,
+  "arm_b_def_fidelity": 0.336589,
+  "arm_b_ctrl_fidelity": 0.251628,
+  "arm_b_held_fidelity": 0.25708,
+  "delta_gain_control_pp": 49.79,
+  "delta_gain_capacity_pp": 41.29,
+  "entanglement_witness": -0.249512,
+  "is_entangled": true,
+  "endpoints_passed": {
+    "H1_reversibility": false,
+    "H2_primary_recovery": true,
+    "H3_capacity_threshold": true,
+    "H4_unentangled_baseline": true,
+    "H5_heldout_specificity": true
+  },
+  "nonce": "OSIRIS-HP003-REMEDIATED-HARVEST-1794039524499",
+  "timestamp": 1794039524.4997225,
+  "block_hash": "3eee949194b8e49ac348f452147418d113efb390fbec922cee70df646d71224c"
+}
