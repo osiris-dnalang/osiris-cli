@@ -59,3 +59,18 @@ repos/
 .osiris_state/
 auto_enhance_*.json
 auto_complete_*.json
+# Credentials and local configuration
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+*.pem
+*.key
+.zenodo_token
+# Private workspace and generated files
+workspace/
+unzipped/
+osiris-env/
+__pycache__/
+*.pyc

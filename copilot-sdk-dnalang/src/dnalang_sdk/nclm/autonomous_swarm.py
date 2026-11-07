@@ -191,7 +191,7 @@ class AutonomousResearchSwarm:
         """Explorer agents discover new research areas"""
         if random.random() < agent.genome.exploration_weight:
             # Explore new domains or connections
-            domains = list(Domain)
+            domains = ["quantum", "consciousness", "spacetime", "defense"]
             new_domain = random.choice(domains)
 
             # Simulate discovery

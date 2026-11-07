@@ -189,7 +189,10 @@ class IntentProcessor:
         self.context_window_size = context_window_size
         self.enable_learning = enable_learning
         self.state_dir = Path(state_dir) if state_dir else Path.home() / ".osiris" / "intent"
-        self.state_dir.mkdir(exist_ok=True, parents=True)
+        try:
+            self.state_dir.mkdir(exist_ok=True, parents=True)
+        except OSError:
+            pass
         
         # Interaction history
         self.interaction_history: List[Dict[str, Any]] = []
@@ -224,7 +227,7 @@ class IntentProcessor:
         
         # Deduce primary goal
         primary_goal = self._deduce_primary_goal(cleaned_input, keywords, context)
-        Extract constraints, skill level, urgency
+        # Extract constraints, skill level, urgency
         constraints = self._extract_constraints(cleaned_input)
         skill_level = self._estimate_skill_level(cleaned_input)
         urgency = self._estimate_urgency(cleaned_input)
@@ -265,8 +268,7 @@ class IntentProcessor:
         self._record_interaction(user_input, intent)
         if self.enable_learning:
             self._learn_from_interaction(cleaned_input, intent)
-            self._update_memory_graph(
-            self._learn_from_interaction(cleaned_input, intent)
+            self._update_memory_graph(intent)
         
         return intent
     
@@ -478,11 +480,22 @@ class IntentProcessor:
                 "Integrate subsystems",
                 "Run full test suite",
             ]
+        elif trajectory == "optimization":
+            suggestions = [
+                "Profile bottlenecks",
+                "Refactor hot paths",
+                "Benchmark improvements",
+                "Document learnings",
+            ]
+        
+        return suggestions[:4]  # Return top 4 suggestions
+    
+    def _calculate_confidence(
         self,
         keywords: Set[str],
         actions: List[IntentAction],
-        constraints: Dict[str, Any],
-        urgency: str,
+        constraints: Optional[Dict[str, Any]] = None,
+        urgency: str = "normal",
     ) -> float:
         """Calculate overall confidence in intent deduction"""
         if not keywords:
@@ -494,24 +507,6 @@ class IntentProcessor:
         urgency_bonus = 0.05 if urgency in ["high", "critical"] else 0.0
         
         return max(0.2, min(1.0, (keyword_confidence + action_confidence + urgency_bonus - constraint_penalty) / 2.0))
-            suggestions = [
-                "Profile bottlenecks",
-                "Refactor hot paths",
-                "Benchmark improvements",
-                "Document learnings",
-            ]
-        
-        return suggestions[:4]  # Return top 4 suggestions
-    
-    def _calculate_confidence(self, keywords: Set[str], actions: List[IntentAction]) -> float:
-        """Calculate overall confidence in intent deduction"""
-        if not keywords:
-            return 0.3
-        
-        keyword_confidence = min(1.0, len(keywords) / 5.0)
-        action_confidence = sum(a.confidence for a in actions) / max(1, len(actions))
-        
-        return (keyword_confidence + action_confidence) / 2.0
     
     def _record_interaction(self, user_input: str, intent: UserIntent) -> None:
         """Record interaction in history"""
