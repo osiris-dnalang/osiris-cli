@@ -50,7 +50,10 @@ def test_launcher_chat_tui_keeps_textual(monkeypatch):
 
 def test_interactive_opens_the_repl(monkeypatch):
     calls = []
-    import osiris_interactive
+    import pytest
+    # osiris_interactive exists only in the unversioned home tree, not in this repo.
+    osiris_interactive = pytest.importorskip(
+        "osiris_interactive", reason="osiris_interactive is not part of the osiris-cli repo")
     monkeypatch.setattr(osiris_repl, "main", lambda argv=None: calls.append(argv))
     osiris_interactive.main([])
     assert calls and calls[0][0] == "interactive"

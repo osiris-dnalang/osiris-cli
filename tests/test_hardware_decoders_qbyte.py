@@ -239,8 +239,13 @@ class TestPackageLevel:
     """Verify top-level osiris package exports."""
 
     def test_version(self):
+        import re
+        from pathlib import Path
+
         import osiris
-        assert osiris.__version__ == "5.0.0"
+        pyproject = (Path(__file__).resolve().parent.parent / "pyproject.toml").read_text()
+        declared = re.search(r'^version\s*=\s*"([^"]+)"', pyproject, re.M).group(1)
+        assert osiris.__version__ == declared
 
     def test_constants(self):
         import osiris

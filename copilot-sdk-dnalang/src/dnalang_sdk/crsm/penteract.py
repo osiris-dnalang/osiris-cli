@@ -76,7 +76,7 @@ logger = logging.getLogger("penteract")
 XI_TARGET = 9223.86             # Negentropy target Ξ
 PHI_IGNITION = 1.0              # Penteract ignition threshold
 RESOLUTION_TIMESTEPS = 1000     # Timesteps per resolution cycle
-GAMMA_FLOOR = 0.001             # Asymptotic gamma floor
+GAMMA_FLOOR = 0.092             # Asymptotic gamma floor
 PENTERACT_VERSION = "11.0"
 W2_TARGET = 0.9999              # Wasserstein-2 efficiency target
 

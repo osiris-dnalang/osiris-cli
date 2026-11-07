@@ -14,7 +14,7 @@ Physical constants (immutable):
 
 import logging as _logging
 
-__version__ = "5.0.0"
+__version__ = "6.0.0"  # must match [project] version in pyproject.toml (CI checks this)
 __all__ = [
     "__version__",
     "LAMBDA_PHI", "THETA_LOCK", "PHI_THRESHOLD",

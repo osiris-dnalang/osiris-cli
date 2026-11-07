@@ -28,13 +28,13 @@ import json
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, List, Dict, Tuple, Any, Union
+from typing import Optional, List, Dict, Tuple, Union
 
 import numpy as np
 
 from .autograd import Tensor, softmax, _is_grad_enabled
-from .layers import Module, Linear, LayerNorm, Dropout
-from .sovereign_mechanics import THETA_LOCK_RAD, CHI_PC, GAMMA_CRITICAL
+from .layers import Module, Linear, Dropout
+from .sovereign_mechanics import THETA_LOCK_RAD, CHI_PC
 
 
 # ===========================================================================
@@ -422,8 +422,8 @@ class EpistemicIntrospector:
         # Sort top salient tokens descending
         token_saliency_sorted = sorted(token_saliency, key=lambda kv: kv[1], reverse=True)
 
-        mean_xi = float(np.mean([l.negentropy_xi for l in layers_telemetry])) if layers_telemetry else 0.0
-        mean_gamma = float(np.mean([l.decoherence_gamma for l in layers_telemetry])) if layers_telemetry else 0.0
+        mean_xi = float(np.mean([t.negentropy_xi for t in layers_telemetry])) if layers_telemetry else 0.0
+        mean_gamma = float(np.mean([t.decoherence_gamma for t in layers_telemetry])) if layers_telemetry else 0.0
 
         # Extract coherence if bidirectional attention exists in any block
         coherences = [
