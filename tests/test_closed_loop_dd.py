@@ -13,6 +13,14 @@ from osiris.quantum.bidirectional_dd import (
 )
 
 
+try:
+    import qiskit  # noqa: F401
+    import qiskit_aer  # noqa: F401
+    HAS_QISKIT = True
+except ImportError:  # optional extra; the CI core install has no qiskit
+    HAS_QISKIT = False
+
+
 class TestClosedLoopDD(unittest.TestCase):
     """Test suite for closed-loop spectator crosstalk optimization under SYS-021."""
 
@@ -40,6 +48,7 @@ class TestClosedLoopDD(unittest.TestCase):
         corrs_odd = SpectatorTomography.compute_edge_correlations(counts_odd, [(14, 15)], self.qubits)
         self.assertAlmostEqual(corrs_odd[(14, 15)], -1.0, places=3)
 
+    @unittest.skipUnless(HAS_QISKIT, "qiskit and qiskit_aer are optional extras")
     def test_closed_loop_simulator_convergence(self):
         """Test end-to-end closed-loop optimization with synthetic crosstalk gradient."""
         result = self.refocuser.optimize_with_simulator(
@@ -63,6 +72,7 @@ class TestClosedLoopDD(unittest.TestCase):
         self.assertIn("ledger_nonce", receipt)
         self.assertEqual(len(receipt["ledger_nonce"]), 16)
 
+    @unittest.skipUnless(HAS_QISKIT, "qiskit and qiskit_aer are optional extras")
     def test_circuit_compilation_with_qiskit(self):
         """Verify Qiskit compilation of optimized schedule."""
         sched = self.refocuser.compiler.compile_staggered_schedule(
