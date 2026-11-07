@@ -27,8 +27,7 @@ import json
 import math
 import time
 from dataclasses import asdict, dataclass, field
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -382,9 +381,9 @@ class ClosedLoopRefocuser:
     ) -> ClosedLoopResult:
         """Run simulated closed-loop optimization on AerSimulator with synthetic ZZ crosstalk."""
         try:
-            from qiskit import QuantumCircuit
+            from qiskit import QuantumCircuit  # noqa: F401  availability check
             from qiskit_aer import AerSimulator
-            sim = AerSimulator()
+            AerSimulator()  # availability check
         except (ImportError, ModuleNotFoundError) as err:
             raise ImportError("qiskit and qiskit_aer are required for optimize_with_simulator()") from err
 
@@ -401,7 +400,7 @@ class ClosedLoopRefocuser:
 
         for it in range(max_iterations):
             # 1. Build circuit for ZZ tomography
-            qc = self.compiler.compile_qiskit(
+            self.compiler.compile_qiskit(
                 self.qubits,
                 self.total_delay_us,
                 self.sequence_type,
@@ -424,7 +423,7 @@ class ClosedLoopRefocuser:
             sim_counts["0" * (len(self.qubits) - 1) + "1"] = odd_shots
 
             # 2. Compute edge parity
-            corrs = SpectatorTomography.compute_edge_correlations(sim_counts, self.edges, self.qubits)
+            SpectatorTomography.compute_edge_correlations(sim_counts, self.edges, self.qubits)
             # Add small realistic residual
             simulated_zz = {e: round(0.02 + 0.15 * error_factor, 4) for e in self.edges}
             mean_residual = float(np.mean([abs(v) for v in simulated_zz.values()]))

@@ -34,7 +34,7 @@ jobs:
 
       - name: Run import smoke tests
         run: |
-          python -c "from osiris import __version__; assert __version__ == '4.0.0'; print('osiris pkg OK')"
+          python -c "import re, osiris; declared = re.search(r'^version\s*=\s*\"([^\"]+)\"', open('pyproject.toml').read(), re.M).group(1); assert osiris.__version__ == declared, (osiris.__version__, declared); print('osiris pkg OK', osiris.__version__)"
           python -c "from osiris.agents import BaseAgent, AURA, AIDEN, CHEOPS, CHRONOS; print('osiris.agents OK')"
           python -c "from osiris.compiler import Lexer, Parser, IROpType; print('osiris.compiler OK')"
           python -c "from osiris.defense import Sentinel, ZeroTrust, PCRB; print('osiris.defense OK')"
