@@ -1,0 +1,295 @@
+{
+  "benchmark_id": "OSIRIS-HP-003",
+  "backend": "ibm_fez",
+  "total_circuits": 45,
+  "shots_per_circuit": 1024,
+  "total_shots": 46080,
+  "qpy_sha256": "2ffb2360c3e271bf9cf5852b25ea52c21034e68ebb7bdfb0b47249dc0b0c0977",
+  "max_cz": 49,
+  "max_depth": 87,
+  "arms": [
+    "Arm A",
+    "Arm B",
+    "Arm B-Def",
+    "Arm B-Ctrl",
+    "Arm B-Held"
+  ],
+  "bases": [
+    "XX",
+    "YY",
+    "ZZ"
+  ],
+  "n_blocks": 3,
+  "circuit_metadata": [
+    {
+      "block_index": 0,
+      "arm": "Arm B-Def",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b0_arm_b_def_zz"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Held",
+      "basis": "YY",
+      "circuit_name": "hp003_b0_arm_b_held_yy"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Def",
+      "basis": "YY",
+      "circuit_name": "hp003_b0_arm_b_def_yy"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Def",
+      "basis": "XX",
+      "circuit_name": "hp003_b0_arm_b_def_xx"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Held",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b0_arm_b_held_zz"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Held",
+      "basis": "XX",
+      "circuit_name": "hp003_b0_arm_b_held_xx"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b0_arm_b_zz"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm A",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b0_arm_a_zz"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Ctrl",
+      "basis": "XX",
+      "circuit_name": "hp003_b0_arm_b_ctrl_xx"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B",
+      "basis": "XX",
+      "circuit_name": "hp003_b0_arm_b_xx"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B",
+      "basis": "YY",
+      "circuit_name": "hp003_b0_arm_b_yy"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Ctrl",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b0_arm_b_ctrl_zz"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm A",
+      "basis": "XX",
+      "circuit_name": "hp003_b0_arm_a_xx"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm A",
+      "basis": "YY",
+      "circuit_name": "hp003_b0_arm_a_yy"
+    },
+    {
+      "block_index": 0,
+      "arm": "Arm B-Ctrl",
+      "basis": "YY",
+      "circuit_name": "hp003_b0_arm_b_ctrl_yy"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Def",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b1_arm_b_def_zz"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm A",
+      "basis": "YY",
+      "circuit_name": "hp003_b1_arm_a_yy"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B",
+      "basis": "XX",
+      "circuit_name": "hp003_b1_arm_b_xx"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm A",
+      "basis": "XX",
+      "circuit_name": "hp003_b1_arm_a_xx"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b1_arm_b_zz"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Def",
+      "basis": "XX",
+      "circuit_name": "hp003_b1_arm_b_def_xx"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Held",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b1_arm_b_held_zz"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B",
+      "basis": "YY",
+      "circuit_name": "hp003_b1_arm_b_yy"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Held",
+      "basis": "YY",
+      "circuit_name": "hp003_b1_arm_b_held_yy"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm A",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b1_arm_a_zz"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Def",
+      "basis": "YY",
+      "circuit_name": "hp003_b1_arm_b_def_yy"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Held",
+      "basis": "XX",
+      "circuit_name": "hp003_b1_arm_b_held_xx"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Ctrl",
+      "basis": "YY",
+      "circuit_name": "hp003_b1_arm_b_ctrl_yy"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Ctrl",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b1_arm_b_ctrl_zz"
+    },
+    {
+      "block_index": 1,
+      "arm": "Arm B-Ctrl",
+      "basis": "XX",
+      "circuit_name": "hp003_b1_arm_b_ctrl_xx"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B",
+      "basis": "YY",
+      "circuit_name": "hp003_b2_arm_b_yy"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B",
+      "basis": "XX",
+      "circuit_name": "hp003_b2_arm_b_xx"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Def",
+      "basis": "XX",
+      "circuit_name": "hp003_b2_arm_b_def_xx"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Held",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b2_arm_b_held_zz"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Ctrl",
+      "basis": "YY",
+      "circuit_name": "hp003_b2_arm_b_ctrl_yy"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm A",
+      "basis": "YY",
+      "circuit_name": "hp003_b2_arm_a_yy"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Held",
+      "basis": "YY",
+      "circuit_name": "hp003_b2_arm_b_held_yy"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm A",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b2_arm_a_zz"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Ctrl",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b2_arm_b_ctrl_zz"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Held",
+      "basis": "XX",
+      "circuit_name": "hp003_b2_arm_b_held_xx"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Ctrl",
+      "basis": "XX",
+      "circuit_name": "hp003_b2_arm_b_ctrl_xx"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Def",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b2_arm_b_def_zz"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B-Def",
+      "basis": "YY",
+      "circuit_name": "hp003_b2_arm_b_def_yy"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm A",
+      "basis": "XX",
+      "circuit_name": "hp003_b2_arm_a_xx"
+    },
+    {
+      "block_index": 2,
+      "arm": "Arm B",
+      "basis": "ZZ",
+      "circuit_name": "hp003_b2_arm_b_zz"
+    }
+  ]
+}
