@@ -1,9 +1,29 @@
-# What `gcloud builds submit` uploads: the repository as git tracks it, minus large legacy
-# bundles the tests do not use.
+# Google Cloud Build ignore rules
 .git
 .gitignore
-#!include:.gitignore
+.env
+.env.*
+*.env
 results/
+artifacts/
 *.zip
 *.tar.gz
 world-record-quantum-supremacy.md.txt
+*.log
+SETUP_*.sh
+SETUP_CREDENTIALS.md
+.git/
+.venv/
+__pycache__/
+SETUP_OSIRIS.sh
+SETUP_CREDENTIALS.md
+RQC_RESEARCH_METHODOLOGY.md
+DEPLOYMENT_SUMMARY.md
+OSIRIS_CHAT_README.md
+EXECUTION_PLAYBOOK.md
+DEPLOYMENT_PACKAGE.md
+QUICKSTART_RQC_RESEARCH.md
+run_ibm.py
+tests/test_gemini_gateway.py
+tests/test_train.py
+results/
