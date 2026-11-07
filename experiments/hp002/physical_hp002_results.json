@@ -1,0 +1,705 @@
+{
+  "benchmark_id": "OSIRIS-HP-002",
+  "backend": "ibm_fez",
+  "job_id": "dbn9e10qtr0c73acjf50",
+  "execution_date": "2026-11-07T03:12:37Z",
+  "total_circuits": 36,
+  "total_physical_shots": 73728,
+  "qpu_usage": {
+    "quantum_seconds": 21,
+    "seconds": 21,
+    "status": "complete"
+  },
+  "arm_synthesis": {
+    "Arm A (Full-Access Inverse)": {
+      "mean_fidelity": 0.975586,
+      "sem_fidelity": 0.000527,
+      "mean_xx": 0.970378,
+      "mean_yy": -0.963542,
+      "mean_zz": 0.968424,
+      "is_entangled": true,
+      "entanglement_witness": -0.475586,
+      "block_fidelities": [
+        0.974365,
+        0.97583,
+        0.976562
+      ]
+    },
+    "Arm B (Restricted Recovery - Matched)": {
+      "mean_fidelity": 0.683675,
+      "sem_fidelity": 0.000937,
+      "mean_xx": 0.897135,
+      "mean_yy": -0.411784,
+      "mean_zz": 0.425781,
+      "is_entangled": true,
+      "entanglement_witness": -0.183675,
+      "block_fidelities": [
+        0.68457,
+        0.681396,
+        0.685059
+      ]
+    },
+    "Arm B Control (Separable Trapped)": {
+      "mean_fidelity": 0.249837,
+      "sem_fidelity": 0.003119,
+      "mean_xx": -0.001628,
+      "mean_yy": -0.003906,
+      "mean_zz": -0.00293,
+      "is_entangled": false,
+      "entanglement_witness": 0.250163,
+      "block_fidelities": [
+        0.24292,
+        0.256104,
+        0.250488
+      ]
+    },
+    "Arm B Held-Out (Scrambler Specificity Gate)": {
+      "mean_fidelity": 0.25057,
+      "sem_fidelity": 0.004134,
+      "mean_xx": 0.019857,
+      "mean_yy": 0.032878,
+      "mean_zz": 0.015299,
+      "is_entangled": false,
+      "entanglement_witness": 0.24943,
+      "block_fidelities": [
+        0.248291,
+        0.260254,
+        0.243164
+      ]
+    }
+  },
+  "endpoints_evaluation": {
+    "primary_restricted_recovery": {
+      "claim": "F_ent(Arm B) > 0.50",
+      "observed": 0.683675,
+      "passed": true
+    },
+    "secondary_gain_over_control": {
+      "claim": "Delta F(Arm B - Control) >= +50.0 pp",
+      "observed_delta_pp": 43.38,
+      "passed": false
+    },
+    "specificity_gate_heldout": {
+      "claim": "F_ent(Arm B Held-Out) <= 0.50",
+      "observed": 0.25057,
+      "passed": true
+    },
+    "reversibility_positive_control": {
+      "claim": "F_ent(Arm A) >= 0.85",
+      "observed": 0.975586,
+      "passed": true
+    }
+  },
+  "block_level_data": {
+    "Arm A (Full-Access Inverse)": [
+      {
+        "block": 0,
+        "fidelity": 0.974365234375,
+        "sigma": 0.002480122427530403,
+        "exp_xx": 0.96875,
+        "exp_yy": -0.9658203125,
+        "exp_zz": 0.962890625
+      },
+      {
+        "block": 1,
+        "fidelity": 0.975830078125,
+        "sigma": 0.0024090470148766083,
+        "exp_xx": 0.97265625,
+        "exp_yy": -0.9609375,
+        "exp_zz": 0.9697265625
+      },
+      {
+        "block": 2,
+        "fidelity": 0.9765625,
+        "sigma": 0.0023730605913872558,
+        "exp_xx": 0.9697265625,
+        "exp_yy": -0.9638671875,
+        "exp_zz": 0.97265625
+      }
+    ],
+    "Arm B (Restricted Recovery - Matched)": [
+      {
+        "block": 0,
+        "fidelity": 0.6845703125,
+        "sigma": 0.00746716636888005,
+        "exp_xx": 0.9111328125,
+        "exp_yy": -0.3955078125,
+        "exp_zz": 0.431640625
+      },
+      {
+        "block": 1,
+        "fidelity": 0.681396484375,
+        "sigma": 0.007551310548692532,
+        "exp_xx": 0.87890625,
+        "exp_yy": -0.40625,
+        "exp_zz": 0.4404296875
+      },
+      {
+        "block": 2,
+        "fidelity": 0.68505859375,
+        "sigma": 0.0074838838363844,
+        "exp_xx": 0.9013671875,
+        "exp_yy": -0.43359375,
+        "exp_zz": 0.4052734375
+      }
+    ],
+    "Arm B Control (Separable Trapped)": [
+      {
+        "block": 0,
+        "fidelity": 0.242919921875,
+        "sigma": 0.009566745105336364,
+        "exp_xx": -0.0302734375,
+        "exp_yy": 0.0048828125,
+        "exp_zz": 0.0068359375
+      },
+      {
+        "block": 1,
+        "fidelity": 0.256103515625,
+        "sigma": 0.009567706388227324,
+        "exp_xx": 0.0146484375,
+        "exp_yy": -0.0126953125,
+        "exp_zz": -0.0029296875
+      },
+      {
+        "block": 2,
+        "fidelity": 0.25048828125,
+        "sigma": 0.009567853918349727,
+        "exp_xx": 0.0107421875,
+        "exp_yy": -0.00390625,
+        "exp_zz": -0.0126953125
+      }
+    ],
+    "Arm B Held-Out (Scrambler Specificity Gate)": [
+      {
+        "block": 0,
+        "fidelity": 0.248291015625,
+        "sigma": 0.00956819307691228,
+        "exp_xx": 0.0009765625,
+        "exp_yy": 0.0087890625,
+        "exp_zz": 0.0009765625
+      },
+      {
+        "block": 1,
+        "fidelity": 0.26025390625,
+        "sigma": 0.009559098553861247,
+        "exp_xx": 0.037109375,
+        "exp_yy": 0.044921875,
+        "exp_zz": 0.048828125
+      },
+      {
+        "block": 2,
+        "fidelity": 0.2431640625,
+        "sigma": 0.009564339953939592,
+        "exp_xx": 0.021484375,
+        "exp_yy": 0.044921875,
+        "exp_zz": -0.00390625
+      }
+    ]
+  },
+  "circuit_records": [
+    {
+      "circuit_idx": 0,
+      "block": 0,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "XX",
+      "exp_val": 0.96875,
+      "shots": 2048,
+      "counts": {
+        "11": 1004,
+        "00": 1012,
+        "01": 19,
+        "10": 13
+      }
+    },
+    {
+      "circuit_idx": 1,
+      "block": 0,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "YY",
+      "exp_val": -0.96582,
+      "shots": 2048,
+      "counts": {
+        "10": 994,
+        "01": 1019,
+        "11": 12,
+        "00": 23
+      }
+    },
+    {
+      "circuit_idx": 2,
+      "block": 0,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "ZZ",
+      "exp_val": 0.962891,
+      "shots": 2048,
+      "counts": {
+        "00": 1050,
+        "11": 960,
+        "10": 18,
+        "01": 20
+      }
+    },
+    {
+      "circuit_idx": 3,
+      "block": 0,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "XX",
+      "exp_val": 0.911133,
+      "shots": 2048,
+      "counts": {
+        "00": 1057,
+        "11": 900,
+        "10": 44,
+        "01": 47
+      }
+    },
+    {
+      "circuit_idx": 4,
+      "block": 0,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "YY",
+      "exp_val": -0.395508,
+      "shots": 2048,
+      "counts": {
+        "10": 707,
+        "11": 302,
+        "01": 722,
+        "00": 317
+      }
+    },
+    {
+      "circuit_idx": 5,
+      "block": 0,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "ZZ",
+      "exp_val": 0.431641,
+      "shots": 2048,
+      "counts": {
+        "01": 281,
+        "00": 758,
+        "11": 708,
+        "10": 301
+      }
+    },
+    {
+      "circuit_idx": 6,
+      "block": 0,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "XX",
+      "exp_val": -0.030273,
+      "shots": 2048,
+      "counts": {
+        "10": 537,
+        "01": 518,
+        "11": 457,
+        "00": 536
+      }
+    },
+    {
+      "circuit_idx": 7,
+      "block": 0,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "YY",
+      "exp_val": 0.004883,
+      "shots": 2048,
+      "counts": {
+        "00": 529,
+        "10": 495,
+        "01": 524,
+        "11": 500
+      }
+    },
+    {
+      "circuit_idx": 8,
+      "block": 0,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "ZZ",
+      "exp_val": 0.006836,
+      "shots": 2048,
+      "counts": {
+        "11": 498,
+        "00": 533,
+        "10": 509,
+        "01": 508
+      }
+    },
+    {
+      "circuit_idx": 9,
+      "block": 0,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "XX",
+      "exp_val": 0.000977,
+      "shots": 2048,
+      "counts": {
+        "01": 486,
+        "10": 537,
+        "11": 493,
+        "00": 532
+      }
+    },
+    {
+      "circuit_idx": 10,
+      "block": 0,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "YY",
+      "exp_val": 0.008789,
+      "shots": 2048,
+      "counts": {
+        "01": 534,
+        "11": 507,
+        "00": 526,
+        "10": 481
+      }
+    },
+    {
+      "circuit_idx": 11,
+      "block": 0,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "ZZ",
+      "exp_val": 0.000977,
+      "shots": 2048,
+      "counts": {
+        "10": 511,
+        "01": 512,
+        "00": 565,
+        "11": 460
+      }
+    },
+    {
+      "circuit_idx": 12,
+      "block": 1,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "XX",
+      "exp_val": 0.972656,
+      "shots": 2048,
+      "counts": {
+        "00": 1029,
+        "11": 991,
+        "10": 16,
+        "01": 12
+      }
+    },
+    {
+      "circuit_idx": 13,
+      "block": 1,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "YY",
+      "exp_val": -0.960938,
+      "shots": 2048,
+      "counts": {
+        "10": 1011,
+        "01": 997,
+        "00": 22,
+        "11": 18
+      }
+    },
+    {
+      "circuit_idx": 14,
+      "block": 1,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "ZZ",
+      "exp_val": 0.969727,
+      "shots": 2048,
+      "counts": {
+        "11": 983,
+        "00": 1034,
+        "10": 12,
+        "01": 19
+      }
+    },
+    {
+      "circuit_idx": 15,
+      "block": 1,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "XX",
+      "exp_val": 0.878906,
+      "shots": 2048,
+      "counts": {
+        "11": 963,
+        "00": 961,
+        "01": 72,
+        "10": 52
+      }
+    },
+    {
+      "circuit_idx": 16,
+      "block": 1,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "YY",
+      "exp_val": -0.40625,
+      "shots": 2048,
+      "counts": {
+        "01": 725,
+        "10": 715,
+        "00": 312,
+        "11": 296
+      }
+    },
+    {
+      "circuit_idx": 17,
+      "block": 1,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "ZZ",
+      "exp_val": 0.44043,
+      "shots": 2048,
+      "counts": {
+        "11": 721,
+        "00": 754,
+        "10": 317,
+        "01": 256
+      }
+    },
+    {
+      "circuit_idx": 18,
+      "block": 1,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "XX",
+      "exp_val": 0.014648,
+      "shots": 2048,
+      "counts": {
+        "10": 493,
+        "00": 557,
+        "11": 482,
+        "01": 516
+      }
+    },
+    {
+      "circuit_idx": 19,
+      "block": 1,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "YY",
+      "exp_val": -0.012695,
+      "shots": 2048,
+      "counts": {
+        "10": 512,
+        "00": 502,
+        "01": 525,
+        "11": 509
+      }
+    },
+    {
+      "circuit_idx": 20,
+      "block": 1,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "ZZ",
+      "exp_val": -0.00293,
+      "shots": 2048,
+      "counts": {
+        "00": 552,
+        "10": 525,
+        "01": 502,
+        "11": 469
+      }
+    },
+    {
+      "circuit_idx": 21,
+      "block": 1,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "XX",
+      "exp_val": 0.037109,
+      "shots": 2048,
+      "counts": {
+        "00": 570,
+        "11": 492,
+        "10": 491,
+        "01": 495
+      }
+    },
+    {
+      "circuit_idx": 22,
+      "block": 1,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "YY",
+      "exp_val": 0.044922,
+      "shots": 2048,
+      "counts": {
+        "11": 516,
+        "00": 554,
+        "10": 459,
+        "01": 519
+      }
+    },
+    {
+      "circuit_idx": 23,
+      "block": 1,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "ZZ",
+      "exp_val": 0.048828,
+      "shots": 2048,
+      "counts": {
+        "01": 499,
+        "11": 488,
+        "10": 475,
+        "00": 586
+      }
+    },
+    {
+      "circuit_idx": 24,
+      "block": 2,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "XX",
+      "exp_val": 0.969727,
+      "shots": 2048,
+      "counts": {
+        "00": 1017,
+        "11": 1000,
+        "10": 17,
+        "01": 14
+      }
+    },
+    {
+      "circuit_idx": 25,
+      "block": 2,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "YY",
+      "exp_val": -0.963867,
+      "shots": 2048,
+      "counts": {
+        "01": 1027,
+        "10": 984,
+        "00": 22,
+        "11": 15
+      }
+    },
+    {
+      "circuit_idx": 26,
+      "block": 2,
+      "arm": "Arm A (Full-Access Inverse)",
+      "basis": "ZZ",
+      "exp_val": 0.972656,
+      "shots": 2048,
+      "counts": {
+        "00": 1049,
+        "11": 971,
+        "01": 15,
+        "10": 13
+      }
+    },
+    {
+      "circuit_idx": 27,
+      "block": 2,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "XX",
+      "exp_val": 0.901367,
+      "shots": 2048,
+      "counts": {
+        "10": 54,
+        "11": 946,
+        "00": 1001,
+        "01": 47
+      }
+    },
+    {
+      "circuit_idx": 28,
+      "block": 2,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "YY",
+      "exp_val": -0.433594,
+      "shots": 2048,
+      "counts": {
+        "10": 740,
+        "01": 728,
+        "00": 281,
+        "11": 299
+      }
+    },
+    {
+      "circuit_idx": 29,
+      "block": 2,
+      "arm": "Arm B (Restricted Recovery - Matched)",
+      "basis": "ZZ",
+      "exp_val": 0.405273,
+      "shots": 2048,
+      "counts": {
+        "10": 295,
+        "11": 670,
+        "00": 769,
+        "01": 314
+      }
+    },
+    {
+      "circuit_idx": 30,
+      "block": 2,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "XX",
+      "exp_val": 0.010742,
+      "shots": 2048,
+      "counts": {
+        "10": 502,
+        "01": 511,
+        "00": 545,
+        "11": 490
+      }
+    },
+    {
+      "circuit_idx": 31,
+      "block": 2,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "YY",
+      "exp_val": -0.003906,
+      "shots": 2048,
+      "counts": {
+        "11": 518,
+        "01": 522,
+        "10": 506,
+        "00": 502
+      }
+    },
+    {
+      "circuit_idx": 32,
+      "block": 2,
+      "arm": "Arm B Control (Separable Trapped)",
+      "basis": "ZZ",
+      "exp_val": -0.012695,
+      "shots": 2048,
+      "counts": {
+        "00": 501,
+        "10": 526,
+        "01": 511,
+        "11": 510
+      }
+    },
+    {
+      "circuit_idx": 33,
+      "block": 2,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "XX",
+      "exp_val": 0.021484,
+      "shots": 2048,
+      "counts": {
+        "00": 542,
+        "11": 504,
+        "01": 525,
+        "10": 477
+      }
+    },
+    {
+      "circuit_idx": 34,
+      "block": 2,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "YY",
+      "exp_val": 0.044922,
+      "shots": 2048,
+      "counts": {
+        "01": 495,
+        "00": 540,
+        "11": 530,
+        "10": 483
+      }
+    },
+    {
+      "circuit_idx": 35,
+      "block": 2,
+      "arm": "Arm B Held-Out (Scrambler Specificity Gate)",
+      "basis": "ZZ",
+      "exp_val": -0.003906,
+      "shots": 2048,
+      "counts": {
+        "01": 499,
+        "11": 495,
+        "10": 529,
+        "00": 525
+      }
+    }
+  ]
+}

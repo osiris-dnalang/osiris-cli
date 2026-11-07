@@ -1,0 +1,15 @@
+{
+  "job_id": "dbn9e10qtr0c73acjf50",
+  "backend": "ibm_fez",
+  "circuit_count": 36,
+  "shots_per_circuit": 2048,
+  "total_physical_shots": 73728,
+  "dispatch_timestamp": "2026-11-07T03:12:04Z",
+  "status": "COMPLETED",
+  "qpu_usage": {
+    "quantum_seconds": 21,
+    "seconds": 21,
+    "status": "complete"
+  },
+  "results_file": "physical_hp002_results.json"
+}

@@ -1,0 +1,36 @@
+{
+  "job_id": "dbn9e8s4148s7390i0h0",
+  "backend": "ibm_marrakesh",
+  "circuit_count": 80,
+  "shots_per_circuit": 1024,
+  "total_physical_shots": 81920,
+  "qpy_sha256": "1af63ccddab93967257e66cf467b3e91b24b73590608e4c7ecf73bb310541952",
+  "dispatch_timestamp": "2026-11-07T03:12:35Z",
+  "target_chain": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "COMPLETED",
+  "qpu_usage": {
+    "qpu_charge_time_seconds": 25,
+    "value": 0.401927,
+    "unit": "resource_units",
+    "status": "complete",
+    "details": [
+      {
+        "value": 0.401927,
+        "unit": "resource_units",
+        "metric": {
+          "id": "caffe3ca-729c-5750-8777-df63bbf8bfd9",
+          "value": 25
+        }
+      }
+    ]
+  }
+}

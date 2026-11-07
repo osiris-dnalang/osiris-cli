@@ -1,0 +1,29 @@
+{
+  "benchmark_id": "OSIRIS-HP-002",
+  "protocol": "Restricted Quantum Recovery Certification with Held-Out Scrambler Controls",
+  "status": "STAGED_READY_FOR_GRANT",
+  "staged_timestamp": "2026-11-07T02:28:05Z",
+  "target_backend": "ibm_fez",
+  "total_circuits": 36,
+  "shots_per_circuit": 2048,
+  "total_physical_shots": 73728,
+  "randomized_blocks": 3,
+  "max_cz_count": 18,
+  "max_depth": 38,
+  "qpy_binary_file": "hp002_staged_circuits.qpy",
+  "qpy_sha256": "4c1e7f8800bb34c73e34c555a9c67352160ea2093ed99900283d364c6f859094",
+  "payload_file": "experiments/hp002/stage_hp002_harness.py",
+  "payload_sha256": "8f8987b1339c3278ad8fc9240369c4e6c2c5e9223d81520dccc6d30a5b55ca29",
+  "schema_sha256": "0a9a813c34ceeac9e36e1b3de17e7b3f212c87edf600a73d0adf774110fb2e84",
+  "arms": [
+    "Arm A: Full-Access Inverse Control",
+    "Arm B: Restricted Hayden-Preskill Recovery",
+    "Arm B Control: No-Early-Entanglement Control",
+    "Arm B Held-Out: Held-Out Scrambler Specificity Gate"
+  ],
+  "endpoints": {
+    "primary": "F_ent(Arm B) > 0.50 with 99% CI",
+    "secondary": "Delta F(Arm B - Control) >= +50.0 pp",
+    "specificity_gate": "F_ent(Arm B Held-Out) <= 0.50"
+  }
+}
