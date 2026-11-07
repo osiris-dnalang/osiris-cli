@@ -1,0 +1,135 @@
+{
+  "benchmark_id": "OSIRIS-QAML-002",
+  "n_qubits": 8,
+  "n_test_samples": 50,
+  "n_train_samples": 250,
+  "depths": [
+    2,
+    4,
+    6,
+    8
+  ],
+  "epsilons": [
+    0.0,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "arms": [
+    "classical",
+    "bare",
+    "sync_xy8",
+    "stag_xy8",
+    "aa_control"
+  ],
+  "classical_baseline": {
+    "clean_accuracy": 0.86,
+    "adversarial_accuracies": {
+      "0.0": {
+        "accuracy": 0.86,
+        "mean_perturbation": 0.0
+      },
+      "0.05": {
+        "accuracy": 0.62,
+        "mean_perturbation": 0.048656250000000005
+      },
+      "0.1": {
+        "accuracy": 0.52,
+        "mean_perturbation": 0.09531250000000005
+      },
+      "0.2": {
+        "accuracy": 0.2,
+        "mean_perturbation": 0.18374999999999997
+      }
+    }
+  },
+  "gate_complexity": {
+    "depth_2": {
+      "bare": {
+        "cx_count": 28,
+        "dd_pulses": 0,
+        "logical_depth": 47
+      },
+      "sync_xy8": {
+        "cx_count": 28,
+        "dd_pulses": 128,
+        "logical_depth": 63
+      },
+      "stag_xy8": {
+        "cx_count": 28,
+        "dd_pulses": 128,
+        "logical_depth": 79
+      }
+    },
+    "depth_4": {
+      "bare": {
+        "cx_count": 56,
+        "dd_pulses": 0,
+        "logical_depth": 93
+      },
+      "sync_xy8": {
+        "cx_count": 56,
+        "dd_pulses": 256,
+        "logical_depth": 125
+      },
+      "stag_xy8": {
+        "cx_count": 56,
+        "dd_pulses": 256,
+        "logical_depth": 157
+      }
+    },
+    "depth_6": {
+      "bare": {
+        "cx_count": 84,
+        "dd_pulses": 0,
+        "logical_depth": 139
+      },
+      "sync_xy8": {
+        "cx_count": 84,
+        "dd_pulses": 384,
+        "logical_depth": 187
+      },
+      "stag_xy8": {
+        "cx_count": 84,
+        "dd_pulses": 384,
+        "logical_depth": 235
+      }
+    },
+    "depth_8": {
+      "bare": {
+        "cx_count": 112,
+        "dd_pulses": 0,
+        "logical_depth": 185
+      },
+      "sync_xy8": {
+        "cx_count": 112,
+        "dd_pulses": 512,
+        "logical_depth": 249
+      },
+      "stag_xy8": {
+        "cx_count": 112,
+        "dd_pulses": 512,
+        "logical_depth": 313
+      }
+    }
+  },
+  "statevector_purities": {
+    "D2_bare": 0.9999999999999956,
+    "D2_sync_xy8": 0.9999999999999956,
+    "D2_stag_xy8": 0.9999999999999956,
+    "D2_aa_control": 0.9999999999999956,
+    "D4_bare": 0.9999999999999905,
+    "D4_sync_xy8": 0.9999999999999905,
+    "D4_stag_xy8": 0.9999999999999905,
+    "D4_aa_control": 0.9999999999999905,
+    "D6_bare": 0.9999999999999853,
+    "D6_sync_xy8": 0.9999999999999853,
+    "D6_stag_xy8": 0.9999999999999853,
+    "D6_aa_control": 0.9999999999999853,
+    "D8_bare": 0.99999999999998,
+    "D8_sync_xy8": 0.99999999999998,
+    "D8_stag_xy8": 0.99999999999998,
+    "D8_aa_control": 0.99999999999998
+  },
+  "timestamp": 1794041182.4156246
+}
