@@ -200,7 +200,7 @@ def _gcp_token():
     if not exe:
         return ""
     try:
-        out = subprocess.run([exe, "auth", "print-access-token"], capture_output=True, text=True, timeout=10)
+        out = subprocess.run([exe, "auth", "print-access-token"], capture_output=True, text=True, timeout=30)
     except (OSError, subprocess.SubprocessError):
         out = None
     tok = out.stdout.strip() if (out and out.returncode == 0) else ""

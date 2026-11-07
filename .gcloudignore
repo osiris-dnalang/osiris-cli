@@ -27,3 +27,6 @@ run_ibm.py
 tests/test_gemini_gateway.py
 tests/test_train.py
 results/
+# What `gcloud builds submit` uploads: the repository as git tracks it, minus large legacy
+# bundles the tests do not use.
+#!include:.gitignore
