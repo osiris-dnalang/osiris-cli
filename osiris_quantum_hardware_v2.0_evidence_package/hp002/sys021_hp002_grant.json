@@ -1,0 +1,54 @@
+{
+  "grant_id": "GRANT-SYS021-HP002-32E417090FFD",
+  "status": "ACTIVE_AUTHORIZED_GRANT",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "operation": "OSIRIS_HP002_RESTRICTED_RECOVERY_CERTIFICATION_V1",
+  "timestamp": 1794033786.8971136,
+  "payload_file": "experiments/hp002/stage_hp002_harness.py",
+  "payload_sha256": "72d6fed2e8e1beb5d9c0a618eb6982b45247e6e4ede96dfdb3199626b6f05973",
+  "operation_schema": {
+    "protocol": "OSIRIS-HP-002",
+    "target_hardware": "ibm_fez",
+    "qubit_registers": {
+      "R": 0,
+      "M": 1,
+      "B1": 2,
+      "B2": 3,
+      "E1": 4,
+      "E2": 5
+    },
+    "total_circuits": 36,
+    "shots_per_circuit": 2048,
+    "total_physical_shots": 73728,
+    "arms": [
+      "Arm A: Full-Access Inverse Control",
+      "Arm B: Restricted Hayden-Preskill Recovery",
+      "Arm B Control: No-Early-Entanglement Negative Control",
+      "Arm B Held-Out: Held-Out Scrambler Specificity Gate"
+    ],
+    "tomography_bases": [
+      "XX",
+      "YY",
+      "ZZ"
+    ],
+    "randomized_blocks": 3
+  },
+  "operation_schema_sha256": "0a9a813c34ceeac9e36e1b3de17e7b3f212c87edf600a73d0adf774110fb2e84",
+  "authority_permit": {
+    "issuer": "Devin Phillip Davis / Node Beta (Standalone)",
+    "scope": "OSIRIS_HP002_RESTRICTED_RECOVERY_CERTIFICATION_V1",
+    "target_digest": "72d6fed2e8e1beb5d9c0a618eb6982b45247e6e4ede96dfdb3199626b6f05973",
+    "nonce": "8eade2fc95bf7c9b518534945f887624",
+    "issued_at_utc": "2026-11-07T06:43:06.896506+00:00",
+    "expires_at_utc": "2026-11-08T06:43:06.896506+00:00",
+    "policy_version": "OSIRIS-SPEC-VERIF-015",
+    "signature": "e5d1ee11eb356715067c2e7dc5bb36fe3e8a980c847b4fd3c7543f06064f80fc"
+  },
+  "signature_receipt": {
+    "sequence_index": 43,
+    "prev_block_hash": "fc92a8459a18aa4dedacbe6a444f01c55bf4fff54468cf560e2ecc1c965bd442",
+    "timestamp": 1794033786.8971136,
+    "nonce": "OSIRIS-HP002-DISPATCH-1794033786897",
+    "block_hash": "08d2044825237c051621de8b4745366e7d0f8365a88a76b8c745e8128c551140"
+  }
+}

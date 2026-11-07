@@ -1,0 +1,74 @@
+{
+  "grant_id": "GRANT-SYS021-QAML001-2B4F9D4F1AE2",
+  "status": "ACTIVE_AUTHORIZED_GRANT",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "operation": "OSIRIS_QAML_001_PHYSICAL_DISPATCH",
+  "timestamp": 1793952389.8383296,
+  "expires_at": 1794038789.8383296,
+  "payload_file": "experiments/qaml_001_adversarial_feature_map/run_qaml_001.py",
+  "payload_sha256": "e2b19cac53f60d0cd809e8360f042da08bb84c96552f8608f647c4855e61be3c",
+  "operation_schema": {
+    "protocol": "OSIRIS-QAML-001",
+    "target_hardware": [
+      "ibm_marrakesh",
+      "ibm_fez"
+    ],
+    "qubit_chain": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "total_shots_per_arm": 33792,
+    "total_blocks": 33,
+    "shots_per_block": 1024,
+    "perturbation_epsilons": [
+      0.0,
+      0.02,
+      0.05,
+      0.1
+    ],
+    "statistical_power_floor": "N >= 33,500 shots per basis per arm",
+    "drift_quarantine_threshold_pp": 1.03,
+    "execution_arms": [
+      "Arm 0: Classical CNN Baseline (4-layer)",
+      "Arm 1: Bare Quantum Feature Map (idle 0 ns)",
+      "Arm 2: Synchronous XY8 Feature Map (Delta = 0 ns)",
+      "Arm 3: Staggered XY8 Feature Map (Delta = 80 ns)",
+      "Arm 4: Identical A/A Drift Control (Delta = 80 ns)"
+    ],
+    "grant_id": "GRANT-SYS021-QAML001-2B4F9D4F1AE2",
+    "status": "ACTIVE_AUTHORIZED_GRANT",
+    "authorized_at": 1793956182.958274,
+    "authorized_by": "Devin Phillip Davis / Enki"
+  },
+  "operation_schema_sha256": "8d4407a30e1170627b5e9d9cf95995e34e30160b1ae70b6a071b42896b1f8c8f",
+  "pqc_signature_template": {
+    "specification": "NIST FIPS 204",
+    "algorithm": "Hybrid-Ed25519+ML-DSA-65",
+    "target_ledger_sequence": 32
+  },
+  "signature_receipt": {
+    "sequence_index": 33,
+    "block_hash": "72d99458f2814843fdcd928f732f3ee658076ca0d0f0c18f990919e6406294d0",
+    "prev_block_hash": "71bcec0fa3bf82e135dc5d87214d30b15925e1dc0afd5b7fc6c8731fccafdbaf",
+    "timestamp": 1793956182.958274,
+    "nonce": "OSIRIS-QAML-DISPATCH-1793956182958",
+    "pqc_envelope": {
+      "specification": "NIST FIPS 204",
+      "algorithm": "Hybrid-Ed25519+ML-DSA-65",
+      "fips204_prehash": "b887206fd69080a791926f8a9e69c695186d3e43c5b0b5fd4773d8f5bb2fbb64f0e631546abf7c5e6edf72d360754b02a4872972d6cfb62e777a746fc943dd48",
+      "ed25519_signature": "5eb0eecd0d4c20d8accdcbd1079883dc1835853a0e5482d2871efa521fc1a7dd944667ef5782c6f29f0f6b3d7d487b1ac6898d5d23e5820fc09e893601ec2a61",
+      "ml_dsa_signature": "665402537511b7ec9acbd08f8da4282dda9fedf0abe75a17749a4836c9435621cb717e1a0b5ec7df52fac6dfaeb5b79c45b2ea26e45542d17715d5b21cd94ad7",
+      "lattice_parameters": {
+        "ring_degree": 256,
+        "modulus": 8380417,
+        "matrix_dimensions": "6x5"
+      }
+    }
+  }
+}

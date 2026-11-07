@@ -1,0 +1,52 @@
+{
+  "grant_id": "GRANT-SYS021-HP001-P2-372D9479F491",
+  "status": "ACTIVE_AUTHORIZED_GRANT",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "operation": "OSIRIS_HP001_PHASE2_RECONSTRUCTED_RECOVERY_V1",
+  "timestamp": 1794018050.5766106,
+  "payload_file": "experiments/hp001/execute_hp001_phase2_fez.py",
+  "payload_sha256": "172cb8a6b76fcc8151a3f0e2d940f1bcf7789aa3c62b94a3ae9bd2c50a17e5cb",
+  "operation_schema": {
+    "protocol": "OSIRIS-HP-001-P2",
+    "target_hardware": "ibm_fez",
+    "qubit_registers": {
+      "R": 0,
+      "M": 1,
+      "B1": 2,
+      "B2": 3,
+      "E1": 4,
+      "E2": 5
+    },
+    "total_circuits": 9,
+    "shots_per_circuit": 4096,
+    "total_physical_shots": 36864,
+    "arms": [
+      "Arm A (Full-Access Inverse)",
+      "Arm B (Restricted Hayden-Preskill Recovery)",
+      "Arm B Control (Separable Trapped)"
+    ],
+    "tomography_bases": [
+      "XX",
+      "YY",
+      "ZZ"
+    ]
+  },
+  "operation_schema_sha256": "b089a34ca19799f7dcd2ea690255b6bb397e9bb0a16af3d7711cf2c8f812320f",
+  "authority_permit": {
+    "issuer": "Devin Phillip Davis / Node Beta (Standalone)",
+    "scope": "OSIRIS_HP001_PHASE2_RECONSTRUCTED_RECOVERY_V1",
+    "target_digest": "172cb8a6b76fcc8151a3f0e2d940f1bcf7789aa3c62b94a3ae9bd2c50a17e5cb",
+    "nonce": "f07c33f18bf2461e24d0dcb9e6f82ede",
+    "issued_at_utc": "2026-11-07T02:20:50.576505+00:00",
+    "expires_at_utc": "2026-11-08T02:20:50.576505+00:00",
+    "policy_version": "OSIRIS-SPEC-VERIF-015",
+    "signature": "847ca77d66f4082ef43f2e68171bc56e5f46a78d3b4f0394668a227366d5a9d3"
+  },
+  "signature_receipt": {
+    "sequence_index": 38,
+    "prev_block_hash": "f2e450a9f8cfe6a0b8735e8e629ac2b23fad87005b742626261d6e3a7eabf79f",
+    "timestamp": 1794018050.5766106,
+    "nonce": "OSIRIS-HP001-P2-1794018050576",
+    "block_hash": "b0e2f43faf7650c0a31c1021bb19c06a9ffd9df0819f9339ace3e207e2d616d3"
+  }
+}

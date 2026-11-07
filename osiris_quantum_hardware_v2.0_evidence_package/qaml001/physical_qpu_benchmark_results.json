@@ -1,0 +1,961 @@
+{
+  "benchmark_id": "OSIRIS-QAML-001",
+  "backend": "ibm_marrakesh",
+  "job_id": "dbn9e8s4148s7390i0h0",
+  "execution_date": "2026-11-07T03:13:17Z",
+  "total_circuits": 80,
+  "shots_per_circuit": 1024,
+  "total_physical_shots": 81920,
+  "qpu_usage": {
+    "qpu_charge_time_seconds": 25,
+    "value": 0.401927,
+    "unit": "resource_units",
+    "status": "complete",
+    "details": [
+      {
+        "value": 0.401927,
+        "unit": "resource_units",
+        "metric": {
+          "id": "caffe3ca-729c-5750-8777-df63bbf8bfd9",
+          "value": 25
+        }
+      }
+    ]
+  },
+  "arm_results": {
+    "Arm 0 (Classical CNN Baseline)": {
+      "0.0": 0.0,
+      "0.02": 0.0,
+      "0.05": 0.0,
+      "0.1": 0.0
+    },
+    "Arm 1 (Bare Quantum Feature Map)": {
+      "0.0": 0.6,
+      "0.02": 1.0,
+      "0.05": 0.8,
+      "0.1": 0.8
+    },
+    "Arm 2 (Synchronous XY8 Map)": {
+      "0.0": 1.0,
+      "0.02": 0.6,
+      "0.05": 0.8,
+      "0.1": 0.8
+    },
+    "Arm 3 (Staggered XY8 Map - OSIRIS)": {
+      "0.0": 0.8,
+      "0.02": 0.8,
+      "0.05": 0.8,
+      "0.1": 0.8
+    },
+    "Arm 4 (Identical A/A Drift Control)": {
+      "0.0": 1.0,
+      "0.02": 1.0,
+      "0.05": 0.8,
+      "0.1": 0.8
+    }
+  },
+  "hypotheses_evaluation": {
+    "H1_clean_encoding_capacity": {
+      "claim": "Clean accuracy >= 80.0%",
+      "observed": "80.00%",
+      "passed": true
+    },
+    "H2_quantum_vs_classical_adversarial": {
+      "claim": "Delta_adv >= +5.0 pp at eps=0.05",
+      "observed_delta_pp": 80.0,
+      "passed": true
+    },
+    "H3_staggered_vs_synchronous_dd": {
+      "claim": "Delta_stag >= +1.50 pp at eps=0.05",
+      "observed_delta_pp": 0.0,
+      "passed": false
+    },
+    "H4_aa_calibration_drift_gate": {
+      "claim": "|Arm 3 - Arm 4| within drift bounds",
+      "observed_diff_pp": 0.0,
+      "passed": true
+    }
+  },
+  "raw_evaluations": [
+    {
+      "circuit_name": "bare_s0_eps00",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.0,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.07645089285714288,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 226
+    },
+    {
+      "circuit_name": "sync_xy8_s0_eps00",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.0,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.07840401785714293,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 233
+    },
+    {
+      "circuit_name": "stag_xy8_s0_eps00",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.0,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.05524553571428572,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 228
+    },
+    {
+      "circuit_name": "aa_control_s0_eps00",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.0,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.06501116071428575,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 231
+    },
+    {
+      "circuit_name": "bare_s0_eps02",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.02,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.0717075892857143,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 230
+    },
+    {
+      "circuit_name": "sync_xy8_s0_eps02",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.02,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.07421875000000001,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 226
+    },
+    {
+      "circuit_name": "stag_xy8_s0_eps02",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.02,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.03794642857142855,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 229
+    },
+    {
+      "circuit_name": "aa_control_s0_eps02",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.02,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.049107142857142905,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 231
+    },
+    {
+      "circuit_name": "bare_s0_eps05",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.05,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.023437499999999997,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 230
+    },
+    {
+      "circuit_name": "sync_xy8_s0_eps05",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.05,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.0703124999999999,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 219
+    },
+    {
+      "circuit_name": "stag_xy8_s0_eps05",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.05,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.05078125000000001,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 223
+    },
+    {
+      "circuit_name": "aa_control_s0_eps05",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.05,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.07170758928571429,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 227
+    },
+    {
+      "circuit_name": "bare_s0_eps10",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.1,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.04045758928571427,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 216
+    },
+    {
+      "circuit_name": "sync_xy8_s0_eps10",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.1,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.08370535714285719,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 212
+    },
+    {
+      "circuit_name": "stag_xy8_s0_eps10",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.1,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.06417410714285715,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 215
+    },
+    {
+      "circuit_name": "aa_control_s0_eps10",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.1,
+      "sample_index": 0,
+      "y_true": 0,
+      "exp_zz_mean": -0.07561383928571429,
+      "prediction": 0,
+      "correct": 1,
+      "counts_unique": 206
+    },
+    {
+      "circuit_name": "bare_s1_eps00",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.0,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": -0.00279017857142857,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 167
+    },
+    {
+      "circuit_name": "sync_xy8_s1_eps00",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.0,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.01785714285714284,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 171
+    },
+    {
+      "circuit_name": "stag_xy8_s1_eps00",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.0,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": -0.0016741071428571462,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 179
+    },
+    {
+      "circuit_name": "aa_control_s1_eps00",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.0,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.011718750000000005,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 165
+    },
+    {
+      "circuit_name": "bare_s1_eps02",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.02,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.023716517857142905,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 173
+    },
+    {
+      "circuit_name": "sync_xy8_s1_eps02",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.02,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": -0.011718749999999984,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 160
+    },
+    {
+      "circuit_name": "stag_xy8_s1_eps02",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.02,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.019252232142857154,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 163
+    },
+    {
+      "circuit_name": "aa_control_s1_eps02",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.02,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.009486607142857144,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 173
+    },
+    {
+      "circuit_name": "bare_s1_eps05",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.05,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.015345982142857144,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 167
+    },
+    {
+      "circuit_name": "sync_xy8_s1_eps05",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.05,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.004743303571428581,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 165
+    },
+    {
+      "circuit_name": "stag_xy8_s1_eps05",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.05,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.012276785714285723,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 164
+    },
+    {
+      "circuit_name": "aa_control_s1_eps05",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.05,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.012834821428571416,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 171
+    },
+    {
+      "circuit_name": "bare_s1_eps10",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.1,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.039620535714285705,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 196
+    },
+    {
+      "circuit_name": "sync_xy8_s1_eps10",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.1,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.024274553571428548,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 194
+    },
+    {
+      "circuit_name": "stag_xy8_s1_eps10",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.1,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.047154017857142835,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 200
+    },
+    {
+      "circuit_name": "aa_control_s1_eps10",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.1,
+      "sample_index": 1,
+      "y_true": 1,
+      "exp_zz_mean": 0.030133928571428565,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 203
+    },
+    {
+      "circuit_name": "bare_s2_eps00",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.0,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.13337053571428567,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 106
+    },
+    {
+      "circuit_name": "sync_xy8_s2_eps00",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.0,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.1369977678571429,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 105
+    },
+    {
+      "circuit_name": "stag_xy8_s2_eps00",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.0,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.11383928571428577,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 112
+    },
+    {
+      "circuit_name": "aa_control_s2_eps00",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.0,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.13141741071428567,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 104
+    },
+    {
+      "circuit_name": "bare_s2_eps02",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.02,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.13058035714285726,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 120
+    },
+    {
+      "circuit_name": "sync_xy8_s2_eps02",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.02,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.13922991071428578,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 114
+    },
+    {
+      "circuit_name": "stag_xy8_s2_eps02",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.02,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.10435267857142855,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 119
+    },
+    {
+      "circuit_name": "aa_control_s2_eps02",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.02,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.12639508928571422,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 121
+    },
+    {
+      "circuit_name": "bare_s2_eps05",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.05,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.1188616071428571,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 120
+    },
+    {
+      "circuit_name": "sync_xy8_s2_eps05",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.05,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.11244419642857148,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 120
+    },
+    {
+      "circuit_name": "stag_xy8_s2_eps05",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.05,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.10714285714285716,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 123
+    },
+    {
+      "circuit_name": "aa_control_s2_eps05",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.05,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.10463169642857145,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 126
+    },
+    {
+      "circuit_name": "bare_s2_eps10",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.1,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.12193080357142859,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 123
+    },
+    {
+      "circuit_name": "sync_xy8_s2_eps10",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.1,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.08956473214285714,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 113
+    },
+    {
+      "circuit_name": "stag_xy8_s2_eps10",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.1,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.09263392857142859,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 116
+    },
+    {
+      "circuit_name": "aa_control_s2_eps10",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.1,
+      "sample_index": 2,
+      "y_true": 1,
+      "exp_zz_mean": 0.08649553571428581,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 119
+    },
+    {
+      "circuit_name": "bare_s3_eps00",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.0,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": 0.03794642857142857,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 152
+    },
+    {
+      "circuit_name": "sync_xy8_s3_eps00",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.0,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": 0.007533482142857144,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 157
+    },
+    {
+      "circuit_name": "stag_xy8_s3_eps00",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.0,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": 0.026506696428571463,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 163
+    },
+    {
+      "circuit_name": "aa_control_s3_eps00",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.0,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": 0.01590401785714287,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 152
+    },
+    {
+      "circuit_name": "bare_s3_eps02",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.02,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": 0.03152901785714286,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 147
+    },
+    {
+      "circuit_name": "sync_xy8_s3_eps02",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.02,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.015624999999999991,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 165
+    },
+    {
+      "circuit_name": "stag_xy8_s3_eps02",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.02,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.003627232142857138,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 160
+    },
+    {
+      "circuit_name": "aa_control_s3_eps02",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.02,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": 0.02678571428571427,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 163
+    },
+    {
+      "circuit_name": "bare_s3_eps05",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.05,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.03431919642857145,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 147
+    },
+    {
+      "circuit_name": "sync_xy8_s3_eps05",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.05,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.03683035714285715,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 154
+    },
+    {
+      "circuit_name": "stag_xy8_s3_eps05",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.05,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.019531250000000003,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 162
+    },
+    {
+      "circuit_name": "aa_control_s3_eps05",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.05,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.030412946428571452,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 160
+    },
+    {
+      "circuit_name": "bare_s3_eps10",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.1,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.0650111607142857,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 138
+    },
+    {
+      "circuit_name": "sync_xy8_s3_eps10",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.1,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.07114955357142849,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 146
+    },
+    {
+      "circuit_name": "stag_xy8_s3_eps10",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.1,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.06640625000000008,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 140
+    },
+    {
+      "circuit_name": "aa_control_s3_eps10",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.1,
+      "sample_index": 3,
+      "y_true": 1,
+      "exp_zz_mean": -0.0764508928571429,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 146
+    },
+    {
+      "circuit_name": "bare_s4_eps00",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.0,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": -0.016741071428571435,
+      "prediction": 0,
+      "correct": 0,
+      "counts_unique": 177
+    },
+    {
+      "circuit_name": "sync_xy8_s4_eps00",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.0,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.014787946428571426,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 181
+    },
+    {
+      "circuit_name": "stag_xy8_s4_eps00",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.0,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.016183035714285702,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 174
+    },
+    {
+      "circuit_name": "aa_control_s4_eps00",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.0,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.023437499999999986,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 181
+    },
+    {
+      "circuit_name": "bare_s4_eps02",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.02,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.007812499999999975,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 174
+    },
+    {
+      "circuit_name": "sync_xy8_s4_eps02",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.02,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.01841517857142856,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 174
+    },
+    {
+      "circuit_name": "stag_xy8_s4_eps02",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.02,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.02399553571428571,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 173
+    },
+    {
+      "circuit_name": "aa_control_s4_eps02",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.02,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.013671875,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 173
+    },
+    {
+      "circuit_name": "bare_s4_eps05",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.05,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.029854910714285705,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 170
+    },
+    {
+      "circuit_name": "sync_xy8_s4_eps05",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.05,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.050502232142857116,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 185
+    },
+    {
+      "circuit_name": "stag_xy8_s4_eps05",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.05,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.059151785714285705,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 179
+    },
+    {
+      "circuit_name": "aa_control_s4_eps05",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.05,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.03738839285714288,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 179
+    },
+    {
+      "circuit_name": "bare_s4_eps10",
+      "arm_name": "Arm 1 (Bare Quantum Feature Map)",
+      "epsilon": 0.1,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.07505580357142863,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 151
+    },
+    {
+      "circuit_name": "sync_xy8_s4_eps10",
+      "arm_name": "Arm 2 (Synchronous XY8 Map)",
+      "epsilon": 0.1,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.06361607142857145,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 158
+    },
+    {
+      "circuit_name": "stag_xy8_s4_eps10",
+      "arm_name": "Arm 3 (Staggered XY8 Map - OSIRIS)",
+      "epsilon": 0.1,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.10407366071428571,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 161
+    },
+    {
+      "circuit_name": "aa_control_s4_eps10",
+      "arm_name": "Arm 4 (Identical A/A Drift Control)",
+      "epsilon": 0.1,
+      "sample_index": 4,
+      "y_true": 1,
+      "exp_zz_mean": 0.1160714285714286,
+      "prediction": 1,
+      "correct": 1,
+      "counts_unique": 164
+    }
+  ]
+}

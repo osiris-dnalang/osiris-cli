@@ -1,0 +1,73 @@
+{
+  "sequence_index": 42,
+  "prev_block_hash": "5df1ba532d8593c6abdf5a6f04ddcc6e6e5bf986eb0dd759a0615850f027f0b3",
+  "event_type": "SYS021_QAML_001_HARDWARE_ACQUISITION_RECEIPT",
+  "operator_id": "Devin Phillip Davis / Enki",
+  "grant_reference": "GRANT-SYS021-QAML001-2B4F9D4F1AE2 (Block #33)",
+  "benchmark_id": "OSIRIS-QAML-001",
+  "job_id": "dbn9e8s4148s7390i0h0",
+  "backend": "ibm_marrakesh",
+  "qpu_seconds": 25,
+  "total_circuits": 80,
+  "shots_per_circuit": 1024,
+  "total_physical_shots": 81920,
+  "qpy_circuits_sha256": "1af63ccddab93967257e66cf467b3e91b24b73590608e4c7ecf73bb310541952",
+  "results_sha256": "67a324b8dde9c081fbdaefafe3655a15ab2a5ecfef3964b6154bfa90d43a7898",
+  "arm_results": {
+    "Arm 0 (Classical CNN Baseline)": {
+      "0.0": 0.0,
+      "0.02": 0.0,
+      "0.05": 0.0,
+      "0.1": 0.0
+    },
+    "Arm 1 (Bare Quantum Feature Map)": {
+      "0.0": 0.6,
+      "0.02": 1.0,
+      "0.05": 0.8,
+      "0.1": 0.8
+    },
+    "Arm 2 (Synchronous XY8 Map)": {
+      "0.0": 1.0,
+      "0.02": 0.6,
+      "0.05": 0.8,
+      "0.1": 0.8
+    },
+    "Arm 3 (Staggered XY8 Map - OSIRIS)": {
+      "0.0": 0.8,
+      "0.02": 0.8,
+      "0.05": 0.8,
+      "0.1": 0.8
+    },
+    "Arm 4 (Identical A/A Drift Control)": {
+      "0.0": 1.0,
+      "0.02": 1.0,
+      "0.05": 0.8,
+      "0.1": 0.8
+    }
+  },
+  "hypotheses_evaluation": {
+    "H1_clean_encoding_capacity": {
+      "claim": "Clean accuracy >= 80.0%",
+      "observed": "80.00%",
+      "passed": true
+    },
+    "H2_quantum_vs_classical_adversarial": {
+      "claim": "Delta_adv >= +5.0 pp at eps=0.05",
+      "observed_delta_pp": 80.0,
+      "passed": true
+    },
+    "H3_staggered_vs_synchronous_dd": {
+      "claim": "Delta_stag >= +1.50 pp at eps=0.05",
+      "observed_delta_pp": 0.0,
+      "passed": false
+    },
+    "H4_aa_calibration_drift_gate": {
+      "claim": "|Arm 3 - Arm 4| within drift bounds",
+      "observed_diff_pp": 0.0,
+      "passed": true
+    }
+  },
+  "nonce": "OSIRIS-QAML-001-HARVEST-1794021252141",
+  "timestamp": 1794021252.141415,
+  "block_hash": "fc92a8459a18aa4dedacbe6a444f01c55bf4fff54468cf560e2ecc1c965bd442"
+}
