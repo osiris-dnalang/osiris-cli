@@ -491,6 +491,42 @@ Crucially, both negative controls confirm that recovery is an active quantum dec
 \item With compiler cancellation prevented, Arm~A demonstrates a physical positive control ceiling of $\mathcal{F}_{\mathrm{ent}} = \mathbf{91.94 \pm 0.17\%}$ under 18 native CZ gates, proving that the restricted decoder ($\mathcal{F}_{\mathrm{ent}} = 79.49\%$) recovers $\sim 86.5\%$ of the maximum coherent information attainable across this 156-qubit heavy-hex processor.
 \end{enumerate}
 
+\subsubsection{Multi-Qubit Scaling \& Quantum Capacity Certification (OSIRIS-HP-003)}
+\label{sec:hp_multiqubit}
+
+To experimentally validate the Hayden--Preskill quantum capacity theorem in a multi-qubit regime, we scaled the benchmark to a two-qubit quantum message ($k = 2$) across an 8-qubit register on IBM Quantum Heron~r2 (\texttt{ibm\_fez}, Job ID \texttt{dbncs05t7fqc73ajci00}, Block~\#46, SHA-256: \texttt{11da5b59...}, 14~QPU seconds). The protocol partitioned the 8-transmon register into reference $R = (R_1, R_2)$, message $M = (M_1, M_2)$, black hole remnant $C = (C_1, C_2)$, and early radiation $E = (E_1, E_2)$.
+
+A four-body Clifford scrambler $U_{MB}$ was applied across $(M_1, M_2, B_1, B_2)$, followed by symplectic tableau inversion to synthesize the restricted 4-qubit decoder $V_{\mathrm{dec}}$ acting exclusively on joint radiation $D + E = (D_1, D_2, E_1, E_2)$. Quarantined remnants $C_1, C_2$ remained isolated behind a strict compile-time firewall (zero gates connecting the decoder to remnants). Information-theoretic auditing confirmed complete tripartite decoupling:
+\begin{equation}
+I(R_1 R_2 : D_1 D_2) = 0,\quad I(R_1 R_2 : E_1 E_2) = 0,\quad I(R_1 R_2 : C_1 C_2) = 0,\quad I(R_1 R_2 : D_1 D_2 E_1 E_2) = 4.000000\ \text{bits}.
+\end{equation}
+Crucially, when only a single photon $D_1$ is captured (Arm~B-Def), mutual information is strictly bounded at $I(R_1 R_2 : D_1 E_1 E_2) = 2.000000\ \text{bits}$, establishing a rigorous sub-capacity threshold.
+
+The physical execution evaluated 45 compiled ISA circuits ($49 \le \text{CZ} \le 55$, depth $\le 87$, zero SWAP gates) across three randomized blocks, acquiring $46{,}080$ physical shots ($1{,}024$ shots/circuit) under dual-observable Pauli tomography.
+
+\begin{table}[H]
+\centering
+\caption{Empirical 2-qubit Hayden--Preskill retrieval and quantum capacity benchmark on IBM Quantum Heron~r2 (\texttt{ibm\_fez}, Job ID \texttt{dbncs05t7fqc73ajci00}, $N = 46{,}080$ physical shots across 3 randomized blocks). Uncertainties denote $1\sigma$ propagating standard errors.}
+\label{tab:hp_multiqubit_results}
+\begin{tabular}{lcccccc}
+\toprule
+Experimental Arm & $\mathcal{F}_{\mathrm{ent}}(R_1, M_1')$ & $\mathcal{F}_{\mathrm{ent}}(R_2, M_2')$ & Mean $\bar{\mathcal{F}}$ & Joint $\mathcal{F}_{\mathrm{joint}}$ & Witness $\mathcal{W}$ & Determination \\
+\midrule
+Arm A (Full-Access Inverse Control) & $86.30\%$ & $90.40\%$ & $\mathbf{88.35 \pm 0.30\%}$ & $46.71\%$ & $-0.3835$ & Positive Control Ceiling \\
+Arm B (Restricted Recovery -- 2 Photons) & $74.06\%$ & $76.92\%$ & $\mathbf{75.49 \pm 0.18\%}$ & $43.20\%$ & $\mathbf{-0.2549}$ & \textbf{Multi-Qubit Recovery ($Z = 141.6\sigma$)} \\
+Arm B-Def (Single Photon Deficient) & $25.59\%$ & $24.14\%$ & $24.86 \pm 0.84\%$ & $\mathbf{25.44\%}$ & $+0.2514$ & \textbf{Capacity Bound: 1 Photon Fails} \\
+Arm B-Ctrl (Separable Trapped Control) & $24.90\%$ & $24.53\%$ & $24.72 \pm 0.11\%$ & $36.57\%$ & $+0.2528$ & Trapped Random Floor ($\sim 25\%$) \\
+Arm B-Held (Held-Out Scrambler $U_2$) & $24.37\%$ & $25.39\%$ & $24.88 \pm 0.07\%$ & $24.92\%$ & $+0.2512$ & Specificity Noise Floor ($\sim 25\%$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The physical telemetry provides two fundamental experimental conclusions:
+\begin{enumerate}
+\item \textbf{Quantum Capacity Bound Confirmed:} When both Hawking photons $(D_1, D_2)$ are collected, the restricted decoder achieves an average message entanglement fidelity of $\bar{\mathcal{F}} = \mathbf{75.49 \pm 0.18\%}$, decisively violating the classical separability threshold ($\mathcal{W} = \mathbf{-0.2549 < 0}$, $Z = 141.6\sigma$, $p < 10^{-100}$). In contrast, when the observer is deprived of the second photon (Arm~B-Def), message recovery collapses to $\bar{\mathcal{F}} = 24.86 \pm 0.84\%$ ($\Delta \bar{\mathcal{F}} = \mathbf{+50.63\text{ pp}}$ capacity gain), confirming that retrieving a 2-qubit message strictly requires collecting at least $k = 2$ radiation photons.
+\item \textbf{EPR Bridge Dependency \& Scrambler Specificity:} When early entanglement is removed (Arm~B-Ctrl), recovery collapses to $24.72 \pm 0.11\%$ ($\Delta \bar{\mathcal{F}} = \mathbf{+50.77\text{ pp}}$ gain over trapped control). Applying the fixed decoder to a held-out scrambler (Arm~B-Held) collapses fidelity to $24.88 \pm 0.07\%$. This proves that multi-qubit recovery requires an active, scrambler-tailored quantum decoding operation mediated exclusively by the entangled radiation bridge.
+\end{enumerate}
+
 \subsection{Multi-Edge Staggered Dynamical Decoupling Survey}
 \label{sec:dd_survey}
 
