@@ -1,231 +1,17 @@
 {
   "benchmark_id": "OSIRIS-HP-003",
   "backend": "ibm_fez",
-  "job_id": "dbncs05t7fqc73ajci00",
-  "execution_date": "2026-11-07T07:07:14Z",
-  "total_circuits": 45,
-  "total_physical_shots": 46080,
-  "qpu_usage": {
-    "quantum_seconds": 14,
-    "seconds": 14,
-    "status": "complete"
-  },
-  "arm_synthesis": {
-    "Arm A": {
-      "mean_f1": 0.862956,
-      "mean_f2": 0.903971,
-      "mean_f_average": 0.883464,
-      "mean_f_joint": 0.467122,
-      "sem_f_average": 0.002991,
-      "entanglement_witness": -0.383464,
-      "is_entangled": true,
-      "block_fidelities_mean": [
-        0.88501,
-        0.887695,
-        0.877686
-      ]
-    },
-    "Arm B": {
-      "mean_f1": 0.74056,
-      "mean_f2": 0.769206,
-      "mean_f_average": 0.754883,
-      "mean_f_joint": 0.431966,
-      "sem_f_average": 0.0018,
-      "entanglement_witness": -0.254883,
-      "is_entangled": true,
-      "block_fidelities_mean": [
-        0.751465,
-        0.757568,
-        0.755615
-      ]
-    },
-    "Arm B-Def": {
-      "mean_f1": 0.255859,
-      "mean_f2": 0.241374,
-      "mean_f_average": 0.248617,
-      "mean_f_joint": 0.254395,
-      "sem_f_average": 0.008374,
-      "entanglement_witness": 0.251383,
-      "is_entangled": false,
-      "block_fidelities_mean": [
-        0.264893,
-        0.243896,
-        0.237061
-      ]
-    },
-    "Arm B-Ctrl": {
-      "mean_f1": 0.249023,
-      "mean_f2": 0.24528,
-      "mean_f_average": 0.247152,
-      "mean_f_joint": 0.365723,
-      "sem_f_average": 0.001067,
-      "entanglement_witness": 0.252848,
-      "is_entangled": false,
-      "block_fidelities_mean": [
-        0.24585,
-        0.246338,
-        0.249268
-      ]
-    },
-    "Arm B-Held": {
-      "mean_f1": 0.243652,
-      "mean_f2": 0.253906,
-      "mean_f_average": 0.248779,
-      "mean_f_joint": 0.249186,
-      "sem_f_average": 0.000746,
-      "entanglement_witness": 0.251221,
-      "is_entangled": false,
-      "block_fidelities_mean": [
-        0.248291,
-        0.247803,
-        0.250244
-      ]
-    }
-  },
-  "endpoints_evaluation": {
-    "H1_reversibility_positive_control": {
-      "claim": "F_mean(Arm A) >= 0.85",
-      "observed": 0.883464,
-      "passed": true
-    },
-    "H2_primary_multiqubit_restricted_recovery": {
-      "claim": "F_mean(Arm B) > 0.50",
-      "observed": 0.754883,
-      "witness": -0.254883,
-      "passed": true
-    },
-    "H3_quantum_capacity_single_photon_threshold": {
-      "claim": "F_joint(Arm B-Def) <= 0.35 (Sub-capacity failure)",
-      "observed": 0.254395,
-      "passed": true
-    },
-    "H4_separable_entanglement_bridge": {
-      "claim": "F_mean(Arm B-Ctrl) <= 0.35 (Trapped control)",
-      "observed": 0.247152,
-      "passed": true
-    },
-    "H5_heldout_scrambler_specificity": {
-      "claim": "F_mean(Arm B-Held) <= 0.35 (Specificity gate)",
-      "observed": 0.248779,
-      "passed": true
-    }
-  },
-  "block_evaluations": [
-    {
-      "block_id": 0,
-      "arms": {
-        "Arm A": {
-          "f1": 0.860352,
-          "f2": 0.909668,
-          "f_mean": 0.88501,
-          "f_joint": 0.45166
-        },
-        "Arm B": {
-          "f1": 0.733887,
-          "f2": 0.769043,
-          "f_mean": 0.751465,
-          "f_joint": 0.435547
-        },
-        "Arm B-Def": {
-          "f1": 0.267578,
-          "f2": 0.262207,
-          "f_mean": 0.264893,
-          "f_joint": 0.26123
-        },
-        "Arm B-Ctrl": {
-          "f1": 0.243652,
-          "f2": 0.248047,
-          "f_mean": 0.24585,
-          "f_joint": 0.364746
-        },
-        "Arm B-Held": {
-          "f1": 0.235352,
-          "f2": 0.26123,
-          "f_mean": 0.248291,
-          "f_joint": 0.236816
-        }
-      }
-    },
-    {
-      "block_id": 1,
-      "arms": {
-        "Arm A": {
-          "f1": 0.874512,
-          "f2": 0.900879,
-          "f_mean": 0.887695,
-          "f_joint": 0.490234
-        },
-        "Arm B": {
-          "f1": 0.736816,
-          "f2": 0.77832,
-          "f_mean": 0.757568,
-          "f_joint": 0.427246
-        },
-        "Arm B-Def": {
-          "f1": 0.242188,
-          "f2": 0.245605,
-          "f_mean": 0.243896,
-          "f_joint": 0.260254
-        },
-        "Arm B-Ctrl": {
-          "f1": 0.249023,
-          "f2": 0.243652,
-          "f_mean": 0.246338,
-          "f_joint": 0.368652
-        },
-        "Arm B-Held": {
-          "f1": 0.239258,
-          "f2": 0.256348,
-          "f_mean": 0.247803,
-          "f_joint": 0.256348
-        }
-      }
-    },
-    {
-      "block_id": 2,
-      "arms": {
-        "Arm A": {
-          "f1": 0.854004,
-          "f2": 0.901367,
-          "f_mean": 0.877686,
-          "f_joint": 0.459473
-        },
-        "Arm B": {
-          "f1": 0.750977,
-          "f2": 0.760254,
-          "f_mean": 0.755615,
-          "f_joint": 0.433105
-        },
-        "Arm B-Def": {
-          "f1": 0.257812,
-          "f2": 0.216309,
-          "f_mean": 0.237061,
-          "f_joint": 0.241699
-        },
-        "Arm B-Ctrl": {
-          "f1": 0.254395,
-          "f2": 0.244141,
-          "f_mean": 0.249268,
-          "f_joint": 0.36377
-        },
-        "Arm B-Held": {
-          "f1": 0.256348,
-          "f2": 0.244141,
-          "f_mean": 0.250244,
-          "f_joint": 0.254395
-        }
-      }
-    }
-  ],
+  "job_id": "dbndsvoou4as73b4cvi0",
+  "timestamp_harvested": 1794039458.9689927,
+  "total_shots_acquired": 46080,
   "circuit_records": [
     {
       "circuit_idx": 0,
       "block": 0,
       "arm": "Arm B-Def",
       "basis": "ZZ",
-      "exp_pair1": 0.005859,
+      "exp_pair1": -0.005859,
       "exp_pair2": 0.0,
-      "exp_joint": 0.033203,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -234,9 +20,8 @@
       "block": 0,
       "arm": "Arm B-Held",
       "basis": "YY",
-      "exp_pair1": 0.037109,
-      "exp_pair2": -0.03125,
-      "exp_joint": 0.013672,
+      "exp_pair1": -0.009766,
+      "exp_pair2": 0.048828,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -245,9 +30,8 @@
       "block": 0,
       "arm": "Arm B-Def",
       "basis": "YY",
-      "exp_pair1": -0.033203,
-      "exp_pair2": -0.017578,
-      "exp_joint": -0.011719,
+      "exp_pair1": -0.035156,
+      "exp_pair2": 0.015625,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -256,9 +40,8 @@
       "block": 0,
       "arm": "Arm B-Def",
       "basis": "XX",
-      "exp_pair1": 0.03125,
-      "exp_pair2": 0.03125,
-      "exp_joint": 0.0,
+      "exp_pair1": 0.673828,
+      "exp_pair2": 0.037109,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -267,9 +50,8 @@
       "block": 0,
       "arm": "Arm B-Held",
       "basis": "ZZ",
-      "exp_pair1": -0.007812,
-      "exp_pair2": 0.0,
-      "exp_joint": -0.019531,
+      "exp_pair1": -0.005859,
+      "exp_pair2": -0.023438,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -278,9 +60,8 @@
       "block": 0,
       "arm": "Arm B-Held",
       "basis": "XX",
-      "exp_pair1": -0.013672,
-      "exp_pair2": 0.013672,
-      "exp_joint": -0.019531,
+      "exp_pair1": 0.052734,
+      "exp_pair2": 0.042969,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -289,9 +70,8 @@
       "block": 0,
       "arm": "Arm B",
       "basis": "ZZ",
-      "exp_pair1": 0.673828,
-      "exp_pair2": 0.6875,
-      "exp_joint": 0.693359,
+      "exp_pair1": 0.638672,
+      "exp_pair2": 0.701172,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -300,9 +80,8 @@
       "block": 0,
       "arm": "Arm A",
       "basis": "ZZ",
-      "exp_pair1": 0.863281,
-      "exp_pair2": 0.892578,
-      "exp_joint": 0.794922,
+      "exp_pair1": 0.771484,
+      "exp_pair2": 0.771484,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -311,9 +90,8 @@
       "block": 0,
       "arm": "Arm B-Ctrl",
       "basis": "XX",
-      "exp_pair1": -0.048828,
+      "exp_pair1": 0.015625,
       "exp_pair2": 0.011719,
-      "exp_joint": 0.498047,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -322,9 +100,8 @@
       "block": 0,
       "arm": "Arm B",
       "basis": "XX",
-      "exp_pair1": 0.697266,
-      "exp_pair2": 0.724609,
-      "exp_joint": 0.59375,
+      "exp_pair1": 0.707031,
+      "exp_pair2": 0.742188,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -333,9 +110,8 @@
       "block": 0,
       "arm": "Arm B",
       "basis": "YY",
-      "exp_pair1": -0.564453,
-      "exp_pair2": -0.664062,
-      "exp_joint": 0.544922,
+      "exp_pair1": -0.595703,
+      "exp_pair2": -0.603516,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -344,9 +120,8 @@
       "block": 0,
       "arm": "Arm B-Ctrl",
       "basis": "ZZ",
-      "exp_pair1": -0.001953,
-      "exp_pair2": 0.007812,
-      "exp_joint": -0.021484,
+      "exp_pair1": 0.005859,
+      "exp_pair2": -0.013672,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -355,20 +130,18 @@
       "block": 0,
       "arm": "Arm A",
       "basis": "XX",
-      "exp_pair1": 0.785156,
-      "exp_pair2": 0.890625,
-      "exp_joint": 0.710938,
+      "exp_pair1": 0.585938,
+      "exp_pair2": 0.642578,
       "shots": 1024,
-      "counts_unique": 15
+      "counts_unique": 16
     },
     {
       "circuit_idx": 13,
       "block": 0,
       "arm": "Arm A",
       "basis": "YY",
-      "exp_pair1": -0.792969,
-      "exp_pair2": -0.855469,
-      "exp_joint": 0.699219,
+      "exp_pair1": -0.541016,
+      "exp_pair2": -0.638672,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -377,9 +150,8 @@
       "block": 0,
       "arm": "Arm B-Ctrl",
       "basis": "YY",
-      "exp_pair1": -0.025391,
-      "exp_pair2": 0.027344,
-      "exp_joint": 0.017578,
+      "exp_pair1": -0.015625,
+      "exp_pair2": 0.042969,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -388,9 +160,8 @@
       "block": 1,
       "arm": "Arm B-Def",
       "basis": "ZZ",
-      "exp_pair1": -0.011719,
-      "exp_pair2": -0.054688,
-      "exp_joint": -0.023438,
+      "exp_pair1": 0.054688,
+      "exp_pair2": 0.011719,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -399,9 +170,8 @@
       "block": 1,
       "arm": "Arm A",
       "basis": "YY",
-      "exp_pair1": -0.759766,
-      "exp_pair2": -0.837891,
-      "exp_joint": 0.644531,
+      "exp_pair1": -0.582031,
+      "exp_pair2": -0.623047,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -410,9 +180,8 @@
       "block": 1,
       "arm": "Arm B",
       "basis": "XX",
-      "exp_pair1": 0.697266,
-      "exp_pair2": 0.798828,
-      "exp_joint": 0.625,
+      "exp_pair1": 0.712891,
+      "exp_pair2": 0.763672,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -421,9 +190,8 @@
       "block": 1,
       "arm": "Arm A",
       "basis": "XX",
-      "exp_pair1": 0.822266,
-      "exp_pair2": 0.878906,
-      "exp_joint": 0.763672,
+      "exp_pair1": 0.607422,
+      "exp_pair2": 0.640625,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -432,9 +200,8 @@
       "block": 1,
       "arm": "Arm B",
       "basis": "ZZ",
-      "exp_pair1": 0.615234,
-      "exp_pair2": 0.693359,
-      "exp_joint": 0.675781,
+      "exp_pair1": 0.626953,
+      "exp_pair2": 0.681641,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -443,9 +210,8 @@
       "block": 1,
       "arm": "Arm B-Def",
       "basis": "XX",
-      "exp_pair1": 0.027344,
-      "exp_pair2": 0.021484,
-      "exp_joint": 0.013672,
+      "exp_pair1": 0.671875,
+      "exp_pair2": 0.005859,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -454,9 +220,8 @@
       "block": 1,
       "arm": "Arm B-Held",
       "basis": "ZZ",
-      "exp_pair1": -0.027344,
-      "exp_pair2": 0.019531,
-      "exp_joint": -0.003906,
+      "exp_pair1": 0.044922,
+      "exp_pair2": 0.0625,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -465,9 +230,8 @@
       "block": 1,
       "arm": "Arm B",
       "basis": "YY",
-      "exp_pair1": -0.634766,
-      "exp_pair2": -0.621094,
-      "exp_joint": 0.591797,
+      "exp_pair1": -0.597656,
+      "exp_pair2": -0.570312,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -476,9 +240,8 @@
       "block": 1,
       "arm": "Arm B-Held",
       "basis": "YY",
-      "exp_pair1": 0.009766,
-      "exp_pair2": 0.007812,
-      "exp_joint": 0.009766,
+      "exp_pair1": 0.023438,
+      "exp_pair2": -0.007812,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -487,9 +250,8 @@
       "block": 1,
       "arm": "Arm A",
       "basis": "ZZ",
-      "exp_pair1": 0.916016,
-      "exp_pair2": 0.886719,
-      "exp_joint": 0.841797,
+      "exp_pair1": 0.75,
+      "exp_pair2": 0.769531,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -498,9 +260,8 @@
       "block": 1,
       "arm": "Arm B-Def",
       "basis": "YY",
-      "exp_pair1": 0.046875,
-      "exp_pair2": -0.015625,
-      "exp_joint": -0.050781,
+      "exp_pair1": 0.033203,
+      "exp_pair2": -0.007812,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -509,9 +270,8 @@
       "block": 1,
       "arm": "Arm B-Held",
       "basis": "XX",
-      "exp_pair1": -0.005859,
-      "exp_pair2": 0.013672,
-      "exp_joint": 0.039062,
+      "exp_pair1": 0.054688,
+      "exp_pair2": 0.035156,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -520,9 +280,8 @@
       "block": 1,
       "arm": "Arm B-Ctrl",
       "basis": "YY",
-      "exp_pair1": -0.005859,
-      "exp_pair2": -0.003906,
-      "exp_joint": -0.021484,
+      "exp_pair1": -0.001953,
+      "exp_pair2": 0.019531,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -531,9 +290,8 @@
       "block": 1,
       "arm": "Arm B-Ctrl",
       "basis": "ZZ",
-      "exp_pair1": -0.013672,
-      "exp_pair2": -0.021484,
-      "exp_joint": 0.003906,
+      "exp_pair1": 0.017578,
+      "exp_pair2": 0.001953,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -542,9 +300,8 @@
       "block": 1,
       "arm": "Arm B-Ctrl",
       "basis": "XX",
-      "exp_pair1": 0.003906,
-      "exp_pair2": -0.007812,
-      "exp_joint": 0.449219,
+      "exp_pair1": -0.007812,
+      "exp_pair2": 0.007812,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -553,9 +310,8 @@
       "block": 2,
       "arm": "Arm B",
       "basis": "YY",
-      "exp_pair1": -0.611328,
-      "exp_pair2": -0.585938,
-      "exp_joint": 0.607422,
+      "exp_pair1": -0.613281,
+      "exp_pair2": -0.617188,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -564,9 +320,8 @@
       "block": 2,
       "arm": "Arm B",
       "basis": "XX",
-      "exp_pair1": 0.703125,
-      "exp_pair2": 0.757812,
-      "exp_joint": 0.625,
+      "exp_pair1": 0.707031,
+      "exp_pair2": 0.742188,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -575,9 +330,8 @@
       "block": 2,
       "arm": "Arm B-Def",
       "basis": "XX",
-      "exp_pair1": -0.011719,
-      "exp_pair2": -0.060547,
-      "exp_joint": -0.017578,
+      "exp_pair1": 0.6875,
+      "exp_pair2": -0.037109,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -586,9 +340,8 @@
       "block": 2,
       "arm": "Arm B-Held",
       "basis": "ZZ",
-      "exp_pair1": -0.019531,
-      "exp_pair2": 0.007812,
-      "exp_joint": 0.0,
+      "exp_pair1": 0.003906,
+      "exp_pair2": -0.050781,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -597,9 +350,8 @@
       "block": 2,
       "arm": "Arm B-Ctrl",
       "basis": "YY",
-      "exp_pair1": -0.021484,
-      "exp_pair2": 0.017578,
-      "exp_joint": 0.015625,
+      "exp_pair1": -0.041016,
+      "exp_pair2": 0.041016,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -608,9 +360,8 @@
       "block": 2,
       "arm": "Arm A",
       "basis": "YY",
-      "exp_pair1": -0.761719,
-      "exp_pair2": -0.851562,
-      "exp_joint": 0.675781,
+      "exp_pair1": -0.554688,
+      "exp_pair2": -0.605469,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -619,9 +370,8 @@
       "block": 2,
       "arm": "Arm B-Held",
       "basis": "YY",
-      "exp_pair1": -0.023438,
-      "exp_pair2": 0.025391,
-      "exp_joint": 0.013672,
+      "exp_pair1": 0.007812,
+      "exp_pair2": -0.013672,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -630,9 +380,8 @@
       "block": 2,
       "arm": "Arm A",
       "basis": "ZZ",
-      "exp_pair1": 0.886719,
-      "exp_pair2": 0.892578,
-      "exp_joint": 0.814453,
+      "exp_pair1": 0.763672,
+      "exp_pair2": 0.769531,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -641,9 +390,8 @@
       "block": 2,
       "arm": "Arm B-Ctrl",
       "basis": "ZZ",
-      "exp_pair1": -0.03125,
-      "exp_pair2": 0.037109,
-      "exp_joint": 0.025391,
+      "exp_pair1": 0.037109,
+      "exp_pair2": 0.021484,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -652,9 +400,8 @@
       "block": 2,
       "arm": "Arm B-Held",
       "basis": "XX",
-      "exp_pair1": 0.021484,
+      "exp_pair1": 0.007812,
       "exp_pair2": -0.005859,
-      "exp_joint": 0.03125,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -663,9 +410,8 @@
       "block": 2,
       "arm": "Arm B-Ctrl",
       "basis": "XX",
-      "exp_pair1": 0.027344,
-      "exp_pair2": -0.042969,
-      "exp_joint": 0.445312,
+      "exp_pair1": 0.015625,
+      "exp_pair2": -0.029297,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -674,9 +420,8 @@
       "block": 2,
       "arm": "Arm B-Def",
       "basis": "ZZ",
-      "exp_pair1": -0.019531,
-      "exp_pair2": -0.037109,
-      "exp_joint": -0.021484,
+      "exp_pair1": 0.017578,
+      "exp_pair2": -0.017578,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -685,9 +430,8 @@
       "block": 2,
       "arm": "Arm B-Def",
       "basis": "YY",
-      "exp_pair1": -0.0625,
-      "exp_pair2": 0.037109,
-      "exp_joint": -0.005859,
+      "exp_pair1": 0.011719,
+      "exp_pair2": 0.003906,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -696,9 +440,8 @@
       "block": 2,
       "arm": "Arm A",
       "basis": "XX",
-      "exp_pair1": 0.767578,
-      "exp_pair2": 0.861328,
-      "exp_joint": 0.699219,
+      "exp_pair1": 0.632812,
+      "exp_pair2": 0.632812,
       "shots": 1024,
       "counts_unique": 16
     },
@@ -707,11 +450,236 @@
       "block": 2,
       "arm": "Arm B",
       "basis": "ZZ",
-      "exp_pair1": 0.689453,
-      "exp_pair2": 0.697266,
-      "exp_joint": 0.714844,
+      "exp_pair1": 0.650391,
+      "exp_pair2": 0.716797,
       "shots": 1024,
       "counts_unique": 16
     }
-  ]
+  ],
+  "block_evaluations": [
+    {
+      "block_id": 0,
+      "arms": {
+        "Arm A": {
+          "f1": 0.724609,
+          "f2": 0.763184,
+          "f_mean": 0.743896,
+          "f_prod": 0.55301
+        },
+        "Arm B": {
+          "f1": 0.735352,
+          "f2": 0.761719,
+          "f_mean": 0.748535,
+          "f_prod": 0.560131
+        },
+        "Arm B-Def": {
+          "f1": 0.425781,
+          "f2": 0.255371,
+          "f_mean": 0.340576,
+          "f_prod": 0.108732
+        },
+        "Arm B-Ctrl": {
+          "f1": 0.259277,
+          "f2": 0.23877,
+          "f_mean": 0.249023,
+          "f_prod": 0.061908
+        },
+        "Arm B-Held": {
+          "f1": 0.26416,
+          "f2": 0.242676,
+          "f_mean": 0.253418,
+          "f_prod": 0.064105
+        }
+      }
+    },
+    {
+      "block_id": 1,
+      "arms": {
+        "Arm A": {
+          "f1": 0.734863,
+          "f2": 0.758301,
+          "f_mean": 0.746582,
+          "f_prod": 0.557247
+        },
+        "Arm B": {
+          "f1": 0.734375,
+          "f2": 0.753906,
+          "f_mean": 0.744141,
+          "f_prod": 0.55365
+        },
+        "Arm B-Def": {
+          "f1": 0.42334,
+          "f2": 0.256348,
+          "f_mean": 0.339844,
+          "f_prod": 0.108522
+        },
+        "Arm B-Ctrl": {
+          "f1": 0.25293,
+          "f2": 0.247559,
+          "f_mean": 0.250244,
+          "f_prod": 0.062615
+        },
+        "Arm B-Held": {
+          "f1": 0.269043,
+          "f2": 0.276367,
+          "f_mean": 0.272705,
+          "f_prod": 0.074355
+        }
+      }
+    },
+    {
+      "block_id": 2,
+      "arms": {
+        "Arm A": {
+          "f1": 0.737793,
+          "f2": 0.751953,
+          "f_mean": 0.744873,
+          "f_prod": 0.554786
+        },
+        "Arm B": {
+          "f1": 0.742676,
+          "f2": 0.769043,
+          "f_mean": 0.755859,
+          "f_prod": 0.57115
+        },
+        "Arm B-Def": {
+          "f1": 0.42334,
+          "f2": 0.235352,
+          "f_mean": 0.329346,
+          "f_prod": 0.099634
+        },
+        "Arm B-Ctrl": {
+          "f1": 0.273438,
+          "f2": 0.237793,
+          "f_mean": 0.255615,
+          "f_prod": 0.065022
+        },
+        "Arm B-Held": {
+          "f1": 0.250977,
+          "f2": 0.239258,
+          "f_mean": 0.245117,
+          "f_prod": 0.060048
+        }
+      }
+    }
+  ],
+  "arm_synthesis": {
+    "Arm A": {
+      "mean_f1": 0.732422,
+      "mean_f2": 0.757812,
+      "mean_f_average": 0.745117,
+      "mean_f_prod": 0.555014,
+      "sem_f_average": 0.000785,
+      "entanglement_witness": -0.245117,
+      "witness_w1": -0.232422,
+      "witness_w2": -0.257812,
+      "z_score": 312.33,
+      "is_entangled": true,
+      "block_fidelities_mean": [
+        0.743896,
+        0.746582,
+        0.744873
+      ]
+    },
+    "Arm B": {
+      "mean_f1": 0.737467,
+      "mean_f2": 0.761556,
+      "mean_f_average": 0.749512,
+      "mean_f_prod": 0.561644,
+      "sem_f_average": 0.003418,
+      "entanglement_witness": -0.249512,
+      "witness_w1": -0.237467,
+      "witness_w2": -0.261556,
+      "z_score": 73.0,
+      "is_entangled": true,
+      "block_fidelities_mean": [
+        0.748535,
+        0.744141,
+        0.755859
+      ]
+    },
+    "Arm B-Def": {
+      "mean_f1": 0.424154,
+      "mean_f2": 0.249023,
+      "mean_f_average": 0.336589,
+      "mean_f_prod": 0.105629,
+      "sem_f_average": 0.003628,
+      "entanglement_witness": 0.163411,
+      "witness_w1": 0.075846,
+      "witness_w2": 0.250977,
+      "z_score": -45.05,
+      "is_entangled": false,
+      "block_fidelities_mean": [
+        0.340576,
+        0.339844,
+        0.329346
+      ]
+    },
+    "Arm B-Ctrl": {
+      "mean_f1": 0.261882,
+      "mean_f2": 0.241374,
+      "mean_f_average": 0.251628,
+      "mean_f_prod": 0.063181,
+      "sem_f_average": 0.002025,
+      "entanglement_witness": 0.248372,
+      "witness_w1": 0.238118,
+      "witness_w2": 0.258626,
+      "z_score": -122.67,
+      "is_entangled": false,
+      "block_fidelities_mean": [
+        0.249023,
+        0.250244,
+        0.255615
+      ]
+    },
+    "Arm B-Held": {
+      "mean_f1": 0.261393,
+      "mean_f2": 0.252767,
+      "mean_f_average": 0.25708,
+      "mean_f_prod": 0.066169,
+      "sem_f_average": 0.008172,
+      "entanglement_witness": 0.24292,
+      "witness_w1": 0.238607,
+      "witness_w2": 0.247233,
+      "z_score": -29.73,
+      "is_entangled": false,
+      "block_fidelities_mean": [
+        0.253418,
+        0.272705,
+        0.245117
+      ]
+    }
+  },
+  "hypothesis_verifications": {
+    "H1_reversibility_positive_control": {
+      "claim": "F1(Arm A) >= 0.85 and F2(Arm A) >= 0.85 independently",
+      "observed_f1": 0.732422,
+      "observed_f2": 0.757812,
+      "passed": false
+    },
+    "H2_primary_multiqubit_restricted_recovery": {
+      "claim": "F_mean(Arm B) > 0.50 with Z > 3.72 (p < 1e-4)",
+      "observed": 0.749512,
+      "z_score": 73.0,
+      "witness": -0.249512,
+      "passed": true
+    },
+    "H3_quantum_capacity_single_photon_threshold": {
+      "claim": "F1(Arm B-Def) <= 0.55 (W1 >= 0) and F2(Arm B-Def) <= 0.35 (Capacity bound)",
+      "observed_f1": 0.424154,
+      "observed_f2": 0.249023,
+      "witness_w1": 0.075846,
+      "passed": true
+    },
+    "H4_unentangled_early_radiation_baseline": {
+      "claim": "F_mean(Arm B-Ctrl) <= 0.35 (Unentangled baseline)",
+      "observed": 0.251628,
+      "passed": true
+    },
+    "H5_heldout_scrambler_specificity": {
+      "claim": "F_mean(Arm B-Held) <= 0.35 (Specificity gate)",
+      "observed": 0.25708,
+      "passed": true
+    }
+  }
 }

@@ -1,0 +1,11 @@
+{
+  "job_id": "dbndsvoou4as73b4cvi0",
+  "backend": "ibm_fez",
+  "total_circuits": 45,
+  "shots_per_circuit": 1024,
+  "total_physical_shots": 46080,
+  "qpy_sha256": "931563b75563b4a5c899b5c6ce72c6d0c057dfd0b2ec0f94f970aaf68732a075",
+  "grant_id": "GRANT-SYS021-HP003-F4C27E913039",
+  "dispatch_timestamp": "2026-11-07T08:17:03Z",
+  "status": "QUEUED"
+}

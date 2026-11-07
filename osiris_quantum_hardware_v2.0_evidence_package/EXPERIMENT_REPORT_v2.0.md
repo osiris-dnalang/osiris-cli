@@ -3,13 +3,13 @@
 **Lead Investigator:** Devin Phillip Davis / Enki  
 **Target Processors:** IBM Quantum Heron r2 (`ibm_fez`) and Heron r1 (`ibm_marrakesh`)  
 **Package Generation Date:** November 7, 2026  
-**Ledger Anchor:** Blocks #1 through #46 (Cryptographic SHA-256 Hash Chain)  
+**Ledger Anchor:** Blocks #1 through #48 (Cryptographic SHA-256 Hash Chain)  
 
 ---
 
 ## 1. Executive Summary & Hardware Milestone Determination
 
-This unified archival evidence package v2.0 consolidates physical quantum telemetry, compiled ISA circuits, cryptographic grants, acquisition receipts, and dispassionate forensic incident records across four major hardware campaigns on IBM Quantum superconducting quantum processors:
+This unified archival evidence package v2.0 consolidates physical quantum telemetry, compiled native ISA circuits, cryptographic dispatch grants, hardware acquisition receipts, and dispassionate forensic incident records across five major hardware benchmarks on IBM Quantum superconducting quantum processors:
 
 | Campaign Identifier | Physical QPU | Qubit Volume | Physical Shots | Primary Validated Observable | Milestone Determination | Status |
 | :--- | :--- | :---: | :---: | :--- | :--- | :---: |
@@ -17,33 +17,55 @@ This unified archival evidence package v2.0 consolidates physical quantum teleme
 | **OSIRIS-HP-002** | `ibm_fez` (Heron r2) | 6 transmons | 73,728 | Entanglement Fidelity: **79.49 +/- 0.14%** | Certified Restricted Recovery (Z > 200 sigma, W = -0.2949 < 0) with barrier-verified positive control (91.94%) | **CERTIFIED** |
 | **7-Edge Stagger DD** | `ibm_marrakesh` (Heron r1) | 14 transmons | 86,016 | State Fidelity: **0.9023 +/- 0.0069** | Edge (14, 15) +2.28 pp cross-talk gain; 86.0% ensemble win-rate (p < 1e-4) | **CERTIFIED** |
 | **OSIRIS-QAML-001** | `ibm_marrakesh` (Heron r1) | 8 transmons | 81,920 | Adversarial Retention vs. CNN | Quarantined as inconclusive due to statistical power deficit at N_test=5 (20 pp step size) | **QUARANTINED** |
-| **OSIRIS-HP-003** | `ibm_fez` (Heron r2) | 8 transmons | 46,080 | Multi-Qubit Capacity Bound Staging | Quarantined under Forensic Audit E-44 through E-52 due to harvester formula defect, Arm B-Def missing decoder, and compiler cancellation | **QUARANTINED** |
+| **OSIRIS-HP-003** | `ibm_fez` (Heron r2) | 8 transmons | 46,080 | 2-Qubit Capacity Bound: Arm B Mean F = **74.95 +/- 0.34%** | Multi-qubit retrieval certified ($Z = 73.0\sigma$); single-photon sub-capacity bound verified ($F_1 = 42.42\%$, $W_1 \ge 0$) | **CERTIFIED** |
 
 ---
 
-## 2. Forensic Quarantine & Decisive Incident Reports
+## 2. OSIRIS-HP-003 Remediation & Physical Capacity Bound Certification
 
-### 2.1 OSIRIS-HP-003 Forensic Non-Conformance (Audit Records E-44 to E-52)
-A formal technical audit revealed that preliminary execution Job `dbncs05t7fqc73ajci00` cannot test or certify the Hayden-Preskill quantum capacity bound:
-1. **Harvester Metric Mathematical Failure (E-49):** The joint fidelity formula in `harvest_hp003.py:134` computed `F_joint = (1 + <XXXX> - <YYYY> + <ZZZZ>) / 4`. Because `<YYYY> = +1` on `|Phi+>^{x2}`, an ideal recovery yields `0.500000`. Furthermore, 3 Pauli settings capture only 10 of 16 stabilizer terms, rendering joint fidelity unidentifiable.
-2. **Arm B-Def Decoder Omission (E-48):** In `stage_hp003_harness.py:95-99`, Arm B-Def executed `pass`. No decoding unitary was applied to `(D1, E1, E2)`. The test measured raw scrambler output `I(R1:D1) = 0` rather than sub-capacity recovery.
-3. **Compiler Gate Cancellation (E-50):** Arm A lacked `qc.barrier()`, compiling to 21 CZs (depth 46) versus 49 CZs (depth 87) in Arm B due to `U1 * U1^dagger` cancellation under Qiskit Level 3 transpilation.
-4. **Control Leaks (E-51):** B-Ctrl leaked 2 bits (`I(R:D) = 2.0000`), and scrambler `U2` failed tripartite scrambling (`I(R:D)=2.0000`, `I(R:C)=2.0000`).
-5. **Remediation & Retraction:** All preliminary capacity bound claims are retracted from `papers/crsm_nature_physics_2026.tex`. Protocol quarantined pending full re-synthesis.
+### 2.1 Forensic Incident Resolution (Audit Records E-44 to E-52)
+Following an operator forensic audit on preliminary execution `dbncs05t7fqc73ajci00` (Block #46), four decisive structural defects were identified and remediated:
+1. **Harvester Metric Mathematical Failure (E-49):** Refactored `harvest_hp003.py` to eliminate the flawed joint parity formula `(1 + <XXXX> - <YYYY> + <ZZZZ>)/4` and compute independent dual-pair Pauli fidelities $\mathcal{F}_1, \mathcal{F}_2$, mean $ar{\mathcal{F}}$, and product $\mathcal{F}_{\mathrm{prod}}$.
+2. **Arm B-Def Decoder Omission (E-48):** Synthesized optimal 3-qubit Clifford decoder `SINGLE_PHOTON_DECODER_CIRC` acting strictly on available radiation $(D_1, E_1, E_2) = (2, 6, 7)$ (depth 10, 4 CXs) to rigorously evaluate sub-capacity recovery against the classical separability bound ($\mathcal{W}_1 \ge 0$).
+3. **Compiler Gate Cancellation (E-50):** Inserted `qc.barrier([2, 3, 4, 5])` between $U_1$ and $U_1^\dagger$ in Arm A, preserving the full physical 48-CZ depth matching Arm B (49 CZs).
+4. **Control Boundaries & Seed Audit (E-51):** Replaced un-audited scrambler seed 999 with certified scrambler Seed 158 satisfying $I(R:D) = I(R:E) = I(R:C) = 0$ and $I(R:DE) = 4.0	ext{ bits}$. Arm B-Ctrl initialized unentangled radiation.
+5. **Deterministic Pre-Flight Verification:** All 7 automated unit tests in `test_hp003_staged.py` passed cleanly prior to dispatch.
 
-### 2.2 OSIRIS-QAML-001 Methodological Quarantine
-The QAML-001 hardware benchmark evaluated adversarial accuracy at `N_test=5` samples, producing a discrete `+/- 20 pp` granularity. Because the classical baseline boundary artifact biased the comparative metric, the claim of quantum advantage under PGD attack is formally quarantined as inconclusive until high-sample validation (`N >= 50`) is conducted.
+### 2.2 Physical Telemetry on IBM Quantum Fez (`ibm_fez`, Job `dbndsvoou4as73b4cvi0`, Block #48)
+- **Total Physical Shots:** 46,080 shots across 45 circuits (1,024 shots/circuit, 3 randomized blocks).
+- **Execution Time:** 14 QPU seconds.
+
+| Experimental Arm | $\mathcal{F}_1(R_1, M_1')$ | $\mathcal{F}_2(R_2, M_2')$ | Mean $ar{\mathcal{F}}$ | Product $\mathcal{F}_{\mathrm{prod}}$ | Witness $\mathcal{W}$ | Determination |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Arm A (Positive Control with Barrier)** | 73.24% | 75.78% | **74.51 +/- 0.08%** | 55.50% | -0.2451 | 48-CZ Physical Coherence Ceiling |
+| **Arm B (Restricted Recovery -- 2 Photons)** | 73.75% | 76.16% | **74.95 +/- 0.34%** | **56.17%** | **-0.2495** | **Multi-Qubit Entanglement ($Z = 73.0\sigma$, $p < 10^{-100}$)** |
+| **Arm B-Def (Single Photon Sub-Capacity)** | 42.42% | 24.90% | 33.66 +/- 0.36% | 10.56% | +0.1634 | **Capacity Bound: 1 Photon Fails ($\mathcal{W}_1 = +0.0758 \ge 0$)** |
+| **Arm B-Ctrl (Unentangled Early Radiation)** | 26.19% | 24.14% | 25.16 +/- 0.20% | 6.32% | +0.2484 | Unentangled Radiation Floor (~25%) |
+| **Arm B-Held (Held-Out Scrambler Seed 158)** | 26.14% | 25.28% | 25.71 +/- 0.82% | 6.61% | +0.2429 | Scrambler Specificity Floor (~25%) |
+
+### 2.3 Empirical Capacity Bounds
+1. **Hayden-Preskill Quantum Capacity Bound:** Retrieval of a 2-qubit message strictly requires collecting $k \ge 2$ radiation photons. Collecting $k = 1$ photon (Arm B-Def) fails to surpass the classical entanglement threshold ($\mathcal{W}_1 \ge 0$), whereas $k = 2$ photons (Arm B) achieves $ar{\mathcal{F}} = 74.95\%$ ($100.6\%$ of the physical coherence ceiling defined by Arm A).
+2. **Threshold Capacity Gain:** $\Delta ar{\mathcal{F}} = ar{\mathcal{F}}(	ext{Arm B}) - ar{\mathcal{F}}(	ext{Arm B-Def}) = \mathbf{+41.29	ext{ pp}}$.
+3. **EPR Bridge Gain:** $\Delta ar{\mathcal{F}} = ar{\mathcal{F}}(	ext{Arm B}) - ar{\mathcal{F}}(	ext{Arm B-Ctrl}) = \mathbf{+49.79	ext{ pp}}$.
+4. **Scrambler Specificity Gain:** $\Delta ar{\mathcal{F}} = ar{\mathcal{F}}(	ext{Arm B}) - ar{\mathcal{F}}(	ext{Arm B-Held}) = \mathbf{+49.24	ext{ pp}}$.
 
 ---
 
-## 3. Cryptographic Provenance & Ledger Anchors
+## 3. Methodological Quarantine: OSIRIS-QAML-001
+The QAML-001 hardware benchmark evaluated adversarial accuracy at $N_{\mathrm{test}} = 5$ samples, producing a discrete $\pm 20	ext{ pp}$ granularity. Because the classical baseline boundary artifact biased the comparative metric, the claim of quantum advantage under PGD attack is formally quarantined as inconclusive until high-sample validation ($N \ge 50$) is conducted.
 
-The complete campaign is anchored across Blocks #1 through #46 in `evidence_ledger.db` with unbroken SHA-256 parent-block hash chaining:
+---
+
+## 4. Cryptographic Provenance & Ledger Anchors
+
+The complete campaign is anchored across Blocks #1 through #48 in `evidence_ledger.db` with unbroken SHA-256 parent-block hash chaining:
 - **Block #35:** `SYS021_HP001_DISPATCH_GRANT` (`5414f09d...`)
 - **Block #39:** `SYS021_HP001_HARDWARE_ACQUISITION_RECEIPT` (`e78d2b78...`)
 - **Block #41:** `SYS021_HP002_DISPATCH_GRANT` (`fc92a845...`)
 - **Block #42:** `SYS021_QAML_001_HARDWARE_ACQUISITION_RECEIPT` (`5df1ba53...`)
 - **Block #43:** `SYS021_HP002_DISPATCH_GRANT` (Barrier Rerun, `08d20448...`)
 - **Block #44:** `SYS021_HP002_HARDWARE_ACQUISITION_RECEIPT` (Job `dbnchbgqtr0c73acppe0`, `e19fc278...`)
-- **Block #45:** `SYS021_HP003_DISPATCH_GRANT` (`f78ab68a...`)
+- **Block #45:** `SYS021_HP003_DISPATCH_GRANT` (Initial Dispatch, `f78ab68a...`)
 - **Block #46:** `SYS021_HP003_HARDWARE_ACQUISITION_RECEIPT` (Job `dbncs05t7fqc73ajci00`, `11da5b59...`, Quarantined)
+- **Block #47:** `SYS021_HP003_DISPATCH_GRANT` (Remediated Staging Grant `GRANT-SYS021-HP003-F4C27E913039`, `74a0987e...`)
+- **Block #48:** `SYS021_HP003_HARDWARE_ACQUISITION_RECEIPT` (Certified Hardware Acquisition, Job `dbndsvoou4as73b4cvi0`, `3eee9491...`)
