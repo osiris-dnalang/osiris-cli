@@ -74,3 +74,6 @@ unzipped/
 osiris-env/
 __pycache__/
 *.pyc
+
+# Local venv (osiris_env was already ignored above)
+osiris-venv/
