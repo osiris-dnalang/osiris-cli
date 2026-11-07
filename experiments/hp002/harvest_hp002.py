@@ -46,7 +46,13 @@ def main():
 
     if "DONE" not in status_str.upper():
         print(f"\n[INFO] Job {job_id} is currently {status_str}. Pending jobs on {backend_name}: {b_status.pending_jobs}.")
-        print("Hardware acquisition is still queued/running. Exiting without harvesting.")
+        print("Waiting for physical hardware execution to complete...")
+        job.wait_for_final_state()
+        status_str = str(job.status())
+        print(f"Final Job Status   : {status_str}")
+
+    if "DONE" not in status_str.upper():
+        print(f"[ERROR] Job terminated with non-DONE status: {status_str}")
         return
 
     print(f"\n[SUCCESS] Hardware job {job_id} is DONE! Extracting tomographic telemetry across 36 circuits...")

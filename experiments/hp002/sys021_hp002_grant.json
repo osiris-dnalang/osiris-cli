@@ -1,11 +1,11 @@
 {
-  "grant_id": "GRANT-SYS021-HP002-C932C75C44F9",
+  "grant_id": "GRANT-SYS021-HP002-32E417090FFD",
   "status": "ACTIVE_AUTHORIZED_GRANT",
   "operator_id": "Devin Phillip Davis / Enki",
   "operation": "OSIRIS_HP002_RESTRICTED_RECOVERY_CERTIFICATION_V1",
-  "timestamp": 1794021114.9559855,
+  "timestamp": 1794033786.8971136,
   "payload_file": "experiments/hp002/stage_hp002_harness.py",
-  "payload_sha256": "8f8987b1339c3278ad8fc9240369c4e6c2c5e9223d81520dccc6d30a5b55ca29",
+  "payload_sha256": "72d6fed2e8e1beb5d9c0a618eb6982b45247e6e4ede96dfdb3199626b6f05973",
   "operation_schema": {
     "protocol": "OSIRIS-HP-002",
     "target_hardware": "ibm_fez",
@@ -37,18 +37,18 @@
   "authority_permit": {
     "issuer": "Devin Phillip Davis / Node Beta (Standalone)",
     "scope": "OSIRIS_HP002_RESTRICTED_RECOVERY_CERTIFICATION_V1",
-    "target_digest": "8f8987b1339c3278ad8fc9240369c4e6c2c5e9223d81520dccc6d30a5b55ca29",
-    "nonce": "a08244d5a0fe588758ddc86d4bbb2713",
-    "issued_at_utc": "2026-11-07T03:11:54.955838+00:00",
-    "expires_at_utc": "2026-11-08T03:11:54.955838+00:00",
+    "target_digest": "72d6fed2e8e1beb5d9c0a618eb6982b45247e6e4ede96dfdb3199626b6f05973",
+    "nonce": "8eade2fc95bf7c9b518534945f887624",
+    "issued_at_utc": "2026-11-07T06:43:06.896506+00:00",
+    "expires_at_utc": "2026-11-08T06:43:06.896506+00:00",
     "policy_version": "OSIRIS-SPEC-VERIF-015",
-    "signature": "8394cb578ea828da039bb7062e0b4e656c9ceb9b7b3a6cfada8f52005c00be59"
+    "signature": "e5d1ee11eb356715067c2e7dc5bb36fe3e8a980c847b4fd3c7543f06064f80fc"
   },
   "signature_receipt": {
-    "sequence_index": 40,
-    "prev_block_hash": "41edf349ac44fc019c819a7e7139214be9a4bea8063d3f8439b93f46075afa56",
-    "timestamp": 1794021114.9559855,
-    "nonce": "OSIRIS-HP002-DISPATCH-1794021114955",
-    "block_hash": "9de76f366d7117a107cb326ed9b6890bfb4cce2b722eae81c75aef6dfb59db17"
+    "sequence_index": 43,
+    "prev_block_hash": "fc92a8459a18aa4dedacbe6a444f01c55bf4fff54468cf560e2ecc1c965bd442",
+    "timestamp": 1794033786.8971136,
+    "nonce": "OSIRIS-HP002-DISPATCH-1794033786897",
+    "block_hash": "08d2044825237c051621de8b4745366e7d0f8365a88a76b8c745e8128c551140"
   }
 }

@@ -464,30 +464,31 @@ I(R : D) = 0.000000,\quad I(R : E) = 0.000000,\quad I(R : C) = 0.000000,\quad I(
 \end{equation}
 Remnants $C_1, C_2$ were quarantined behind an impermeable compile-time firewall: exactly zero entangling gates or operations link the decoder to $C_1$ or $C_2$.
 
-To protect against temporal calibration drift, the protocol was organized into three randomized execution blocks across four arms and three tomographic bases ($XX, YY, ZZ$), totaling 36 circuits and $73{,}728$ physical shots ($2{,}048$ shots per circuit). To rule out identity routing or circuit leakage, Arm~B Held-Out executed a non-trivial held-out scrambler $U_2$ against the fixed decoder $V(U_1)$. Reconstructed Bell state entanglement fidelities $\mathcal{F}_{\mathrm{ent}} = \frac{1}{4}(1 + \langle XX \rangle - \langle YY \rangle + \langle ZZ \rangle)$ were evaluated with propagating $1\sigma$ standard errors.
+To protect against temporal calibration drift, the protocol was organized into three randomized execution blocks across four arms and three tomographic bases ($XX, YY, ZZ$), totaling 36 circuits and $73{,}728$ physical shots ($2{,}048$ shots per circuit). To ensure rigorous physical comparability and prevent compiler pass deception, a strict execution barrier was inserted between scrambling and inversion operations in Arm~A (\texttt{qc.barrier([1, 2, 3])}), preventing Qiskit's Level~3 transpiler from cancelling $U_1 U_1^\dagger \to \mathbb{I}$. As a result, all four arms underwent equivalent physical circuit depths ($32 \le \text{depth} \le 39$) and two-qubit entangling exposure ($15 \le \text{CZ} \le 18$, zero SWAP routing overhead). Reconstructed Bell state entanglement fidelities $\mathcal{F}_{\mathrm{ent}} = \frac{1}{4}(1 + \langle XX \rangle - \langle YY \rangle + \langle ZZ \rangle)$ were evaluated with propagating $1\sigma$ standard errors (Job ID \texttt{dbnchbgqtr0c73acppe0}, Block~\#44, SHA-256: \texttt{e19fc278...}).
 
 \begin{table}[H]
 \centering
-\caption{Empirical tomographic reconstruction and entanglement recovery on IBM Quantum Heron~r2 (\texttt{ibm\_fez}, Job ID \texttt{dbn9e10qtr0c73acjf50}, $N = 73{,}728$ physical shots across 3 randomized blocks). Uncertainties denote $1\sigma$ propagating standard errors.}
+\caption{Empirical tomographic reconstruction and entanglement recovery on IBM Quantum Heron~r2 (\texttt{ibm\_fez}, Job ID \texttt{dbnchbgqtr0c73acppe0}, $N = 73{,}728$ physical shots across 3 randomized blocks, compiled with compiler-barrier verification). Uncertainties denote $1\sigma$ propagating standard errors.}
 \label{tab:hp_three_arm_results}
 \begin{tabular}{lcccccc}
 \toprule
 Experimental Arm & $\langle XX \rangle$ & $\langle YY \rangle$ & $\langle ZZ \rangle$ & Reconstructed $\mathcal{F}_{\mathrm{ent}}$ & Witness $\mathcal{W}$ & Determination \\
 \midrule
-Arm A (Full-Access Inverse Control) & $+0.9704$ & $-0.9635$ & $+0.9684$ & $\mathbf{97.56 \pm 0.05\%}$ & $-0.4756$ & Positive Control Ceiling \\
-Arm B (Restricted Recovery -- Matched $U_1$) & $+0.8971$ & $-0.4118$ & $+0.4258$ & $\mathbf{68.37 \pm 0.09\%}$ & $\mathbf{-0.1837}$ & \textbf{Entangled Recovery ($p < 10^{-100}$)} \\
-Arm B Control (Separable Trapped) & $-0.0016$ & $-0.0039$ & $-0.0029$ & $24.98 \pm 0.31\%$ & $+0.2502$ & Trapped / Maximally Mixed \\
-Arm B Held-Out (Scrambler Specificity Gate $U_2$) & $+0.0199$ & $+0.0329$ & $+0.0153$ & $25.06 \pm 0.41\%$ & $+0.2494$ & Uncorrelated Scrambling Floor \\
+Arm A (Full-Access Inverse Control) & $+0.8675$ & $-0.8812$ & $+0.9290$ & $\mathbf{91.94 \pm 0.17\%}$ & $-0.4194$ & Positive Control Ceiling \\
+Arm B (Restricted Recovery -- Matched $U_1$) & $+0.8916$ & $-0.6299$ & $+0.6582$ & $\mathbf{79.49 \pm 0.14\%}$ & $\mathbf{-0.2949}$ & \textbf{Entangled Recovery ($p < 10^{-100}$)} \\
+Arm B Control (Separable Trapped) & $+0.0052$ & $+0.0133$ & $+0.0039$ & $24.89 \pm 0.57\%$ & $+0.2511$ & Trapped / Maximally Mixed \\
+Arm B Held-Out (Scrambler Specificity Gate $U_2$) & $-0.0124$ & $+0.0348$ & $+0.0241$ & $24.42 \pm 0.44\%$ & $+0.2558$ & Uncorrelated Scrambling Floor \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The primary pre-registered endpoint was decisively passed: the restricted recovery fidelity $\mathcal{F}_{\mathrm{ent}} = \mathbf{68.37 \pm 0.09\%}$ strictly exceeds the classical separability threshold ($0.50$), violating the entanglement witness $\mathcal{W} = 0.50 - \mathcal{F}_{\mathrm{ent}} = \mathbf{-0.1837 < 0}$ by $Z = 196.0\sigma$ ($p < 10^{-100}$). 
+The primary pre-registered endpoint was decisively passed: the restricted recovery fidelity $\mathcal{F}_{\mathrm{ent}} = \mathbf{79.49 \pm 0.14\%}$ strictly exceeds the classical separability threshold ($0.50$), violating the entanglement witness $\mathcal{W} = 0.50 - \mathcal{F}_{\mathrm{ent}} = \mathbf{-0.2949 < 0}$ by $Z > 200\sigma$ ($p < 10^{-100}$). 
 
 Crucially, both negative controls confirm that recovery is an active quantum decoding process:
 \begin{enumerate}
-\item In Arm~B Control (no prior entanglement between black hole and early radiation), the message remains trapped, yielding $\mathcal{F}_{\mathrm{ent}} = 24.98 \pm 0.31\%$, exactly matching the random mixed state ceiling ($\frac{1}{4} = 25.00\%$). The net empirical recovery gain is $\Delta \mathcal{F}_{\mathrm{ent}} = \mathbf{+43.38\text{ pp}}$ ($Z = 135.5\sigma$).
-\item In Arm~B Held-Out, substituting an unaligned scrambler $U_2$ against the fixed decoder $V(U_1)$ collapses fidelity to $\mathcal{F}_{\mathrm{ent}} = 25.06 \pm 0.41\%$. This eliminates trivial pass-through, identity routing, or residual noise artifacts as explanations for the observed entanglement.
+\item In Arm~B Control (no prior entanglement between black hole and early radiation), the message remains trapped, yielding $\mathcal{F}_{\mathrm{ent}} = 24.89 \pm 0.57\%$, exactly matching the random mixed state ceiling ($\frac{1}{4} = 25.00\%$). The net empirical recovery gain is $\Delta \mathcal{F}_{\mathrm{ent}} = \mathbf{+54.60\text{ pp}}$ ($Z = 92.5\sigma$).
+\item In Arm~B Held-Out, substituting an unaligned scrambler $U_2$ against the fixed decoder $V(U_1)$ collapses fidelity to $\mathcal{F}_{\mathrm{ent}} = 24.42 \pm 0.44\%$ ($\Delta \mathcal{F}_{\mathrm{ent}} = \mathbf{+55.07\text{ pp}}$ specificity delta). This eliminates trivial pass-through, identity routing, or residual noise artifacts as explanations for the observed entanglement.
+\item With compiler cancellation prevented, Arm~A demonstrates a physical positive control ceiling of $\mathcal{F}_{\mathrm{ent}} = \mathbf{91.94 \pm 0.17\%}$ under 18 native CZ gates, proving that the restricted decoder ($\mathcal{F}_{\mathrm{ent}} = 79.49\%$) recovers $\sim 86.5\%$ of the maximum coherent information attainable across this 156-qubit heavy-hex processor.
 \end{enumerate}
 
 \subsection{Multi-Edge Staggered Dynamical Decoupling Survey}
@@ -513,13 +514,13 @@ To evaluate whether geometric quantum representations confer resilience against 
 
 \begin{table}[H]
 \centering
-\caption{Adversarial classification accuracy under PGD attacks on IBM Quantum Heron~r1 (\texttt{ibm\_marrakesh}, Job ID \texttt{dbn9e8s4148s7390i0h0}, $N = 81{,}920$ physical shots).}
+\caption{Adversarial classification accuracy under PGD attacks on IBM Quantum Heron~r1 (\texttt{ibm\_marrakesh}, Job ID \texttt{dbn9e8s4148s7390i0h0}, $N = 81{,}920$ physical shots across 80 circuits).}
 \label{tab:qaml_results}
 \begin{tabular}{lcccc}
 \toprule
 Experimental Arm & $\epsilon = 0.00$ (Clean) & $\epsilon = 0.02$ & $\epsilon = 0.05$ & $\epsilon = 0.10$ \\
 \midrule
-Arm 0 (Classical CNN Baseline) & $100.0\%$ & $0.0\%$ & $0.0\%$ & $0.0\%$ \\
+Arm 0 (Classical CNN Baseline) & $0.0\%$ & $0.0\%$ & $0.0\%$ & $0.0\%$ \\
 Arm 1 (Bare Quantum Feature Map) & $60.0\%$ & $100.0\%$ & $80.0\%$ & $80.0\%$ \\
 Arm 2 (Synchronous XY8 Map) & $100.0\%$ & $60.0\%$ & $80.0\%$ & $80.0\%$ \\
 Arm 3 (Staggered XY8 Map -- OSIRIS) & $80.0\%$ & $80.0\%$ & $80.0\%$ & $80.0\%$ \\
@@ -528,12 +529,17 @@ Arm 4 (A/A Calibration Drift Control) & $100.0\%$ & $100.0\%$ & $80.0\%$ & $80.0
 \end{tabular}
 \end{table}
 
-The physical telemetry yields three deterministic conclusions:
+\subsubsection{Methodological Audit \& Inconclusive Determination}
+\label{sec:qaml_inconclusive}
+
+A rigorous statistical audit of the physical telemetry necessitates classifying \texttt{OSIRIS-QAML-001} as \textbf{inconclusive}, precluding any definitive claims of quantum adversarial advantage:
 \begin{enumerate}
-\item \textbf{Quantum Adversarial Advantage ($H_1, H_2$ Confirmed):} While the classical CNN baseline collapses to $0.0\%$ accuracy under even slight adversarial perturbations ($\epsilon \ge 0.02$), all quantum feature map encodings maintain $\ge 80.0\%$ classification accuracy out to $\epsilon = 0.10$ ($\Delta_{\mathrm{adv}} = \mathbf{+80.0\text{ pp}}$ at $\epsilon = 0.05$, confirming hypotheses $H_1$ and $H_2$).
-\item \textbf{Pulse Timing Regimes in Low-Depth Encodings ($H_3$ Falsified in Current Regime):} In contrast to spectator idle registers where staggered pulse scheduling demonstrated a $+2.28\text{ pp}$ gain, within this specific low-depth quantum feature map encoding, staggered and synchronous dynamical decoupling achieved identical classification accuracy ($80.0\%$, $\Delta_{\mathrm{stag}} = 0.0\text{ pp}$). Hypothesis $H_3$ ($\Delta_{\mathrm{stag}} \ge +1.50\text{ pp}$) is therefore dispassionately falsified in this operating regime, demonstrating that idle dephasing suppression does not automatically translate to enhanced adversarial classification margins in shallow gate circuits.
-\item \textbf{Hardware Stability ($H_4$ Confirmed):} The identical A/A drift control (Arm~4 vs.\ clean baselines) verified that drift remained within calibration bounds ($0.0\text{ pp}$ offset), ruling out backend degradation during the acquisition run.
+\item \textbf{Statistical Power Deficit at Small Test Volumes:} With $N_{\mathrm{test}} = 5$ evaluation points per arm, each point represents a $20.0\text{ pp}$ discrete step. The $95\%$ Clopper--Pearson confidence interval for $4/5$ ($80.0\%$) spans $[28.4\%,\ 99.5\%]$, and for $5/5$ spans $[47.8\%,\ 100.0\%]$. Because these intervals encompass virtually the entire distribution, the five experimental arms are statistically indistinguishable. Resolving a true $5.0\text{ pp}$ accuracy delta at $80\%$ baseline accuracy ($\alpha = 0.05$, power $1 - \beta = 0.80$) would require $N \approx 500$ evaluation points per arm ($\sim 8{,}000$ circuits), rendering this preliminary slice severely underpowered.
+\item \textbf{High Intrinsic Variance in A/A Controls:} Arm~4 executed the exact identical pulse and stagger schedule as Arm~3 ($\Delta = \SI{80}{\nano\second}$). Yet at $\epsilon = 0.00$ and $\epsilon = 0.02$, Arm~4 scored $100.0\%$ ($5/5$) compared to $80.0\%$ ($4/5$) in Arm~3. This $20.0\text{ pp}$ variance between identical arms demonstrates that within-arm binomial fluctuations match or exceed the between-arm differences reported across the entire table.
+\item \textbf{Classical Baseline Boundary Artifact:} Arm~0's uniform $0.0\%$ accuracy across all perturbation levels was an artifact of test-set boundary sampling rather than physical adversarial collapse. The trained classical network achieved $74.0\%$ accuracy on the 200-sample training partition. On the 5-point test slice ($\mathbf{y}_{\mathrm{test}} = [0, 1, 1, 1, 1]$), the model predicted $[1, 0, 0, 0, 0]$: four borderline samples ($\hat{p}_1 \in [0.35, 0.48]$) fell just beneath the $0.50$ decision boundary. Asserting an $+80.0\text{ pp}$ quantum advantage under $H_2$ was therefore an artifact of an inverted local test partition.
+\item \textbf{Null Staggered Separation ($H_3$ Unresolved):} At $\epsilon = 0.05$, Arm~2 and Arm~3 achieved identical $80.0\%$ accuracy ($\Delta_{\mathrm{stag}} = 0.0\text{ pp}$). Hypothesis $H_3$ is recorded as failed.
 \end{enumerate}
+Consequently, \texttt{OSIRIS-QAML-001} is quarantined as an underpowered preliminary study, and no further QPU resources are allocated toward this protocol without an appropriately scaled $\ge 500$-sample test harness.
 
 % ═════════════════════════════════════════════════════════════════
 \section{Proposed Experiments}
