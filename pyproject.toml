@@ -183,6 +183,7 @@ namespaces = true   # bench_tasks has no __init__.py: a .py there would change o
 [tool.setuptools.package-data]
 # the benchmark task definitions are data the console and osiris_bench read from <site-packages>/bench_tasks
 bench_tasks = ["*/*", "*/*/*"]
+osiris_cli = ["policy/*.json"]
 
 [tool.ruff]
 target-version = "py39"
